@@ -19,9 +19,9 @@ public:
 	Simulation();
 	virtual ~Simulation();
 
-	void Simulation(ControlFlowGraph targetBranchCFG, ControlFlowGraph targetMCCCFG, int populationSize, double mutationProb, double crossOverProb, int numberOfGenerations);
+	Simulation(ControlFlowGraph targetBranchCFG, ControlFlowGraph targetMCCCFG, int populationSize, double mutationProb, double crossOverProb, int numberOfGenerations);
 	int evaluateFitness(Organism* organism);
-	TestSuite getBestTestSuite();
+	TestSuite* getBestTestSuite();
 	void run();
 
 private:

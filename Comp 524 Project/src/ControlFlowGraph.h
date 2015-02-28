@@ -8,6 +8,9 @@
 #if !defined(EA_36970A6C_11F2_400d_B9FF_6A9242FEA2B5__INCLUDED_)
 #define EA_36970A6C_11F2_400d_B9FF_6A9242FEA2B5__INCLUDED_
 
+#include "TestCase.h"
+#include <string>
+
 class ControlFlowGraph
 {
 
@@ -19,7 +22,7 @@ public:
 
 private:
 	bool* edges;
-	predicates;
+	int* predicates;
 
 };
 
