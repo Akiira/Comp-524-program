@@ -18,8 +18,10 @@ public:
 	TestCase(int numberOfEdges, int numberOfParameters);
 	bool* getEdgesCovered();
 	int* getInputParameters();
+	void setInputParameters(int[]);
 
 private:
+	int numberOfParameters;
 	bool* branchEdgesCovered;
 	int* inputParameters;
 	bool* multiConditionCovered;
