@@ -14,7 +14,6 @@ class TestSuite
 {
 
 public:
-	TestSuite();
 	virtual ~TestSuite();
 
 	TestSuite(int numberOfTestCases, int numberOfParameters, int numberOfEdges);
@@ -22,6 +21,7 @@ public:
 	TestCase* getTestCase(int index);
 
 private:
+	int numberOfTestCases;
 	int* duplicates;
 	bool* edgesCovered;
 	TestCase** testCases;

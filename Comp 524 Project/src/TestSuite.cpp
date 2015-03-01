@@ -6,34 +6,34 @@
 ///////////////////////////////////////////////////////////
 
 #include "TestSuite.h"
-
-
-TestSuite::TestSuite(){
-
-}
-
-
+#include <cassert>
 
 TestSuite::~TestSuite(){
 
 }
 
 
-
-
-
 TestSuite::TestSuite(int numberOfTestCases, int numberOfParameters, int numberOfEdges){
+	this->numberOfTestCases = numberOfTestCases;
+	edgesCovered = new bool[numberOfEdges];
+	duplicates = new int[numberOfEdges];
 
+	testCases = new TestCase*[numberOfTestCases];
+
+	for(int i = 0; i < numberOfTestCases; i++){
+		testCases[i] = new TestCase(numberOfEdges, numberOfParameters);
+	}
 }
 
 
 TestCase** TestSuite::getAllTestCases(){
-
-	return  0;
+	return  testCases;
 }
 
 
 TestCase* TestSuite::getTestCase(int index){
 
-	return  0;
+	assert(index >= 0  &&  index < numberOfTestCases);
+
+	return  testCases[index];
 }
