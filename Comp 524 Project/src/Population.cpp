@@ -7,23 +7,12 @@
 
 #include "Population.h"
 
-
-
-Population::Population(){
-
-}
-
-
-
 Population::~Population(){
 
 }
 
 
-
-
-
-Population::Population(int popSize, int maxGenerations, ControlFlowGraph* targetCFG){
+Population::Population(int popSize, ControlFlowGraph* targetCFG){
 
 }
 
