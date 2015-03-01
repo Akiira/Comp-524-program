@@ -26,5 +26,7 @@ private:
 	int* inputParameters;
 	bool* multiConditionCovered;
 
+	void generateRandomParameters();
+
 };
 #endif // !defined(EA_B2C38A95_D3AD_472b_BE3C_F83540FB1055__INCLUDED_)

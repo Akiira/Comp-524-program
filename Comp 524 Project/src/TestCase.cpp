@@ -47,3 +47,7 @@ void TestCase::setInputParameters(int newValues[]) {
 		inputParameters[i] = newValues[i];
 	}
 }
+
+void TestCase::generateRandomParameters() {
+	//for each parameter generate a random value
+}
