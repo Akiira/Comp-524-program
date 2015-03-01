@@ -33,6 +33,8 @@ void Organism::mutate(){
 }
 
 
-void Organism::setFitness(int fitness){
-	this->fitness = fitness;
+void Organism::setFitness(const ControlFlowGraph& target){
+	for(int i = 0; i < chromosome->getNumberOfTestCases(); i++){
+
+	}
 }

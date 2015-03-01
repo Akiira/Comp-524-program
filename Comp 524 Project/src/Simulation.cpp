@@ -24,8 +24,14 @@ Simulation::Simulation(ControlFlowGraph* targetBranchCFG,
 	MultiCondCoverageGraph = targetMCCCFG;
 	this->populationSize = populationSize;
 	this->numberOfGenerations = numberOfGenerations;
+	probabilityForMutation = mutationProb;
+	probabilityForCrossover = crossOverProb;
+	bestOrganismSeen = 0;
 
 	population = new Population(populationSize, targetBranchCFG);
+
+	//once the population is initialized each organism needs to be evaluated
+	// once each organism is evaluated we can set bestOrganismSeen
 }
 
 

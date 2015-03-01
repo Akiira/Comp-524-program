@@ -9,6 +9,7 @@
 #define EA_FD308F31_83AB_4efc_8F0F_05730A9FF804__INCLUDED_
 
 #include "TestSuite.h"
+#include "ControlFlowGraph.h"
 
 class Organism
 {
@@ -20,7 +21,7 @@ public:
 	TestSuite* getChromosome();
 	void mutate();
 
-	void setFitness(int fitness);
+	void setFitness(const ControlFlowGraph& target);
 	int getFitness();
 
 private:
