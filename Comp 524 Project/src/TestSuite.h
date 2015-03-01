@@ -20,6 +20,28 @@ public:
 	TestCase** getAllTestCases();
 	TestCase* getTestCase(int index);
 
+
+
+	int* getDuplicates() const {
+		return duplicates;
+	}
+
+	bool* getEdgesCovered() const {
+		return edgesCovered;
+	}
+
+	void setEdgesCovered(bool* edgesCovered) {
+		this->edgesCovered = edgesCovered;
+	}
+
+	int getNumberOfTestCases() const {
+		return numberOfTestCases;
+	}
+
+	void setNumberOfTestCases(int numberOfTestCases) {
+		this->numberOfTestCases = numberOfTestCases;
+	}
+
 private:
 	int numberOfTestCases;
 	int* duplicates;
