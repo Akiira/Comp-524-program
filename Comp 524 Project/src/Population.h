@@ -9,6 +9,7 @@
 #define EA_BE7C8399_4BC5_48f6_93FA_2B1C440AB247__INCLUDED_
 
 #include "Organism.h"
+#include "ControlFlowGraph.h"
 
 class Population
 {

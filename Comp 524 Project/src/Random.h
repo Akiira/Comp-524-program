@@ -12,6 +12,8 @@ class Random
 {
 
 public:
+	Random();
+	virtual ~Random();
 
 
 };

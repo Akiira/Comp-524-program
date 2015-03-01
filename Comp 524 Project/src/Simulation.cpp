@@ -22,7 +22,7 @@ Simulation::~Simulation(){
 
 
 
-void Simulation::Simulation(ControlFlowGraph targetBranchCFG,
+Simulation::Simulation(ControlFlowGraph targetBranchCFG,
 		ControlFlowGraph targetMCCCFG, int populationSize, double mutationProb,
 		double crossOverProb, int numberOfGenerations){
 
@@ -35,9 +35,9 @@ int Simulation::evaluateFitness(Organism* organism){
 }
 
 
-TestSuite Simulation::getBestTestSuite(){
+TestSuite* Simulation::getBestTestSuite(){
 
-	return  0;
+	return 0;
 }
 
 

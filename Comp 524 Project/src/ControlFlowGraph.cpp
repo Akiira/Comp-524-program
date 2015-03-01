@@ -19,7 +19,7 @@ ControlFlowGraph::~ControlFlowGraph(){
 }
 
 bool * ControlFlowGraph::block1(TestCase testCase) {
-	int parameters = testCase.getInputParameters();
+	int* parameters = testCase.getInputParameters();
 	bool* coverage;
 
 	if(parameters[0] > 2)
@@ -34,7 +34,7 @@ bool * ControlFlowGraph::block1(TestCase testCase) {
 }
 
 bool * ControlFlowGraph::block2(TestCase testCase) {
-	bool coverage = block4(testCase);
+	bool* coverage = block4(testCase);
 	coverage[1] = true;
 
 	return coverage;
@@ -42,14 +42,17 @@ bool * ControlFlowGraph::block2(TestCase testCase) {
 }
 
 bool * ControlFlowGraph::block3(TestCase testCase) {
-	bool coverage = block4(testCase);
+	bool* coverage = block4(testCase);
 	coverage[2] = true;
 
 	return coverage;
 }
 
 bool * ControlFlowGraph::block4(TestCase testCase) {
-	bool coverage = {false,false, false, false};
+	bool* coverage = new bool[4];
+	coverage[0] = false;
+	coverage[1] = false;
+	coverage[2] = false;
 	coverage[3] = true;
 	return coverage;
 }
