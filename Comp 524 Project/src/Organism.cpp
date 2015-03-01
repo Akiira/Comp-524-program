@@ -13,23 +13,18 @@ Organism::~Organism(){
 }
 
 
-
-
-
 Organism::Organism(){
 
 }
 
 
 TestSuite* Organism::getChromosome(){
-
-	return  0;
+	return  chromosome;
 }
 
 
 int Organism::getFitness(){
-
-	return 0;
+	return fitness;
 }
 
 
@@ -39,5 +34,5 @@ void Organism::mutate(){
 
 
 void Organism::setFitness(int fitness){
-
+	this->fitness = fitness;
 }

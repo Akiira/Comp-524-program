@@ -18,9 +18,10 @@ public:
 
 	Organism();
 	TestSuite* getChromosome();
-	int getFitness();
 	void mutate();
+
 	void setFitness(int fitness);
+	int getFitness();
 
 private:
 	TestSuite* chromosome;
