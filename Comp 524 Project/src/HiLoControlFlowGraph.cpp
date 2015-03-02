@@ -195,10 +195,18 @@ void HiLoControlFlowGraph::block10() {
 			// This is where it might make sense to have a subclass of testCase. That in addition to the three input parameters,
 			//	will also allow you to store a list of (in this case up to 9) additional guesses as part of the test case.
 			// 	That way the generated test case is completely reproducible by a human later.
+			// Also each program/CFG will have different boundaries that we'll want to take into account when generating
+			//	the input parameters randomly/ through some local opt scheme. So either all the test case generation
+			//	functions need to be in the CFG or there should be test case subclasses with different generation methods.
+
+			// For now just go through the loop once then quit like el ariss did. Need to figure this out.
+			/*
 			if (programVariables[LOOP_COUNTER] < 10) {
 				programVariables[GUESS] = uniformInRange(programVariables[TARGET]-5, programVariables[TARGET]+5);
 				block2();
 			}
+			*/
+
 
 		}
 		else
