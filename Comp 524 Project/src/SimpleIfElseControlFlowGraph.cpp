@@ -31,6 +31,36 @@ int SimpleIfElseControlFlowGraph::getNumberOfParameters() {
 	return numberOfParameters;
 }
 
+void SimpleIfElseControlFlowGraph::printTestCase(TestCase* testCase){
+	int* inputParameters = testCase->getInputParameters();
+	bool* edgesCovered = testCase->getEdgesCovered();
+	bool* predicatesCovered = testCase->getPredicatesCovered();
+
+
+	std::cout << std::endl;
+	std::cout << "Input Parameters" << std::endl;
+	std::cout << " x " << std::endl;
+	std::cout << "---" << std::endl;
+	std::cout << " " << inputParameters[0] << std::endl;
+
+	std::cout << "Edge Coverage" << std::endl;
+	std::cout << " B1toB2 | B1toB3 | B2toB4 | B3toB4 " << std::endl;
+	std::cout << "-----------------------------------" << std::endl;
+	for(int i = 0; i < numberOfEdges; i++)
+	{
+		std::cout << "   " << edgesCovered[i] << "    |";
+	}
+	std::cout << std::endl;
+
+	std::cout << "Predicate Coverage" << std::endl;
+	std::cout << " B1_T | B1_F " << std::endl;
+	std::cout << "-------------" << std::endl;
+	for(int i = 0; i < numberOfPredicates; i++)
+	{
+		std::cout << "  " << predicatesCovered[i] << "   |";
+	}
+}
+
 void SimpleIfElseControlFlowGraph::runTestCase() {
 	testCase->clearCoverage();
 	block1();

@@ -15,6 +15,7 @@ public:
 	SimpleIfElseControlFlowGraph();
 	virtual ~SimpleIfElseControlFlowGraph();
 
+	void printTestCase(TestCase* testCase);
 	int getNumberOfEdges();
 	int getNumberOfPredicates();
 	int getNumberOfParameters();

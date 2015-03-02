@@ -61,5 +61,9 @@ private:
 
 	TestCase** testCases;
 
+	// Adding this so it can be passed to print, Also will probably be needed in other
+	//	methods later.
+	ControlFlowGraph* targetCFG;
+
 };
 #endif // !defined(EA_04823F4F_8B3F_4bb8_9DBC_42A1717DC256__INCLUDED_)

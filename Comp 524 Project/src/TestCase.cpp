@@ -88,6 +88,8 @@ void TestCase::print() {
 	{
 		std::cout << predicatesCovered[i] << " | ";
 	}
+
+
 }
 
 

@@ -7,7 +7,7 @@
 #include "HiLoControlFlowGraph.h"
 
 HiLoControlFlowGraph::HiLoControlFlowGraph() {
-	numberOfEdges = 16;
+	numberOfEdges = 14;
 	numberOfPredicates = 14;
 
 	// Target isn't an input since its always num1 * num2
@@ -27,6 +27,38 @@ int HiLoControlFlowGraph::getNumberOfPredicates() {
 }
 int HiLoControlFlowGraph::getNumberOfParameters() {
 	return numberOfParameters;
+}
+
+void HiLoControlFlowGraph::printTestCase(TestCase* testCase){
+	int* inputParameters = testCase->getInputParameters();
+	bool* edgesCovered = testCase->getEdgesCovered();
+	bool* predicatesCovered = testCase->getPredicatesCovered();
+
+	std::cout << std::endl;
+	std::cout << "Input Parameters" << std::endl;
+	std::cout << " Num1  Num2  Guess " << std::endl;
+	std::cout << "------------------" << std::endl;
+	for (int i = 0; i < numberOfParameters; i++) {
+		std::cout << "  " << inputParameters[i] << "  |";
+	}
+
+
+	std::cout << endl << "Edge Coverage" << std::endl;
+	std::cout << " B1toB2| B2toB3| B2toB4|B3toB10| B4toB5| B4toB6|B5toB10| B6toB7| B6toB8|B7toB10| B8toB9|B8toB10|B9toB10|B10toB2" << std::endl;
+	std::cout << "---------------------------------------------------------------------------------------------------------------" << std::endl;
+	for(int i = 0; i < numberOfEdges; i++)
+	{
+		std::cout << "   " << edgesCovered[i] << "   |";
+	}
+	std::cout << std::endl;
+
+	std::cout << "Predicate Coverage" << std::endl;
+	std::cout << " B2_T | B2_F | B4_T | B4_F | B6_FF| B6_FT| B6_TF| B6_TT| B8_T | B8_F |B10_FF|B10_FT|B10_TF|B10_TT" << std::endl;
+	std::cout << "-------------------------------------------------------------------------------------------------" << std::endl;
+	for(int i = 0; i < numberOfPredicates; i++)
+	{
+		std::cout << "  " << predicatesCovered[i] << "   |";
+	}
 }
 
 HiLoControlFlowGraph::~HiLoControlFlowGraph() {
@@ -171,13 +203,14 @@ void HiLoControlFlowGraph::block10() {
 			//	the input parameters randomly/ through some local opt scheme. So either all the test case generation
 			//	functions need to be in the CFG or there should be test case subclasses with different generation methods.
 
-			/* For now just go through the loop once then quit like el ariss did. Need to figure this out.
+			/* For now just go through the loop once then quit like El Ariss did. Need to figure this out.
 
 			if (programVariables[LOOP_COUNTER] <= 9) {
 				programVariables[GUESS] = uniformInRange(programVariables[TARGET]-5, programVariables[TARGET]+5);
 				block2();
 			}
 			else {
+				// Force this to be the last run through the loop
 				programVariables[GUESS] = programVariables[TARGET];
 				block2();
 			}

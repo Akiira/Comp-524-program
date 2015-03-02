@@ -21,6 +21,8 @@ TestSuite::~TestSuite(){
 TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG){
 	assert(numberOfTestCases > 0);
 
+	this->targetCFG = targetCFG;
+
 	this->numberOfTestCases = numberOfTestCases;
 	this->numberOfParameters = targetCFG->getNumberOfParameters();
 	this->numberOfEdges = targetCFG->getNumberOfEdges();
@@ -40,6 +42,8 @@ TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG){
 		testCases[i] = new TestCase(numberOfParameters, numberOfEdges, numberOfPredicates);
 		targetCFG->setCoverageOfTestCase(testCases[i]);
 	}
+
+
 }
 
 
@@ -58,6 +62,7 @@ TestCase* TestSuite::getTestCase(int index){
 void TestSuite::print() {
 	for (int i = 0; i < numberOfTestCases; i++) {
 		std::cout << std::endl << std::endl << "Test Case #" << i ;
-		testCases[i]->print();
+		//testCases[i]->print();
+		targetCFG->printTestCase(testCases[i]);
 	}
 }

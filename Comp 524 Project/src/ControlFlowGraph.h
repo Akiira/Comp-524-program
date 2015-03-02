@@ -17,9 +17,11 @@ class ControlFlowGraph
 {
 
 public:
+	virtual ~ControlFlowGraph();
+
 	void setCoverageOfTestCase(TestCase* testCase);
 
-	virtual ~ControlFlowGraph();
+	virtual void printTestCase(TestCase* testCase)=0;
 	virtual int getNumberOfEdges()=0;
 	virtual int getNumberOfPredicates()=0;
 	virtual int getNumberOfParameters()=0;
