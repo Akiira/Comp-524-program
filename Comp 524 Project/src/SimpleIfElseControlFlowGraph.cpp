@@ -32,14 +32,13 @@ int SimpleIfElseControlFlowGraph::getNumberOfParameters() {
 }
 
 void SimpleIfElseControlFlowGraph::printInputParameters(int* inputParameters) {
-	std::cout << "Input Parameters" << std::endl;
+	std::cout << endl << "Input Parameters" << std::endl;
 	std::cout << " x " << std::endl;
 	std::cout << "---" << std::endl;
 	std::cout << " " << inputParameters[0] << std::endl;
-	std::cout << std::endl;
 }
 void SimpleIfElseControlFlowGraph::printEdgesCovered(bool* edgesCovered) {
-	std::cout << "Edge Coverage" << std::endl;
+	std::cout << endl << "Edge Coverage" << std::endl;
 	std::cout << " B1toB2 | B1toB3 | B2toB4 | B3toB4 " << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
 	for(int i = 0; i < numberOfEdges; i++)
@@ -49,7 +48,7 @@ void SimpleIfElseControlFlowGraph::printEdgesCovered(bool* edgesCovered) {
 	std::cout << std::endl;
 }
 void SimpleIfElseControlFlowGraph::printPredicatesCovered(bool* predicatesCovered) {
-	std::cout << "Predicate Coverage" << std::endl;
+	std::cout << endl << "Predicate Coverage" << std::endl;
 	std::cout << " B1_T | B1_F " << std::endl;
 	std::cout << "-------------" << std::endl;
 	for(int i = 0; i < numberOfPredicates; i++)

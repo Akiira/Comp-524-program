@@ -51,7 +51,7 @@ void HiLoControlFlowGraph::printEdgesCovered(bool* edgesCovered){
 }
 
 void HiLoControlFlowGraph::printPredicatesCovered(bool* predicatesCovered){
-	std::cout  << endl <<  "Predicate Coverage" << std::endl;
+	std::cout << endl << "Predicate Coverage" << std::endl;
 	std::cout << " B2_T | B2_F | B4_T | B4_F | B6_FF| B6_FT| B6_TF| B6_TT| B8_T | B8_F |B10_FF|B10_FT|B10_TF|B10_TT" << std::endl;
 	std::cout << "-------------------------------------------------------------------------------------------------" << std::endl;
 	for(int i = 0; i < numberOfPredicates; i++)

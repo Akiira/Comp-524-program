@@ -8,7 +8,7 @@
 using namespace std;
 
 void simpleIfElseControlFlowGraphTest_testSuite_version() {
-	cout << endl << endl << "SimpleIfElse Test Suite Test: " << endl;
+	cout << endl << "SimpleIfElse Test Suite Test: " << endl;
 	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
 	TestSuite* testSuite = new TestSuite { 10, testCFG };
 
@@ -17,7 +17,7 @@ void simpleIfElseControlFlowGraphTest_testSuite_version() {
 
 void simpleIfElseControlFlowGraphTest_testCase_version() {
 	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
-	cout << endl << endl << "SimpleIfElse Test Case Test: " << endl;
+	cout << endl << "SimpleIfElse Test Case Test: " << endl;
 	TestCase* falseTestCase = new TestCase { testCFG->getNumberOfParameters(),
 			testCFG->getNumberOfEdges(), testCFG->getNumberOfPredicates() };
 	falseTestCase->setInputParameters(new int[1] {1});
@@ -29,12 +29,14 @@ void simpleIfElseControlFlowGraphTest_testCase_version() {
 	testCFG->setCoverageOfTestCase(falseTestCase);
 	testCFG->setCoverageOfTestCase(trueTestCase);
 
+	cout << endl << "False Test Case:" ;
 	falseTestCase->print(testCFG);
+	cout << endl << "True Test Case:";
 	trueTestCase->print(testCFG);
 }
 
 void hiLoControlFlowGraphTest_testSuite_version() {
-	cout << endl << endl <<  "HiLo Test Suite Test: " << endl;
+	cout << endl << "HiLo Test Suite Test: " << endl;
 	ControlFlowGraph* testCFG = new HiLoControlFlowGraph { };
 	TestSuite* testSuite = new TestSuite { 10, testCFG };
 

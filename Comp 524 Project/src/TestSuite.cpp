@@ -63,9 +63,9 @@ void TestSuite::print() {
 	cout << "Test Suite Coverage:" << endl;
 	targetCFG->printTestSuiteCoverage(this);
 
-	cout << "Test Case Coverage:" << endl;
+	cout << endl << "Test Case Coverage:" << endl;
 	for (int i = 0; i < numberOfTestCases; i++) {
-		std::cout << std::endl << std::endl << "Test Case #" << i ;
+		std::cout << std::endl << "Test Case #" << i << std::endl;
 		testCases[i]->print(targetCFG);
 	}
 }
