@@ -7,14 +7,21 @@
 #include "HiLoControlFlowGraph.h"
 
 HiLoControlFlowGraph::HiLoControlFlowGraph() {
-	NUM_OF_EDGES = 16;
-	NUM_OF_PREDICATES = 14;
+	numberOfEdges = 16;
+	numberOfPredicates = 14;
 
 	coverage = new bool*[2];
-	coverage[0] = new bool[NUM_OF_EDGES];
-	coverage[1] = new bool[NUM_OF_PREDICATES];
+	coverage[0] = new bool[numberOfEdges];
+	coverage[1] = new bool[numberOfPredicates];
 	testCase = 0;
 
+}
+
+int HiLoControlFlowGraph::getNumberOfEdges() {
+	return numberOfEdges;
+}
+int HiLoControlFlowGraph::getNumberOfPredicates() {
+	return numberOfPredicates;
 }
 
 HiLoControlFlowGraph::~HiLoControlFlowGraph() {

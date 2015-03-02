@@ -7,10 +7,11 @@
 
 #include "TestCase.h"
 
-
+/*
 TestCase::TestCase(){
 
 }
+*/
 
 
 
@@ -18,21 +19,20 @@ TestCase::~TestCase(){
 
 }
 
-
-
-
-
-TestCase::TestCase(int numberOfEdges, int numberOfParameters){
+TestCase::TestCase(int numberOfEdges, int numberOfPredicates, int numberOfParameters){
 	this->numberOfParameters = numberOfParameters;
 	branchEdgesCovered = new bool[numberOfEdges];
+	multiConditionCovered = new bool[numberOfPredicates];
 	inputParameters = new int[numberOfParameters];
-	multiConditionCovered = 0;
 }
 
 
 bool* TestCase::getEdgesCovered(){
-
 	return  branchEdgesCovered;
+}
+
+bool* TestCase::getMultiConditionCovered(){
+	return  multiConditionCovered;
 }
 
 

@@ -16,6 +16,9 @@ class HiLoControlFlowGraph : public ControlFlowGraph
 		HiLoControlFlowGraph();
 		virtual ~HiLoControlFlowGraph();
 
+		int getNumberOfEdges();
+		int getNumberOfPredicates();
+
 	private:
 		// This enumeration type stores the edges of the Control Flow Graph (CFG)
 		// Full branch coverage is achieved if all edges have been executed

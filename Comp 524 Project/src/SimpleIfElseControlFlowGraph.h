@@ -15,7 +15,10 @@ public:
 	SimpleIfElseControlFlowGraph();
 	virtual ~SimpleIfElseControlFlowGraph();
 
-	void runTestCase();
+	int getNumberOfEdges();
+	int getNumberOfPredicates();
+
+
 
 private:
 	struct edges {
@@ -25,6 +28,7 @@ private:
 		enum { B1_T, B1_F };
 	};
 
+	void runTestCase();
 	void block1();
 	void block2();
 	void block3();

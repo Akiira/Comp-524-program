@@ -8,12 +8,12 @@
 #include "SimpleIfElseControlFlowGraph.h"
 
 SimpleIfElseControlFlowGraph::SimpleIfElseControlFlowGraph() {
-	NUM_OF_EDGES = 4;
-	NUM_OF_PREDICATES = 2;
+	numberOfEdges = 4;
+	numberOfPredicates = 2;
 
 	coverage = new bool*[2];
-	coverage[0] = new bool[NUM_OF_EDGES];
-	coverage[1] = new bool[NUM_OF_PREDICATES];
+	coverage[0] = new bool[numberOfEdges];
+	coverage[1] = new bool[numberOfPredicates];
 	testCase = 0;
 }
 
@@ -21,12 +21,19 @@ SimpleIfElseControlFlowGraph::~SimpleIfElseControlFlowGraph() {
 	// Just implicitly call ControlFlowGraph destructor
 }
 
+int SimpleIfElseControlFlowGraph::getNumberOfEdges() {
+	return numberOfEdges;
+}
+int SimpleIfElseControlFlowGraph::getNumberOfPredicates() {
+	return numberOfPredicates;
+}
+
 void SimpleIfElseControlFlowGraph::runTestCase() {
 	block1();
 }
 void SimpleIfElseControlFlowGraph::block1() {
 	int* parameters = testCase->getInputParameters();
-
+	std::cout << parameters[0] << std::endl;
 	if(parameters[0] > 2)
 	{
 		coverage[0][SimpleIfElseControlFlowGraph::edges::B1toB2] = true;
