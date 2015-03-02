@@ -10,19 +10,24 @@
 using namespace std;
 
 void controlFlowGraphTest() {
+	cout << "here";
 	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph();
 
-	TestCase* falseTestCase = new TestCase(testCFG->getNumberOfEdges(), testCFG->getNumberOfPredicates(), 1);
+	//TestSuite* testSuite = new TestSuite(10, testCFG);
+
+	//testSuite->print();
+
+	TestCase* falseTestCase = new TestCase(testCFG->getNumberOfParameters(), testCFG->getNumberOfEdges(), testCFG->getNumberOfPredicates());
 	falseTestCase->setInputParameters(new int[1] {1});
 
-	TestCase* trueTestCase = new TestCase(testCFG->getNumberOfEdges(), testCFG->getNumberOfPredicates(), 1);
+	TestCase* trueTestCase = new TestCase(testCFG->getNumberOfParameters(), testCFG->getNumberOfEdges(), testCFG->getNumberOfPredicates());
 	trueTestCase->setInputParameters(new int[1] {3});
 
-	bool** falseCoverage = testCFG->getCoverageOfTestCase(falseTestCase);
+	bool** falseCoverage = testCFG->setCoverageOfTestCase(falseTestCase);
 
-	bool** trueCoverage = testCFG->getCoverageOfTestCase(trueTestCase);
+	bool** trueCoverage = testCFG->setCoverageOfTestCase(trueTestCase);
 
-	//cout << &falseCoverage << " " << &trueCoverage << endl;
+	cout << &falseCoverage << " " << &trueCoverage << endl;
 
 	cout << "x == 1 testCase Edge Coverage:" << endl;
 	for (int i = 0; i < testCFG->getNumberOfEdges(); i++) {
@@ -41,10 +46,12 @@ void controlFlowGraphTest() {
 	for (int i = 0; i < testCFG->getNumberOfPredicates(); i++) {
 		cout << trueCoverage[1][i] << " | ";
 	}
+
 }
 
 int main() {
 	cout << "Run" << endl;
+
 	controlFlowGraphTest();
 
 	return 0;

@@ -6,12 +6,14 @@
 ///////////////////////////////////////////////////////////
 
 #include "ControlFlowGraph.h"
-
+#include <iostream>
 ControlFlowGraph::ControlFlowGraph(){
+	std::cout << "here";
 	coverage = 0;
 	testCase = 0;
 	numberOfEdges = 0;
 	numberOfPredicates = 0;
+	numberOfParameters = 0;
 }
 
 
@@ -20,7 +22,7 @@ ControlFlowGraph::~ControlFlowGraph(){
 	delete testCase;
 }
 
-bool** ControlFlowGraph::getCoverageOfTestCase(TestCase* testCase) {
+bool** ControlFlowGraph::setCoverageOfTestCase(TestCase* testCase) {
 	// Reset coverage and assign testCase ptr to the passed testCase
 	for (int i = 0; i < numberOfEdges; i++) {
 		coverage[0][i] = false;

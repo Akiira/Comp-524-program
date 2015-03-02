@@ -8,6 +8,9 @@
 #if !defined(EA_B2C38A95_D3AD_472b_BE3C_F83540FB1055__INCLUDED_)
 #define EA_B2C38A95_D3AD_472b_BE3C_F83540FB1055__INCLUDED_
 
+
+#include "Random.h"
+
 class TestCase
 {
 
@@ -15,20 +18,24 @@ public:
 	//TestCase();
 	virtual ~TestCase();
 
-	TestCase(int numberOfEdges, int numberOfPredicates, int numberOfParameters);
-	bool* getEdgesCovered();
-	bool* getMultiConditionCovered();
+	TestCase(int numberOfParameters, int numberOfEdges, int numberOfPredicates);
 
+	bool* edgesCovered;
+	bool* predicatesCovered;
 
 	int* getInputParameters();
 	void setInputParameters(int[]);
+	void setInputParameterAtIndex(int index, int newValue);
+
+	void clearCoverage();
+	void print();
 
 private:
 	int numberOfParameters;
-	bool* branchEdgesCovered;
-	int* inputParameters;
-	bool* multiConditionCovered;
+	int numberOfEdges;
+	int numberOfPredicates;
 
+	int* inputParameters;
 	void generateRandomParameters();
 
 };

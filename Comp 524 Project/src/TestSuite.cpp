@@ -6,22 +6,34 @@
 ///////////////////////////////////////////////////////////
 
 #include "TestSuite.h"
+#include <iostream>
 #include <cassert>
 
 TestSuite::~TestSuite(){
 
 }
 
-
-TestSuite::TestSuite(int numberOfTestCases, int numberOfParameters, int numberOfEdges, int numberOfPredicates){
+// Fill the new suite with random test cases and evaluate the coverage of all the test cases
+TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* cfg){
+	cout << "here";
 	this->numberOfTestCases = numberOfTestCases;
+	this->numberOfParameters = cfg->getNumberOfParameters();
+	this->numberOfEdges = cfg->getNumberOfEdges();
+	this->numberOfPredicates = cfg->getNumberOfPredicates();
+
+
 	edgesCovered = new bool[numberOfEdges];
-	duplicates = new int[numberOfEdges];
+	duplicateEdgesCovered = new int[numberOfEdges];
+
+	predicatesCovered = new bool[numberOfPredicates];
+	duplicatePredicatesCovered = new int[numberOfPredicates];
 
 	testCases = new TestCase*[numberOfTestCases];
 
 	for(int i = 0; i < numberOfTestCases; i++){
-		testCases[i] = new TestCase(numberOfEdges, numberOfParameters, numberOfPredicates);
+		// Generates random test cases and stores them
+		testCases[i] = new TestCase(numberOfParameters, numberOfEdges, numberOfPredicates);
+		cfg->setCoverageOfTestCase(testCases[i]);
 	}
 }
 
@@ -36,4 +48,12 @@ TestCase* TestSuite::getTestCase(int index){
 	assert(index >= 0  &&  index < numberOfTestCases);
 
 	return  testCases[index];
+}
+
+void TestSuite::print() {
+	std::cout << "here";
+	for (int i = 0; i < numberOfTestCases; i++) {
+		std::cout << "Test Case #" << i << std::endl;
+		testCases[i]->print();
+	}
 }

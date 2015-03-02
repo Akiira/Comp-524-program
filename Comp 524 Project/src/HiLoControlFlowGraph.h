@@ -18,6 +18,7 @@ class HiLoControlFlowGraph : public ControlFlowGraph
 
 		int getNumberOfEdges();
 		int getNumberOfPredicates();
+		int getNumberOfParameters();
 
 	private:
 		// This enumeration type stores the edges of the Control Flow Graph (CFG)

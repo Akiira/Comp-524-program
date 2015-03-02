@@ -6,35 +6,25 @@
 ///////////////////////////////////////////////////////////
 
 #include "TestCase.h"
-
-/*
-TestCase::TestCase(){
-
-}
-*/
-
-
-
+#include <iostream>
 TestCase::~TestCase(){
 
+	delete[] edgesCovered;
+	delete[] predicatesCovered;
+	delete[] inputParameters;
 }
 
-TestCase::TestCase(int numberOfEdges, int numberOfPredicates, int numberOfParameters){
+TestCase::TestCase(int numberOfParameters, int numberOfEdges, int numberOfPredicates){
 	this->numberOfParameters = numberOfParameters;
-	branchEdgesCovered = new bool[numberOfEdges];
-	multiConditionCovered = new bool[numberOfPredicates];
+	this->numberOfEdges = numberOfEdges;
+	this->numberOfPredicates = numberOfPredicates;
+
+	edgesCovered =  new bool[numberOfEdges];
+	predicatesCovered = new bool[numberOfPredicates];
 	inputParameters = new int[numberOfParameters];
+
+	generateRandomParameters();
 }
-
-
-bool* TestCase::getEdgesCovered(){
-	return  branchEdgesCovered;
-}
-
-bool* TestCase::getMultiConditionCovered(){
-	return  multiConditionCovered;
-}
-
 
 int* TestCase::getInputParameters(){
 
@@ -48,6 +38,52 @@ void TestCase::setInputParameters(int newValues[]) {
 	}
 }
 
+void TestCase::setInputParameterAtIndex(int index, int newValue) {
+	inputParameters[index] = newValue;
+}
+
 void TestCase::generateRandomParameters() {
 	//for each parameter generate a random value
+	for(int i = 0; i < numberOfParameters; i++)
+	{
+		inputParameters[i] = uniformInRange(1, 10);
+	}
 }
+
+void TestCase::clearCoverage() {
+	for(int i = 0; i < numberOfEdges; i++)
+	{
+		edgesCovered[i] = false;
+	}
+
+	for(int i = 0; i < numberOfPredicates; i++)
+	{
+		predicatesCovered[i] = false;
+	}
+}
+
+void TestCase::print() {
+	std::cout << "Edge Coverage" << std::endl;
+	for(int i = 0; i < numberOfEdges; i++)
+	{
+		std::cout << edgesCovered[i] << " | ";
+	}
+	std::cout << std::endl;
+
+	std::cout << "Predicate Coverage" << std::endl;
+	for(int i = 0; i < numberOfPredicates; i++)
+	{
+		std::cout << predicatesCovered[i] << " | ";
+	}
+}
+
+
+/*
+bool* TestCase::getEdgesCovered(){
+	return  edgesCovered;
+}
+
+bool* TestCase::getpredicatesCovered(){
+	return  predicatesCovered;
+}
+*/

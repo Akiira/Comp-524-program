@@ -23,6 +23,9 @@ int HiLoControlFlowGraph::getNumberOfEdges() {
 int HiLoControlFlowGraph::getNumberOfPredicates() {
 	return numberOfPredicates;
 }
+int HiLoControlFlowGraph::getNumberOfParameters() {
+	return numberOfParameters;
+}
 
 HiLoControlFlowGraph::~HiLoControlFlowGraph() {
 	// Just implicitly call ControlFlowGraph destructor

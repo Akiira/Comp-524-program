@@ -17,6 +17,7 @@ public:
 
 	int getNumberOfEdges();
 	int getNumberOfPredicates();
+	int getNumberOfParameters();
 
 
 
