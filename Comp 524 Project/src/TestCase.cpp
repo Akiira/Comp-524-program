@@ -69,7 +69,7 @@ void TestCase::clearCoverage() {
 }
 
 void TestCase::print(ControlFlowGraph* cfg) {
-	cfg->printTestCase(this);
+	cfg->printTestCaseCoverage(this);
 }
 
 

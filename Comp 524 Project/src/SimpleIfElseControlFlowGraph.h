@@ -15,7 +15,6 @@ public:
 	SimpleIfElseControlFlowGraph();
 	virtual ~SimpleIfElseControlFlowGraph();
 
-	void printTestCase(TestCase* testCase);
 	int getNumberOfEdges();
 	int getNumberOfPredicates();
 	int getNumberOfParameters();
@@ -35,6 +34,10 @@ private:
 	void block2();
 	void block3();
 	void block4();
+
+	void printInputParameters(int* inputParameters);
+	void printEdgesCovered(bool* edgesCovered);
+	void printPredicatesCovered(bool* predicatesCovered);
 };
 
 

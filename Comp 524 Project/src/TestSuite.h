@@ -38,6 +38,14 @@ public:
 		this->edgesCovered = edgesCovered;
 	}
 
+	bool* getPredicatesCovered() const {
+		return predicatesCovered;
+	}
+
+	void setPredicatesCovered(bool* predicatesCovered) {
+		this->predicatesCovered = predicatesCovered;
+	}
+
 	int getNumberOfTestCases() const {
 		return numberOfTestCases;
 	}

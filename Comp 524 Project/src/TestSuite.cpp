@@ -60,6 +60,10 @@ TestCase* TestSuite::getTestCase(int index){
 }
 
 void TestSuite::print() {
+	cout << "Test Suite Coverage:" << endl;
+	targetCFG->printTestSuiteCoverage(this);
+
+	cout << "Test Case Coverage:" << endl;
 	for (int i = 0; i < numberOfTestCases; i++) {
 		std::cout << std::endl << std::endl << "Test Case #" << i ;
 		testCases[i]->print(targetCFG);
@@ -77,7 +81,7 @@ void TestSuite::calculateTestSuiteCoverage() {
 
 	for (int i =0; i < numberOfTestCases; i++) {
 		for (int j = 0; j < numberOfPredicates; j++) {
-			edgesCovered[j] |= testCases[i]->getPredicatesCovered()[j];
+			predicatesCovered[j] |= testCases[i]->getPredicatesCovered()[j];
 		}
 	}
 

@@ -21,3 +21,21 @@ void ControlFlowGraph::setCoverageOfTestCase(TestCase* testCase) {
 	// Run through the CFG calculating coverage as it goes.
 	runTestCase();
 }
+
+void ControlFlowGraph::printTestCaseCoverage(TestCase* testCase){
+	int* inputParameters = testCase->getInputParameters();
+	bool* edgesCovered = testCase->getEdgesCovered();
+	bool* predicatesCovered = testCase->getPredicatesCovered();
+
+	printInputParameters(inputParameters);
+	printEdgesCovered(edgesCovered);
+	printPredicatesCovered(predicatesCovered);
+}
+
+void ControlFlowGraph::printTestSuiteCoverage(TestSuite* testSuite){
+	bool* edgesCovered = testSuite->getEdgesCovered();
+	bool* predicatesCovered = testSuite->getPredicatesCovered();
+
+	printEdgesCovered(edgesCovered);
+	printPredicatesCovered(predicatesCovered);
+}
