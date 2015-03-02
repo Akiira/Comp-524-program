@@ -11,6 +11,9 @@
 #include "TestCase.h"
 #include <iostream>
 
+//Forward declaration
+class TestCase;
+
 class ControlFlowGraph
 {
 

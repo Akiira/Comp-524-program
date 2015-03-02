@@ -9,11 +9,13 @@
 #define EA_B2C38A95_D3AD_472b_BE3C_F83540FB1055__INCLUDED_
 #include "ControlFlowGraph.h"
 
+//Forward declaration
+class ControlFlowGraph;
+
 class TestCase
 {
 
 public:
-	//TestCase();
 	virtual ~TestCase();
 
 	TestCase(int numberOfEdges, int numberOfPredicates, int numberOfParameters);
