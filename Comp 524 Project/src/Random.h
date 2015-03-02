@@ -8,13 +8,13 @@
 #if !defined(EA_48879502_EC2C_4c41_94A4_804A9E653A41__INCLUDED_)
 #define EA_48879502_EC2C_4c41_94A4_804A9E653A41__INCLUDED_
 
-class Random
-{
+#include <random>     // needed for the mersenne twister random number generator
+#include <functional>  // needed for bind
+using namespace std;
 
-public:
-	Random();
-	virtual ~Random();
+extern long uniformInRange(long from, long to);
+extern function<double()> uniform01;
+extern mt19937 mersenne;
 
 
-};
 #endif // !defined(EA_48879502_EC2C_4c41_94A4_804A9E653A41__INCLUDED_)
