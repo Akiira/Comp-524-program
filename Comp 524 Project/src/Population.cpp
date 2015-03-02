@@ -12,7 +12,7 @@ Population::~Population(){
 }
 
 
-Population::Population(int popSize, const ControlFlowGraph& targetCFG){
+Population::Population(int popSize, ControlFlowGraph& targetCFG){
 	population = new Organism*[popSize];
 
 	for(int i = 0; i < popSize; i++){
