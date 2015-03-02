@@ -18,7 +18,7 @@ class Simulation
 public:
 	virtual ~Simulation();
 
-	Simulation(const ControlFlowGraph& targetBranchCFG, int populationSize, double mutationProb,
+	Simulation(ControlFlowGraph& targetBranchCFG, int populationSize, double mutationProb,
 			double crossOverProb, int numberOfGenerations);
 
 	int evaluateFitness(Organism* organism);

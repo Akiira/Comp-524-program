@@ -12,7 +12,7 @@ Simulation::~Simulation(){
 
 }
 
-Simulation::Simulation(const ControlFlowGraph& targetBranchCFG, int populationSize, double mutationProb,
+Simulation::Simulation(ControlFlowGraph& targetBranchCFG, int populationSize, double mutationProb,
 		double crossOverProb, int numberOfGenerations){
 
 	targetCFG = &targetBranchCFG;
