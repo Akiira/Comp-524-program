@@ -17,11 +17,11 @@ Organism::Organism(ControlFlowGraph& target) {
 	setFitness(target);
 }
 
-TestSuite* Organism::getChromosome(){
+TestSuite* Organism::getChromosome() const{
 	return  chromosome;
 }
 
-int Organism::getFitness(){
+int Organism::getFitness() const{
 	return fitness;
 }
 

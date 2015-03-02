@@ -19,11 +19,11 @@ public:
 	virtual ~Organism();
 
 	Organism(ControlFlowGraph& target);
-	TestSuite* getChromosome();
+	TestSuite* getChromosome() const;
 	void mutate();
 
 	void setFitness(ControlFlowGraph& target);
-	int getFitness();
+	int getFitness() const;
 
 private:
 	TestSuite* chromosome;
