@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////
 
 #include "TestCase.h"
+#include "ControlFlowGraph.h"
 
 TestCase::~TestCase(){
 
