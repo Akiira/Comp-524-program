@@ -9,20 +9,12 @@
 #define EA_36970A6C_11F2_400d_B9FF_6A9242FEA2B5__INCLUDED_
 
 #include "TestCase.h"
-#include <string>
 
 class ControlFlowGraph
 {
 
 public:
-	ControlFlowGraph();
-	virtual ~ControlFlowGraph();
-
-	bool* getEdgesCoveredByTestCase(TestCase testCase);
-
-private:
-	bool* edges;
-	int* predicates;
+	virtual bool* getEdgesCoveredByTestCase(TestCase testCase);
 
 };
 
