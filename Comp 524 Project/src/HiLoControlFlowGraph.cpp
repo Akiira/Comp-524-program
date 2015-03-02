@@ -9,7 +9,9 @@
 HiLoControlFlowGraph::HiLoControlFlowGraph() {
 	numberOfEdges = 16;
 	numberOfPredicates = 14;
-	numberOfParameters = 4;
+
+	// Target isn't an input since its always num1 * num2
+	numberOfParameters = 3;
 
 	testCase = 0;
 
@@ -35,9 +37,10 @@ HiLoControlFlowGraph::~HiLoControlFlowGraph() {
 void HiLoControlFlowGraph::runTestCase() {
 	testCase->clearCoverage();
 	int* inputParameters = testCase->getInputParameters();
-	for (int i = 0; i < numberOfParameters; i++) {
-		programVariables[i] = inputParameters[i];
-	}
+	programVariables[NUM1] = inputParameters[NUM1];
+	programVariables[NUM2] = inputParameters[NUM2];
+	programVariables[GUESS] = inputParameters[GUESS];
+	programVariables[TARGET] = programVariables[NUM1] * programVariables[NUM2];
 	programVariables[LOOP_COUNTER] = 0;
 	block1();
 }
@@ -183,6 +186,15 @@ void HiLoControlFlowGraph::block10() {
 			//	each time with a good chance of picking the right guess.
 			//	With this scheme it will be quite easy for the algorithm to get LOOP_MANY covered,
 			//	not so easy to get LOOP_1, or LOOP_2
+
+			// This program is a pretty bad example to use for loops since it actually takes input within the
+			//	loop, meaning the number of input parameters is technically infinite. Using this random generation
+			//	makes no sense because a test case that got the coverage using this has nothing to do with the
+			//	human actually entering the parameters.
+
+			// This is where it might make sense to have a subclass of testCase. That in addition to the three input parameters,
+			//	will also allow you to store a list of (in this case up to 9) additional guesses as part of the test case.
+			// 	That way the generated test case is completely reproducible by a human later.
 			if (programVariables[LOOP_COUNTER] < 10) {
 				programVariables[GUESS] = uniformInRange(programVariables[TARGET]-5, programVariables[TARGET]+5);
 				block2();
@@ -208,6 +220,7 @@ void HiLoControlFlowGraph::block10() {
 	}
 
 	// Set loop coverage based on how many times the loop was executed
+	//TODO Add a loop coverage array to the test case class.
 	if (programVariables[LOOP_COUNTER] == 1) {
 		//testCase->addLoopCoverage(loops::LOOP_1);
 	} else if (programVariables[LOOP_COUNTER] == 2) {
