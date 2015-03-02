@@ -18,8 +18,7 @@ class Simulation
 public:
 	virtual ~Simulation();
 
-	Simulation(ControlFlowGraph* targetBranchCFG, ControlFlowGraph*
-			targetMCCCFG, int populationSize, double mutationProb,
+	Simulation(const ControlFlowGraph& targetBranchCFG, int populationSize, double mutationProb,
 			double crossOverProb, int numberOfGenerations);
 
 	int evaluateFitness(Organism* organism);
@@ -29,8 +28,8 @@ public:
 private:
 	Population* population;
 	Organism* bestOrganismSeen;
-	ControlFlowGraph* BranchCoverageGraph;
-	ControlFlowGraph* MultiCondCoverageGraph;
+	const ControlFlowGraph* targetCFG;
+
 	int numberOfGenerations;
 	int populationSize;
 	double probabilityForCrossover;

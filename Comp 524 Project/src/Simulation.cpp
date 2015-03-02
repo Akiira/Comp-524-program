@@ -12,16 +12,10 @@ Simulation::~Simulation(){
 
 }
 
-
-
-
-
-Simulation::Simulation(ControlFlowGraph* targetBranchCFG,
-		ControlFlowGraph* targetMCCCFG, int populationSize, double mutationProb,
+Simulation::Simulation(const ControlFlowGraph& targetBranchCFG, int populationSize, double mutationProb,
 		double crossOverProb, int numberOfGenerations){
 
-	BranchCoverageGraph = targetBranchCFG;
-	MultiCondCoverageGraph = targetMCCCFG;
+	targetCFG = &targetBranchCFG;
 	this->populationSize = populationSize;
 	this->numberOfGenerations = numberOfGenerations;
 	probabilityForMutation = mutationProb;
