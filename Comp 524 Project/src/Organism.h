@@ -18,7 +18,7 @@ class Organism
 public:
 	virtual ~Organism();
 
-	Organism(const ControlFlowGraph& target);
+	Organism(ControlFlowGraph& target);
 	TestSuite* getChromosome();
 	void mutate();
 
