@@ -13,7 +13,8 @@ Organism::~Organism(){
 }
 
 Organism::Organism(ControlFlowGraph& target) {
-
+	chromosome = new TestSuite(666, &target); //TODO: remove hardcoded value
+	setFitness(target);
 }
 
 TestSuite* Organism::getChromosome(){
@@ -30,7 +31,7 @@ void Organism::mutate(){
 }
 
 
-void Organism::setFitness(const ControlFlowGraph& target){
+void Organism::setFitness(ControlFlowGraph& target){
 	int sum = 0;
 	for(int i = 0; i < chromosome->getNumberOfTestCases(); i++){
 
