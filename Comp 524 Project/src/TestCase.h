@@ -7,6 +7,7 @@
 
 #if !defined(EA_B2C38A95_D3AD_472b_BE3C_F83540FB1055__INCLUDED_)
 #define EA_B2C38A95_D3AD_472b_BE3C_F83540FB1055__INCLUDED_
+#include "ControlFlowGraph.h"
 
 class TestCase
 {
@@ -16,6 +17,7 @@ public:
 	virtual ~TestCase();
 
 	TestCase(int numberOfEdges, int numberOfPredicates, int numberOfParameters);
+	TestCase(const ControlFlowGraph& cfg);
 	bool* getEdgesCovered();
 	bool* getMultiConditionCovered();
 
