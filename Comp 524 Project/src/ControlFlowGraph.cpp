@@ -7,12 +7,7 @@
 
 #include "ControlFlowGraph.h"
 #include <iostream>
-ControlFlowGraph::ControlFlowGraph(){
-	testCase = 0;
-	numberOfEdges = 0;
-	numberOfPredicates = 0;
-	numberOfParameters = 0;
-}
+
 
 
 ControlFlowGraph::~ControlFlowGraph(){

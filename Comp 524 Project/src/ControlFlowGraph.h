@@ -17,16 +17,12 @@ class ControlFlowGraph
 {
 
 public:
-	ControlFlowGraph();
-	virtual ~ControlFlowGraph();
-
-	// Returns a 2d boolean array where retval[0] = edges covered, retval[1] = predicates covered
 	void setCoverageOfTestCase(TestCase* testCase);
 
-	// =0 makes it pure virtual, so it can only be defined in subclasses
-	virtual int getNumberOfEdges()const =0;
-	virtual int getNumberOfPredicates()const =0;
-	virtual int getNumberOfParameters()const =0;
+	virtual ~ControlFlowGraph();
+	virtual int getNumberOfEdges()=0;
+	virtual int getNumberOfPredicates()=0;
+	virtual int getNumberOfParameters()=0;
 
 
 protected:
@@ -37,7 +33,7 @@ protected:
 
 	// Must be overridden by each subclass, called by getCoverageOfTestCase,
 	//	expected to update coverage instance variable through side effects
-	//	so it can ultimately be returned by getCOverageOfTestCase
+	//	so it can ultimately be returned by setCOverageOfTestCase
 	virtual void runTestCase()=0;
 };
 

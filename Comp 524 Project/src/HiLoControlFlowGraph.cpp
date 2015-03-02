@@ -6,9 +6,6 @@
  */
 #include "HiLoControlFlowGraph.h"
 
-//using namespace HiLoControlFlowGraph;
-//using HiLoControlFlowGraph::predicates;
-
 HiLoControlFlowGraph::HiLoControlFlowGraph() {
 	numberOfEdges = 16;
 	numberOfPredicates = 14;
@@ -44,7 +41,7 @@ void HiLoControlFlowGraph::block1() {
 }
 
 
-void HiLoControlFlowGraph::block2() {
+void HiLoControlFlowGraph::block2()  {
 	if (true /*testCase.guess == testCase.target*/)
 	{
 		//testCase->edgesCovered[HiLoControlFlowGraph::edges::B2toB3] = true;
@@ -63,14 +60,14 @@ void HiLoControlFlowGraph::block2() {
 	}
 }
 
-void HiLoControlFlowGraph::block3() {
+void HiLoControlFlowGraph::block3()  {
 	//testCase->edgesCovered[HiLoControlFlowGraph::edges::B3toB10] = true;
 	testCase->addEdgeCoverage(edges::B3toB10);
 	block10();
 }
 
 
-void HiLoControlFlowGraph::block4() {
+void HiLoControlFlowGraph::block4()  {
 	if (true /*testCase.guess > testCase.target*/)
 	{
 		//testCase->edgesCovered[HiLoControlFlowGraph::edges::B4toB5] = true;
@@ -88,12 +85,12 @@ void HiLoControlFlowGraph::block4() {
 		block6();
 	}
 }
-void HiLoControlFlowGraph::block5() {
+void HiLoControlFlowGraph::block5()  {
 	//testCase->edgesCovered[HiLoControlFlowGraph::edges::B5toB10] = true;
 	testCase->addEdgeCoverage(edges::B5toB10);
 	block10();
 }
-void HiLoControlFlowGraph::block6() {
+void HiLoControlFlowGraph::block6()  {
 	if (true /*testCase.guess < testCase.num1*/)
 	{
 		if (true /*testCase.guess < testCase.num2*/)
@@ -131,7 +128,7 @@ void HiLoControlFlowGraph::block6() {
 		block8();
 	}
 }
-void HiLoControlFlowGraph::block7() {
+void HiLoControlFlowGraph::block7()  {
 	//testCase->edgesCovered[HiLoControlFlowGraph::edges::B7toB10] = true;
 	testCase->addEdgeCoverage(edges::B7toB10);
 	block10();
