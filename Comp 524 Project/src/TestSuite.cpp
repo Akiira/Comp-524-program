@@ -62,7 +62,6 @@ TestCase* TestSuite::getTestCase(int index){
 void TestSuite::print() {
 	for (int i = 0; i < numberOfTestCases; i++) {
 		std::cout << std::endl << std::endl << "Test Case #" << i ;
-		//testCases[i]->print();
-		targetCFG->printTestCase(testCases[i]);
+		testCases[i]->print(targetCFG);
 	}
 }

@@ -8,7 +8,7 @@
 using namespace std;
 
 void simpleIfElseControlFlowGraphTest_testSuite_version() {
-	cout << "SimpleIfElse Test Suite Test: " << endl;
+	cout << endl << endl << "SimpleIfElse Test Suite Test: " << endl;
 	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
 	TestSuite* testSuite = new TestSuite { 10, testCFG };
 
@@ -29,8 +29,8 @@ void simpleIfElseControlFlowGraphTest_testCase_version() {
 	testCFG->setCoverageOfTestCase(falseTestCase);
 	testCFG->setCoverageOfTestCase(trueTestCase);
 
-	falseTestCase->print();
-	trueTestCase->print();
+	falseTestCase->print(testCFG);
+	trueTestCase->print(testCFG);
 }
 
 void hiLoControlFlowGraphTest_testSuite_version() {
@@ -42,8 +42,8 @@ void hiLoControlFlowGraphTest_testSuite_version() {
 }
 
 int main() {
-	simpleIfElseControlFlowGraphTest_testSuite_version();
 	simpleIfElseControlFlowGraphTest_testCase_version();
+	simpleIfElseControlFlowGraphTest_testSuite_version();
 	hiLoControlFlowGraphTest_testSuite_version();
 	return 0;
 }

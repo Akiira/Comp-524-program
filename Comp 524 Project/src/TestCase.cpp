@@ -68,28 +68,8 @@ void TestCase::clearCoverage() {
 	}
 }
 
-void TestCase::print() {
-	std::cout << std::endl;
-	std::cout << "Input Parameters" << std::endl;
-	for(int i = 0; i < numberOfParameters; i++)
-	{
-		std::cout << inputParameters[i] << " | ";
-	}
-	std::cout << std::endl;
-	std::cout << "Edge Coverage" << std::endl;
-	for(int i = 0; i < numberOfEdges; i++)
-	{
-		std::cout << edgesCovered[i] << " | ";
-	}
-	std::cout << std::endl;
-
-	std::cout << "Predicate Coverage" << std::endl;
-	for(int i = 0; i < numberOfPredicates; i++)
-	{
-		std::cout << predicatesCovered[i] << " | ";
-	}
-
-
+void TestCase::print(ControlFlowGraph* cfg) {
+	cfg->printTestCase(this);
 }
 
 

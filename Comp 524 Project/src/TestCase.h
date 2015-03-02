@@ -37,7 +37,7 @@ public:
 	void addPredicateCoverage(int predicate);
 
 	void clearCoverage();
-	void print();
+	void print(ControlFlowGraph* cfg);
 
 private:
 	int numberOfParameters;
