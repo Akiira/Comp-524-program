@@ -10,15 +10,21 @@
 #include <cassert>
 
 TestSuite::~TestSuite(){
-
+	delete[] edgesCovered;
+	delete[] predicatesCovered;
+	delete[] duplicateEdgesCovered;
+	delete[] duplicatePredicatesCovered;
+	delete[] testCases;
 }
 
 // Fill the new suite with random test cases and evaluate the coverage of all the test cases
-TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* cfg){
+TestSuite::TestSuite(int numberOfTestCases, const ControlFlowGraph* targetCFG){
+	assert(numberOfTestCases > 0);
+
 	this->numberOfTestCases = numberOfTestCases;
-	this->numberOfParameters = cfg->getNumberOfParameters();
-	this->numberOfEdges = cfg->getNumberOfEdges();
-	this->numberOfPredicates = cfg->getNumberOfPredicates();
+	this->numberOfParameters = targetCFG->getNumberOfParameters();
+	this->numberOfEdges = targetCFG->getNumberOfEdges();
+	this->numberOfPredicates = targetCFG->getNumberOfPredicates();
 
 
 	edgesCovered = new bool[numberOfEdges];
@@ -32,7 +38,7 @@ TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* cfg){
 	for(int i = 0; i < numberOfTestCases; i++){
 		// Generates random test cases and stores them
 		testCases[i] = new TestCase(numberOfParameters, numberOfEdges, numberOfPredicates);
-		cfg->setCoverageOfTestCase(testCases[i]);
+		targetCFG->setCoverageOfTestCase(testCases[i]);
 	}
 }
 

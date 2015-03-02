@@ -17,7 +17,7 @@ class TestSuite
 public:
 	virtual ~TestSuite();
 
-	TestSuite(int numberOfTestCases, ControlFlowGraph* cfg);
+	TestSuite(int numberOfTestCases, const ControlFlowGraph* cfg);
 	TestCase** getAllTestCases();
 	TestCase* getTestCase(int index);
 
