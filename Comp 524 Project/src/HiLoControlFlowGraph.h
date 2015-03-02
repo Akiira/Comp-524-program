@@ -36,6 +36,20 @@ class HiLoControlFlowGraph : public ControlFlowGraph
 						B8_T, B8_F, B10_FF, B10_FT, B10_TF, B10_TT };
 		};
 
+		struct loops {
+			// Since its a do-while, fewest possible is 1, then also try for 2 and something
+			//	greater than 2 iterations.
+			enum { LOOP_1, LOOP_2, LOOP_MANY };
+		};
+
+		// Make it easier to read the program
+		enum parameterEnum {NUM1, NUM2, GUESS, TARGET, LOOP_COUNTER};
+		// Initialized to testCase->getInputParameters to start
+		//	allows the CFG to update and change these while the program is running
+		//	without affecting the test case itself.
+		int* programVariables;
+		int numberOfProgramVariables;
+
 		void runTestCase();
 		void block1();
 		void block2();
