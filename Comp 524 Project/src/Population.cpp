@@ -12,7 +12,7 @@ Population::~Population(){
 }
 
 
-Population::Population(int popSize, ControlFlowGraph* targetCFG){
+Population::Population(int popSize, const ControlFlowGraph& targetCFG){
 
 }
 

@@ -17,7 +17,7 @@ class Population
 public:
 	virtual ~Population();
 
-	Population(int popSize, ControlFlowGraph* targetCFG);
+	Population(int popSize, const ControlFlowGraph& targetCFG);
 	void crossover(Organism* offspring1, Organism* offspring2);
 	void replace(Organism* offspring);
 	Organism* select();
