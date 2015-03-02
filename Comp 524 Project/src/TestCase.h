@@ -21,9 +21,7 @@ class TestCase
 public:
 	virtual ~TestCase();
 
-
 	TestCase(int numberOfParameters, int numberOfEdges, int numberOfPredicates);
-
 	TestCase(const ControlFlowGraph& cfg);
 
 
@@ -31,12 +29,13 @@ public:
 	bool* getPredicatesCovered();
 
 
-	bool* edgesCovered;
-	bool* predicatesCovered;
+
 
 	int* getInputParameters();
 	void setInputParameters(int[]);
 	void setInputParameterAtIndex(int index, int newValue);
+	void addEdgeCoverage(int edge);
+	void addPredicateCoverage(int predicate);
 
 	void clearCoverage();
 	void print();
@@ -47,6 +46,9 @@ private:
 	int numberOfPredicates;
 
 	int* inputParameters;
+	bool* edgesCovered;
+	bool* predicatesCovered;
+
 	void generateRandomParameters();
 
 };

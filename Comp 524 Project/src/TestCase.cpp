@@ -99,3 +99,10 @@ bool* TestCase::getPredicatesCovered(){
 	return  predicatesCovered;
 }
 
+void TestCase::addEdgeCoverage(int edge) {
+	edgesCovered[edge] = true;
+}
+
+void TestCase::addPredicateCoverage(int predicate) {
+	predicatesCovered[predicate] = true;
+}
