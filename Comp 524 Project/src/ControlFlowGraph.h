@@ -24,9 +24,9 @@ public:
 	void setCoverageOfTestCase(TestCase* testCase);
 
 	// =0 makes it pure virtual, so it can only be defined in subclasses
-	virtual int getNumberOfEdges()=0;
-	virtual int getNumberOfPredicates()=0;
-	virtual int getNumberOfParameters()=0;
+	virtual int getNumberOfEdges()const =0;
+	virtual int getNumberOfPredicates()const =0;
+	virtual int getNumberOfParameters()const =0;
 
 
 protected:
