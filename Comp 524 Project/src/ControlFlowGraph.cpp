@@ -7,52 +7,44 @@
 
 #include "ControlFlowGraph.h"
 
-
 ControlFlowGraph::ControlFlowGraph(){
-
+	coverage = 0;
+	testCase = 0;
+	numberOfEdges = 0;
+	numberOfPredicates = 0;
 }
-
 
 
 ControlFlowGraph::~ControlFlowGraph(){
-
+	delete[] coverage;
+	delete testCase;
 }
 
-bool * ControlFlowGraph::block1(TestCase testCase) {
-	int* parameters = testCase.getInputParameters();
-	bool* coverage;
+bool** ControlFlowGraph::getCoverageOfTestCase(TestCase* testCase) {
+	// Reset coverage and assign testCase ptr to the passed testCase
+	for (int i = 0; i < numberOfEdges; i++) {
+		coverage[0][i] = false;
+	}
+	for (int i = 0; i < numberOfPredicates; i++) {
+		coverage[1][i] = false;
+	}
+	this->testCase = testCase;
 
-	if(parameters[0] > 2)
-		coverage = block3(testCase);
-	else
-		coverage = block2(testCase);
+	// Run through the CFG calculating coverage as it goes.
+	runTestCase();
 
+	// Have to make a copy of the coverage array, otherwise it will always be the same
+	// Need to fix this, I'm thinking these should just be set directly on the testCase as it goes instead of storing
+	//	in this temporary location inside the CFG
+	bool** retval = new bool*[2];
+	retval[0] = new bool[numberOfEdges];
+	retval[1] = new bool[numberOfPredicates];
+	for (int i = 0; i < numberOfEdges; i++) {
+		retval[0][i] = coverage[0][i];
+	}
+	for (int i = 0; i < numberOfPredicates; i++) {
+		retval[1][i]  = coverage[1][i];
+	}
 
-	coverage[0] = true;
-
-	return coverage;
-}
-
-bool * ControlFlowGraph::block2(TestCase testCase) {
-	bool* coverage = block4(testCase);
-	coverage[1] = true;
-
-	return coverage;
-
-}
-
-bool * ControlFlowGraph::block3(TestCase testCase) {
-	bool* coverage = block4(testCase);
-	coverage[2] = true;
-
-	return coverage;
-}
-
-bool * ControlFlowGraph::block4(TestCase testCase) {
-	bool* coverage = new bool[4];
-	coverage[0] = false;
-	coverage[1] = false;
-	coverage[2] = false;
-	coverage[3] = true;
-	return coverage;
+	return retval;
 }

@@ -13,7 +13,7 @@ TestSuite::~TestSuite(){
 }
 
 
-TestSuite::TestSuite(int numberOfTestCases, int numberOfParameters, int numberOfEdges){
+TestSuite::TestSuite(int numberOfTestCases, int numberOfParameters, int numberOfEdges, int numberOfPredicates){
 	this->numberOfTestCases = numberOfTestCases;
 	edgesCovered = new bool[numberOfEdges];
 	duplicates = new int[numberOfEdges];
@@ -21,7 +21,7 @@ TestSuite::TestSuite(int numberOfTestCases, int numberOfParameters, int numberOf
 	testCases = new TestCase*[numberOfTestCases];
 
 	for(int i = 0; i < numberOfTestCases; i++){
-		testCases[i] = new TestCase(numberOfEdges, numberOfParameters);
+		testCases[i] = new TestCase(numberOfEdges, numberOfParameters, numberOfPredicates);
 	}
 }
 

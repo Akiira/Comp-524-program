@@ -9,7 +9,7 @@
 #define EA_36970A6C_11F2_400d_B9FF_6A9242FEA2B5__INCLUDED_
 
 #include "TestCase.h"
-#include <string>
+#include <iostream>
 
 class ControlFlowGraph
 {
@@ -18,37 +18,23 @@ public:
 	ControlFlowGraph();
 	virtual ~ControlFlowGraph();
 
-	bool* getBranchEdgesCoveredByTestCase(TestCase testCase);
+	// Returns a 2d boolean array where retval[0] = edges covered, retval[1] = predicates covered
+	bool** getCoverageOfTestCase(TestCase* testCase);
 
-private:
-	bool * block1(TestCase testCase);
-	bool * block2(TestCase testCase);
-	bool * block3(TestCase testCase);
-	bool * block4(TestCase testCase);
+	// =0 makes it pure virtual, so it can only be defined in subclasses
+	virtual int getNumberOfEdges()=0;
+	virtual int getNumberOfPredicates()=0;
 
-	int* predicates;
+protected:
+	bool** coverage;
+	TestCase* testCase;
+	int numberOfEdges;
+	int numberOfPredicates;
 
-
+	// Must be overridden by each subclass, called by getCoverageOfTestCase,
+	//	expected to update coverage instance variable through side effects
+	//	so it can ultimately be returned by getCOverageOfTestCase
+	virtual void runTestCase()=0;
 };
-
-
-/*
- * First we will use this toy example while programming our project
- *  it has 2 possible branches.
- *
- * 	   Start
- * 		 |
- * 		 |
- *      x > 2
- *      / \
- *     /   \
- *    /     \
- *  x++      x--
- *    \      /
- *     \    /
- *      \  /
- *     print x
- *
- */
 
 #endif // !defined(EA_36970A6C_11F2_400d_B9FF_6A9242FEA2B5__INCLUDED_)

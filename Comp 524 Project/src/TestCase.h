@@ -12,11 +12,14 @@ class TestCase
 {
 
 public:
-	TestCase();
+	//TestCase();
 	virtual ~TestCase();
 
-	TestCase(int numberOfEdges, int numberOfParameters);
+	TestCase(int numberOfEdges, int numberOfPredicates, int numberOfParameters);
 	bool* getEdgesCovered();
+	bool* getMultiConditionCovered();
+
+
 	int* getInputParameters();
 	void setInputParameters(int[]);
 

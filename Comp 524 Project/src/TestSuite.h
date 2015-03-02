@@ -16,7 +16,7 @@ class TestSuite
 public:
 	virtual ~TestSuite();
 
-	TestSuite(int numberOfTestCases, int numberOfParameters, int numberOfEdges);
+	TestSuite(int numberOfTestCases, int numberOfParameters, int numberOfEdges, int numberOfPredicates);
 	TestCase** getAllTestCases();
 	TestCase* getTestCase(int index);
 
