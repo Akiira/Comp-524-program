@@ -23,17 +23,31 @@ TestCase::~TestCase(){
 
 
 TestCase::TestCase(int numberOfEdges, int numberOfParameters){
-
+	this->numberOfParameters = numberOfParameters;
+	branchEdgesCovered = new bool[numberOfEdges];
+	inputParameters = new int[numberOfParameters];
+	multiConditionCovered = 0;
 }
 
 
 bool* TestCase::getEdgesCovered(){
 
-	return  0;
+	return  branchEdgesCovered;
 }
 
 
 int* TestCase::getInputParameters(){
 
-	return  0;
+	return  inputParameters;
+}
+
+void TestCase::setInputParameters(int newValues[]) {
+	for(int i = 0; i < numberOfParameters; i++)
+	{
+		inputParameters[i] = newValues[i];
+	}
+}
+
+void TestCase::generateRandomParameters() {
+	//for each parameter generate a random value
 }
