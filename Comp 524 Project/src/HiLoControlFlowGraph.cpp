@@ -46,7 +46,6 @@ void HiLoControlFlowGraph::runTestCase() {
 }
 
 void HiLoControlFlowGraph::block1() {
-	//testCase->edgesCovered[HiLoControlFlowGraph::edges::B1toB2] = true;
 	testCase->addEdgeCoverage(edges::B1toB2);
 	block2();
 }
@@ -58,24 +57,19 @@ void HiLoControlFlowGraph::block2()  {
 
 	if (programVariables[GUESS] == programVariables[TARGET])
 	{
-		//testCase->edgesCovered[HiLoControlFlowGraph::edges::B2toB3] = true;
 		testCase->addEdgeCoverage(edges::B2toB3);
-		//testCase->predicatesCovered[HiLoControlFlowGraph::predicates::B2_T] = true;
 		testCase->addPredicateCoverage(predicates::B2_T);
 		block3();
 	}
 	else
 	{
-		//testCase->edgesCovered[HiLoControlFlowGraph::edges::B2toB4] = true;
 		testCase->addEdgeCoverage(edges::B2toB4);
-		//testCase->predicatesCovered[HiLoControlFlowGraph::predicates::B2_F] = true;
 		testCase->addPredicateCoverage(predicates::B2_F);
 		block4();
 	}
 }
 
 void HiLoControlFlowGraph::block3()  {
-	//testCase->edgesCovered[HiLoControlFlowGraph::edges::B3toB10] = true;
 	testCase->addEdgeCoverage(edges::B3toB10);
 	block10();
 }
@@ -84,89 +78,69 @@ void HiLoControlFlowGraph::block3()  {
 void HiLoControlFlowGraph::block4()  {
 	if (programVariables[GUESS] >programVariables[TARGET])
 	{
-		//testCase->edgesCovered[HiLoControlFlowGraph::edges::B4toB5] = true;
 		testCase->addEdgeCoverage(edges::B4toB5);
-		//testCase->predicatesCovered[HiLoControlFlowGraph::predicates::B4_T] = true;
 		testCase->addPredicateCoverage(predicates::B4_T);
 		block5();
 	}
 	else
 	{
-		//testCase->edgesCovered[HiLoControlFlowGraph::edges::B4toB6] = true;
 		testCase->addEdgeCoverage(edges::B4toB6);
-		//testCase->predicatesCovered[HiLoControlFlowGraph::predicates::B4_F] = true;
 		testCase->addPredicateCoverage(predicates::B4_F);
 		block6();
 	}
 }
 void HiLoControlFlowGraph::block5()  {
-	//testCase->edgesCovered[HiLoControlFlowGraph::edges::B5toB10] = true;
 	testCase->addEdgeCoverage(edges::B5toB10);
 	block10();
 }
 void HiLoControlFlowGraph::block6()  {
 	if (programVariables[GUESS] < programVariables[NUM1])
 	{
-		if (true /*testCase.guess < testCase.num2*/)
+		if (programVariables[GUESS] < programVariables[NUM2])
 		{
-			//testCase->predicatesCovered[HiLoControlFlowGraph::predicates::B6_TT] = true;
 			testCase->addPredicateCoverage(predicates::B6_TT);
 		}
 		else
 		{
-			//testCase->predicatesCovered[HiLoControlFlowGraph::predicates::B6_TF] = true;
 			testCase->addPredicateCoverage(predicates::B6_TF);
 		}
 		//Its an 'or' condition, follow true branch since first one was true
-		//testCase->edgesCovered[HiLoControlFlowGraph::edges::B6toB7] = true;
 		testCase->addEdgeCoverage(edges::B6toB7);
 		block7();
 	}
 	else if (programVariables[GUESS] < programVariables[NUM2])
 	{
 		// We already know first part of the condition is false
-		//testCase->predicatesCovered[HiLoControlFlowGraph::predicates::B6_FT] = true;
 		testCase->addPredicateCoverage(predicates::B6_FT);
-
-		//testCase->edgesCovered[HiLoControlFlowGraph::edges::B6toB7] = true;
 		testCase->addEdgeCoverage(edges::B6toB7);
 		block7();
 	}
 	else {
 		// Both parts of the condition are false
-		//testCase->predicatesCovered[HiLoControlFlowGraph::predicates::B6_FF] = true;
 		testCase->addPredicateCoverage(predicates::B6_FF);
-
-		//testCase->edgesCovered[HiLoControlFlowGraph::edges::B6toB8] = true;
 		testCase->addEdgeCoverage(edges::B6toB8);
 		block8();
 	}
 }
 void HiLoControlFlowGraph::block7()  {
-	//testCase->edgesCovered[HiLoControlFlowGraph::edges::B7toB10] = true;
 	testCase->addEdgeCoverage(edges::B7toB10);
 	block10();
 }
 void HiLoControlFlowGraph::block8() {
 	if (programVariables[GUESS] != 0 )
 	{
-		//testCase->edgesCovered[HiLoControlFlowGraph::edges::B8toB9] = true;
 		testCase->addEdgeCoverage(edges::B8toB9);
-		//testCase->predicatesCovered[HiLoControlFlowGraph::predicates::B8_T] = true;
 		testCase->addPredicateCoverage(predicates::B8_T);
 		block5();
 	}
 	else
 	{
-		//testCase->edgesCovered[HiLoControlFlowGraph::edges::B8toB10] = true;
 		testCase->addEdgeCoverage(edges::B8toB10);
-		//testCase->predicatesCovered[HiLoControlFlowGraph::predicates::B8_F] = true;
 		testCase->addPredicateCoverage(predicates::B8_F);
 		block6();
 	}
 }
 void HiLoControlFlowGraph::block9() {
-	//testCase->edgesCovered[HiLoControlFlowGraph::edges::B9toB10] = true;
 	testCase->addEdgeCoverage(edges::B9toB10);
 	block10();
 }
@@ -175,12 +149,9 @@ void HiLoControlFlowGraph::block10() {
 	{
 		if (programVariables[GUESS] != 0)
 		{
-			//testCase->predicatesCovered[HiLoControlFlowGraph::predicates::B10_TT] = true;
 			testCase->addPredicateCoverage(predicates::B10_TT);
 			//Its an 'and' condition, this is the only time we'll follow the true branch
-			//testCase->edgesCovered[HiLoControlFlowGraph::edges::B10toB2] = true;
 			testCase->addEdgeCoverage(edges::B10toB2);
-
 
 			// Not sure about this but as a first thought allow the loop to run up to 10 times,
 			//	each time with a good chance of picking the right guess.
@@ -189,41 +160,41 @@ void HiLoControlFlowGraph::block10() {
 
 			// This program is a pretty bad example to use for loops since it actually takes input within the
 			//	loop, meaning the number of input parameters is technically infinite. Using this random generation
-			//	makes no sense because a test case that got the coverage using this has nothing to do with the
-			//	human actually entering the parameters.
+			//	makes no sense without storing the sequence of guesses because a test case that got the coverage using
+			// this has nothing to do with the human actually entering the parameters.
 
 			// This is where it might make sense to have a subclass of testCase. That in addition to the three input parameters,
 			//	will also allow you to store a list of (in this case up to 9) additional guesses as part of the test case.
 			// 	That way the generated test case is completely reproducible by a human later.
-			// Also each program/CFG will have different boundaries that we'll want to take into account when generating
+
+			// Also each program/CFG will have different input boundaries that we'll want to take into account when generating
 			//	the input parameters randomly/ through some local opt scheme. So either all the test case generation
 			//	functions need to be in the CFG or there should be test case subclasses with different generation methods.
 
-			// For now just go through the loop once then quit like el ariss did. Need to figure this out.
-			/*
-			if (programVariables[LOOP_COUNTER] < 10) {
+			/* For now just go through the loop once then quit like el ariss did. Need to figure this out.
+
+			if (programVariables[LOOP_COUNTER] <= 9) {
 				programVariables[GUESS] = uniformInRange(programVariables[TARGET]-5, programVariables[TARGET]+5);
 				block2();
 			}
+			else {
+				programVariables[GUESS] = programVariables[TARGET];
+				block2();
+			}
 			*/
-
-
 		}
 		else
 		{
-			//testCase->predicatesCovered[HiLoControlFlowGraph::predicates::B10_TF] = true;
 			testCase->addPredicateCoverage(predicates::B10_TF);
 		}
 	}
 	else if (programVariables[GUESS] != 0 )
 	{
 		// We already know first part of the condition is false
-		//testCase->predicatesCovered[HiLoControlFlowGraph::predicates::B10_FT] = true;
 		testCase->addPredicateCoverage(predicates::B10_FT);
 	}
 	else {
 		// Both parts of the condition are false
-		//testCase->predicatesCovered[HiLoControlFlowGraph::predicates::B10_FF] = true;
 		testCase->addPredicateCoverage(HiLoControlFlowGraph::predicates::B10_FF);
 	}
 

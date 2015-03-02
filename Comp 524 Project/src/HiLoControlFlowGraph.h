@@ -46,8 +46,8 @@ class HiLoControlFlowGraph : public ControlFlowGraph
 		enum programVariableEnum {NUM1, NUM2, GUESS, TARGET, LOOP_COUNTER};
 		// Initialized to testCase->getInputParameters to start
 		//	allows the CFG to update and change these while the program is running
-		//	In this case, guess must be changed after each loop iteration.
-		//	without affecting the test case itself. Also has a loop_counter to helf with loop coverage
+		//	In this case, guess must be changed after each loop iteration
+		//	without affecting the test case itself. Also has a loop_counter to help with loop coverage
 		//	calculation
 		int* programVariables;
 		int numberOfProgramVariables;
