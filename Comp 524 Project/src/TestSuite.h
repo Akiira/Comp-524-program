@@ -10,6 +10,7 @@
 
 #include "TestCase.h"
 #include "ControlFlowGraph.h"
+#include <bitset>
 
 class TestSuite
 {
@@ -44,6 +45,8 @@ public:
 	void setNumberOfTestCases(int numberOfTestCases) {
 		this->numberOfTestCases = numberOfTestCases;
 	}
+
+	void calculateTestSuiteCoverage();
 
 	void print();
 

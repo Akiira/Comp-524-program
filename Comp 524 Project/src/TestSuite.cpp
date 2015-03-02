@@ -43,7 +43,7 @@ TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG){
 		targetCFG->setCoverageOfTestCase(testCases[i]);
 	}
 
-
+	calculateTestSuiteCoverage();
 }
 
 
@@ -65,3 +65,21 @@ void TestSuite::print() {
 		testCases[i]->print(targetCFG);
 	}
 }
+
+// This code is ridiculously inefficient, maybe we can switch to bitsets instead,
+//	then use |= on entire bitsets.
+void TestSuite::calculateTestSuiteCoverage() {
+	for (int i =0; i < numberOfTestCases; i++) {
+		for (int j = 0; j < numberOfEdges; j++) {
+			edgesCovered[j] |= testCases[i]->getEdgesCovered()[j];
+		}
+	}
+
+	for (int i =0; i < numberOfTestCases; i++) {
+		for (int j = 0; j < numberOfPredicates; j++) {
+			edgesCovered[j] |= testCases[i]->getPredicatesCovered()[j];
+		}
+	}
+
+}
+
