@@ -9,7 +9,8 @@
 #define EA_FD308F31_83AB_4efc_8F0F_05730A9FF804__INCLUDED_
 
 #include "TestSuite.h"
-#include "ControlFlowGraph.h"
+
+class ControlFlowGraph;
 
 class Organism
 {
@@ -17,7 +18,7 @@ class Organism
 public:
 	virtual ~Organism();
 
-	Organism();
+	Organism(const ControlFlowGraph& target);
 	TestSuite* getChromosome();
 	void mutate();
 
