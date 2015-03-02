@@ -9,19 +9,21 @@ using namespace std;
 
 void controlFlowGraphTest_testSuite_version() {
 	cout << "Test Suite Test: " << endl;
-	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph();
-	TestSuite* testSuite = new TestSuite(10, testCFG);
+	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
+	TestSuite* testSuite = new TestSuite { 10, testCFG };
 
 	testSuite->print();
 }
 
 void controlFlowGraphTest_testCase_version() {
-	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph();
+	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
 	cout << endl << endl << "Test Case Test: " << endl;
-	TestCase* falseTestCase = new TestCase(testCFG->getNumberOfParameters(), testCFG->getNumberOfEdges(), testCFG->getNumberOfPredicates());
+	TestCase* falseTestCase = new TestCase { testCFG->getNumberOfParameters(),
+			testCFG->getNumberOfEdges(), testCFG->getNumberOfPredicates() };
 	falseTestCase->setInputParameters(new int[1] {1});
 
-	TestCase* trueTestCase = new TestCase(testCFG->getNumberOfParameters(), testCFG->getNumberOfEdges(), testCFG->getNumberOfPredicates());
+	TestCase* trueTestCase = new TestCase { testCFG->getNumberOfParameters(),
+			testCFG->getNumberOfEdges(), testCFG->getNumberOfPredicates() };
 	trueTestCase->setInputParameters(new int[1] {3});
 
 	testCFG->setCoverageOfTestCase(falseTestCase);
