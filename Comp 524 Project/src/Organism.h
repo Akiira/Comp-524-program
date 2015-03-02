@@ -22,7 +22,7 @@ public:
 	TestSuite* getChromosome();
 	void mutate();
 
-	void setFitness(const ControlFlowGraph& target);
+	void setFitness(ControlFlowGraph& target);
 	int getFitness();
 
 private:
