@@ -6,7 +6,7 @@
 ///////////////////////////////////////////////////////////
 
 #include "TestCase.h"
-#include <iostream>
+
 TestCase::~TestCase(){
 
 	delete[] edgesCovered;
@@ -24,6 +24,11 @@ TestCase::TestCase(int numberOfParameters, int numberOfEdges, int numberOfPredic
 	inputParameters = new int[numberOfParameters];
 
 	generateRandomParameters();
+}
+
+// I couldn't figure out how to get this to work right even with the forward references.
+// It works from the TestSuite though which makes more sense anyway.
+TestCase::TestCase(const ControlFlowGraph& cfg) {
 }
 
 int* TestCase::getInputParameters(){
@@ -63,6 +68,13 @@ void TestCase::clearCoverage() {
 }
 
 void TestCase::print() {
+	std::cout << std::endl;
+	std::cout << "Input Parameters" << std::endl;
+	for(int i = 0; i < numberOfParameters; i++)
+	{
+		std::cout << inputParameters[i] << " | ";
+	}
+	std::cout << std::endl;
 	std::cout << "Edge Coverage" << std::endl;
 	for(int i = 0; i < numberOfEdges; i++)
 	{
@@ -78,12 +90,12 @@ void TestCase::print() {
 }
 
 
-/*
+
 bool* TestCase::getEdgesCovered(){
 	return  edgesCovered;
 }
 
-bool* TestCase::getpredicatesCovered(){
+bool* TestCase::getPredicatesCovered(){
 	return  predicatesCovered;
 }
-*/
+

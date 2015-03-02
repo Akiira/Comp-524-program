@@ -1,5 +1,3 @@
-
-
 #include <iostream>
 #include "TestCase.h"
 #include "TestSuite.h"
@@ -9,51 +7,33 @@
 
 using namespace std;
 
-void controlFlowGraphTest() {
-	cout << "here";
+void controlFlowGraphTest_testSuite_version() {
+	cout << "Test Suite Test: " << endl;
 	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph();
+	TestSuite* testSuite = new TestSuite(10, testCFG);
 
-	//TestSuite* testSuite = new TestSuite(10, testCFG);
+	testSuite->print();
+}
 
-	//testSuite->print();
-
+void controlFlowGraphTest_testCase_version() {
+	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph();
+	cout << endl << endl << "Test Case Test: " << endl;
 	TestCase* falseTestCase = new TestCase(testCFG->getNumberOfParameters(), testCFG->getNumberOfEdges(), testCFG->getNumberOfPredicates());
 	falseTestCase->setInputParameters(new int[1] {1});
 
 	TestCase* trueTestCase = new TestCase(testCFG->getNumberOfParameters(), testCFG->getNumberOfEdges(), testCFG->getNumberOfPredicates());
 	trueTestCase->setInputParameters(new int[1] {3});
 
-	bool** falseCoverage = testCFG->setCoverageOfTestCase(falseTestCase);
+	testCFG->setCoverageOfTestCase(falseTestCase);
+	testCFG->setCoverageOfTestCase(trueTestCase);
 
-	bool** trueCoverage = testCFG->setCoverageOfTestCase(trueTestCase);
-
-	cout << &falseCoverage << " " << &trueCoverage << endl;
-
-	cout << "x == 1 testCase Edge Coverage:" << endl;
-	for (int i = 0; i < testCFG->getNumberOfEdges(); i++) {
-		cout << falseCoverage[0][i] << " | ";
-	}
-	cout << endl << "x == 1 testCase Predicate Coverage:" << endl;
-	for (int i = 0; i < testCFG->getNumberOfPredicates(); i++) {
-		cout << falseCoverage[1][i] << " | ";
-	}
-
-	cout << endl << "x == 3 testCase Edge Coverage:" << endl;
-	for (int i = 0; i < testCFG->getNumberOfEdges(); i++) {
-		cout << trueCoverage[0][i] << " | ";
-	}
-	cout << endl << "x == 3 testCase Predicate Coverage:" << endl;
-	for (int i = 0; i < testCFG->getNumberOfPredicates(); i++) {
-		cout << trueCoverage[1][i] << " | ";
-	}
-
+	falseTestCase->print();
+	trueTestCase->print();
 }
 
 int main() {
-	cout << "Run" << endl;
-
-	controlFlowGraphTest();
-
+	controlFlowGraphTest_testSuite_version();
+	controlFlowGraphTest_testCase_version();
 	return 0;
 }
 

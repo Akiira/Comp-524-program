@@ -8,7 +8,6 @@
 #include "SimpleIfElseControlFlowGraph.h"
 #include <iostream>
 SimpleIfElseControlFlowGraph::SimpleIfElseControlFlowGraph() {
-	std::cout << "here";
 	numberOfEdges = 4;
 	numberOfPredicates = 2;
 	numberOfParameters = 1;

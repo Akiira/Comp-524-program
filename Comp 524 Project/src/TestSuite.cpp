@@ -15,7 +15,6 @@ TestSuite::~TestSuite(){
 
 // Fill the new suite with random test cases and evaluate the coverage of all the test cases
 TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* cfg){
-	cout << "here";
 	this->numberOfTestCases = numberOfTestCases;
 	this->numberOfParameters = cfg->getNumberOfParameters();
 	this->numberOfEdges = cfg->getNumberOfEdges();
@@ -51,9 +50,8 @@ TestCase* TestSuite::getTestCase(int index){
 }
 
 void TestSuite::print() {
-	std::cout << "here";
 	for (int i = 0; i < numberOfTestCases; i++) {
-		std::cout << "Test Case #" << i << std::endl;
+		std::cout << std::endl << std::endl << "Test Case #" << i ;
 		testCases[i]->print();
 	}
 }
