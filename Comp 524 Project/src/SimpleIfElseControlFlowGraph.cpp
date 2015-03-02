@@ -40,25 +40,31 @@ void SimpleIfElseControlFlowGraph::block1() {
 
 	if(parameters[0] > 2)
 	{
-		testCase->edgesCovered[SimpleIfElseControlFlowGraph::edges::B1toB2] = true;
-		testCase->predicatesCovered[SimpleIfElseControlFlowGraph::predicates::B1_T] = true;
+		//testCase->edgesCovered[SimpleIfElseControlFlowGraph::edges::B1toB2] = true;
+		testCase->addEdgeCoverage(edges::B1toB2);
+		//testCase->predicatesCovered[SimpleIfElseControlFlowGraph::predicates::B1_T] = true;
+		testCase->addPredicateCoverage(predicates::B1_T);
 		block2();
 	}
 	else
 	{
-		testCase->edgesCovered[SimpleIfElseControlFlowGraph::edges::B1toB3] = true;
-		testCase->predicatesCovered[SimpleIfElseControlFlowGraph::predicates::B1_F] = true;
+		//testCase->edgesCovered[SimpleIfElseControlFlowGraph::edges::B1toB3] = true;
+		testCase->addEdgeCoverage(edges::B1toB3);
+		//testCase->predicatesCovered[SimpleIfElseControlFlowGraph::predicates::B1_F] = true;
+		testCase->addPredicateCoverage(predicates::B1_F);
 		block3();
 	}
 }
 
 void SimpleIfElseControlFlowGraph::block2() {
-	testCase->edgesCovered[SimpleIfElseControlFlowGraph::edges::B2toB4] = true;
+	//testCase->edgesCovered[SimpleIfElseControlFlowGraph::edges::B2toB4] = true;
+	testCase->addEdgeCoverage(edges::B2toB4);
 	block4();
 }
 
 void SimpleIfElseControlFlowGraph::block3() {
-	testCase->edgesCovered[SimpleIfElseControlFlowGraph::edges::B3toB4] = true;
+	//testCase->edgesCovered[SimpleIfElseControlFlowGraph::edges::B3toB4] = true;
+	testCase->addEdgeCoverage(edges::B3toB4);
 	block4();
 }
 
