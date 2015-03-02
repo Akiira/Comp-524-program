@@ -18,7 +18,7 @@ TestSuite::~TestSuite(){
 }
 
 // Fill the new suite with random test cases and evaluate the coverage of all the test cases
-TestSuite::TestSuite(int numberOfTestCases, const ControlFlowGraph* targetCFG){
+TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG){
 	assert(numberOfTestCases > 0);
 
 	this->numberOfTestCases = numberOfTestCases;
