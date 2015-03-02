@@ -15,12 +15,22 @@ public:
 	SimpleIfElseControlFlowGraph();
 	virtual ~SimpleIfElseControlFlowGraph();
 
+	void runTestCase();
+
 private:
-	bool * block1(TestCase testCase);
-	bool * block2(TestCase testCase);
-	bool * block3(TestCase testCase);
-	bool * block4(TestCase testCase);
+	struct edges {
+		enum {B1toB2, B1toB3, B2toB4, B3toB4};
+	};
+	struct predicates {
+		enum { B1_T, B1_F };
+	};
+
+	void block1();
+	void block2();
+	void block3();
+	void block4();
 };
+
 
 #endif /* SIMPLEIFELSECONTROLFLOWGRAPH_H_ */
 
@@ -33,15 +43,19 @@ private:
  * 	   Start
  * 		 |
  * 		 |
- *      x > 2
- *      / \
- *     /   \
- *    /     \
- *  x++      x--
+ *      x > 2 (B1)
+ *     /     \
+ *    /       \
+ *   /         \
+ *  x++ (B2)   x-- (B3)
  *    \      /
  *     \    /
  *      \  /
- *     print x
+ *     print x (B4)
+ *       |
+ *       |
+ *      End
+ *
  *
  */
 

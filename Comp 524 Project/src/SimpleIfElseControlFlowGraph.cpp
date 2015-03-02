@@ -8,50 +8,50 @@
 #include "SimpleIfElseControlFlowGraph.h"
 
 SimpleIfElseControlFlowGraph::SimpleIfElseControlFlowGraph() {
-	// TODO Auto-generated constructor stub
+	NUM_OF_EDGES = 4;
+	NUM_OF_PREDICATES = 2;
 
+	coverage = new bool*[2];
+	coverage[0] = new bool[NUM_OF_EDGES];
+	coverage[1] = new bool[NUM_OF_PREDICATES];
+	testCase = 0;
 }
 
 SimpleIfElseControlFlowGraph::~SimpleIfElseControlFlowGraph() {
-	// TODO Auto-generated destructor stub
+	// Just implicitly call ControlFlowGraph destructor
 }
 
-bool * SimpleIfElseControlFlowGraph::block1(TestCase testCase) {
-	int* parameters = testCase.getInputParameters();
-	bool* coverage;
+void SimpleIfElseControlFlowGraph::runTestCase() {
+	block1();
+}
+void SimpleIfElseControlFlowGraph::block1() {
+	int* parameters = testCase->getInputParameters();
 
 	if(parameters[0] > 2)
-		coverage = block3(testCase);
+	{
+		coverage[0][SimpleIfElseControlFlowGraph::edges::B1toB2] = true;
+		coverage[1][SimpleIfElseControlFlowGraph::predicates::B1_T] = true;
+		block2();
+	}
 	else
-		coverage = block2(testCase);
-
-
-	coverage[0] = true;
-
-	return coverage;
+	{
+		coverage[0][SimpleIfElseControlFlowGraph::edges::B1toB3] = true;
+		coverage[1][SimpleIfElseControlFlowGraph::predicates::B1_F] = true;
+		block3();
+	}
 }
 
-bool * SimpleIfElseControlFlowGraph::block2(TestCase testCase) {
-	bool* coverage = block4(testCase);
-	coverage[1] = true;
-
-	return coverage;
-
+void SimpleIfElseControlFlowGraph::block2() {
+	coverage[0][SimpleIfElseControlFlowGraph::edges::B2toB4] = true;
+	block4();
 }
 
-bool * SimpleIfElseControlFlowGraph::block3(TestCase testCase) {
-	bool* coverage = block4(testCase);
-	coverage[2] = true;
-
-	return coverage;
+void SimpleIfElseControlFlowGraph::block3() {
+	coverage[0][SimpleIfElseControlFlowGraph::edges::B3toB4] = true;
+	block4();
 }
 
-bool * SimpleIfElseControlFlowGraph::block4(TestCase testCase) {
-	bool* coverage = new bool[4];
-	coverage[0] = false;
-	coverage[1] = false;
-	coverage[2] = false;
-	coverage[3] = true;
-	return coverage;
+void SimpleIfElseControlFlowGraph::block4() {
+	return;
 }
 
