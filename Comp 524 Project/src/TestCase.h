@@ -11,9 +11,6 @@
 //Forward declaration
 class ControlFlowGraph;
 
-
-#include "Random.h"
-
 class TestCase
 {
 
@@ -21,7 +18,7 @@ public:
 	virtual ~TestCase();
 
 	TestCase(int numberOfParameters, int numberOfEdges, int numberOfPredicates);
-	TestCase(const ControlFlowGraph& cfg);
+	TestCase(ControlFlowGraph& cfg);
 
 
 	bool* getEdgesCovered();
