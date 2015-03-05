@@ -21,7 +21,7 @@ Population::Population(int popSize, ControlFlowGraph& targetCFG){
 }
 
 
-void Population::crossover(Organism* offspring1, Organism* offspring2){
+void Population::crossover(Organism& offspring1, Organism& offspring2, Organism& child1, Organism& child2){
 
 }
 
