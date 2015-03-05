@@ -7,6 +7,7 @@
 
 #include "TestCase.h"
 #include "ControlFlowGraph.h"
+#include "Random.h"
 
 TestCase::~TestCase(){
 
@@ -20,16 +21,23 @@ TestCase::TestCase(int numberOfParameters, int numberOfEdges, int numberOfPredic
 	this->numberOfEdges = numberOfEdges;
 	this->numberOfPredicates = numberOfPredicates;
 
-	edgesCovered =  new bool[numberOfEdges];
-	predicatesCovered = new bool[numberOfPredicates];
-	inputParameters = new int[numberOfParameters];
+	edgesCovered = new bool[numberOfEdges] { };
+	predicatesCovered = new bool[numberOfPredicates] { };
+	inputParameters = new int[numberOfParameters] { };
 
 	generateRandomParameters();
 }
 
-// I couldn't figure out how to get this to work right even with the forward references.
-// It works from the TestSuite though which makes more sense anyway.
-TestCase::TestCase(const ControlFlowGraph& cfg) {
+TestCase::TestCase(ControlFlowGraph& cfg) {
+	numberOfEdges      = cfg.getNumberOfEdges();
+	numberOfParameters = cfg.getNumberOfParameters();
+	numberOfPredicates = cfg.getNumberOfPredicates();
+
+	edgesCovered = new bool[numberOfEdges] { };
+	predicatesCovered = new bool[numberOfPredicates] { };
+	inputParameters = new int[numberOfParameters] { };
+
+	generateRandomParameters();
 }
 
 int* TestCase::getInputParameters(){
