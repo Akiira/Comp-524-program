@@ -6,10 +6,9 @@
 ///////////////////////////////////////////////////////////
 
 #include "Simulation.h"
-#include <cassert>
 
 Simulation::~Simulation(){
-
+	delete population;
 }
 
 Simulation::Simulation(ControlFlowGraph& targetBranchCFG, int populationSize, double mutationProb,
@@ -22,17 +21,10 @@ Simulation::Simulation(ControlFlowGraph& targetBranchCFG, int populationSize, do
 	probabilityForCrossover = crossOverProb;
 	bestOrganismSeen = 0;
 
-	population = new Population(populationSize, targetBranchCFG);
+	population = new Population { populationSize, targetBranchCFG };
 
 	//once the population is initialized each organism needs to be evaluated
 	// once each organism is evaluated we can set bestOrganismSeen
-}
-
-
-int Simulation::evaluateFitness(Organism* organism){
-
-	assert(false);
-	return 0;
 }
 
 
@@ -42,10 +34,39 @@ TestSuite* Simulation::getBestTestSuite(){
 
 
 void Simulation::run(){
-	bool done = false;
+	int i { 0 };
+	Organism child1(*targetCFG), child2(*targetCFG);
 
 	do{
+		auto parent1 = population->select();
+		auto parent2 = population->select();
 
-	}while(!done);
+		population->crossover(*parent1, *parent2, child1, child2);
+
+		child1.mutate(probabilityForMutation);
+		child1.setFitness(*targetCFG);
+		child2.mutate(probabilityForMutation);
+		child2.setFitness(*targetCFG);
+
+		if(child1 <= child2)
+			population->replace(child2);
+		else
+			population->replace(child1);
+
+		i++;
+
+	}while(i < numberOfGenerations);
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
