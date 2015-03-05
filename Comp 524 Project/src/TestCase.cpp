@@ -41,7 +41,6 @@ TestCase::TestCase(ControlFlowGraph& cfg) {
 }
 
 int* TestCase::getInputParameters(){
-
 	return  inputParameters;
 }
 
