@@ -9,6 +9,9 @@
 #include <iostream>
 #include <cassert>
 
+using std::cout;
+using std::endl;
+
 TestSuite::~TestSuite(){
 	delete[] edgesCovered;
 	delete[] predicatesCovered;
