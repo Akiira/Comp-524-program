@@ -28,7 +28,7 @@ public:
 private:
 	Population* population;
 	Organism* bestOrganismSeen;
-	const ControlFlowGraph* targetCFG;
+	ControlFlowGraph* targetCFG;
 
 	int numberOfGenerations;
 	int populationSize;
