@@ -25,6 +25,12 @@ public:
 	void setFitness(ControlFlowGraph& target);
 	int getFitness() const;
 
+	bool operator<=(const Organism& right);
+	bool operator==(const Organism& right);
+	Organism& operator=(const Organism& org);
+
+	friend class Population;
+
 private:
 	TestSuite* chromosome;
 	int fitness;

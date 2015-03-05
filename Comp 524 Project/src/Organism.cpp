@@ -39,3 +39,26 @@ void Organism::setFitness(ControlFlowGraph& target){
 
 	fitness = sum;
 }
+
+bool Organism::operator<=(const Organism& right) { //overloaded operator <=
+	return (fitness <= right.fitness) ? true : false;
+} //operator<=
+
+bool Organism::operator==(const Organism& right) { //overloaded operator ==
+												   //TODO implement function
+	return false;
+	//return (strcmp(chromosome, right.chromosome) == 0)? true : false;
+}	//operator==
+
+Organism& Organism::operator=(const Organism& org) {	//assignment operator
+	//TODO: implement this.
+//	if (this != &org) {
+//		delete[] chromosome;
+//		chromosome = new char[org.length + 1];
+//		assert(chromosome != NULL);
+//		strcpy(chromosome, org.chromosome);
+//		fitness = org.fitness;
+//		length = org.length;
+//	}	//if
+	return *this;
+}//operator=
