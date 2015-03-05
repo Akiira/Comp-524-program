@@ -26,7 +26,7 @@ int Organism::getFitness() const{
 }
 
 
-void Organism::mutate(){
+void Organism::mutate(double mutationProb){
 
 }
 

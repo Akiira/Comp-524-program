@@ -20,7 +20,7 @@ public:
 
 	Organism(ControlFlowGraph& target);
 	TestSuite* getChromosome() const;
-	void mutate();
+	void mutate(double mutationProb);
 
 	void setFitness(ControlFlowGraph& target);
 	int getFitness() const;
