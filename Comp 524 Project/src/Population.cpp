@@ -31,7 +31,7 @@ void Population::initializeStartingPopulation(){
 }
 
 
-void Population::replace(Organism* offspring){
+void Population::replace(Organism& offspring){
 
 }
 

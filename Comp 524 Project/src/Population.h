@@ -19,7 +19,7 @@ public:
 
 	Population(int popSize, ControlFlowGraph& targetCFG);
 	void crossover(Organism& offspring1, Organism& offspring2, Organism& child1, Organism& child2);
-	void replace(Organism* offspring);
+	void replace(Organism& offspring);
 	Organism* select();
 
 private:
