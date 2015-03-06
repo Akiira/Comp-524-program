@@ -8,6 +8,7 @@
 #include "TestSuite.h"
 #include <iostream>
 #include <cassert>
+#include <cstring>
 
 using std::cout;
 using std::endl;
@@ -135,6 +136,32 @@ TestSuite& TestSuite::operator =(const TestSuite& other) {
 		delete[] duplicateEdgesCovered;
 		delete[] duplicatePredicatesCovered;
 
-		TestCase** testCases;
+		for(int i = 0; i < numberOfTestCases; i++){
+			delete testCases[i];
+		}
+		delete[] testCases;
+
+		numberOfTestCases = other.numberOfTestCases;
+		numberOfParameters = other.numberOfParameters;
+		numberOfEdges = other.numberOfEdges;
+		numberOfPredicates = other.numberOfPredicates;
+
+		edgesCovered = new bool[numberOfEdges] { };
+		duplicateEdgesCovered = new int[numberOfEdges] { };
+		predicatesCovered = new bool[numberOfPredicates] { };
+		duplicatePredicatesCovered = new int[numberOfPredicates] { };
+		testCases = new TestCase*[numberOfTestCases] { } ;
+
+		using std::memcpy;
+		memcpy(edgesCovered, other.edgesCovered, sizeof(numberOfEdges * sizeof(bool)));
+		memcpy(duplicateEdgesCovered, other.duplicateEdgesCovered, sizeof(numberOfEdges * sizeof(int)));
+		memcpy(predicatesCovered, other.predicatesCovered, sizeof(numberOfEdges * sizeof(bool)));
+		memcpy(duplicatePredicatesCovered, other.duplicatePredicatesCovered, sizeof(numberOfEdges * sizeof(int)));
+
+		for(int i = 0; i < numberOfTestCases; i++){
+			testCases[i] = new TestCase { *other.testCases[i] };
+		}
 	}
+
+	return *this;
 }
