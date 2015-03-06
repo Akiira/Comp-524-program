@@ -24,6 +24,7 @@ public:
 
 private:
 	Organism** population;
+	int populationSize;
 	int totalFitness;
 
 	void initializeStartingPopulation();

@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////
 
 #include "Population.h"
+#include "Random.h"
 
 Population::~Population(){
 
@@ -14,10 +15,11 @@ Population::~Population(){
 
 Population::Population(int popSize, ControlFlowGraph& targetCFG){
 	population = new Organism*[popSize];
-
+	populationSize = popSize;
 	for(int i = 0; i < popSize; i++){
 		population[i] = new Organism(targetCFG);
 	}
+	totalFitness = 0;
 }
 
 
@@ -35,10 +37,9 @@ void Population::replace(Organism& offspring){
 
 }
 
-
+//TODO implement fitness proportional selection
 Organism* Population::select(){
-
-	return  0;
+	return population[uniformInRange(0, populationSize)];
 }
 
 
