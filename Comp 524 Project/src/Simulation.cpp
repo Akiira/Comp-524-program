@@ -37,9 +37,7 @@ TestSuite* Simulation::getBestTestSuite(){
 void Simulation::run(){
 	int i { 0 };
 
-	// When you create an organism, it wont automatically fill the test suite
-	// the organism will then have methods that all you to build a test suite from
-	// copyed	test cases
+	// Create two shells of organism to use, their chromosomes are not set by this constructor
 	Organism child1(*targetCFG), child2(*targetCFG);
 
 	do{

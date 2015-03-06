@@ -31,6 +31,8 @@ TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG){
 TestSuite::TestSuite(int numberOfTestCases, TestCase** testCasesToCopy, ControlFlowGraph* targetCFG) {
 	initializeMembersAndAllocateMemory(numberOfTestCases, targetCFG);
 	fillTestSuiteWithExistingTestCases(testCasesToCopy);
+	// Still have to re-evaluate the test suite but all the test cases will be the same
+	// TODO rethink this because there's stil; mutation to worry about
 	calculateTestSuiteCoverage();
 }
 
