@@ -14,6 +14,29 @@
 
 class TestSuite
 {
+private:
+	int numberOfTestCases;
+
+	int numberOfParameters;
+	int numberOfEdges;
+	int numberOfPredicates;
+
+	bool* edgesCovered;
+	bool* predicatesCovered;
+	int* duplicateEdgesCovered;
+	int* duplicatePredicatesCovered;
+
+	TestCase** testCases;
+
+	// Adding this so it can be passed to print, Also will probably be needed in other
+	//	methods later.
+	ControlFlowGraph* targetCFG;
+
+	// SHared code between constructors
+	void initializeMembersAndAllocateMemory(int numberOfTestCases, ControlFlowGraph* targetCFG);
+
+	void fillTestSuiteWithRandomTestCases();
+	void fillTestSuiteWithExistingTestCases(TestCase** testCasesToCopy);
 
 public:
 	virtual ~TestSuite();
@@ -23,6 +46,11 @@ public:
 
 	TestCase** getAllTestCases() const;
 	TestCase* getTestCase(int index);
+	void calculateTestSuiteCoverage();
+
+	void print();
+	void printSimple();
+	TestSuite& operator=(const TestSuite& org);
 
 	int* getDuplicateEdgesCovered() const {
 		return duplicateEdgesCovered;
@@ -55,35 +83,5 @@ public:
 	void setNumberOfTestCases(int numberOfTestCases) {
 		this->numberOfTestCases = numberOfTestCases;
 	}
-
-	void calculateTestSuiteCoverage();
-
-	void print();
-	void printSimple();
-
-private:
-	int numberOfTestCases;
-
-	int numberOfParameters;
-	int numberOfEdges;
-	int numberOfPredicates;
-
-	bool* edgesCovered;
-	bool* predicatesCovered;
-	int* duplicateEdgesCovered;
-	int* duplicatePredicatesCovered;
-
-	TestCase** testCases;
-
-	// Adding this so it can be passed to print, Also will probably be needed in other
-	//	methods later.
-	ControlFlowGraph* targetCFG;
-
-	// SHared code between constructors
-	void initializeMembersAndAllocateMemory(int numberOfTestCases, ControlFlowGraph* targetCFG);
-
-	void fillTestSuiteWithRandomTestCases();
-	void fillTestSuiteWithExistingTestCases(TestCase** testCasesToCopy);
-
 };
 #endif // !defined(EA_04823F4F_8B3F_4bb8_9DBC_42A1717DC256__INCLUDED_)
