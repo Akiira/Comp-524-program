@@ -8,6 +8,7 @@
 #include "TestSuite.h"
 #include <iostream>
 #include <cassert>
+#include <cstring>
 
 using std::cout;
 using std::endl;
@@ -17,6 +18,9 @@ TestSuite::~TestSuite(){
 	delete[] predicatesCovered;
 	delete[] duplicateEdgesCovered;
 	delete[] duplicatePredicatesCovered;
+	for(int i = 0; i < numberOfTestCases; i++){
+		delete testCases[i];
+	}
 	delete[] testCases;
 }
 
@@ -47,12 +51,13 @@ void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, Contro
 	this->numberOfPredicates = targetCFG->getNumberOfPredicates();
 
 	//TODO Why have both boolean and int arrays?
+	//TODO I agree we can just get by with the ints. I will remove the bools when i get a chance.
 	edgesCovered = new bool[numberOfEdges];
-	duplicateEdgesCovered = new int[numberOfEdges];
+	duplicateEdgesCovered = new int[numberOfEdges] { };
 	predicatesCovered = new bool[numberOfPredicates];
-	duplicatePredicatesCovered = new int[numberOfPredicates];
+	duplicatePredicatesCovered = new int[numberOfPredicates] { };
 
-	testCases = new TestCase*[numberOfTestCases];
+	testCases = new TestCase*[numberOfTestCases] { };
 }
 
 void TestSuite::fillTestSuiteWithRandomTestCases() {
@@ -121,3 +126,39 @@ void TestSuite::calculateTestSuiteCoverage() {
 
 }
 
+TestSuite& TestSuite::operator =(const TestSuite& other) {
+	if(this != &other){
+		delete[] edgesCovered;
+		delete[] predicatesCovered;
+		delete[] duplicateEdgesCovered;
+		delete[] duplicatePredicatesCovered;
+
+		for(int i = 0; i < numberOfTestCases; i++){
+			delete testCases[i];
+		}
+		delete[] testCases;
+
+		numberOfTestCases = other.numberOfTestCases;
+		numberOfParameters = other.numberOfParameters;
+		numberOfEdges = other.numberOfEdges;
+		numberOfPredicates = other.numberOfPredicates;
+
+		edgesCovered = new bool[numberOfEdges] { };
+		duplicateEdgesCovered = new int[numberOfEdges] { };
+		predicatesCovered = new bool[numberOfPredicates] { };
+		duplicatePredicatesCovered = new int[numberOfPredicates] { };
+		testCases = new TestCase*[numberOfTestCases] { } ;
+
+		using std::memcpy;
+		memcpy(edgesCovered, other.edgesCovered, sizeof(numberOfEdges * sizeof(bool)));
+		memcpy(duplicateEdgesCovered, other.duplicateEdgesCovered, sizeof(numberOfEdges * sizeof(int)));
+		memcpy(predicatesCovered, other.predicatesCovered, sizeof(numberOfEdges * sizeof(bool)));
+		memcpy(duplicatePredicatesCovered, other.duplicatePredicatesCovered, sizeof(numberOfEdges * sizeof(int)));
+
+		for(int i = 0; i < numberOfTestCases; i++){
+			testCases[i] = new TestCase { *other.testCases[i] };
+		}
+	}
+
+	return *this;
+}

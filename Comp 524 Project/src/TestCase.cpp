@@ -9,8 +9,9 @@
 #include "ControlFlowGraph.h"
 #include "Random.h"
 
-#include <string.h>
+#include <string>
 #include <cassert>
+#include <cstring>
 
 TestCase::~TestCase(){
 
@@ -46,6 +47,7 @@ TestCase::TestCase(ControlFlowGraph& cfg) {
 // Copy constructor
 //TODO Test that I did memcpy right
 TestCase::TestCase(const TestCase& that) {
+	cout << "\tInCopyConstructor\n";
 	numberOfEdges = that.numberOfEdges;
 	numberOfParameters = that.numberOfParameters;
 	numberOfPredicates = that.numberOfPredicates;
@@ -132,4 +134,26 @@ void TestCase::setInputParameters(int newValues[]) {
 void TestCase::setInputParameterAtIndex(int index, int newValue) {
 	assert(index >= 0 && index < numberOfParameters);
 	inputParameters[index] = newValue;
+}
+
+TestCase& TestCase::operator =(const TestCase& org) {
+	if(this != &org){
+		delete[] inputParameters;
+		delete[] edgesCovered;
+		delete[] predicatesCovered;
+
+		numberOfEdges = org.numberOfEdges;
+		numberOfParameters = org.numberOfParameters;
+		numberOfPredicates = org.numberOfPredicates;
+
+		edgesCovered = new bool[numberOfEdges] { };
+		inputParameters = new int[numberOfParameters] { };
+		predicatesCovered = new bool[numberOfPredicates] { };
+
+		using std::memcpy;
+		memcpy(edgesCovered, org.edgesCovered, sizeof(org.numberOfEdges * sizeof(bool)));
+		memcpy(inputParameters, org.inputParameters, sizeof(org.numberOfParameters * 4));
+		memcpy(predicatesCovered, org.predicatesCovered, sizeof(org.numberOfPredicates * sizeof(bool)));
+	}
+	return *this;
 }
