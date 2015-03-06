@@ -9,6 +9,9 @@
 #include "ControlFlowGraph.h"
 #include "Random.h"
 
+#include <string.h>
+#include <cassert>
+
 TestCase::~TestCase(){
 
 	delete[] edgesCovered;
@@ -40,19 +43,19 @@ TestCase::TestCase(ControlFlowGraph& cfg) {
 	generateRandomParameters();
 }
 
-int* TestCase::getInputParameters(){
-	return  inputParameters;
-}
+// Copy constructor
+//TODO Test that I did memcpy right
+TestCase::TestCase(const TestCase& that) {
+	numberOfEdges = that.numberOfEdges;
+	numberOfParameters = that.numberOfParameters;
+	numberOfPredicates = that.numberOfPredicates;
 
-void TestCase::setInputParameters(int newValues[]) {
-	for(int i = 0; i < numberOfParameters; i++)
-	{
-		inputParameters[i] = newValues[i];
-	}
-}
-
-void TestCase::setInputParameterAtIndex(int index, int newValue) {
-	inputParameters[index] = newValue;
+	edgesCovered = new bool[numberOfEdges] { };
+	memcpy(edgesCovered, that.edgesCovered, sizeof *edgesCovered);
+	predicatesCovered = new bool[numberOfPredicates] { };
+	memcpy(predicatesCovered, that.predicatesCovered, sizeof *predicatesCovered);
+	inputParameters = new int[numberOfParameters] { };
+	memcpy(inputParameters, that.inputParameters, sizeof *inputParameters);
 }
 
 void TestCase::generateRandomParameters() {
@@ -79,8 +82,6 @@ void TestCase::print(ControlFlowGraph* cfg) {
 	cfg->printTestCaseCoverage(this);
 }
 
-
-
 bool* TestCase::getEdgesCovered(){
 	return  edgesCovered;
 }
@@ -89,10 +90,31 @@ bool* TestCase::getPredicatesCovered(){
 	return  predicatesCovered;
 }
 
+int* TestCase::getInputParameters(){
+	return  inputParameters;
+}
+
+int TestCase::getInputParameterAtIndex(int index) {
+	assert(index >= 0 && index < numberOfParameters);
+	return inputParameters[index];
+}
+
 void TestCase::addEdgeCoverage(int edge) {
 	edgesCovered[edge] = true;
 }
 
 void TestCase::addPredicateCoverage(int predicate) {
 	predicatesCovered[predicate] = true;
+}
+
+void TestCase::setInputParameters(int newValues[]) {
+	for(int i = 0; i < numberOfParameters; i++)
+	{
+		inputParameters[i] = newValues[i];
+	}
+}
+
+void TestCase::setInputParameterAtIndex(int index, int newValue) {
+	assert(index >= 0 && index < numberOfParameters);
+	inputParameters[index] = newValue;
 }

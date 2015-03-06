@@ -64,7 +64,6 @@ void TestSuite::fillTestSuiteWithExistingTestCases(TestCase** testCasesToCopy) {
 	assert(testCases != 0);
 	for(int i = 0; i < numberOfTestCases; i++){
 		// Call copy constructor to perform deep copy of the test cases one by one.
-		//TODO Implement TestCase copy constructor.
 		testCases[i] = new TestCase(*testCasesToCopy[i]);
 
 		// Don't need to setCoverage again because test case will have already been evaluated

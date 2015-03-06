@@ -19,19 +19,19 @@ public:
 
 	TestCase(int numberOfParameters, int numberOfEdges, int numberOfPredicates);
 	TestCase(ControlFlowGraph& cfg);
+	// Copy constructor
+	TestCase(const TestCase& that);
 
 
 	bool* getEdgesCovered();
 	bool* getPredicatesCovered();
-
-
-
-
 	int* getInputParameters();
-	void setInputParameters(int[]);
-	void setInputParameterAtIndex(int index, int newValue);
+	int getInputParameterAtIndex(int index);
+
 	void addEdgeCoverage(int edge);
 	void addPredicateCoverage(int predicate);
+	void setInputParameters(int[]);
+	void setInputParameterAtIndex(int index, int newValue);
 
 	void clearCoverage();
 	void print(ControlFlowGraph* cfg);
