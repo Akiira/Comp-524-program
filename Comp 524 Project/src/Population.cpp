@@ -25,8 +25,8 @@ Population::Population(int popSize, ControlFlowGraph& targetCFG){
 
 
 void Population::crossover(const Organism& parent1, const Organism& parent2, Organism& offspring1, Organism& offspring2, int numberOfCutPoints) {
-	const TestSuite& parent1Chromosome = *parent1.getChromosome();
-	const TestSuite& parent2Chromosome = *parent2.getChromosome();
+	TestSuite& parent1Chromosome = *parent1.getChromosome();
+	TestSuite& parent2Chromosome = *parent2.getChromosome();
 
 	int parent1NumberOfTestCases = parent1Chromosome.getNumberOfTestCases();
 	int parent2NumberOfTestCases = parent2Chromosome.getNumberOfTestCases();
@@ -49,11 +49,11 @@ void Population::crossover(const Organism& parent1, const Organism& parent2, Org
 
 	// Use parent2NumberOfTestCases as the upperBound of cutpoints since parent2 must be <= parent1
 	int* cutPoints = selectCutPoints(numberOfCutPoints, parent2NumberOfTestCases);
-	bool alternate = true;
 
 	TestCase** offspring1TestCases = new TestCase*[parent1NumberOfTestCases];
 	TestCase** offspring2TestCases = new TestCase*[parent2NumberOfTestCases];
 
+	bool alternate = true;
 	int current = 0;  //the overall finger through all chromosomes (parents & offspring)
 	for (int i = 0; i < numberOfCutPoints; i++){
 		if (alternate){
@@ -87,13 +87,26 @@ void Population::crossover(const Organism& parent1, const Organism& parent2, Org
 	  }//for
 	}//else
 
-	// Now fill in remaining testcases of offspring1 from parent1 (if parent1 had more than parent2)
+	// Now fill in remaining test cases of offspring1 from parent1 (if parent1 had more than parent2)
 	for (int j = parent2NumberOfTestCases; j < parent1NumberOfTestCases; j++) {
 		 offspring1TestCases[j] = parent1TestCases[j];
 	}
 
+	// Perform a deep copy of the test cases so that the parent and offspring don't reference the same
+	//	objects.
+	for (int i = 0; i < parent1NumberOfTestCases; i++) {
+		offspring1TestCases[i] = new TestCase(*offspring1TestCases[i]);
+	}
+
+	for (int i = 0; i < parent2NumberOfTestCases; i++) {
+		offspring2TestCases[i] = new TestCase(*offspring2TestCases[i]);
+	}
+
+	// Set the chromosome of offspring1 and offspring2 to be a new TestSuite instance made up of the
+	//	crossed over test case arrays.
 	offspring1.initializeChromosomeFromTestCases(parent1NumberOfTestCases, offspring1TestCases);
-	offspring2.initializeChromosomeFromTestCases(parent1NumberOfTestCases, offspring1TestCases);
+	offspring2.initializeChromosomeFromTestCases(parent2NumberOfTestCases, offspring2TestCases);
+
 }
 
 int*  Population::selectCutPoints(int numCutPoints, int upperBound) {
@@ -127,7 +140,7 @@ void Population::replace(Organism& offspring){
 
 //TODO implement fitness proportional selection
 Organism* Population::select(){
-	return population[uniformInRange(0, populationSize)];
+	return population[uniformInRange(0, populationSize-1)];
 }
 
 

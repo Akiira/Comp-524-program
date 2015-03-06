@@ -27,12 +27,14 @@ TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG){
 	calculateTestSuiteCoverage();
 }
 
-// Create a new suite out of existing testCases, need to perform deep copy on the testCases array
-TestSuite::TestSuite(int numberOfTestCases, TestCase** testCasesToCopy, ControlFlowGraph* targetCFG) {
+/** Create a new suite out of existing testCases
+ * 	IMPORTANT: No copying is done here, just straight assignment of the pointer so ensure a deep copy was done
+ * 	on them before calling this, should only be called from the crossover operator
+ * 	(or maybe mutation or simulation in the future) where this copying is done.
+ */
+TestSuite::TestSuite(int numberOfTestCases, TestCase** testCases, ControlFlowGraph* targetCFG) {
 	initializeMembersAndAllocateMemory(numberOfTestCases, targetCFG);
-	fillTestSuiteWithExistingTestCases(testCasesToCopy);
-	// Still have to re-evaluate the test suite but all the test cases will be the same
-	// TODO rethink this because there's stil; mutation to worry about
+	fillTestSuiteWithExistingTestCases(testCases);
 	calculateTestSuiteCoverage();
 }
 
@@ -62,15 +64,9 @@ void TestSuite::fillTestSuiteWithRandomTestCases() {
 	}
 }
 
-void TestSuite::fillTestSuiteWithExistingTestCases(TestCase** testCasesToCopy) {
+void TestSuite::fillTestSuiteWithExistingTestCases(TestCase** testCases) {
 	assert(testCases != 0);
-	for(int i = 0; i < numberOfTestCases; i++){
-		// Call copy constructor to perform deep copy of the test cases one by one.
-		testCases[i] = new TestCase(*testCasesToCopy[i]);
-
-		// Don't need to setCoverage again because test case will have already been evaluated
-		//targetCFG->setCoverageOfTestCase(testCases[i]);
-	}
+	this->testCases = testCases;
 }
 
 TestCase** TestSuite::getAllTestCases() const{

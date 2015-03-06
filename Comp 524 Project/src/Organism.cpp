@@ -25,8 +25,12 @@ Organism::Organism(ControlFlowGraph& target) {
 	chromosome = 0;
 }
 
-// Will take an array of pointers to test cases. And call the version of TestSuite constructor
-//	that performs a deep copy on them to create a new TestSuite object. Necessary for crossover
+/**
+ * IMPORTANT: Perform deep copy on the testCases before calling this.
+ * Takes an array of pointers to test cases which will ultimately be directly assigned to the testCases array
+ * of a new TestSuite instance (that will become the chromosome of this Organism)
+ * Necessary for crossover
+ */
 void Organism::initializeChromosomeFromTestCases(int numberOfTestCases, TestCase** testCases) {
 	chromosome = new TestSuite(numberOfTestCases, testCases, targetCFG);
 	initialized = true;

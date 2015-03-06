@@ -49,6 +49,10 @@ void Simulation::run(){
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 		cout << "Generation # " << i << endl;
+		cout << "Parents" << endl;
+		parent1->print();
+		parent2->print();
+		cout << "Children" << endl;
 		child1.print();
 		child2.print();
 

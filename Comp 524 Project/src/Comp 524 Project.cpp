@@ -52,7 +52,7 @@ int main() {
 	//Simulation::Simulation(ControlFlowGraph& targetCFG, int populationSize, int numberOfCutPoints, double mutationProb,
 	//		double crossOverProb, int numberOfGenerations){
 	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
-	Simulation* s = new Simulation(*testCFG, 10, 3, 1, 1, 10);
+	Simulation* s = new Simulation(*testCFG, 10, 2, 1, 1, 10);
 	s->run();
 	return 0;
 }
