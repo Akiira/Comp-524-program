@@ -49,12 +49,13 @@ void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, Contro
 	this->numberOfPredicates = targetCFG->getNumberOfPredicates();
 
 	//TODO Why have both boolean and int arrays?
+	//TODO I agree we can just get by with the ints. I will remove the bools when i get a chance.
 	edgesCovered = new bool[numberOfEdges];
-	duplicateEdgesCovered = new int[numberOfEdges];
+	duplicateEdgesCovered = new int[numberOfEdges] { };
 	predicatesCovered = new bool[numberOfPredicates];
-	duplicatePredicatesCovered = new int[numberOfPredicates];
+	duplicatePredicatesCovered = new int[numberOfPredicates] { };
 
-	testCases = new TestCase*[numberOfTestCases];
+	testCases = new TestCase*[numberOfTestCases] { };
 }
 
 void TestSuite::fillTestSuiteWithRandomTestCases() {
