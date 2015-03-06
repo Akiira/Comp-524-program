@@ -6,6 +6,10 @@
 #include "SimpleIfElseControlFlowGraph.h"
 #include "Simulation.h"
 
+#include <chrono>
+#include <ctime>
+
+
 using namespace std;
 
 void simpleIfElseControlFlowGraphTest_testSuite_version() {
@@ -44,16 +48,45 @@ void hiLoControlFlowGraphTest_testSuite_version() {
 	testSuite->print();
 }
 
+void hiLoSimulationTest() {
+	cout << "HiLo Simulation" << endl;
+	ControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
+	Simulation* hiLoSim = new Simulation(*hiLoCFG, 1000, 1000, 2, 1, 1, 100);
+	hiLoSim->run();
+}
+
+void simpleIfElseSimulationTest() {
+	//Simulation::Simulation(ControlFlowGraph& targetCFG, int populationSize, int initialTestSuiteSize,
+	//		int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations)
+
+	ControlFlowGraph* simpleIfElseCFG = new SimpleIfElseControlFlowGraph { };
+	Simulation* simpleIfElseSim = new Simulation(*simpleIfElseCFG, 10, 100, 2, 1, 1, 10);
+	simpleIfElseSim->run();
+}
+
 int main() {
 	//simpleIfElseControlFlowGraphTest_testCase_version();
 	//simpleIfElseControlFlowGraphTest_testSuite_version();
 	//hiLoControlFlowGraphTest_testSuite_version();
 
-	//Simulation::Simulation(ControlFlowGraph& targetCFG, int populationSize, int numberOfCutPoints, double mutationProb,
-	//		double crossOverProb, int numberOfGenerations){
-	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
-	Simulation* s = new Simulation(*testCFG, 10, 2, 1, 1, 10);
-	s->run();
+    std::chrono::time_point<std::chrono::system_clock> start, end;
+    start = std::chrono::system_clock::now();
+
+    hiLoSimulationTest();
+
+    end = std::chrono::system_clock::now();
+
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
+    std::cout << "finished computation at " << std::ctime(&end_time)
+              << "elapsed time: " << elapsed_seconds.count() << "s\n";
+
+
+
+
+
+
 	return 0;
 }
 
