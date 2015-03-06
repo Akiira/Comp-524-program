@@ -36,6 +36,8 @@ public:
 	void clearCoverage();
 	void print(ControlFlowGraph* cfg);
 
+	TestCase& operator=(const TestCase& org);
+
 private:
 	int numberOfParameters;
 	int numberOfEdges;
