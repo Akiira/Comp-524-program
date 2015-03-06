@@ -31,8 +31,8 @@ void Population::crossover(const Organism& parent1, const Organism& parent2, Org
 	int parent1NumberOfTestCases = parent1Chromosome.getNumberOfTestCases();
 	int parent2NumberOfTestCases = parent2Chromosome.getNumberOfTestCases();
 
-	TestCase** parent1TestCases;
-	TestCase** parent2TestCases;
+	TestCase**parent1TestCases { };
+	TestCase**parent2TestCases { };
 
 	// Swap things so that parent1TestCases refers to the array with the most test cases
 	if (parent1NumberOfTestCases >= parent2NumberOfTestCases) {
