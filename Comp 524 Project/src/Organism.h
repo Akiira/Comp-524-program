@@ -21,6 +21,7 @@ public:
 	Organism(ControlFlowGraph& target);
 
 	void initializeRandomChromosome();
+	void initializeChromosomeFromTestCases(int numberOfTestCases, TestCase** testCases);
 
 	TestSuite* getChromosome() const;
 	void mutate(double mutationProb);

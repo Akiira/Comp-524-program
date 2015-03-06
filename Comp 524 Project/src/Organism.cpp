@@ -12,19 +12,27 @@ Organism::~Organism(){
 	delete chromosome;
 }
 
+// Note have to explicitly call a initializeChromosome method to create the chromosome.
+//	and have to explicitly call setFitness to evaluate the fitness of the chromosome.
 Organism::Organism(ControlFlowGraph& target) {
 	targetCFG = &target;
 	initialized = false;
 	evaluated = false;
 	fitness = 0;
 	chromosome = 0;
-	//chromosome = new TestSuite(666, &target); //TODO: remove hardcoded value
-	//setFitness(target);
+}
+
+// Will take an array of pointers to test cases. Will perform
+//	a deep copy on them then create a new TestSuite object out of them.
+// 	Will be used during crossover
+void Organism::initializeChromosomeFromTestCases(int numberOfTestCases, TestCase** testCases) {
+	chromosome = new TestSuite(numberOfTestCases, testCases, targetCFG);
+	initialized = true;
 }
 
 void Organism::initializeRandomChromosome() {
 	chromosome = new TestSuite(10, targetCFG);
-
+	initialized = true;
 }
 
 TestSuite* Organism::getChromosome() const{
