@@ -18,7 +18,9 @@ class TestSuite
 public:
 	virtual ~TestSuite();
 
-	TestSuite(int numberOfTestCases, ControlFlowGraph* );
+	TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG);
+	TestSuite(int numberOfTestCases, TestCase** testCasesToCopy, ControlFlowGraph* targetCFG);
+
 	TestCase** getAllTestCases();
 	TestCase* getTestCase(int index);
 
@@ -75,6 +77,12 @@ private:
 	// Adding this so it can be passed to print, Also will probably be needed in other
 	//	methods later.
 	ControlFlowGraph* targetCFG;
+
+	// SHared code between constructors
+	void initializeMembersAndAllocateMemory(int numberOfTestCases, ControlFlowGraph* targetCFG);
+
+	void fillTestSuiteWithRandomTestCases();
+	void fillTestSuiteWithExistingTestCases(TestCase** testCasesToCopy);
 
 };
 #endif // !defined(EA_04823F4F_8B3F_4bb8_9DBC_42A1717DC256__INCLUDED_)

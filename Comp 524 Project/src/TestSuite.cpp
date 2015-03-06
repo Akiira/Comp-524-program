@@ -22,33 +22,55 @@ TestSuite::~TestSuite(){
 
 // Fill the new suite with random test cases and evaluate the coverage of all the test cases
 TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG){
+	initializeMembersAndAllocateMemory(numberOfTestCases, targetCFG);
+	fillTestSuiteWithRandomTestCases();
+	calculateTestSuiteCoverage();
+}
+
+// Create a new suite out of existing testCases, need to perform deep copy on the testCases array
+TestSuite::TestSuite(int numberOfTestCases, TestCase** testCasesToCopy, ControlFlowGraph* targetCFG) {
+	initializeMembersAndAllocateMemory(numberOfTestCases, targetCFG);
+	fillTestSuiteWithExistingTestCases(testCasesToCopy);
+	calculateTestSuiteCoverage();
+}
+
+void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, ControlFlowGraph* targetCFG) {
 	assert(numberOfTestCases > 0);
-
 	this->targetCFG = targetCFG;
-
 	this->numberOfTestCases = numberOfTestCases;
 	this->numberOfParameters = targetCFG->getNumberOfParameters();
 	this->numberOfEdges = targetCFG->getNumberOfEdges();
 	this->numberOfPredicates = targetCFG->getNumberOfPredicates();
 
-
+	//TODO Why have both boolean and int arrays?
 	edgesCovered = new bool[numberOfEdges];
 	duplicateEdgesCovered = new int[numberOfEdges];
-
 	predicatesCovered = new bool[numberOfPredicates];
 	duplicatePredicatesCovered = new int[numberOfPredicates];
 
 	testCases = new TestCase*[numberOfTestCases];
+}
 
+void TestSuite::fillTestSuiteWithRandomTestCases() {
+	assert(testCases != 0);
 	for(int i = 0; i < numberOfTestCases; i++){
 		// Generates random test cases and stores them
 		testCases[i] = new TestCase(numberOfParameters, numberOfEdges, numberOfPredicates);
 		targetCFG->setCoverageOfTestCase(testCases[i]);
 	}
-
-	calculateTestSuiteCoverage();
 }
 
+void TestSuite::fillTestSuiteWithExistingTestCases(TestCase** testCasesToCopy) {
+	assert(testCases != 0);
+	for(int i = 0; i < numberOfTestCases; i++){
+		// Call copy constructor to perform deep copy of the test cases one by one.
+		//TODO Implement TestCase copy constructor.
+		testCases[i] = new TestCase(*testCasesToCopy[i]);
+
+		// Don't need to setCoverage again because test case will have already been evaluated
+		//targetCFG->setCoverageOfTestCase(testCases[i]);
+	}
+}
 
 TestCase** TestSuite::getAllTestCases(){
 	return  testCases;
