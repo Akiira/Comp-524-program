@@ -136,9 +136,9 @@ TestCase& TestCase::operator =(const TestCase& org) {
 		predicatesCovered = new bool[numberOfPredicates] { };
 
 		using std::memcpy;
-		memcpy(edgesCovered, org.edgesCovered, sizeof(org.numberOfEdges));
+		memcpy(edgesCovered, org.edgesCovered, sizeof(org.numberOfEdges * sizeof(bool)));
 		memcpy(inputParameters, org.inputParameters, sizeof(org.numberOfParameters * 4));
-		memcpy(predicatesCovered, org.predicatesCovered, sizeof(org.numberOfPredicates));
+		memcpy(predicatesCovered, org.predicatesCovered, sizeof(org.numberOfPredicates * sizeof(bool)));
 	}
 	return *this;
 }
