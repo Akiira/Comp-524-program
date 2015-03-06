@@ -44,7 +44,7 @@ void Simulation::run(){
 		auto parent1 = population->select();
 		auto parent2 = population->select();
 
-		population->crossover(*parent1, *parent2, child1, child2);
+		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 
 		child1.mutate(probabilityForMutation);
 		child1.setFitness();
