@@ -36,8 +36,8 @@ void Organism::initializeChromosomeFromTestCases(int numberOfTestCases, TestCase
 	initialized = true;
 }
 
-void Organism::initializeRandomChromosome() {
-	chromosome = new TestSuite(10, targetCFG);
+void Organism::initializeRandomChromosome(int numberOfTestCases) {
+	chromosome = new TestSuite(numberOfTestCases, targetCFG);
 	initialized = true;
 }
 

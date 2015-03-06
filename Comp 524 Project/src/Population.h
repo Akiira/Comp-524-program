@@ -17,7 +17,7 @@ class Population
 public:
 	virtual ~Population();
 
-	Population(int popSize, ControlFlowGraph& targetCFG);
+	Population(int popSize, int initialTestSuiteSize, ControlFlowGraph& targetCFG);
 	void crossover(const Organism& parent1, const Organism& parent2, Organism& offspring1, Organism& offspring2, int numberOfCutPoints);
 	void replace(Organism& offspring);
 	Organism* select();
@@ -26,6 +26,7 @@ private:
 	Organism** population;
 	int populationSize;
 	int totalFitness;
+	int initialTestSuiteSize;
 
 
 	void initializeStartingPopulation();

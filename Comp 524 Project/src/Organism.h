@@ -20,7 +20,7 @@ public:
 
 	Organism(ControlFlowGraph& target);
 
-	void initializeRandomChromosome();
+	void initializeRandomChromosome(int numberOfTestCases);
 	void initializeChromosomeFromTestCases(int numberOfTestCases, TestCase** testCases);
 
 	TestSuite* getChromosome() const;
@@ -44,6 +44,5 @@ private:
 	// Evaluated means it's fitness is up to date
 	bool initialized, evaluated;
 	int fitness;
-
 };
 #endif // !defined(EA_FD308F31_83AB_4efc_8F0F_05730A9FF804__INCLUDED_)

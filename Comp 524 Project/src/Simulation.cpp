@@ -14,18 +14,19 @@ Simulation::~Simulation(){
 	delete population;
 }
 
-Simulation::Simulation(ControlFlowGraph& targetCFG, int populationSize, int numberOfCutPoints, double mutationProb,
-		double crossOverProb, int numberOfGenerations){
+Simulation::Simulation(ControlFlowGraph& targetCFG, int populationSize, int initialTestSuiteSize,
+		int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations){
 
 	this->targetCFG = &targetCFG;
 	this->populationSize = populationSize;
+	this->initialTestSuiteSize = initialTestSuiteSize;
 	this->numberOfGenerations = numberOfGenerations;
 	this->numberOfCutPoints = numberOfCutPoints;
 	probabilityForMutation = mutationProb;
 	probabilityForCrossover = crossOverProb;
 	bestOrganismSeen = 0;
 
-	population = new Population { populationSize, targetCFG };
+	population = new Population { populationSize, initialTestSuiteSize, targetCFG };
 
 	//once the population is initialized each organism needs to be evaluated
 	// once each organism is evaluated we can set bestOrganismSeen

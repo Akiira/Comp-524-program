@@ -18,8 +18,8 @@ class Simulation
 public:
 	virtual ~Simulation();
 
-	Simulation(ControlFlowGraph& targetCFG, int populationSize, int numberOfCutPoints, double mutationProb,
-			double crossOverProb, int numberOfGenerations);
+	Simulation(ControlFlowGraph& targetCFG, int populationSize, int initalTestSuiteSize,
+			int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations);
 
 	TestSuite* getBestTestSuite();
 	void run();
@@ -31,6 +31,7 @@ private:
 
 	int numberOfGenerations;
 	int populationSize;
+	int initialTestSuiteSize;
 	int numberOfCutPoints;
 	double probabilityForCrossover;
 	double probabilityForMutation;

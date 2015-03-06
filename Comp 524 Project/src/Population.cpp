@@ -12,13 +12,16 @@ Population::~Population(){
 
 }
 
-
-Population::Population(int popSize, ControlFlowGraph& targetCFG){
+/**
+ * Creates a new population of random test suites
+ */
+Population::Population(int popSize, int initialTestSuiteSize, ControlFlowGraph& targetCFG){
 	population = new Organism*[popSize];
 	populationSize = popSize;
+	this->initialTestSuiteSize = initialTestSuiteSize;
 	for(int i = 0; i < popSize; i++){
 		population[i] = new Organism(targetCFG);
-		population[i]->initializeRandomChromosome();
+		population[i]->initializeRandomChromosome(initialTestSuiteSize);
 	}
 	totalFitness = 0;
 }
