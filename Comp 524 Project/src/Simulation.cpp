@@ -36,6 +36,10 @@ TestSuite* Simulation::getBestTestSuite(){
 
 void Simulation::run(){
 	int i { 0 };
+
+	// When you create an organism, it wont automatically fill the test suite
+	// the organism will then have methods that all you to build a test suite from
+	// copyed	test cases
 	Organism child1(*targetCFG), child2(*targetCFG);
 
 	do{
@@ -45,9 +49,9 @@ void Simulation::run(){
 		population->crossover(*parent1, *parent2, child1, child2);
 
 		child1.mutate(probabilityForMutation);
-		child1.setFitness(*targetCFG);
+		child1.setFitness();
 		child2.mutate(probabilityForMutation);
-		child2.setFitness(*targetCFG);
+		child2.setFitness();
 
 		if(child1 <= child2)
 			population->replace(child2);

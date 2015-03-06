@@ -13,8 +13,18 @@ Organism::~Organism(){
 }
 
 Organism::Organism(ControlFlowGraph& target) {
-	chromosome = new TestSuite(666, &target); //TODO: remove hardcoded value
-	setFitness(target);
+	targetCFG = &target;
+	initialized = false;
+	evaluated = false;
+	fitness = 0;
+	chromosome = 0;
+	//chromosome = new TestSuite(666, &target); //TODO: remove hardcoded value
+	//setFitness(target);
+}
+
+void Organism::initializeRandomChromosome() {
+	chromosome = new TestSuite(10, targetCFG);
+
 }
 
 TestSuite* Organism::getChromosome() const{
@@ -30,8 +40,7 @@ void Organism::mutate(double mutationProb){
 
 }
 
-
-void Organism::setFitness(ControlFlowGraph& target){
+void Organism::setFitness(){
 	int sum = 0;
 	for(int i = 0; i < chromosome->getNumberOfTestCases(); i++){
 

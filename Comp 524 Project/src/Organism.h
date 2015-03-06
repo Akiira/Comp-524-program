@@ -19,10 +19,13 @@ public:
 	virtual ~Organism();
 
 	Organism(ControlFlowGraph& target);
+
+	void initializeRandomChromosome();
+
 	TestSuite* getChromosome() const;
 	void mutate(double mutationProb);
 
-	void setFitness(ControlFlowGraph& target);
+	void setFitness();
 	int getFitness() const;
 
 	bool operator<=(const Organism& right);
@@ -33,6 +36,10 @@ public:
 
 private:
 	TestSuite* chromosome;
+	ControlFlowGraph* targetCFG;
+	// Initialized means it has a full test suite
+	// Evaluated means it's fitness is up to date
+	bool initialized, evaluated;
 	int fitness;
 
 };
