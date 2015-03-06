@@ -131,7 +131,7 @@ void Population::replace(Organism& offspring){
 
 //TODO implement fitness proportional selection
 Organism* Population::select(){
-	return population[uniformInRange(0, populationSize)];
+	return population[uniformInRange(0, populationSize-1)];
 }
 
 
