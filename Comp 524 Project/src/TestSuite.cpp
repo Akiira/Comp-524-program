@@ -17,6 +17,9 @@ TestSuite::~TestSuite(){
 	delete[] predicatesCovered;
 	delete[] duplicateEdgesCovered;
 	delete[] duplicatePredicatesCovered;
+	for(int i = 0; i < numberOfTestCases; i++){
+		delete testCases[i];
+	}
 	delete[] testCases;
 }
 
@@ -125,3 +128,13 @@ void TestSuite::calculateTestSuiteCoverage() {
 
 }
 
+TestSuite& TestSuite::operator =(const TestSuite& other) {
+	if(this != &other){
+		delete[] edgesCovered;
+		delete[] predicatesCovered;
+		delete[] duplicateEdgesCovered;
+		delete[] duplicatePredicatesCovered;
+
+		TestCase** testCases;
+	}
+}
