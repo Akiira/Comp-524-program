@@ -7,6 +7,9 @@
 
 #include "Organism.h"
 #include "ControlFlowGraph.h"
+#include <iostream>
+using std::cout;
+using std::endl;
 
 Organism::~Organism(){
 	delete chromosome;
@@ -78,3 +81,7 @@ Organism& Organism::operator=(const Organism& org) {	//assignment operator
 //	}	//if
 	return *this;
 }//operator=
+
+void Organism::print() {
+	chromosome->printSimple();
+}

@@ -6,6 +6,9 @@
 ///////////////////////////////////////////////////////////
 
 #include "Simulation.h"
+#include <iostream>
+using std::cout;
+using std::endl;
 
 Simulation::~Simulation(){
 	delete population;
@@ -45,6 +48,9 @@ void Simulation::run(){
 		auto parent2 = population->select();
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
+		cout << "Generation # " << i << endl;
+		child1.print();
+		child2.print();
 
 		//child1.mutate(probabilityForMutation);
 		//child1.setFitness();

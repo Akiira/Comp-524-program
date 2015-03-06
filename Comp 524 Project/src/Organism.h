@@ -33,6 +33,8 @@ public:
 	bool operator==(const Organism& right);
 	Organism& operator=(const Organism& org);
 
+	void print();
+
 	friend class Population;
 
 private:

@@ -96,6 +96,18 @@ void TestSuite::print() {
 	}
 }
 
+void TestSuite::printSimple() {
+	//cout << "Test Suite Coverage:" << endl;
+	//targetCFG->printTestSuiteCoverage(this);
+
+	//cout << endl << "First Parameter of Each test case:" << endl;
+	for (int i = 0; i < numberOfTestCases; i++) {
+		//std::cout << std::endl << "Test Case #" << i << std::endl;
+		cout << testCases[i]->getInputParameterAtIndex(0) << " ";
+	}
+	cout << endl;
+}
+
 // This code is ridiculously inefficient, maybe we can switch to bitsets instead,
 //	then use |= on entire bitsets.
 void TestSuite::calculateTestSuiteCoverage() {

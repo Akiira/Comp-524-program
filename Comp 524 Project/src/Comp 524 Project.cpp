@@ -4,6 +4,7 @@
 #include "ControlFlowGraph.h"
 #include "HiLoControlFlowGraph.h"
 #include "SimpleIfElseControlFlowGraph.h"
+#include "Simulation.h"
 
 using namespace std;
 
@@ -44,9 +45,15 @@ void hiLoControlFlowGraphTest_testSuite_version() {
 }
 
 int main() {
-	simpleIfElseControlFlowGraphTest_testCase_version();
-	simpleIfElseControlFlowGraphTest_testSuite_version();
-	hiLoControlFlowGraphTest_testSuite_version();
+	//simpleIfElseControlFlowGraphTest_testCase_version();
+	//simpleIfElseControlFlowGraphTest_testSuite_version();
+	//hiLoControlFlowGraphTest_testSuite_version();
+
+	//Simulation::Simulation(ControlFlowGraph& targetCFG, int populationSize, int numberOfCutPoints, double mutationProb,
+	//		double crossOverProb, int numberOfGenerations){
+	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
+	Simulation* s = new Simulation(*testCFG, 10, 3, 1, 1, 10);
+	s->run();
 	return 0;
 }
 

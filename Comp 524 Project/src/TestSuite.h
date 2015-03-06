@@ -59,6 +59,7 @@ public:
 	void calculateTestSuiteCoverage();
 
 	void print();
+	void printSimple();
 
 private:
 	int numberOfTestCases;

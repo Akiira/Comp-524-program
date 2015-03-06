@@ -18,6 +18,7 @@ Population::Population(int popSize, ControlFlowGraph& targetCFG){
 	populationSize = popSize;
 	for(int i = 0; i < popSize; i++){
 		population[i] = new Organism(targetCFG);
+		population[i]->initializeRandomChromosome();
 	}
 	totalFitness = 0;
 }

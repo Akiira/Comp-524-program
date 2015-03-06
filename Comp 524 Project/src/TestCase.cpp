@@ -51,11 +51,11 @@ TestCase::TestCase(const TestCase& that) {
 	numberOfPredicates = that.numberOfPredicates;
 
 	edgesCovered = new bool[numberOfEdges] { };
-	memcpy(edgesCovered, that.edgesCovered, sizeof *edgesCovered);
+	memcpy(edgesCovered, that.edgesCovered, sizeof *edgesCovered * numberOfEdges);
 	predicatesCovered = new bool[numberOfPredicates] { };
-	memcpy(predicatesCovered, that.predicatesCovered, sizeof *predicatesCovered);
+	memcpy(predicatesCovered, that.predicatesCovered, sizeof *predicatesCovered * numberOfPredicates);
 	inputParameters = new int[numberOfParameters] { };
-	memcpy(inputParameters, that.inputParameters, sizeof *inputParameters);
+	memcpy(inputParameters, that.inputParameters, sizeof *inputParameters * numberOfParameters);
 }
 
 void TestCase::generateRandomParameters() {
