@@ -46,15 +46,15 @@ void Simulation::run(){
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 
-		child1.mutate(probabilityForMutation);
-		child1.setFitness();
-		child2.mutate(probabilityForMutation);
-		child2.setFitness();
+		//child1.mutate(probabilityForMutation);
+		//child1.setFitness();
+		//child2.mutate(probabilityForMutation);
+		//child2.setFitness();
 
-		if(child1 <= child2)
-			population->replace(child2);
-		else
-			population->replace(child1);
+		//if(child1 <= child2)
+		//	population->replace(child2);
+		//else
+		//	population->replace(child1);
 
 		i++;
 

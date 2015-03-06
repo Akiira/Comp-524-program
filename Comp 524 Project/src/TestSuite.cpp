@@ -73,7 +73,7 @@ void TestSuite::fillTestSuiteWithExistingTestCases(TestCase** testCasesToCopy) {
 	}
 }
 
-TestCase** TestSuite::getAllTestCases(){
+TestCase** TestSuite::getAllTestCases() const{
 	return  testCases;
 }
 

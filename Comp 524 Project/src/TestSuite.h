@@ -21,7 +21,7 @@ public:
 	TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG);
 	TestSuite(int numberOfTestCases, TestCase** testCasesToCopy, ControlFlowGraph* targetCFG);
 
-	TestCase** getAllTestCases();
+	TestCase** getAllTestCases() const;
 	TestCase* getTestCase(int index);
 
 	int* getDuplicateEdgesCovered() const {
