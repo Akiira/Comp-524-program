@@ -19,11 +19,13 @@ Population::Population(int popSize, int initialTestSuiteSize, ControlFlowGraph& 
 	population = new Organism*[popSize];
 	populationSize = popSize;
 	this->initialTestSuiteSize = initialTestSuiteSize;
+	totalFitness = 0;
 	for(int i = 0; i < popSize; i++){
 		population[i] = new Organism(targetCFG);
 		population[i]->initializeRandomChromosome(initialTestSuiteSize);
+		population[i]->setFitness();
+		totalFitness += population[i]->getFitness();
 	}
-	totalFitness = 0;
 }
 
 

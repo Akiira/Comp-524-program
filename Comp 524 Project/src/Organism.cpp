@@ -56,8 +56,26 @@ void Organism::mutate(double mutationProb){
 
 void Organism::setFitness(){
 	int sum = 0;
-	for(int i = 0; i < chromosome->getNumberOfTestCases(); i++){
 
+	int* edgeCoverage = chromosome->getDuplicateEdgesCovered();
+	int* predicateCoverage = chromosome->getDuplicatePredicatesCovered();
+	int baseReward = chromosome->getNumberOfTestCases() + 1;
+
+	// An idea I had for a quick fitness function
+	// Max fitness is numberOfTestCases*numberOfEdges + numberOfTestCases*numberOfPredicates
+	// Min fitness is 0
+	// They are punished for covering the same edges and predicates over and over
+	//	The hope is that this brings organisms that managed to cover the hard to reach test cases to the top
+	for(int i = 0; i < (targetCFG->getNumberOfEdges()); i++){
+		if (edgeCoverage[i] > 0) {
+			sum += baseReward - edgeCoverage[i];
+		}
+	}
+
+	for(int i = 0; i < (targetCFG->getNumberOfPredicates()); i++){
+		if (predicateCoverage[i] > 0) {
+			sum += baseReward - predicateCoverage[i];
+		}
 	}
 
 	fitness = sum;
