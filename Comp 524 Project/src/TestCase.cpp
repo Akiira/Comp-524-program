@@ -64,7 +64,8 @@ void TestCase::generateRandomParameters() {
 	//for each parameter generate a random value
 	for(int i = 0; i < numberOfParameters; i++)
 	{
-		inputParameters[i] = uniformInRange(1, 10);
+		inputParameters[i] = uniformInRange(1, 10); //TODO do somthing about the range, maybe store ranges
+													// for each parameter in the targetCFG
 	}
 }
 
