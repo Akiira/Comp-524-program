@@ -34,6 +34,9 @@ TestSuite::TestSuite(const TestSuite& testSuite) {
 	duplicateEdgesCovered = new int[numberOfEdges] { };
 	duplicatePredicatesCovered = new int[numberOfPredicates] { };
 
+	edgesCovered = new bool[numberOfEdges] { };
+	predicatesCovered = new bool[numberOfPredicates] { };
+
 	testCases = new TestCase*[numberOfTestCases] { };
 }
 
@@ -61,6 +64,8 @@ void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases) {
 
 	duplicateEdgesCovered = new int[numberOfEdges] { };
 	duplicatePredicatesCovered = new int[numberOfPredicates] { };
+	edgesCovered = new bool[numberOfEdges] { };
+	predicatesCovered = new bool[numberOfPredicates] { };
 
 	testCases = new TestCase*[numberOfTestCases] { };
 }
