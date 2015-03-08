@@ -23,6 +23,8 @@ public:
 	Organism* randomSelect();
 	Organism* fitnessProportionalSelect();
 
+	void printFitnessOfEachOrganism();
+
 private:
 	Organism** population;
 	int populationSize;

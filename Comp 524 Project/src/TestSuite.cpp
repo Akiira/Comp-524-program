@@ -109,6 +109,10 @@ void TestSuite::printSimple() {
 	cout << endl;
 }
 
+void TestSuite::printOnlyTestSuiteCoverage() {
+	targetCFG->printTestSuiteCoverage(this);
+}
+
 // This code is ridiculously inefficient, maybe we can switch to bitsets instead,
 //	then use |= on entire bitsets.
 void TestSuite::calculateTestSuiteCoverage() {

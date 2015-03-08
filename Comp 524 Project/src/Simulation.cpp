@@ -28,6 +28,7 @@ Simulation::Simulation(ControlFlowGraph& targetCFG, int populationSize, int init
 
 	population = new Population { populationSize, initialTestSuiteSize, targetCFG };
 
+
 	//once the population is initialized each organism needs to be evaluated
 	// once each organism is evaluated we can set bestOrganismSeen
 }
@@ -47,9 +48,6 @@ void Simulation::run(){
 	do{
 		auto parent1 = population->fitnessProportionalSelect();
 		auto parent2 = population->fitnessProportionalSelect();
-		//if (parent2.getChromosome()->getAllTestCases() == NULL || parent1.getChromosome()->getAllTestCases() == NULL) {
-		//	cout << "here" << endl;
-		//}
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 		cout << "Generation # " << i << endl;
@@ -59,6 +57,7 @@ void Simulation::run(){
 		cout << "Children" << endl;
 		child1.print();
 		child2.print();
+
 
 		//child1.mutate(probabilityForMutation);
 		//child1.setFitness();
@@ -73,6 +72,7 @@ void Simulation::run(){
 		i++;
 
 	}while(i < numberOfGenerations);
+	population->printFitnessOfEachOrganism();
 
 }
 

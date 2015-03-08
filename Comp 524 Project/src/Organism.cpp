@@ -106,5 +106,6 @@ Organism& Organism::operator=(const Organism& org) {	//assignment operator
 }//operator=
 
 void Organism::print() {
-	chromosome->printSimple();
+	cout << "Fitness: " << fitness << endl;
+	chromosome->printOnlyTestSuiteCoverage();
 }

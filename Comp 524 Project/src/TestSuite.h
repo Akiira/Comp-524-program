@@ -50,6 +50,7 @@ public:
 
 	void print();
 	void printSimple();
+	void printOnlyTestSuiteCoverage();
 	TestSuite& operator=(const TestSuite& org);
 
 	int* getDuplicateEdgesCovered() const {

@@ -151,6 +151,9 @@ Organism* Population::randomSelect(){
 }
 
 // Straight from GA0
+// I tried to have this return Organism like it was in GA0 and change only the
+//	relevant things in Simulation to pass the parents into crossover and it caused
+//	a the program to crash without error after a random number of generations. very confused
 Organism* Population::fitnessProportionalSelect()
 {//selects a member of the population using proportional selection scheme.
  //If totalFitness is zero then an organism is selected at random.
@@ -198,3 +201,11 @@ void Population::setPopulationFitness()
     }//for
   }//for
 }//setPopulationFitness
+
+void Population::printFitnessOfEachOrganism() {
+	for (int i = 0; i < populationSize; i++) {
+		cout << population[i]->getFitness() << endl;
+	}
+
+	cout << "Difference between best and worst: " << population[0]->getFitness() - population[populationSize-1]->getFitness() << endl;
+}
