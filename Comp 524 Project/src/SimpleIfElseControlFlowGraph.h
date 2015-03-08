@@ -41,6 +41,9 @@ private:
 
 	void printEdgesCovered(int* edgesCovered);
 	void printPredicatesCovered(int* predicatesCovered);
+
+	// same as superclass
+	//SimpleIfElseControlFlowGraph& operator=(const SimpleIfElseControlFlowGraph& other);
 };
 
 

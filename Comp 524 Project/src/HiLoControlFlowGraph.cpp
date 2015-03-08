@@ -7,6 +7,7 @@
 #include "HiLoControlFlowGraph.h"
 using std::endl;
 using std::cout;
+#include <cstring>
 
 HiLoControlFlowGraph::HiLoControlFlowGraph() {
 	numberOfEdges = 14;
@@ -270,4 +271,20 @@ void HiLoControlFlowGraph::block10() {
 	// If we made it here we exited the loop and end the program
 	return;
 }
+
+HiLoControlFlowGraph& HiLoControlFlowGraph::operator=(const HiLoControlFlowGraph& other)
+{
+	if (this != &other) {
+		delete testCase;
+		testCase = other.testCase;
+		numberOfEdges = other.numberOfEdges;
+		numberOfPredicates = other.numberOfPredicates;
+		numberOfParameters = other.numberOfParameters;
+		numberOfProgramVariables = other.numberOfProgramVariables;
+		memcpy(programVariables, other.programVariables, sizeof(numberOfProgramVariables * sizeof(int)));
+
+		// I'm assuming it's pointless to try to copy the structs and enums since every object has the same ones
+	}	//if
+	return *this;
+}//operator=
 

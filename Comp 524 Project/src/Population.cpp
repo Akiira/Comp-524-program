@@ -141,9 +141,26 @@ void Population::initializeStartingPopulation(){
 }
 
 
-void Population::replace(Organism& offspring){
+void Population::replace(Organism& child)
+{//attempts to replace the worst member of the population with child
 
-}
+  Organism* tmp;
+  int worst = populationSize - 1;
+
+  if (child.getFitness() >= population[worst]-> getFitness()){
+    totalFitness += child.getFitness() - population[worst]->getFitness();
+    *population[worst] = child;
+    int i = populationSize - 1;
+    //now move the new child to the correct position in the popArray
+    //remember that organisms are kept in order of decreasing fitness.
+    while ((i > 0) && (population[i]->getFitness() > population[i-1]->getFitness())){
+      tmp = population[i];
+      population[i] = population[i-1];
+      population[i-1] = tmp;
+      i--;
+    }//while
+  }//if
+}//replace
 
 //TODO implement fitness proportional selection
 Organism* Population::randomSelect(){
@@ -202,10 +219,15 @@ void Population::setPopulationFitness()
   }//for
 }//setPopulationFitness
 
-void Population::printFitnessOfEachOrganism() {
+void Population::printPopulationFitness() {
+	/*
 	for (int i = 0; i < populationSize; i++) {
 		cout << population[i]->getFitness() << endl;
 	}
-
-	cout << "Difference between best and worst: " << population[0]->getFitness() - population[populationSize-1]->getFitness() << endl;
+	*/
+	int bestFitness = population[0]->getFitness();
+	int worstFitness = population[populationSize-1]->getFitness();
+	cout << "Best Fitness: " << bestFitness << endl;
+	cout << "Worst Fitness: " << worstFitness << endl;
+	cout << "Difference between best and worst: " << bestFitness - worstFitness << endl;
 }

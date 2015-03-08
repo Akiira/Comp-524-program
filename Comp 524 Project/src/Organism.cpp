@@ -8,6 +8,8 @@
 #include "Organism.h"
 #include "ControlFlowGraph.h"
 #include <iostream>
+#include <cassert>
+#include "Random.h"
 using std::cout;
 using std::endl;
 
@@ -42,21 +44,35 @@ void Organism::initializeRandomChromosome(int numberOfTestCases) {
 }
 
 TestSuite* Organism::getChromosome() const{
+	assert(initialized == true);
 	return  chromosome;
 }
 
 int Organism::getFitness() const{
+	//assert(evaluated == true);
 	return fitness;
 }
 
 
-void Organism::mutate(double mutationProb){
+void Organism::mutate(double mutationProb) {
+	assert(initialized == true);
+	int numberOfTestCases = chromosome->getNumberOfTestCases();
+	for (int i = 0; i < numberOfTestCases; i++) {
+		double toss = uniform01();
+		if (toss < mutationProb) {
+			TestCase* newTestCase = new TestCase(*targetCFG);
+			targetCFG->setCoverageOfTestCase(newTestCase);
+			chromosome->setTestCase(i, newTestCase);
+		}
+	}
 
+	evaluated = false;
 }
 
 int Organism::setFitness(){
-	int sum = 0;
-
+	assert(initialized == true);
+	fitness = 0;
+	chromosome->calculateTestSuiteCoverage();
 	int* edgeCoverage = chromosome->getDuplicateEdgesCovered();
 	int* predicateCoverage = chromosome->getDuplicatePredicatesCovered();
 	int baseReward = chromosome->getNumberOfTestCases() + 1;
@@ -68,40 +84,44 @@ int Organism::setFitness(){
 	//	The hope is that this brings organisms that managed to cover the hard to reach test cases to the top
 	for(int i = 0; i < (targetCFG->getNumberOfEdges()); i++){
 		if (edgeCoverage[i] > 0) {
-			sum += baseReward - edgeCoverage[i];
+			fitness += baseReward - edgeCoverage[i];
 		}
 	}
 
 	for(int i = 0; i < (targetCFG->getNumberOfPredicates()); i++){
 		if (predicateCoverage[i] > 0) {
-			sum += baseReward - predicateCoverage[i];
+			fitness += baseReward - predicateCoverage[i];
 		}
 	}
 
-	fitness = sum;
+	evaluated = true;
 	return fitness;
 }
 
 bool Organism::operator<=(const Organism& right) { //overloaded operator <=
+	assert(evaluated == true);
 	return (fitness <= right.fitness) ? true : false;
 } //operator<=
 
 bool Organism::operator==(const Organism& right) { //overloaded operator ==
-												   //TODO implement function
+	assert(evaluated == true);										   //TODO implement function
 	return false;
 	//return (strcmp(chromosome, right.chromosome) == 0)? true : false;
 }	//operator==
 
 Organism& Organism::operator=(const Organism& org) {	//assignment operator
-	//TODO: implement this.
-//	if (this != &org) {
-//		delete[] chromosome;
-//		chromosome = new char[org.length + 1];
-//		assert(chromosome != NULL);
-//		strcpy(chromosome, org.chromosome);
-//		fitness = org.fitness;
-//		length = org.length;
-//	}	//if
+	assert(org.initialized == true && org.evaluated == true);
+	if (this != &org) {
+		chromosome->~TestSuite();
+		chromosome = org.chromosome;
+
+		//TODO implement CFG assignment op
+		targetCFG = org.targetCFG;
+		assert(chromosome != NULL);
+		fitness = org.fitness;
+		initialized = org.initialized;
+		evaluated = org.evaluated;
+	}	//if
 	return *this;
 }//operator=
 

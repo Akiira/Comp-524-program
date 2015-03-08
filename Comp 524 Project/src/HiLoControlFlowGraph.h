@@ -70,6 +70,8 @@ class HiLoControlFlowGraph : public ControlFlowGraph
 
 		void printEdgesCovered(int* edgesCovered);
 		void printPredicatesCovered(int* predicatesCovered);
+
+		virtual HiLoControlFlowGraph& operator=(const HiLoControlFlowGraph& other);
 };
 
 

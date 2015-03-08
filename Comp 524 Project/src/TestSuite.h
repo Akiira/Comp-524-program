@@ -46,6 +46,7 @@ public:
 
 	TestCase** getAllTestCases() const;
 	TestCase* getTestCase(int index);
+	void setTestCase(int index, TestCase* testCase);
 	void calculateTestSuiteCoverage();
 
 	void print();

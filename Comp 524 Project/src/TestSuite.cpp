@@ -28,7 +28,8 @@ TestSuite::~TestSuite(){
 TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG){
 	initializeMembersAndAllocateMemory(numberOfTestCases, targetCFG);
 	fillTestSuiteWithRandomTestCases();
-	calculateTestSuiteCoverage();
+	// This is now called directly by Organism.setFitness
+	//calculateTestSuiteCoverage();
 }
 
 /** Create a new suite out of existing testCases
@@ -39,7 +40,8 @@ TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG){
 TestSuite::TestSuite(int numberOfTestCases, TestCase** testCases, ControlFlowGraph* targetCFG) {
 	initializeMembersAndAllocateMemory(numberOfTestCases, targetCFG);
 	fillTestSuiteWithExistingTestCases(testCases);
-	calculateTestSuiteCoverage();
+	// This is now called directly by Organism.setFitness
+	//calculateTestSuiteCoverage();
 }
 
 void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, ControlFlowGraph* targetCFG) {
@@ -84,6 +86,11 @@ TestCase* TestSuite::getTestCase(int index){
 	assert(index >= 0  &&  index < numberOfTestCases);
 
 	return  testCases[index];
+}
+
+void TestSuite::setTestCase(int index, TestCase* testCase) {
+	delete testCases[index];
+	testCases[index] = testCase;
 }
 
 void TestSuite::print() {

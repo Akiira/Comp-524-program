@@ -75,11 +75,14 @@ TestCase::TestCase(const TestCase& that) {
 	memcpy(inputParameters, that.inputParameters, sizeof *inputParameters * numberOfParameters);
 }
 
+// TODO: Were going to have to use some knowledge of the program here
+// This should probably be replaced by method(s) in the CFG classes that
+//	generate test cases in different ways
 void TestCase::generateRandomParameters() {
 	//for each parameter generate a random value
 	for(int i = 0; i < numberOfParameters; i++)
 	{
-		inputParameters[i] = uniformInRange(1, 10);
+		inputParameters[i] = uniformInRange(0, 100);
 	}
 }
 

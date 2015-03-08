@@ -39,3 +39,15 @@ void ControlFlowGraph::printTestSuiteCoverage(TestSuite* testSuite){
 	printEdgesCovered(edgesCovered);
 	printPredicatesCovered(predicatesCovered);
 }
+
+ControlFlowGraph& ControlFlowGraph::operator=(const ControlFlowGraph& other)
+{
+	if (this != &other) {
+		delete testCase;
+		testCase = other.testCase;
+		numberOfEdges = other.numberOfEdges;
+		numberOfPredicates = other.numberOfPredicates;
+		numberOfParameters = other.numberOfParameters;
+	}	//if
+	return *this;
+}//operator=

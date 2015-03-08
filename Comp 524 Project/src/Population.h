@@ -23,7 +23,7 @@ public:
 	Organism* randomSelect();
 	Organism* fitnessProportionalSelect();
 
-	void printFitnessOfEachOrganism();
+	void printPopulationFitness();
 
 private:
 	Organism** population;
