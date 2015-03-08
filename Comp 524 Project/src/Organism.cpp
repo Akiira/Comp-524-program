@@ -27,11 +27,10 @@ Organism::Organism(int numOfTestCases, TestCase** testCases) {
 
 Organism::Organism(int numOfTestCases ) {
 	initialized = true;
-	evaluated = false;
 	fitness = 0;
-	chromosome = 0;
 
 	chromosome = new TestSuite { numOfTestCases };
+	setFitness();
 }
 
 TestSuite* Organism::getChromosome() const{
