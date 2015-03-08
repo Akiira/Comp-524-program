@@ -47,7 +47,7 @@ TestSuite::TestSuite(int numberOfTestCases){
 TestSuite::TestSuite(int numberOfTestCases, TestCase** testCases) {
 
 	initializeMembersAndAllocateMemory(numberOfTestCases);
-	fillTestSuiteWithExistingTestCases(testCases);
+	this->testCases = testCases;
 	calculateTestSuiteCoverage();
 }
 
@@ -72,11 +72,6 @@ void TestSuite::fillTestSuiteWithRandomTestCases() {
 		testCases[i] = new TestCase { numberOfParameters, numberOfEdges, numberOfPredicates };
 		targetCFG->setCoverageOfTestCase(testCases[i]);
 	}
-}
-
-void TestSuite::fillTestSuiteWithExistingTestCases(TestCase** testCases) {
-	assert(testCases != 0);
-	this->testCases = testCases;
 }
 
 TestCase** TestSuite::getAllTestCases() const{

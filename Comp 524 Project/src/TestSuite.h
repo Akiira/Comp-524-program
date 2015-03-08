@@ -21,8 +21,6 @@ private:
 	int numberOfEdges;
 	int numberOfPredicates;
 
-	//bool* edgesCovered;
-	//bool* predicatesCovered;
 	int* duplicateEdgesCovered;
 	int* duplicatePredicatesCovered;
 
@@ -31,9 +29,8 @@ private:
 
 	// SHared code between constructors
 	void initializeMembersAndAllocateMemory(int numberOfTestCases);
-
 	void fillTestSuiteWithRandomTestCases();
-	void fillTestSuiteWithExistingTestCases(TestCase** testCasesToCopy);
+
 
 public:
 	virtual ~TestSuite();
