@@ -8,45 +8,51 @@
 #include "Population.h"
 #include "Random.h"
 
-Population::~Population(){
+#include <cassert>
+#include "GlobalVariables.h"
+
+Population::~Population() {
 
 }
 
 /**
  * Creates a new population of random test suites
  */
-Population::Population(int popSize, int initialTestSuiteSize, ControlFlowGraph& targetCFG){
+Population::Population(int popSize, int initialTestSuiteSize) {
+	assert(targetCFG);
 	population = new Organism*[popSize];
 	populationSize = popSize;
 	this->initialTestSuiteSize = initialTestSuiteSize;
+<<<<<<< HEAD
 
 	for(int i = 0; i < popSize; i++){
 		population[i] = new Organism(targetCFG);
 		population[i]->initializeRandomChromosome(initialTestSuiteSize);
+=======
+	for (int i = 0; i < popSize; i++) {
+		population[i] = new Organism(initialTestSuiteSize);
+>>>>>>> refs/heads/AddingAssignmentToCrossiver
 	}
 	totalFitness = 0;
 	setPopulationFitness();
 }
 
+void Population::crossover(const Organism& parent1, const Organism& parent2,
+		Organism*& offspring1, Organism*& offspring2, int numberOfCutPoints) {
 
-void Population::crossover(const Organism& parent1, const Organism& parent2, Organism& offspring1, Organism& offspring2, int numberOfCutPoints) {
-	TestSuite& parent1Chromosome = *parent1.getChromosome();
-	TestSuite& parent2Chromosome = *parent2.getChromosome();
-
-	int parent1NumberOfTestCases = parent1Chromosome.getNumberOfTestCases();
-	int parent2NumberOfTestCases = parent2Chromosome.getNumberOfTestCases();
+	int parent1NumberOfTestCases = parent1.getNumberOfTestCases();
+	int parent2NumberOfTestCases = parent2.getNumberOfTestCases();
 
 	TestCase**parent1TestCases { };
 	TestCase**parent2TestCases { };
 
 	// Swap things so that parent1TestCases refers to the array with the most test cases
 	if (parent1NumberOfTestCases >= parent2NumberOfTestCases) {
-		parent1TestCases = parent1Chromosome.getAllTestCases();
-		parent2TestCases = parent2Chromosome.getAllTestCases();
-	}
-	else {
-		parent1TestCases = parent2Chromosome.getAllTestCases();
-		parent2TestCases = parent1Chromosome.getAllTestCases();
+		parent1TestCases = parent1.chromosome->getAllTestCases();
+		parent2TestCases = parent2.chromosome->getAllTestCases();
+	} else {
+		parent1TestCases = parent2.chromosome->getAllTestCases();
+		parent2TestCases = parent1.chromosome->getAllTestCases();
 		int tmp = parent1NumberOfTestCases;
 		parent1NumberOfTestCases = parent2NumberOfTestCases;
 		parent2NumberOfTestCases = tmp;
@@ -54,102 +60,86 @@ void Population::crossover(const Organism& parent1, const Organism& parent2, Org
 
 
 	// Use parent2NumberOfTestCases as the upperBound of cutpoints since parent2 must be <= parent1
-	int* cutPoints = selectCutPoints(numberOfCutPoints, parent2NumberOfTestCases);
+	int* cutPoints = selectCutPoints(numberOfCutPoints,	parent2NumberOfTestCases);
 
-	TestCase** offspring1TestCases = new TestCase*[parent1NumberOfTestCases];
-	TestCase** offspring2TestCases = new TestCase*[parent2NumberOfTestCases];
+	TestCase** child1TestCases = new TestCase*[parent1NumberOfTestCases] { };
+	TestCase** child2TestCases = new TestCase*[parent2NumberOfTestCases] { };
 
-	bool alternate = true;
-	int current = 0;  //the overall finger through all chromosomes (parents & offspring)
-	for (int i = 0; i < numberOfCutPoints; i++){
-		if (alternate){
-		  for (int j=current; j <= cutPoints[i]; j++){
-			  offspring1TestCases[j] = parent1TestCases[j];
-			  offspring2TestCases[j] = parent2TestCases[j];
-			  parent1TestCases[j]->getEdgesCovered()[0] = 1;
-		  }
-		}//if
-		else{
-		  for (int j=current; j <= cutPoints[i]; j++){
-			  offspring1TestCases[j] = parent2TestCases[j];
-			  offspring2TestCases[j] = parent1TestCases[j];
-		  }
+	bool alternate { true };
+	int current { 0 }; //the overall finger through all chromosomes (parents & offspring)
+	for (int i = 0; i < numberOfCutPoints; i++) {
+		if (alternate) {
+			for (int j = current; j <= cutPoints[i]; j++) {
+				child1TestCases[j] = new TestCase { *parent1TestCases[j] };
+				child2TestCases[j] = new TestCase { *parent2TestCases[j] };
+			}
+		}  //if
+		else {
+			for (int j = current; j <= cutPoints[i]; j++) {
+				child1TestCases[j] = new TestCase { *parent2TestCases[j] };
+				child2TestCases[j] = new TestCase { *parent1TestCases[j] };
+			}
 		}
 		current = cutPoints[i] + 1;
 		alternate = !alternate;
-	}//endfor i
+	}
 
 	//now take care of the last segments, if any
-	 if (alternate){
-	  for (int j=current; j < parent2NumberOfTestCases; j++){
-		  offspring1TestCases[j] = parent1TestCases[j];
-		  offspring2TestCases[j] = parent2TestCases[j];
-	  }
-	}
-	else{
-		//GA0 had j <= orgLength here but < in the case above (A typo?)
-	  for (int j=current; j < parent2NumberOfTestCases; j++){
-		  offspring1TestCases[j] = parent2TestCases[j];
-		  offspring2TestCases[j] = parent1TestCases[j];
-	  }
+	if (alternate) {
+		for (int j = current; j < parent2NumberOfTestCases; j++) {
+			child1TestCases[j] = new TestCase { *parent1TestCases[j] };
+			child2TestCases[j] = new TestCase { *parent2TestCases[j] };
+		}
+	} else {
+		for (int j = current; j < parent2NumberOfTestCases; j++) {
+			child1TestCases[j] = new TestCase { *parent2TestCases[j] };
+			child2TestCases[j] = new TestCase { *parent1TestCases[j] };
+		}
 	}
 
 	// Now fill in remaining test cases of offspring1 from parent1 (if parent1 had more than parent2)
 	for (int j = parent2NumberOfTestCases; j < parent1NumberOfTestCases; j++) {
-		 offspring1TestCases[j] = parent1TestCases[j];
+		child1TestCases[j] = new TestCase { *parent1TestCases[j] };
 	}
 
-	// Perform a deep copy of the test cases so that the parent and offspring don't reference the same
-	//	objects.
-	for (int i = 0; i < parent1NumberOfTestCases; i++) {
-		offspring1TestCases[i] = new TestCase(*offspring1TestCases[i]);
-	}
-
-	for (int i = 0; i < parent2NumberOfTestCases; i++) {
-		offspring2TestCases[i] = new TestCase(*offspring2TestCases[i]);
-	}
-
-	// Set the chromosome of offspring1 and offspring2 to be a new TestSuite instance made up of the
-	//	crossed over test case arrays.
-	offspring1.initializeChromosomeFromTestCases(parent1NumberOfTestCases, offspring1TestCases);
-	offspring2.initializeChromosomeFromTestCases(parent2NumberOfTestCases, offspring2TestCases);
-
+	offspring1 = new Organism { parent1.getNumberOfTestCases(), child1TestCases };
+	offspring2 = new Organism { parent2.getNumberOfTestCases(),	child2TestCases };
 }
 
-int*  Population::selectCutPoints(int numCutPoints, int upperBound) {
+int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 	//select numCutPoints randomly in the range [0..orgLength-1]
 	//and store their locations in the cutPoints array
 	int* cutPoints = new int[numCutPoints];
 
 	int m = 0;   // the number of points selected so far
-	int i=0;  //index for cutPoints array
+	int i = 0;  //index for cutPoints array
 
 	// GA0 also had (t <= orgLength) here, pretty sure it should be <, otherwise cutpoint could be orgLength
-	for (int t = 0; (t < upperBound) && (m < numCutPoints); t++){
-		if (((upperBound - t) * uniform01()) < (numCutPoints - m)){
-		  cutPoints[i] = t;
-		  i++;
-		  m++;
+	for (int t = 0; (t < upperBound) && (m < numCutPoints); t++) {
+		if (((upperBound - t) * uniform01()) < (numCutPoints - m)) {
+			cutPoints[i] = t;
+			i++;
+			m++;
 		}
-	}//for
+	}  //for
 	return cutPoints;
- }//selectCutPoints
+}  //selectCutPoints
 
-
-void Population::initializeStartingPopulation(){
-
-}
-
-
-void Population::replace(Organism& offspring){
+void Population::replace(Organism& offspring) {
 
 }
 
 //TODO implement fitness proportional selection
+<<<<<<< HEAD
 Organism* Population::randomSelect(){
 	return population[uniformInRange(0, populationSize-1)];
+=======
+Organism* Population::select() {
+	return population[uniformInRange(0, populationSize - 1)];
+>>>>>>> refs/heads/AddingAssignmentToCrossiver
 }
 
+<<<<<<< HEAD
 // Straight from GA0
 // I tried to have this return Organism like it was in GA0 and change only the
 //	relevant things in Simulation to pass the parents into crossover and it caused
@@ -177,6 +167,9 @@ Organism* Population::fitnessProportionalSelect()
   cout << i << endl;
   return population[i];
 }//select
+=======
+void Population::setPopulationFitness() {
+>>>>>>> refs/heads/AddingAssignmentToCrossiver
 
 // Straight from GA0
 void Population::setPopulationFitness()

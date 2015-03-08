@@ -7,7 +7,9 @@
 
 #include "Organism.h"
 #include "ControlFlowGraph.h"
+#include "GlobalVariables.h"
 #include <iostream>
+#include <cassert>
 using std::cout;
 using std::endl;
 
@@ -15,30 +17,20 @@ Organism::~Organism(){
 	delete chromosome;
 }
 
-// Note have to explicitly call a initializeChromosome method to create the chromosome.
-//	and have to explicitly call setFitness to evaluate the fitness of the chromosome.
-Organism::Organism(ControlFlowGraph& target) {
-	targetCFG = &target;
-	initialized = false;
+
+Organism::Organism(int numOfTestCases, TestCase** testCases) {
+	chromosome = new TestSuite { numOfTestCases, testCases };
+	initialized = true;
 	evaluated = false;
 	fitness = 0;
-	chromosome = 0;
 }
 
-/**
- * IMPORTANT: Perform deep copy on the testCases before calling this.
- * Takes an array of pointers to test cases which will ultimately be directly assigned to the testCases array
- * of a new TestSuite instance (that will become the chromosome of this Organism)
- * Necessary for crossover
- */
-void Organism::initializeChromosomeFromTestCases(int numberOfTestCases, TestCase** testCases) {
-	chromosome = new TestSuite(numberOfTestCases, testCases, targetCFG);
+Organism::Organism(int numOfTestCases ) {
 	initialized = true;
-}
+	fitness = 0;
 
-void Organism::initializeRandomChromosome(int numberOfTestCases) {
-	chromosome = new TestSuite(numberOfTestCases, targetCFG);
-	initialized = true;
+	chromosome = new TestSuite { numOfTestCases };
+	setFitness();
 }
 
 TestSuite* Organism::getChromosome() const{
@@ -82,6 +74,20 @@ int Organism::setFitness(){
 	return fitness;
 }
 
+void Organism::print() {
+	chromosome->printSimple();
+}
+
+int Organism::getNumberOfTestCases() const {
+	if(chromosome)
+		return chromosome->getNumberOfTestCases();
+	else
+		return -1;
+}
+
+
+//===========================OVERLOADED OPERATORS===========================
+
 bool Organism::operator<=(const Organism& right) { //overloaded operator <=
 	return (fitness <= right.fitness) ? true : false;
 } //operator<=
@@ -104,8 +110,11 @@ Organism& Organism::operator=(const Organism& org) {	//assignment operator
 //	}	//if
 	return *this;
 }//operator=
+<<<<<<< HEAD
 
 void Organism::print() {
 	cout << "Fitness: " << fitness << endl;
 	chromosome->printOnlyTestSuiteCoverage();
 }
+=======
+>>>>>>> refs/heads/AddingAssignmentToCrossiver

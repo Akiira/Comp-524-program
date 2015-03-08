@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////
 
 #include "TestSuite.h"
+#include "GlobalVariables.h"
 #include <iostream>
 #include <cassert>
 #include <cstring>
@@ -24,37 +25,42 @@ TestSuite::~TestSuite(){
 	delete[] testCases;
 }
 
+TestSuite::TestSuite(const TestSuite& testSuite) {
+	numberOfTestCases = testSuite.numberOfTestCases;
+	numberOfParameters = testSuite.numberOfParameters;
+	numberOfPredicates = testSuite.numberOfPredicates;
+	numberOfEdges = testSuite.numberOfEdges;
+
+	duplicateEdgesCovered = new int[numberOfEdges] { };
+	duplicatePredicatesCovered = new int[numberOfPredicates] { };
+
+	testCases = new TestCase*[numberOfTestCases] { };
+}
+
 // Fill the new suite with random test cases and evaluate the coverage of all the test cases
-TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG){
-	initializeMembersAndAllocateMemory(numberOfTestCases, targetCFG);
+TestSuite::TestSuite(int numberOfTestCases){
+	initializeMembersAndAllocateMemory(numberOfTestCases);
 	fillTestSuiteWithRandomTestCases();
 	calculateTestSuiteCoverage();
 }
 
-/** Create a new suite out of existing testCases
- * 	IMPORTANT: No copying is done here, just straight assignment of the pointer so ensure a deep copy was done
- * 	on them before calling this, should only be called from the crossover operator
- * 	(or maybe mutation or simulation in the future) where this copying is done.
- */
-TestSuite::TestSuite(int numberOfTestCases, TestCase** testCases, ControlFlowGraph* targetCFG) {
-	initializeMembersAndAllocateMemory(numberOfTestCases, targetCFG);
+TestSuite::TestSuite(int numberOfTestCases, TestCase** testCases) {
+
+	initializeMembersAndAllocateMemory(numberOfTestCases);
 	fillTestSuiteWithExistingTestCases(testCases);
 	calculateTestSuiteCoverage();
 }
 
-void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, ControlFlowGraph* targetCFG) {
+void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases) {
 	assert(numberOfTestCases > 0);
-	this->targetCFG = targetCFG;
+
 	this->numberOfTestCases = numberOfTestCases;
 	this->numberOfParameters = targetCFG->getNumberOfParameters();
 	this->numberOfEdges = targetCFG->getNumberOfEdges();
 	this->numberOfPredicates = targetCFG->getNumberOfPredicates();
 
-	//TODO Why have both boolean and int arrays?
-	//TODO I agree we can just get by with the ints. I will remove the bools when i get a chance.
-	//edgesCovered = new bool[numberOfEdges];
+
 	duplicateEdgesCovered = new int[numberOfEdges] { };
-	//predicatesCovered = new bool[numberOfPredicates];
 	duplicatePredicatesCovered = new int[numberOfPredicates] { };
 
 	testCases = new TestCase*[numberOfTestCases] { };
@@ -63,8 +69,7 @@ void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, Contro
 void TestSuite::fillTestSuiteWithRandomTestCases() {
 	assert(testCases != 0);
 	for(int i = 0; i < numberOfTestCases; i++){
-		// Generates random test cases and stores them
-		testCases[i] = new TestCase(*targetCFG);
+		testCases[i] = new TestCase { numberOfParameters, numberOfEdges, numberOfPredicates };
 		targetCFG->setCoverageOfTestCase(testCases[i]);
 	}
 }
