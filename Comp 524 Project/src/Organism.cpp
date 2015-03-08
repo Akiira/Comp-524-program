@@ -132,7 +132,7 @@ Organism& Organism::operator=(const Organism& org) {	//assignment operator
 	assert(org.initialized == true && org.evaluated == true);
 	if (this != &org) {
 		chromosome->~TestSuite();
-		chromosome = org.chromosome;
+		*chromosome = *org.chromosome;
 
 		assert(chromosome != NULL);
 		fitness = org.fitness;
