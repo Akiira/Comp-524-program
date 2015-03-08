@@ -8,6 +8,9 @@
 #include "Population.h"
 #include "Random.h"
 
+#include <cassert>
+#include "GlobalVariables.h"
+
 Population::~Population() {
 
 }
@@ -15,63 +18,57 @@ Population::~Population() {
 /**
  * Creates a new population of random test suites
  */
-Population::Population(int popSize, int initialTestSuiteSize,
-		ControlFlowGraph& targetCFG) {
+Population::Population(int popSize, int initialTestSuiteSize) {
+	assert(targetCFG);
 	population = new Organism*[popSize];
 	populationSize = popSize;
 	this->initialTestSuiteSize = initialTestSuiteSize;
 	for (int i = 0; i < popSize; i++) {
-		population[i] = new Organism(targetCFG);
-		population[i]->initializeRandomChromosome(initialTestSuiteSize);
+		population[i] = new Organism(initialTestSuiteSize);
 	}
 	totalFitness = 0;
 }
 
 void Population::crossover(const Organism& parent1, const Organism& parent2,
-		Organism& offspring1, Organism& offspring2, int numberOfCutPoints) {
-	TestSuite& parent1Chromosome = *parent1.getChromosome();
-	TestSuite& parent2Chromosome = *parent2.getChromosome();
+		Organism*& offspring1, Organism*& offspring2, int numberOfCutPoints) {
 
-	int parent1NumberOfTestCases = parent1Chromosome.getNumberOfTestCases();
-	int parent2NumberOfTestCases = parent2Chromosome.getNumberOfTestCases();
+	int parent1NumberOfTestCases = parent1.getNumberOfTestCases();
+	int parent2NumberOfTestCases = parent2.getNumberOfTestCases();
 
 	TestCase**parent1TestCases { };
 	TestCase**parent2TestCases { };
 
 	// Swap things so that parent1TestCases refers to the array with the most test cases
 	if (parent1NumberOfTestCases >= parent2NumberOfTestCases) {
-		parent1TestCases = parent1Chromosome.getAllTestCases();
-		parent2TestCases = parent2Chromosome.getAllTestCases();
+		parent1TestCases = parent1.chromosome->getAllTestCases();
+		parent2TestCases = parent2.chromosome->getAllTestCases();
 	} else {
-		parent1TestCases = parent2Chromosome.getAllTestCases();
-		parent2TestCases = parent1Chromosome.getAllTestCases();
+		parent1TestCases = parent2.chromosome->getAllTestCases();
+		parent2TestCases = parent1.chromosome->getAllTestCases();
 		int tmp = parent1NumberOfTestCases;
 		parent1NumberOfTestCases = parent2NumberOfTestCases;
 		parent2NumberOfTestCases = tmp;
 	}
 
 	// Use parent2NumberOfTestCases as the upperBound of cutpoints since parent2 must be <= parent1
-	int* cutPoints = selectCutPoints(numberOfCutPoints,
-			parent2NumberOfTestCases);
+	int* cutPoints = selectCutPoints(numberOfCutPoints,	parent2NumberOfTestCases);
 
-	TestCase** offspring1TestCases = new TestCase*[parent1NumberOfTestCases];
-	TestCase** offspring2TestCases = new TestCase*[parent2NumberOfTestCases];
+	TestCase** child1TestCases = new TestCase*[parent1NumberOfTestCases] { };
+	TestCase** child2TestCases = new TestCase*[parent2NumberOfTestCases] { };
 
-
-
-	bool alternate = true;
-	int current = 0; //the overall finger through all chromosomes (parents & offspring)
+	bool alternate { true };
+	int current { 0 }; //the overall finger through all chromosomes (parents & offspring)
 	for (int i = 0; i < numberOfCutPoints; i++) {
 		if (alternate) {
 			for (int j = current; j <= cutPoints[i]; j++) {
-				offspring1TestCases[j] = new TestCase { *parent1TestCases[j] };
-				offspring2TestCases[j] = new TestCase { *parent2TestCases[j] };
+				child1TestCases[j] = new TestCase { *parent1TestCases[j] };
+				child2TestCases[j] = new TestCase { *parent2TestCases[j] };
 			}
 		}  //if
 		else {
 			for (int j = current; j <= cutPoints[i]; j++) {
-				offspring1TestCases[j] = new TestCase { *parent2TestCases[j] };
-				offspring2TestCases[j] = new TestCase { *parent1TestCases[j] };
+				child1TestCases[j] = new TestCase { *parent2TestCases[j] };
+				child2TestCases[j] = new TestCase { *parent1TestCases[j] };
 			}
 		}
 		current = cutPoints[i] + 1;
@@ -81,28 +78,23 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 	//now take care of the last segments, if any
 	if (alternate) {
 		for (int j = current; j < parent2NumberOfTestCases; j++) {
-			offspring1TestCases[j] = new TestCase { *parent1TestCases[j] };
-			offspring2TestCases[j] = new TestCase { *parent2TestCases[j] };
+			child1TestCases[j] = new TestCase { *parent1TestCases[j] };
+			child2TestCases[j] = new TestCase { *parent2TestCases[j] };
 		}
 	} else {
 		for (int j = current; j < parent2NumberOfTestCases; j++) {
-			offspring1TestCases[j] = new TestCase { *parent2TestCases[j] };
-			offspring2TestCases[j] = new TestCase { *parent1TestCases[j] };
+			child1TestCases[j] = new TestCase { *parent2TestCases[j] };
+			child2TestCases[j] = new TestCase { *parent1TestCases[j] };
 		}
 	}
 
 	// Now fill in remaining test cases of offspring1 from parent1 (if parent1 had more than parent2)
 	for (int j = parent2NumberOfTestCases; j < parent1NumberOfTestCases; j++) {
-		offspring1TestCases[j] = new TestCase { *parent1TestCases[j] };
+		child1TestCases[j] = new TestCase { *parent1TestCases[j] };
 	}
 
-	// Set the chromosome of offspring1 and offspring2 to be a new TestSuite instance made up of the
-	//	crossed over test case arrays.
-	offspring1.initializeChromosomeFromTestCases(parent1NumberOfTestCases,
-			offspring1TestCases);
-	offspring2.initializeChromosomeFromTestCases(parent2NumberOfTestCases,
-			offspring2TestCases);
-
+	offspring1 = new Organism { parent1.getNumberOfTestCases(), child1TestCases };
+	offspring2 = new Organism { parent2.getNumberOfTestCases(),	child2TestCases };
 }
 
 int* Population::selectCutPoints(int numCutPoints, int upperBound) {
@@ -123,10 +115,6 @@ int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 	}  //for
 	return cutPoints;
 }  //selectCutPoints
-
-void Population::initializeStartingPopulation() {
-
-}
 
 void Population::replace(Organism& offspring) {
 
