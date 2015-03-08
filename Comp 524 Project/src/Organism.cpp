@@ -7,6 +7,7 @@
 
 #include "Organism.h"
 #include "ControlFlowGraph.h"
+#include "GlobalVariables.h"
 #include <iostream>
 #include <cassert>
 #include "Random.h"
@@ -17,30 +18,29 @@ Organism::~Organism(){
 	delete chromosome;
 }
 
-// Note have to explicitly call a initializeChromosome method to create the chromosome.
-//	and have to explicitly call setFitness to evaluate the fitness of the chromosome.
-Organism::Organism(ControlFlowGraph& target) {
-	targetCFG = &target;
-	initialized = false;
+
+Organism::Organism(int numOfTestCases, TestCase** testCases) {
+	chromosome = new TestSuite { numOfTestCases, testCases };
+	initialized = true;
 	evaluated = false;
 	fitness = 0;
-	chromosome = 0;
 }
 
 /**
- * IMPORTANT: Perform deep copy on the testCases before calling this.
- * Takes an array of pointers to test cases which will ultimately be directly assigned to the testCases array
- * of a new TestSuite instance (that will become the chromosome of this Organism)
- * Necessary for crossover
+ * Removed SetFitness()
+ * The idea is to keep things consistent between the Organism constructors. Above
+ * we can't set the fitness yet because it is used in crossover but the fitness
+ * shouldn't be calculated until after mutation. Here we could set the fitness
+ * but it seems better to maintain consistency and require that when you create
+ * an organism you must call setFitness yourself at an appropriate time. This
+ * constructor is used by the population constructor which calls setPopulationFitness
+ * to evaluate the fitness of all individuals and sort them.
  */
-void Organism::initializeChromosomeFromTestCases(int numberOfTestCases, TestCase** testCases) {
-	chromosome = new TestSuite(numberOfTestCases, testCases, targetCFG);
+Organism::Organism(int numOfTestCases ) {
+	chromosome = new TestSuite { numOfTestCases };
 	initialized = true;
-}
-
-void Organism::initializeRandomChromosome(int numberOfTestCases) {
-	chromosome = new TestSuite(numberOfTestCases, targetCFG);
-	initialized = true;
+	evaluated = false;
+	fitness = 0;
 }
 
 TestSuite* Organism::getChromosome() const{
@@ -49,7 +49,7 @@ TestSuite* Organism::getChromosome() const{
 }
 
 int Organism::getFitness() const{
-	//assert(evaluated == true);
+	assert(evaluated == true);
 	return fitness;
 }
 
@@ -98,6 +98,20 @@ int Organism::setFitness(){
 	return fitness;
 }
 
+void Organism::print() {
+	chromosome->printSimple();
+}
+
+int Organism::getNumberOfTestCases() const {
+	if(chromosome)
+		return chromosome->getNumberOfTestCases();
+	else
+		return -1;
+}
+
+
+//===========================OVERLOADED OPERATORS===========================
+
 bool Organism::operator<=(const Organism& right) { //overloaded operator <=
 	assert(evaluated == true);
 	return (fitness <= right.fitness) ? true : false;
@@ -115,8 +129,6 @@ Organism& Organism::operator=(const Organism& org) {	//assignment operator
 		chromosome->~TestSuite();
 		chromosome = org.chromosome;
 
-		//TODO implement CFG assignment op
-		targetCFG = org.targetCFG;
 		assert(chromosome != NULL);
 		fitness = org.fitness;
 		initialized = org.initialized;
@@ -124,8 +136,3 @@ Organism& Organism::operator=(const Organism& org) {	//assignment operator
 	}	//if
 	return *this;
 }//operator=
-
-void Organism::print() {
-	cout << "Fitness: " << fitness << endl;
-	chromosome->printOnlyTestSuiteCoverage();
-}

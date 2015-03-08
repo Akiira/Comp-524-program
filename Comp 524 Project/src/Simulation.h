@@ -18,7 +18,7 @@ class Simulation
 public:
 	virtual ~Simulation();
 
-	Simulation(ControlFlowGraph& targetCFG, int populationSize, int initalTestSuiteSize,
+	Simulation(int populationSize, int initalTestSuiteSize,
 			int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations);
 
 	TestSuite* getBestTestSuite();
@@ -27,7 +27,7 @@ public:
 private:
 	Population* population;
 	Organism* bestOrganismSeen;
-	ControlFlowGraph* targetCFG;
+	//ControlFlowGraph* targetCFG;
 
 	int numberOfGenerations;
 	int populationSize;

@@ -6,7 +6,9 @@
 ///////////////////////////////////////////////////////////
 
 #include "Simulation.h"
+#include "GlobalVariables.h"
 #include <iostream>
+#include <cassert>
 using std::cout;
 using std::endl;
 
@@ -14,10 +16,9 @@ Simulation::~Simulation(){
 	delete population;
 }
 
-Simulation::Simulation(ControlFlowGraph& targetCFG, int populationSize, int initialTestSuiteSize,
+Simulation::Simulation(int populationSize, int initialTestSuiteSize,
 		int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations){
 
-	this->targetCFG = &targetCFG;
 	this->populationSize = populationSize;
 	this->initialTestSuiteSize = initialTestSuiteSize;
 	this->numberOfGenerations = numberOfGenerations;
@@ -26,7 +27,7 @@ Simulation::Simulation(ControlFlowGraph& targetCFG, int populationSize, int init
 	probabilityForCrossover = crossOverProb;
 	bestOrganismSeen = 0;
 
-	population = new Population { populationSize, initialTestSuiteSize, targetCFG };
+	population = new Population { populationSize, initialTestSuiteSize };
 
 
 	//once the population is initialized each organism needs to be evaluated
@@ -41,9 +42,7 @@ TestSuite* Simulation::getBestTestSuite(){
 
 void Simulation::run(){
 	int i { 0 };
-
-	// Create two shells of organism to use, their chromosomes are not set by this constructor
-	Organism child1(*targetCFG), child2(*targetCFG);
+	Organism *child1 { }, *child2 { };
 
 	do{
 		auto parent1 = population->fitnessProportionalSelect();
@@ -55,24 +54,25 @@ void Simulation::run(){
 		parent2->print();
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
-		child1.mutate(probabilityForMutation);
-		child1.setFitness();
-		child2.mutate(probabilityForMutation);
-		child2.setFitness();
+		child1->mutate(probabilityForMutation);
+		child1->setFitness();
+		child2->mutate(probabilityForMutation);
+		child2->setFitness();
 
 		cout << "Children" << endl;
-		child1.print();
-		child2.print();
+		cout << "Children" << endl;
+		assert(child1);
+		assert(child2);
+		child1->print();
+		child2->print();
 
 		if(child1 <= child2)
 		{
-			population->replace(child2);
+			population->replace(*child2);
 		}
 		else {
-			population->replace(child1);
+			population->replace(*child1);
 		}
-
-
 
 		i++;
 

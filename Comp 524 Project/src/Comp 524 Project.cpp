@@ -5,6 +5,7 @@
 #include "HiLoControlFlowGraph.h"
 #include "SimpleIfElseControlFlowGraph.h"
 #include "Simulation.h"
+#include "GlobalVariables.h"
 
 #include <chrono>
 #include <ctime>
@@ -12,16 +13,20 @@
 
 using namespace std;
 
+ControlFlowGraph* targetCFG;
+
 void simpleIfElseControlFlowGraphTest_testSuite_version() {
 	cout << endl << "SimpleIfElse Test Suite Test: " << endl;
 	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
-	TestSuite* testSuite = new TestSuite { 10, testCFG };
+	targetCFG = testCFG;
+	TestSuite* testSuite = new TestSuite { 10 };
 
 	testSuite->print();
 }
 
 void simpleIfElseControlFlowGraphTest_testCase_version() {
 	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
+	targetCFG = testCFG;
 	cout << endl << "SimpleIfElse Test Case Test: " << endl;
 	TestCase* falseTestCase = new TestCase { testCFG->getNumberOfParameters(),
 			testCFG->getNumberOfEdges(), testCFG->getNumberOfPredicates() };
@@ -43,7 +48,8 @@ void simpleIfElseControlFlowGraphTest_testCase_version() {
 void hiLoControlFlowGraphTest_testSuite_version() {
 	cout << endl << "HiLo Test Suite Test: " << endl;
 	ControlFlowGraph* testCFG = new HiLoControlFlowGraph { };
-	TestSuite* testSuite = new TestSuite { 10, testCFG };
+	targetCFG = testCFG;
+	TestSuite* testSuite = new TestSuite { 10 };
 
 	testSuite->print();
 }
@@ -51,7 +57,9 @@ void hiLoControlFlowGraphTest_testSuite_version() {
 void hiLoSimulationTest() {
 	cout << "HiLo Simulation" << endl;
 	ControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
-	Simulation* hiLoSim = new Simulation(*hiLoCFG, 1000, 100, 30, .1, 1, 1000);
+
+	targetCFG = hiLoCFG;
+	Simulation* hiLoSim = new Simulation(1000, 1000, 2, .01, 1, 100);
 	hiLoSim->run();
 }
 
@@ -60,7 +68,8 @@ void simpleIfElseSimulationTest() {
 	//		int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations)
 
 	ControlFlowGraph* simpleIfElseCFG = new SimpleIfElseControlFlowGraph { };
-	Simulation* simpleIfElseSim = new Simulation(*simpleIfElseCFG, 10, 100, 2, 1, 1, 10);
+	targetCFG = simpleIfElseCFG;
+	Simulation* simpleIfElseSim = new Simulation(10, 100, 2, 1, 1, 10);
 	simpleIfElseSim->run();
 }
 
@@ -69,17 +78,17 @@ int main() {
 	//simpleIfElseControlFlowGraphTest_testSuite_version();
 	//hiLoControlFlowGraphTest_testSuite_version();
 
-    std::chrono::time_point<std::chrono::system_clock> start, end;
-    start = std::chrono::system_clock::now();
+    chrono::time_point<chrono::system_clock> start, end;
+    start = chrono::system_clock::now();
 
     hiLoSimulationTest();
 
-    end = std::chrono::system_clock::now();
+    end = chrono::system_clock::now();
 
-    std::chrono::duration<double> elapsed_seconds = end-start;
-    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+    chrono::duration<double> elapsed_seconds = end-start;
+    time_t end_time = std::chrono::system_clock::to_time_t(end);
 
-    std::cout << "finished computation at " << std::ctime(&end_time)
+    cout << "finished computation at " << std::ctime(&end_time)
               << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
 

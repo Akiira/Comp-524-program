@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////
 
 #include "TestSuite.h"
+#include "GlobalVariables.h"
 #include <iostream>
 #include <cassert>
 #include <cstring>
@@ -14,8 +15,6 @@ using std::cout;
 using std::endl;
 
 TestSuite::~TestSuite(){
-	//delete[] edgesCovered;
-	//delete[] predicatesCovered;
 	delete[] duplicateEdgesCovered;
 	delete[] duplicatePredicatesCovered;
 	for(int i = 0; i < numberOfTestCases; i++){
@@ -24,39 +23,44 @@ TestSuite::~TestSuite(){
 	delete[] testCases;
 }
 
+TestSuite::TestSuite(const TestSuite& testSuite) {
+	numberOfTestCases = testSuite.numberOfTestCases;
+	numberOfParameters = testSuite.numberOfParameters;
+	numberOfPredicates = testSuite.numberOfPredicates;
+	numberOfEdges = testSuite.numberOfEdges;
+
+	duplicateEdgesCovered = new int[numberOfEdges] { };
+	duplicatePredicatesCovered = new int[numberOfPredicates] { };
+
+	testCases = new TestCase*[numberOfTestCases] { };
+}
+
 // Fill the new suite with random test cases and evaluate the coverage of all the test cases
-TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG){
-	initializeMembersAndAllocateMemory(numberOfTestCases, targetCFG);
+TestSuite::TestSuite(int numberOfTestCases){
+	initializeMembersAndAllocateMemory(numberOfTestCases);
 	fillTestSuiteWithRandomTestCases();
 	// This is now called directly by Organism.setFitness
 	//calculateTestSuiteCoverage();
 }
 
-/** Create a new suite out of existing testCases
- * 	IMPORTANT: No copying is done here, just straight assignment of the pointer so ensure a deep copy was done
- * 	on them before calling this, should only be called from the crossover operator
- * 	(or maybe mutation or simulation in the future) where this copying is done.
- */
-TestSuite::TestSuite(int numberOfTestCases, TestCase** testCases, ControlFlowGraph* targetCFG) {
-	initializeMembersAndAllocateMemory(numberOfTestCases, targetCFG);
-	fillTestSuiteWithExistingTestCases(testCases);
+TestSuite::TestSuite(int numberOfTestCases, TestCase** testCases) {
+
+	initializeMembersAndAllocateMemory(numberOfTestCases);
+	this->testCases = testCases;
 	// This is now called directly by Organism.setFitness
 	//calculateTestSuiteCoverage();
 }
 
-void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, ControlFlowGraph* targetCFG) {
+void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases) {
 	assert(numberOfTestCases > 0);
-	this->targetCFG = targetCFG;
+
 	this->numberOfTestCases = numberOfTestCases;
 	this->numberOfParameters = targetCFG->getNumberOfParameters();
 	this->numberOfEdges = targetCFG->getNumberOfEdges();
 	this->numberOfPredicates = targetCFG->getNumberOfPredicates();
 
-	//TODO Why have both boolean and int arrays?
-	//TODO I agree we can just get by with the ints. I will remove the bools when i get a chance.
-	//edgesCovered = new bool[numberOfEdges];
+
 	duplicateEdgesCovered = new int[numberOfEdges] { };
-	//predicatesCovered = new bool[numberOfPredicates];
 	duplicatePredicatesCovered = new int[numberOfPredicates] { };
 
 	testCases = new TestCase*[numberOfTestCases] { };
@@ -65,15 +69,9 @@ void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, Contro
 void TestSuite::fillTestSuiteWithRandomTestCases() {
 	assert(testCases != 0);
 	for(int i = 0; i < numberOfTestCases; i++){
-		// Generates random test cases and stores them
-		testCases[i] = new TestCase(*targetCFG);
+		testCases[i] = new TestCase { numberOfParameters, numberOfEdges, numberOfPredicates };
 		targetCFG->setCoverageOfTestCase(testCases[i]);
 	}
-}
-
-void TestSuite::fillTestSuiteWithExistingTestCases(TestCase** testCases) {
-	assert(testCases != 0);
-	this->testCases = testCases;
 }
 
 TestCase** TestSuite::getAllTestCases() const{
@@ -139,8 +137,6 @@ void TestSuite::calculateTestSuiteCoverage() {
 
 TestSuite& TestSuite::operator =(const TestSuite& other) {
 	if(this != &other){
-		//delete[] edgesCovered;
-		//delete[] predicatesCovered;
 		delete[] duplicateEdgesCovered;
 		delete[] duplicatePredicatesCovered;
 
@@ -154,16 +150,13 @@ TestSuite& TestSuite::operator =(const TestSuite& other) {
 		numberOfEdges = other.numberOfEdges;
 		numberOfPredicates = other.numberOfPredicates;
 
-		//edgesCovered = new bool[numberOfEdges] { };
 		duplicateEdgesCovered = new int[numberOfEdges] { };
-		//predicatesCovered = new bool[numberOfPredicates] { };
 		duplicatePredicatesCovered = new int[numberOfPredicates] { };
 		testCases = new TestCase*[numberOfTestCases] { } ;
 
 		using std::memcpy;
-		//memcpy(edgesCovered, other.edgesCovered, sizeof(numberOfEdges * sizeof(bool)));
+
 		memcpy(duplicateEdgesCovered, other.duplicateEdgesCovered, sizeof(numberOfEdges * sizeof(int)));
-		//memcpy(predicatesCovered, other.predicatesCovered, sizeof(numberOfEdges * sizeof(bool)));
 		memcpy(duplicatePredicatesCovered, other.duplicatePredicatesCovered, sizeof(numberOfEdges * sizeof(int)));
 
 		for(int i = 0; i < numberOfTestCases; i++){

@@ -21,28 +21,23 @@ private:
 	int numberOfEdges;
 	int numberOfPredicates;
 
-	//bool* edgesCovered;
-	//bool* predicatesCovered;
 	int* duplicateEdgesCovered;
 	int* duplicatePredicatesCovered;
 
 	TestCase** testCases;
 
-	// Adding this so it can be passed to print, Also will probably be needed in other
-	//	methods later.
-	ControlFlowGraph* targetCFG;
 
 	// SHared code between constructors
-	void initializeMembersAndAllocateMemory(int numberOfTestCases, ControlFlowGraph* targetCFG);
-
+	void initializeMembersAndAllocateMemory(int numberOfTestCases);
 	void fillTestSuiteWithRandomTestCases();
-	void fillTestSuiteWithExistingTestCases(TestCase** testCasesToCopy);
+
 
 public:
 	virtual ~TestSuite();
 
-	TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG);
-	TestSuite(int numberOfTestCases, TestCase** testCasesToCopy, ControlFlowGraph* targetCFG);
+	TestSuite(const TestSuite&);
+	TestSuite(int numberOfTestCases);
+	TestSuite(int numberOfTestCases, TestCase** testCasesToCopy);
 
 	TestCase** getAllTestCases() const;
 	TestCase* getTestCase(int index);
@@ -61,25 +56,6 @@ public:
 	int* getDuplicatePredicatesCovered() const {
 		return duplicatePredicatesCovered;
 	}
-
-	/*
-	bool* getEdgesCovered() const {
-		return edgesCovered;
-	}
-
-	void setEdgesCovered(bool* edgesCovered) {
-		this->edgesCovered = edgesCovered;
-	}
-
-
-	bool* getPredicatesCovered() const {
-		return predicatesCovered;
-	}
-
-	void setPredicatesCovered(bool* predicatesCovered) {
-		this->predicatesCovered = predicatesCovered;
-	}
-	*/
 
 	int getNumberOfTestCases() const {
 		return numberOfTestCases;
