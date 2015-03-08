@@ -57,53 +57,43 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 	TestCase** offspring1TestCases = new TestCase*[parent1NumberOfTestCases];
 	TestCase** offspring2TestCases = new TestCase*[parent2NumberOfTestCases];
 
+
+
 	bool alternate = true;
 	int current = 0; //the overall finger through all chromosomes (parents & offspring)
 	for (int i = 0; i < numberOfCutPoints; i++) {
 		if (alternate) {
 			for (int j = current; j <= cutPoints[i]; j++) {
-				offspring1TestCases[j] = parent1TestCases[j];
-				offspring2TestCases[j] = parent2TestCases[j];
-				parent1TestCases[j]->getEdgesCovered()[0] = 1;
+				offspring1TestCases[j] = new TestCase { *parent1TestCases[j] };
+				offspring2TestCases[j] = new TestCase { *parent2TestCases[j] };
 			}
 		}  //if
 		else {
 			for (int j = current; j <= cutPoints[i]; j++) {
-				offspring1TestCases[j] = parent2TestCases[j];
-				offspring2TestCases[j] = parent1TestCases[j];
+				offspring1TestCases[j] = new TestCase { *parent2TestCases[j] };
+				offspring2TestCases[j] = new TestCase { *parent1TestCases[j] };
 			}
 		}
 		current = cutPoints[i] + 1;
 		alternate = !alternate;
-	}  //endfor i
+	}
 
-	   //now take care of the last segments, if any
+	//now take care of the last segments, if any
 	if (alternate) {
 		for (int j = current; j < parent2NumberOfTestCases; j++) {
-			offspring1TestCases[j] = parent1TestCases[j];
-			offspring2TestCases[j] = parent2TestCases[j];
+			offspring1TestCases[j] = new TestCase { *parent1TestCases[j] };
+			offspring2TestCases[j] = new TestCase { *parent2TestCases[j] };
 		}
 	} else {
-		//GA0 had j <= orgLength here but < in the case above (A typo?)
 		for (int j = current; j < parent2NumberOfTestCases; j++) {
-			offspring1TestCases[j] = parent2TestCases[j];
-			offspring2TestCases[j] = parent1TestCases[j];
+			offspring1TestCases[j] = new TestCase { *parent2TestCases[j] };
+			offspring2TestCases[j] = new TestCase { *parent1TestCases[j] };
 		}
 	}
 
 	// Now fill in remaining test cases of offspring1 from parent1 (if parent1 had more than parent2)
 	for (int j = parent2NumberOfTestCases; j < parent1NumberOfTestCases; j++) {
-		offspring1TestCases[j] = parent1TestCases[j];
-	}
-
-	// Perform a deep copy of the test cases so that the parent and offspring don't reference the same
-	//	objects.
-	for (int i = 0; i < parent1NumberOfTestCases; i++) {
-		offspring1TestCases[i] = new TestCase(*offspring1TestCases[i]);
-	}
-
-	for (int i = 0; i < parent2NumberOfTestCases; i++) {
-		offspring2TestCases[i] = new TestCase(*offspring2TestCases[i]);
+		offspring1TestCases[j] = new TestCase { *parent1TestCases[j] };
 	}
 
 	// Set the chromosome of offspring1 and offspring2 to be a new TestSuite instance made up of the
