@@ -44,8 +44,6 @@ TestCase::TestCase(ControlFlowGraph& cfg) {
 	generateRandomParameters();
 }
 
-// Copy constructor
-//TODO Test that I did memcpy right
 TestCase::TestCase(const TestCase& that) {
 
 	numberOfEdges = that.numberOfEdges;
@@ -53,25 +51,12 @@ TestCase::TestCase(const TestCase& that) {
 	numberOfPredicates = that.numberOfPredicates;
 
 	edgesCovered = new bool[numberOfEdges] { };
-	/*
-	for (int i = 0; i < numberOfEdges; i++) {
-		edgesCovered[i] = that.edgesCovered[i];
-	}
-	*/
 	memcpy(edgesCovered, that.edgesCovered, sizeof *edgesCovered * numberOfEdges);
+
 	predicatesCovered = new bool[numberOfPredicates] { };
-	/*
-	for (int i = 0; i < numberOfPredicates; i++) {
-		predicatesCovered[i] = that.predicatesCovered[i];
-	}
-	*/
 	memcpy(predicatesCovered, that.predicatesCovered, sizeof *predicatesCovered * numberOfPredicates);
+
 	inputParameters = new int[numberOfParameters] { };
-	/*
-	for (int i = 0; i < numberOfParameters; i++) {
-		inputParameters[i] = that.inputParameters[i];
-	}
-	*/
 	memcpy(inputParameters, that.inputParameters, sizeof *inputParameters * numberOfParameters);
 }
 
