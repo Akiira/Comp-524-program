@@ -5,6 +5,7 @@
 #include "HiLoControlFlowGraph.h"
 #include "SimpleIfElseControlFlowGraph.h"
 #include "Simulation.h"
+#include "GlobalVariables.h"
 
 #include <chrono>
 #include <ctime>
@@ -12,10 +13,12 @@
 
 using namespace std;
 
+ControlFlowGraph* targetCFG;
+
 void simpleIfElseControlFlowGraphTest_testSuite_version() {
 	cout << endl << "SimpleIfElse Test Suite Test: " << endl;
 	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
-	TestSuite* testSuite = new TestSuite { 10, testCFG };
+	TestSuite* testSuite = new TestSuite { 10 };
 
 	testSuite->print();
 }
@@ -43,7 +46,7 @@ void simpleIfElseControlFlowGraphTest_testCase_version() {
 void hiLoControlFlowGraphTest_testSuite_version() {
 	cout << endl << "HiLo Test Suite Test: " << endl;
 	ControlFlowGraph* testCFG = new HiLoControlFlowGraph { };
-	TestSuite* testSuite = new TestSuite { 10, testCFG };
+	TestSuite* testSuite = new TestSuite { 10 };
 
 	testSuite->print();
 }
@@ -51,7 +54,8 @@ void hiLoControlFlowGraphTest_testSuite_version() {
 void hiLoSimulationTest() {
 	cout << "HiLo Simulation" << endl;
 	ControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
-	Simulation* hiLoSim = new Simulation(*hiLoCFG, 1000, 1000, 2, 1, 1, 100);
+	targetCFG = hiLoCFG;
+	Simulation* hiLoSim = new Simulation(1000, 1000, 2, 1, 1, 100);
 	hiLoSim->run();
 }
 
@@ -60,7 +64,7 @@ void simpleIfElseSimulationTest() {
 	//		int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations)
 
 	ControlFlowGraph* simpleIfElseCFG = new SimpleIfElseControlFlowGraph { };
-	Simulation* simpleIfElseSim = new Simulation(*simpleIfElseCFG, 10, 100, 2, 1, 1, 10);
+	Simulation* simpleIfElseSim = new Simulation(10, 100, 2, 1, 1, 10);
 	simpleIfElseSim->run();
 }
 
