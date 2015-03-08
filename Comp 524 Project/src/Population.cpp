@@ -61,12 +61,9 @@ void Population::crossover(const Organism& parent1, const Organism& parent2, Org
 	for (int i = 0; i < numberOfCutPoints; i++){
 		if (alternate){
 		  for (int j=current; j <= cutPoints[i]; j++){
-			  //cout << "\tBefore assignment" << endl;
 			  offspring1TestCases[j] = parent1TestCases[j];
 			  offspring2TestCases[j] = parent2TestCases[j];
-			  cout << "\t Orig: " <<offspring1TestCases[j]->getEdgesCovered()[0] << "\n";
 			  parent1TestCases[j]->getEdgesCovered()[0] = 1;
-			  cout << "\t after: " <<offspring1TestCases[j]->getEdgesCovered()[0] << "\n";
 		  }
 		}//if
 		else{

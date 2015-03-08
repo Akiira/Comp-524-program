@@ -47,7 +47,7 @@ TestCase::TestCase(ControlFlowGraph& cfg) {
 // Copy constructor
 //TODO Test that I did memcpy right
 TestCase::TestCase(const TestCase& that) {
-	cout << "\tInCopyConstructor\n";
+
 	numberOfEdges = that.numberOfEdges;
 	numberOfParameters = that.numberOfParameters;
 	numberOfPredicates = that.numberOfPredicates;
