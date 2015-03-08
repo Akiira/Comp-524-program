@@ -15,8 +15,6 @@ using std::cout;
 using std::endl;
 
 TestSuite::~TestSuite(){
-	//delete[] edgesCovered;
-	//delete[] predicatesCovered;
 	delete[] duplicateEdgesCovered;
 	delete[] duplicatePredicatesCovered;
 	for(int i = 0; i < numberOfTestCases; i++){
@@ -132,8 +130,6 @@ void TestSuite::calculateTestSuiteCoverage() {
 
 TestSuite& TestSuite::operator =(const TestSuite& other) {
 	if(this != &other){
-		//delete[] edgesCovered;
-		//delete[] predicatesCovered;
 		delete[] duplicateEdgesCovered;
 		delete[] duplicatePredicatesCovered;
 
@@ -147,16 +143,13 @@ TestSuite& TestSuite::operator =(const TestSuite& other) {
 		numberOfEdges = other.numberOfEdges;
 		numberOfPredicates = other.numberOfPredicates;
 
-		//edgesCovered = new bool[numberOfEdges] { };
 		duplicateEdgesCovered = new int[numberOfEdges] { };
-		//predicatesCovered = new bool[numberOfPredicates] { };
 		duplicatePredicatesCovered = new int[numberOfPredicates] { };
 		testCases = new TestCase*[numberOfTestCases] { } ;
 
 		using std::memcpy;
-		//memcpy(edgesCovered, other.edgesCovered, sizeof(numberOfEdges * sizeof(bool)));
+
 		memcpy(duplicateEdgesCovered, other.duplicateEdgesCovered, sizeof(numberOfEdges * sizeof(int)));
-		//memcpy(predicatesCovered, other.predicatesCovered, sizeof(numberOfEdges * sizeof(bool)));
 		memcpy(duplicatePredicatesCovered, other.duplicatePredicatesCovered, sizeof(numberOfEdges * sizeof(int)));
 
 		for(int i = 0; i < numberOfTestCases; i++){
