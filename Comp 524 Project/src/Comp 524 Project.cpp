@@ -69,17 +69,17 @@ int main() {
 	//simpleIfElseControlFlowGraphTest_testSuite_version();
 	//hiLoControlFlowGraphTest_testSuite_version();
 
-    std::chrono::time_point<std::chrono::system_clock> start, end;
-    start = std::chrono::system_clock::now();
+    chrono::time_point<chrono::system_clock> start, end;
+    start = chrono::system_clock::now();
 
     hiLoSimulationTest();
 
-    end = std::chrono::system_clock::now();
+    end = chrono::system_clock::now();
 
-    std::chrono::duration<double> elapsed_seconds = end-start;
-    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+    chrono::duration<double> elapsed_seconds = end-start;
+    time_t end_time = std::chrono::system_clock::to_time_t(end);
 
-    std::cout << "finished computation at " << std::ctime(&end_time)
+    cout << "finished computation at " << std::ctime(&end_time)
               << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
 
