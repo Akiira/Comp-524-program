@@ -24,6 +24,18 @@ TestSuite::~TestSuite(){
 	delete[] testCases;
 }
 
+TestSuite::TestSuite(const TestSuite& testSuite) {
+	numberOfTestCases = testSuite.numberOfTestCases;
+	numberOfParameters = testSuite.numberOfParameters;
+	numberOfPredicates = testSuite.numberOfPredicates;
+	numberOfEdges = testSuite.numberOfEdges;
+
+	duplicateEdgesCovered = new int[numberOfEdges] { };
+	duplicatePredicatesCovered = new int[numberOfPredicates] { };
+
+	testCases = new TestCase*[numberOfTestCases];
+}
+
 // Fill the new suite with random test cases and evaluate the coverage of all the test cases
 TestSuite::TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG){
 	initializeMembersAndAllocateMemory(numberOfTestCases, targetCFG);

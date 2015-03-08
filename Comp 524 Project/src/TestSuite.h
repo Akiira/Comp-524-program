@@ -41,6 +41,7 @@ private:
 public:
 	virtual ~TestSuite();
 
+	TestSuite(const TestSuite&);
 	TestSuite(int numberOfTestCases, ControlFlowGraph* targetCFG);
 	TestSuite(int numberOfTestCases, TestCase** testCasesToCopy, ControlFlowGraph* targetCFG);
 
