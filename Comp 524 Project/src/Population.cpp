@@ -165,7 +165,7 @@ Organism* Population::fitnessProportionalSelect()
       sum += population[i]->getFitness();
     }//while
   }//else
-  cout << i << endl;
+  //cout << "Selected: " << i << endl;
   return population[i];
 }//select
 

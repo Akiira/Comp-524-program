@@ -98,8 +98,13 @@ int Organism::setFitness(){
 	return fitness;
 }
 
-void Organism::print() {
+void Organism::printSimple() {
 	chromosome->printSimple();
+}
+
+void Organism::printFitnessAndCoverage() {
+	cout << "Fitness: " << fitness << endl;
+	chromosome->printOnlyTestSuiteCoverage();
 }
 
 int Organism::getNumberOfTestCases() const {

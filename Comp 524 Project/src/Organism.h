@@ -36,7 +36,8 @@ public:
 	bool operator==(const Organism& right);
 	Organism& operator=(const Organism& org);
 
-	void print();
+	void printSimple();
+	void printFitnessAndCoverage();
 
 	friend class Population;
 

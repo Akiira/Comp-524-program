@@ -45,13 +45,14 @@ void Simulation::run(){
 	Organism *child1 { }, *child2 { };
 
 	do{
+		population->printPopulationFitness();
 		auto parent1 = population->fitnessProportionalSelect();
 		auto parent2 = population->fitnessProportionalSelect();
 
 		cout << "Generation # " << i << endl;
-		cout << "Parents" << endl;
-		parent1->print();
-		parent2->print();
+		//cout << "Parents" << endl;
+		//parent1->printFitnessAndCoverage();
+		//parent2->printFitnessAndCoverage();
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 		child1->mutate(probabilityForMutation);
@@ -59,12 +60,11 @@ void Simulation::run(){
 		child2->mutate(probabilityForMutation);
 		child2->setFitness();
 
-		cout << "Children" << endl;
-		cout << "Children" << endl;
 		assert(child1);
 		assert(child2);
-		child1->print();
-		child2->print();
+		//cout << "Children" << endl;
+		//child1->printFitnessAndCoverage();
+		//child2->printFitnessAndCoverage();
 
 		if(child1 <= child2)
 		{
