@@ -89,3 +89,10 @@ Organism& Organism::operator=(const Organism& org) {	//assignment operator
 void Organism::print() {
 	chromosome->printSimple();
 }
+
+int Organism::getNumberOfTestCases() const {
+	if(chromosome)
+		return chromosome->getNumberOfTestCases();
+	else
+		return -1;
+}

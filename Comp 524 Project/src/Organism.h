@@ -28,6 +28,7 @@ public:
 
 	void setFitness();
 	int getFitness() const;
+	int getNumberOfTestCases() const;
 
 	bool operator<=(const Organism& right);
 	bool operator==(const Organism& right);
