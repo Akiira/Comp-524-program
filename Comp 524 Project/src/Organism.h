@@ -18,7 +18,8 @@ class Organism
 public:
 	virtual ~Organism();
 
-	Organism(ControlFlowGraph& target);
+	Organism(int numOfTestCases);
+	Organism(int numOfTestCases, TestCase** testCases);
 
 	void initializeRandomChromosome(int numberOfTestCases);
 	void initializeChromosomeFromTestCases(int numberOfTestCases, TestCase** testCases);
@@ -40,9 +41,6 @@ public:
 
 private:
 	TestSuite* chromosome;
-	ControlFlowGraph* targetCFG;
-	// Initialized means it has a full test suite
-	// Evaluated means it's fitness is up to date
 	bool initialized, evaluated;
 	int fitness;
 };
