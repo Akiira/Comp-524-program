@@ -33,8 +33,8 @@ void ControlFlowGraph::printTestCaseCoverage(TestCase* testCase){
 }
 
 void ControlFlowGraph::printTestSuiteCoverage(TestSuite* testSuite){
-	bool* edgesCovered = testSuite->getEdgesCovered();
-	bool* predicatesCovered = testSuite->getPredicatesCovered();
+	int* edgesCovered = testSuite->getDuplicateEdgesCovered();
+	int* predicatesCovered = testSuite->getDuplicatePredicatesCovered();
 
 	printEdgesCovered(edgesCovered);
 	printPredicatesCovered(predicatesCovered);

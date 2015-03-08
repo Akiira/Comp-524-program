@@ -67,6 +67,9 @@ class HiLoControlFlowGraph : public ControlFlowGraph
 		void printInputParameters(int* inputParameters);
 		void printEdgesCovered(bool* edgesCovered);
 		void printPredicatesCovered(bool* predicatesCovered);
+
+		void printEdgesCovered(int* edgesCovered);
+		void printPredicatesCovered(int* predicatesCovered);
 };
 
 

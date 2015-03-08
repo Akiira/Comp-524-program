@@ -60,6 +60,27 @@ void SimpleIfElseControlFlowGraph::printPredicatesCovered(bool* predicatesCovere
 	std::cout << std::endl;
 }
 
+void SimpleIfElseControlFlowGraph::printEdgesCovered(int* edgesCovered) {
+	std::cout << endl << "Edge Coverage" << std::endl;
+	std::cout << " B1toB2 | B1toB3 | B2toB4 | B3toB4 " << std::endl;
+	std::cout << "-----------------------------------" << std::endl;
+	for(int i = 0; i < numberOfEdges; i++)
+	{
+		std::cout << "   " << edgesCovered[i] << "    |";
+	}
+	std::cout << std::endl;
+}
+void SimpleIfElseControlFlowGraph::printPredicatesCovered(int* predicatesCovered) {
+	std::cout << endl << "Predicate Coverage" << std::endl;
+	std::cout << " B1_T | B1_F " << std::endl;
+	std::cout << "-------------" << std::endl;
+	for(int i = 0; i < numberOfPredicates; i++)
+	{
+		std::cout << "  " << predicatesCovered[i] << "   |";
+	}
+	std::cout << std::endl;
+}
+
 void SimpleIfElseControlFlowGraph::runTestCase() {
 	testCase->clearCoverage();
 	block1();

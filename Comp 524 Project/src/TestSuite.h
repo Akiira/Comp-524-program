@@ -21,8 +21,8 @@ private:
 	int numberOfEdges;
 	int numberOfPredicates;
 
-	bool* edgesCovered;
-	bool* predicatesCovered;
+	//bool* edgesCovered;
+	//bool* predicatesCovered;
 	int* duplicateEdgesCovered;
 	int* duplicatePredicatesCovered;
 
@@ -60,6 +60,7 @@ public:
 		return duplicatePredicatesCovered;
 	}
 
+	/*
 	bool* getEdgesCovered() const {
 		return edgesCovered;
 	}
@@ -68,6 +69,7 @@ public:
 		this->edgesCovered = edgesCovered;
 	}
 
+
 	bool* getPredicatesCovered() const {
 		return predicatesCovered;
 	}
@@ -75,6 +77,7 @@ public:
 	void setPredicatesCovered(bool* predicatesCovered) {
 		this->predicatesCovered = predicatesCovered;
 	}
+	*/
 
 	int getNumberOfTestCases() const {
 		return numberOfTestCases;
