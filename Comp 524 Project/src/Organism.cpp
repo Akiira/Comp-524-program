@@ -54,7 +54,7 @@ void Organism::mutate(double mutationProb){
 
 }
 
-void Organism::setFitness(){
+int Organism::setFitness(){
 	int sum = 0;
 
 	int* edgeCoverage = chromosome->getDuplicateEdgesCovered();
@@ -79,6 +79,7 @@ void Organism::setFitness(){
 	}
 
 	fitness = sum;
+	return fitness;
 }
 
 bool Organism::operator<=(const Organism& right) { //overloaded operator <=

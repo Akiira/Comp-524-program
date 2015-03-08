@@ -19,13 +19,13 @@ Population::Population(int popSize, int initialTestSuiteSize, ControlFlowGraph& 
 	population = new Organism*[popSize];
 	populationSize = popSize;
 	this->initialTestSuiteSize = initialTestSuiteSize;
-	totalFitness = 0;
+
 	for(int i = 0; i < popSize; i++){
 		population[i] = new Organism(targetCFG);
 		population[i]->initializeRandomChromosome(initialTestSuiteSize);
-		population[i]->setFitness();
-		totalFitness += population[i]->getFitness();
 	}
+	totalFitness = 0;
+	setPopulationFitness();
 }
 
 
@@ -51,6 +51,7 @@ void Population::crossover(const Organism& parent1, const Organism& parent2, Org
 		parent1NumberOfTestCases = parent2NumberOfTestCases;
 		parent2NumberOfTestCases = tmp;
 	}
+
 
 	// Use parent2NumberOfTestCases as the upperBound of cutpoints since parent2 must be <= parent1
 	int* cutPoints = selectCutPoints(numberOfCutPoints, parent2NumberOfTestCases);
@@ -145,11 +146,55 @@ void Population::replace(Organism& offspring){
 }
 
 //TODO implement fitness proportional selection
-Organism* Population::select(){
+Organism* Population::randomSelect(){
 	return population[uniformInRange(0, populationSize-1)];
 }
 
+// Straight from GA0
+Organism* Population::fitnessProportionalSelect()
+{//selects a member of the population using proportional selection scheme.
+ //If totalFitness is zero then an organism is selected at random.
+  long toss;
+  int i = 0;
+  int sum;
 
-void Population::setPopulationFitness(){
+  if (totalFitness == 0){
+    //    i = rand() % popSize;
+    i = uniformInRange(0, populationSize-1);
+  }
+  else{
+    sum  = population[0]->getFitness();
+    //toss = rand() % totalFitness;
+    toss = uniformInRange(0, totalFitness);
+    while (sum < toss){
+      i++;
+      sum += population[i]->getFitness();
+    }//while
+  }//else
+  cout << i << endl;
+  return population[i];
+}//select
 
-}
+// Straight from GA0
+void Population::setPopulationFitness()
+{//sets the fitness of each member of the population
+ //also computes the total fitness
+  int i, j;
+  totalFitness = 0;
+  for (i = 0; i < populationSize; i++){
+    totalFitness += population[i]->setFitness();
+  }
+
+  //now sort popArray so that the organisms are in order of fitness
+  //from highest to lowest.
+  Organism* tmp;
+  for (i = populationSize - 1; i > 1; i--){
+    for (j = 0; j < i; j++){
+      if (population[j]->fitness < population[j+1]->fitness){
+		tmp = population[j];
+		population[j] = population[j+1];
+		population[j+1] = tmp;
+      }
+    }//for
+  }//for
+}//setPopulationFitness

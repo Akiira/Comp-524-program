@@ -26,7 +26,8 @@ public:
 	TestSuite* getChromosome() const;
 	void mutate(double mutationProb);
 
-	void setFitness();
+	// Also returns fitness
+	int setFitness();
 	int getFitness() const;
 
 	bool operator<=(const Organism& right);

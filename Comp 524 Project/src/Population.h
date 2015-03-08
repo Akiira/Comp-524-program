@@ -20,7 +20,8 @@ public:
 	Population(int popSize, int initialTestSuiteSize, ControlFlowGraph& targetCFG);
 	void crossover(const Organism& parent1, const Organism& parent2, Organism& offspring1, Organism& offspring2, int numberOfCutPoints);
 	void replace(Organism& offspring);
-	Organism* select();
+	Organism* randomSelect();
+	Organism* fitnessProportionalSelect();
 
 private:
 	Organism** population;

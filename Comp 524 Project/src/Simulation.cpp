@@ -45,8 +45,11 @@ void Simulation::run(){
 	Organism child1(*targetCFG), child2(*targetCFG);
 
 	do{
-		auto parent1 = population->select();
-		auto parent2 = population->select();
+		auto parent1 = population->fitnessProportionalSelect();
+		auto parent2 = population->fitnessProportionalSelect();
+		//if (parent2.getChromosome()->getAllTestCases() == NULL || parent1.getChromosome()->getAllTestCases() == NULL) {
+		//	cout << "here" << endl;
+		//}
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 		cout << "Generation # " << i << endl;

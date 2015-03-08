@@ -65,14 +65,14 @@ void simpleIfElseSimulationTest() {
 }
 
 int main() {
-	simpleIfElseControlFlowGraphTest_testCase_version();
-	simpleIfElseControlFlowGraphTest_testSuite_version();
-	hiLoControlFlowGraphTest_testSuite_version();
+	//simpleIfElseControlFlowGraphTest_testCase_version();
+	//simpleIfElseControlFlowGraphTest_testSuite_version();
+	//hiLoControlFlowGraphTest_testSuite_version();
 
     std::chrono::time_point<std::chrono::system_clock> start, end;
     start = std::chrono::system_clock::now();
 
-    //hiLoSimulationTest();
+    hiLoSimulationTest();
 
     end = std::chrono::system_clock::now();
 
