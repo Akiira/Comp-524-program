@@ -51,7 +51,7 @@ void hiLoControlFlowGraphTest_testSuite_version() {
 void hiLoSimulationTest() {
 	cout << "HiLo Simulation" << endl;
 	ControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
-	Simulation* hiLoSim = new Simulation(*hiLoCFG, 1000, 1000, 30, .1, 1, 10000);
+	Simulation* hiLoSim = new Simulation(*hiLoCFG, 1000, 100, 30, .1, 1, 1000);
 	hiLoSim->run();
 }
 
