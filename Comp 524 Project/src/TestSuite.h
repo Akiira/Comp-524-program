@@ -59,25 +59,6 @@ public:
 		return duplicatePredicatesCovered;
 	}
 
-	/*
-	bool* getEdgesCovered() const {
-		return edgesCovered;
-	}
-
-	void setEdgesCovered(bool* edgesCovered) {
-		this->edgesCovered = edgesCovered;
-	}
-
-
-	bool* getPredicatesCovered() const {
-		return predicatesCovered;
-	}
-
-	void setPredicatesCovered(bool* predicatesCovered) {
-		this->predicatesCovered = predicatesCovered;
-	}
-	*/
-
 	int getNumberOfTestCases() const {
 		return numberOfTestCases;
 	}

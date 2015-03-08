@@ -23,15 +23,9 @@ Population::Population(int popSize, int initialTestSuiteSize) {
 	population = new Organism*[popSize];
 	populationSize = popSize;
 	this->initialTestSuiteSize = initialTestSuiteSize;
-<<<<<<< HEAD
 
-	for(int i = 0; i < popSize; i++){
-		population[i] = new Organism(targetCFG);
-		population[i]->initializeRandomChromosome(initialTestSuiteSize);
-=======
 	for (int i = 0; i < popSize; i++) {
 		population[i] = new Organism(initialTestSuiteSize);
->>>>>>> refs/heads/AddingAssignmentToCrossiver
 	}
 	totalFitness = 0;
 	setPopulationFitness();
@@ -130,16 +124,11 @@ void Population::replace(Organism& offspring) {
 }
 
 //TODO implement fitness proportional selection
-<<<<<<< HEAD
-Organism* Population::randomSelect(){
-	return population[uniformInRange(0, populationSize-1)];
-=======
 Organism* Population::select() {
 	return population[uniformInRange(0, populationSize - 1)];
->>>>>>> refs/heads/AddingAssignmentToCrossiver
 }
 
-<<<<<<< HEAD
+
 // Straight from GA0
 // I tried to have this return Organism like it was in GA0 and change only the
 //	relevant things in Simulation to pass the parents into crossover and it caused
@@ -167,9 +156,7 @@ Organism* Population::fitnessProportionalSelect()
   cout << i << endl;
   return population[i];
 }//select
-=======
-void Population::setPopulationFitness() {
->>>>>>> refs/heads/AddingAssignmentToCrossiver
+
 
 // Straight from GA0
 void Population::setPopulationFitness()

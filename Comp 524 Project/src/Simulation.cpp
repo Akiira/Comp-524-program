@@ -54,16 +54,11 @@ void Simulation::run(){
 		parent1->print();
 		parent2->print();
 		cout << "Children" << endl;
-<<<<<<< HEAD
-		child1.print();
-		child2.print();
-
-=======
 		assert(child1);
 		assert(child2);
 		child1->print();
 		child2->print();
->>>>>>> refs/heads/AddingAssignmentToCrossiver
+
 
 		//child1.mutate(probabilityForMutation);
 		//child1.setFitness();

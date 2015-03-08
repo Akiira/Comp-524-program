@@ -18,6 +18,7 @@ ControlFlowGraph* targetCFG;
 void simpleIfElseControlFlowGraphTest_testSuite_version() {
 	cout << endl << "SimpleIfElse Test Suite Test: " << endl;
 	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
+	targetCFG = testCFG;
 	TestSuite* testSuite = new TestSuite { 10 };
 
 	testSuite->print();
@@ -25,6 +26,7 @@ void simpleIfElseControlFlowGraphTest_testSuite_version() {
 
 void simpleIfElseControlFlowGraphTest_testCase_version() {
 	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
+	targetCFG = testCFG;
 	cout << endl << "SimpleIfElse Test Case Test: " << endl;
 	TestCase* falseTestCase = new TestCase { testCFG->getNumberOfParameters(),
 			testCFG->getNumberOfEdges(), testCFG->getNumberOfPredicates() };
@@ -46,6 +48,7 @@ void simpleIfElseControlFlowGraphTest_testCase_version() {
 void hiLoControlFlowGraphTest_testSuite_version() {
 	cout << endl << "HiLo Test Suite Test: " << endl;
 	ControlFlowGraph* testCFG = new HiLoControlFlowGraph { };
+	targetCFG = testCFG;
 	TestSuite* testSuite = new TestSuite { 10 };
 
 	testSuite->print();
@@ -64,6 +67,7 @@ void simpleIfElseSimulationTest() {
 	//		int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations)
 
 	ControlFlowGraph* simpleIfElseCFG = new SimpleIfElseControlFlowGraph { };
+	targetCFG = simpleIfElseCFG;
 	Simulation* simpleIfElseSim = new Simulation(10, 100, 2, 1, 1, 10);
 	simpleIfElseSim->run();
 }

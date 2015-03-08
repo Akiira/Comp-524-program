@@ -110,11 +110,3 @@ Organism& Organism::operator=(const Organism& org) {	//assignment operator
 //	}	//if
 	return *this;
 }//operator=
-<<<<<<< HEAD
-
-void Organism::print() {
-	cout << "Fitness: " << fitness << endl;
-	chromosome->printOnlyTestSuiteCoverage();
-}
-=======
->>>>>>> refs/heads/AddingAssignmentToCrossiver
