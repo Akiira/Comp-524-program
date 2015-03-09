@@ -22,11 +22,11 @@ HiLoControlFlowGraph::HiLoControlFlowGraph() {
 	numberOfProgramVariables = 5;
 	programVariables = new int[numberOfProgramVariables] { };
 
-	rangeForEachParameter[0][0] = 1;
+	rangeForEachParameter[0][0] = -100;
 	rangeForEachParameter[0][1] = 100;
-	rangeForEachParameter[1][0] = 1;
+	rangeForEachParameter[1][0] = -100;
 	rangeForEachParameter[1][1] = 100;
-	rangeForEachParameter[2][0] = 0;
+	rangeForEachParameter[2][0] = -15000;
 	rangeForEachParameter[2][1] = 15000;
 }
 
