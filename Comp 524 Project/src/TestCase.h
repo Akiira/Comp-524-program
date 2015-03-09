@@ -22,6 +22,7 @@ public:
 	// Copy constructor
 	TestCase(const TestCase& that);
 
+	void mutate();
 
 	bool* getEdgesCovered();
 	bool* getPredicatesCovered();

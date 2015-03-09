@@ -61,6 +61,29 @@ TestCase::TestCase(const TestCase& that) {
 	memcpy(inputParameters, that.inputParameters, sizeof *inputParameters * numberOfParameters);
 }
 
+
+//This is another type of mutation we could use, perhaps in addition to other operators.
+//The only thing that would need changing if we use this, is to change it from uniformInRange
+// to a gaussian distribution; so it has a higher probability of picking closer numbers.
+// Atleast, that how it is in the book.
+void TestCase::mutate() {
+	for(int i = 0; i < numberOfParameters; i++){
+		int x = uniformInRange(1, 10);
+
+		if(uniformInRange(0,1)){
+			inputParameters[i] += x;
+			if( inputParameters[i] > targetCFG->getUpperBoundForParameter(i) ){
+				inputParameters[i] = targetCFG->getUpperBoundForParameter(i);
+			}
+		} else {
+			inputParameters[i] -= x;
+			if( inputParameters[i] < targetCFG->getLowerBoundForParameter(i) ){
+				inputParameters[i] = targetCFG->getLowerBoundForParameter(i);
+			}
+		}
+	}
+}
+
 void TestCase::generateRandomParameters() {
 	//for each parameter generate a random value
 	for(int i = 0; i < numberOfParameters; i++)
