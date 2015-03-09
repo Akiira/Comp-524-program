@@ -66,12 +66,13 @@ void Simulation::run(){
 		//child1->printFitnessAndCoverage();
 		//child2->printFitnessAndCoverage();
 
-		if(child1 <= child2)
-		{
+		if(child1 <= child2){
 			population->replace(*child2);
+			delete child1;
 		}
 		else {
 			population->replace(*child1);
+			delete child2;
 		}
 
 		i++;
