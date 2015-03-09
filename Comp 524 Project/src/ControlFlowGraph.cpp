@@ -8,8 +8,6 @@
 #include "ControlFlowGraph.h"
 #include <iostream>
 
-
-
 ControlFlowGraph::~ControlFlowGraph(){
 	delete testCase;
 }
