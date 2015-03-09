@@ -19,7 +19,6 @@ Population::~Population() {
  * Creates a new population of random test suites
  */
 Population::Population(int popSize, int initialTestSuiteSize) {
-	assert(targetCFG);
 	population = new Organism*[popSize];
 	populationSize = popSize;
 	this->initialTestSuiteSize = initialTestSuiteSize;
@@ -78,7 +77,7 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 		current = cutPoints[i] + 1;
 		alternate = !alternate;
 	}
-
+	delete[] cutPoints;
 	//now take care of the last segments, if any
 	if (alternate) {
 		for (int j = current; j < parent2NumberOfTestCases; j++) {
