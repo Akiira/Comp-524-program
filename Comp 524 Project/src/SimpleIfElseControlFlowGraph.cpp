@@ -7,6 +7,7 @@
 
 #include "SimpleIfElseControlFlowGraph.h"
 #include <iostream>
+#include <cassert>
 using std::endl;
 
 SimpleIfElseControlFlowGraph::SimpleIfElseControlFlowGraph() {
@@ -31,6 +32,15 @@ int SimpleIfElseControlFlowGraph::getNumberOfPredicates() {
 }
 int SimpleIfElseControlFlowGraph::getNumberOfParameters() {
 	return numberOfParameters;
+}
+int SimpleIfElseControlFlowGraph::getLowerBoundForParameter(int parameter) {
+	assert(parameter >= 0 && parameter < 1);
+	return rangeForEachParameter[parameter][0];
+}
+
+int SimpleIfElseControlFlowGraph::getUpperBoundForParameter(int parameter) {
+	assert(parameter >= 0 && parameter < 1);
+	return rangeForEachParameter[parameter][1];
 }
 
 void SimpleIfElseControlFlowGraph::printInputParameters(int* inputParameters) {
@@ -121,6 +131,3 @@ void SimpleIfElseControlFlowGraph::block3() {
 void SimpleIfElseControlFlowGraph::block4() {
 	return;
 }
-
-
-

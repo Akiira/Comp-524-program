@@ -18,7 +18,8 @@ public:
 	int getNumberOfEdges();
 	int getNumberOfPredicates();
 	int getNumberOfParameters();
-
+	int getLowerBoundForParameter(int);
+	int getUpperBoundForParameter(int);
 
 
 private:
@@ -28,6 +29,7 @@ private:
 	struct predicates {
 		enum { B1_T, B1_F };
 	};
+	int rangeForEachParameter[3][2];
 
 	void runTestCase();
 	void block1();
