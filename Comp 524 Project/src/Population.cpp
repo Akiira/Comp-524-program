@@ -128,7 +128,8 @@ void Population::replace(Organism& child)
 
   if (child.getFitness() >= population[worst]-> getFitness()){
     totalFitness += child.getFitness() - population[worst]->getFitness();
-    *population[worst] = child;
+    delete population[worst];
+    population[worst] = &child;
     int i = populationSize - 1;
     //now move the new child to the correct position in the popArray
     //remember that organisms are kept in order of decreasing fitness.
