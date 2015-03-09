@@ -6,6 +6,7 @@
  */
 #include "HiLoControlFlowGraph.h"
 #include <cstring>
+#include <cassert>
 using std::endl;
 using std::cout;
 
@@ -19,7 +20,14 @@ HiLoControlFlowGraph::HiLoControlFlowGraph() {
 	testCase = 0;
 
 	numberOfProgramVariables = 5;
-	programVariables = new int[numberOfProgramVariables];
+	programVariables = new int[numberOfProgramVariables] { };
+
+	rangeForEachParameter[0][0] = 1;
+	rangeForEachParameter[0][1] = 100;
+	rangeForEachParameter[1][0] = 5;
+	rangeForEachParameter[1][1] = 200;
+	rangeForEachParameter[2][0] = 6;
+	rangeForEachParameter[2][1] = 150;
 }
 
 int HiLoControlFlowGraph::getNumberOfEdges() {
@@ -30,6 +38,15 @@ int HiLoControlFlowGraph::getNumberOfPredicates() {
 }
 int HiLoControlFlowGraph::getNumberOfParameters() {
 	return numberOfParameters;
+}
+
+int HiLoControlFlowGraph::getLowerBoundForParameter(int parameter) {
+	assert(parameter >= 0 && parameter < numberOfParameters);
+	return rangeForEachParameter[parameter][0];
+}
+int HiLoControlFlowGraph::getUpperBoundForParameter(int parameter) {
+	assert(parameter >= 0 && parameter < numberOfParameters);
+	return rangeForEachParameter[parameter][1];
 }
 
 void HiLoControlFlowGraph::printInputParameters(int* inputParameters){

@@ -29,6 +29,8 @@ public:
 	virtual int getNumberOfEdges()=0;
 	virtual int getNumberOfPredicates()=0;
 	virtual int getNumberOfParameters()=0;
+	virtual int getLowerBoundForParameter(int);
+	virtual int getUpperBoundForParameter(int);
 
 
 protected:

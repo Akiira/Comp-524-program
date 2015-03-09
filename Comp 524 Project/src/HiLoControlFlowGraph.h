@@ -19,6 +19,8 @@ class HiLoControlFlowGraph : public ControlFlowGraph
 		int getNumberOfEdges();
 		int getNumberOfPredicates();
 		int getNumberOfParameters();
+		int getLowerBoundForParameter(int);
+		int getUpperBoundForParameter(int);
 
 	private:
 		// This enumeration type stores the edges of the Control Flow Graph (CFG)
@@ -51,6 +53,7 @@ class HiLoControlFlowGraph : public ControlFlowGraph
 		//	calculation
 		int* programVariables;
 		int numberOfProgramVariables;
+		int rangeForEachParameter[3][2];
 
 		void runTestCase();
 		void block1();
