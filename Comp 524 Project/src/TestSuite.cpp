@@ -44,14 +44,6 @@ TestSuite::TestSuite(int numberOfTestCases){
 }
 
 TestSuite::TestSuite(int numberOfTestCases, TestCase** testCases) {
-
-	initializeMembersAndAllocateMemory(numberOfTestCases);
-	this->testCases = testCases;
-	// This is now called directly by Organism.setFitness
-	//calculateTestSuiteCoverage();
-}
-
-void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases) {
 	assert(numberOfTestCases > 0);
 
 	this->numberOfTestCases = numberOfTestCases;
@@ -62,7 +54,21 @@ void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases) {
 
 	duplicateEdgesCovered = new int[numberOfEdges] { };
 	duplicatePredicatesCovered = new int[numberOfPredicates] { };
+	this->testCases = testCases;
+	// This is now called directly by Organism.setFitness
+	//calculateTestSuiteCoverage();
+}
 
+void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases) {
+	assert(numberOfTestCases > 0);
+	this->numberOfTestCases = numberOfTestCases;
+	this->numberOfParameters = targetCFG->getNumberOfParameters();
+	this->numberOfEdges = targetCFG->getNumberOfEdges();
+	this->numberOfPredicates = targetCFG->getNumberOfPredicates();
+
+
+	duplicateEdgesCovered = new int[numberOfEdges] { };
+	duplicatePredicatesCovered = new int[numberOfPredicates] { };
 	testCases = new TestCase*[numberOfTestCases] { };
 }
 
