@@ -122,15 +122,15 @@ int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 
 void Population::replace(Organism& child)
 {//attempts to replace the worst member of the population with child
-
-  Organism* tmp;
   int worst = populationSize - 1;
 
   if (child.getFitness() >= population[worst]-> getFitness()){
     totalFitness += child.getFitness() - population[worst]->getFitness();
     delete population[worst];
     population[worst] = &child;
+
     int i = populationSize - 1;
+    Organism* tmp;
     //now move the new child to the correct position in the popArray
     //remember that organisms are kept in order of decreasing fitness.
     while ((i > 0) && (population[i]->getFitness() > population[i-1]->getFitness())){
