@@ -60,7 +60,7 @@ void Organism::mutate(double mutationProb) {
 	for (int i = 0; i < numberOfTestCases; i++) {
 		double toss = uniform01();
 		if (toss < mutationProb) {
-			TestCase* newTestCase = new TestCase(*targetCFG);
+			TestCase* newTestCase = new TestCase();
 			targetCFG->setCoverageOfTestCase(newTestCase);
 			chromosome->setTestCase(i, newTestCase);
 		}

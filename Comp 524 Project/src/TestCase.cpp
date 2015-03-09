@@ -8,6 +8,7 @@
 #include "TestCase.h"
 #include "ControlFlowGraph.h"
 #include "Random.h"
+#include "GlobalVariables.h"
 
 #include <string>
 #include <cassert>
@@ -32,10 +33,10 @@ TestCase::TestCase(int numberOfParameters, int numberOfEdges, int numberOfPredic
 	generateRandomParameters();
 }
 
-TestCase::TestCase(ControlFlowGraph& cfg) {
-	numberOfEdges      = cfg.getNumberOfEdges();
-	numberOfParameters = cfg.getNumberOfParameters();
-	numberOfPredicates = cfg.getNumberOfPredicates();
+TestCase::TestCase() {
+	numberOfEdges      = targetCFG->getNumberOfEdges();
+	numberOfParameters = targetCFG->getNumberOfParameters();
+	numberOfPredicates = targetCFG->getNumberOfPredicates();
 
 	edgesCovered = new bool[numberOfEdges] { };
 	predicatesCovered = new bool[numberOfPredicates] { };

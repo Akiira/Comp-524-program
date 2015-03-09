@@ -18,7 +18,7 @@ public:
 	virtual ~TestCase();
 
 	TestCase(int numberOfParameters, int numberOfEdges, int numberOfPredicates);
-	TestCase(ControlFlowGraph& cfg);
+	TestCase();
 	// Copy constructor
 	TestCase(const TestCase& that);
 
