@@ -19,7 +19,7 @@ public:
 
 	Population(int popSize, int initialTestSuiteSize);
 	void crossover(const Organism& parent1, const Organism& parent2, Organism*& offspring1, Organism*& offspring2, int numberOfCutPoints);
-	void replace(Organism& offspring);
+	void replace(Organism* offspring);
 	Organism* randomSelect();
 	Organism* select();
 	Organism* fitnessProportionalSelect();

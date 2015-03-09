@@ -119,14 +119,14 @@ int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 	return cutPoints;
 }  //selectCutPoints
 
-void Population::replace(Organism& child)
+void Population::replace(Organism* child)
 {//attempts to replace the worst member of the population with child
   int worst = populationSize - 1;
 
-  if (child.getFitness() >= population[worst]-> getFitness()){
-    totalFitness += child.getFitness() - population[worst]->getFitness();
+  if (child->getFitness() >= population[worst]-> getFitness()){
+    totalFitness += child->getFitness() - population[worst]->getFitness();
     delete population[worst];
-    population[worst] = &child;
+    population[worst] = child;
 
     int i = populationSize - 1;
     Organism* tmp;
@@ -137,8 +137,11 @@ void Population::replace(Organism& child)
       population[i] = population[i-1];
       population[i-1] = tmp;
       i--;
-    }//while
-  }//if
+    }
+  }
+  else {
+	  delete child;
+  }
 }//replace
 
 // Straight from GA0
