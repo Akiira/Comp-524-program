@@ -2,7 +2,7 @@
 //  Organism.h
 //  Implementation of the Class Organism
 //  Created on:      27-Feb-2015 12:13:22 AM
-//  Original author: Randall
+//  Original author: Randall and Austin
 ///////////////////////////////////////////////////////////
 
 #if !defined(EA_FD308F31_83AB_4efc_8F0F_05730A9FF804__INCLUDED_)

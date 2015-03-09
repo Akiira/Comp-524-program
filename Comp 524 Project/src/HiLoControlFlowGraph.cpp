@@ -2,12 +2,12 @@
  * HiLoControlFlowGraph.cpp
  *
  *  Created on: Feb 28, 2015
- *      Author: amb6470
+ *      Author: Austin and Randall
  */
 #include "HiLoControlFlowGraph.h"
+#include <cstring>
 using std::endl;
 using std::cout;
-#include <cstring>
 
 HiLoControlFlowGraph::HiLoControlFlowGraph() {
 	numberOfEdges = 14;

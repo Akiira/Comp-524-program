@@ -2,7 +2,7 @@
 //  Simulation.h
 //  Implementation of the Class Simulation
 //  Created on:      27-Feb-2015 12:11:44 AM
-//  Original author: Randall
+//  Original author: Randall and Austin
 ///////////////////////////////////////////////////////////
 
 #if !defined(EA_63CB5297_1E19_44f6_AF1B_16CF01DC9D73__INCLUDED_)

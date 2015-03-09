@@ -2,7 +2,7 @@
 //  Organism.cpp
 //  Implementation of the Class Organism
 //  Created on:      27-Feb-2015 12:13:22 AM
-//  Original author: Randall
+//  Original author: Randall and Austin
 ///////////////////////////////////////////////////////////
 
 #include "Organism.h"

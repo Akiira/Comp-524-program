@@ -2,7 +2,7 @@
 //  ControlFlowGraph.h
 //  Implementation of the Class ControlFlowGraph
 //  Created on:      27-Feb-2015 12:13:50 AM
-//  Original author: Randall
+//  Original author: Randall and Austin
 ///////////////////////////////////////////////////////////
 
 #if !defined(EA_36970A6C_11F2_400d_B9FF_6A9242FEA2B5__INCLUDED_)

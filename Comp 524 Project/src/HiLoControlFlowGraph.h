@@ -2,7 +2,7 @@
  * HiLoControlFlowGraph.h
  *
  *  Created on: Feb 28, 2015
- *      Author: amb6470
+ *      Author:  Austin and Randall
  */
 
 #ifndef HILOCONTROLFLOWGRAPH_H_

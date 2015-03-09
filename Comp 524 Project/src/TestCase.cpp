@@ -2,7 +2,7 @@
 //  TestCase.cpp
 //  Implementation of the Class TestCase
 //  Created on:      27-Feb-2015 12:13:42 AM
-//  Original author: Randall
+//  Original author: Randall and Austin
 ///////////////////////////////////////////////////////////
 
 #include "TestCase.h"

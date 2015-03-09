@@ -2,7 +2,7 @@
  * GlobalVariables.h
  *
  *  Created on: Mar 8, 2015
- *      Author: Kitty
+ *      Author: Austin and Randall
  */
 
 #ifndef GLOBALVARIABLES_H_
