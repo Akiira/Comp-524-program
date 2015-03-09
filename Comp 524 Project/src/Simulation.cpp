@@ -78,6 +78,8 @@ void Simulation::run(){
 		i++;
 
 	}while(i < numberOfGenerations);
+	bestOrganismSeen = population->getBestOrganism();
+	bestOrganismSeen->printFitnessAndCoverage();
 	population->printPopulationFitness();
 
 }

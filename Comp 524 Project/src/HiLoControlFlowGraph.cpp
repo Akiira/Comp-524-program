@@ -23,11 +23,11 @@ HiLoControlFlowGraph::HiLoControlFlowGraph() {
 	programVariables = new int[numberOfProgramVariables] { };
 
 	rangeForEachParameter[0][0] = 0;
-	rangeForEachParameter[0][1] = 100;
+	rangeForEachParameter[0][1] = 50;
 	rangeForEachParameter[1][0] = 0;
-	rangeForEachParameter[1][1] = 200;
+	rangeForEachParameter[1][1] = 50;
 	rangeForEachParameter[2][0] = 0;
-	rangeForEachParameter[2][1] = 150;
+	rangeForEachParameter[2][1] = 3500;
 }
 
 int HiLoControlFlowGraph::getNumberOfEdges() {

@@ -205,3 +205,7 @@ void Population::printPopulationFitness() {
 	cout << "Worst Fitness: " << worstFitness << endl;
 	cout << "Difference between best and worst: " << bestFitness - worstFitness << endl;
 }
+
+Organism* Population::getBestOrganism() const {
+	return population[0];
+}

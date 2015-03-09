@@ -26,6 +26,8 @@ public:
 
 	void printPopulationFitness();
 
+	Organism* getBestOrganism() const;
+
 private:
 	Organism** population;
 	int populationSize;
