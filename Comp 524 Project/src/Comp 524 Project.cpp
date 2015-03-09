@@ -59,12 +59,12 @@ void hiLoSimulationTest() {
 	ControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
 
 	targetCFG = hiLoCFG;
-	Simulation* hiLoSim = new Simulation(1000, 1000, 2, .01, 1, 10000);
+	Simulation* hiLoSim = new Simulation(10000, 10, 2, .02, 1, 100000);
 	hiLoSim->run();
 }
 
 void simpleIfElseSimulationTest() {
-	//Simulation::Simulation(ControlFlowGraph& targetCFG, int populationSize, int initialTestSuiteSize,
+	//Simulation::Simulation(int populationSize, int initialTestSuiteSize,
 	//		int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations)
 
 	ControlFlowGraph* simpleIfElseCFG = new SimpleIfElseControlFlowGraph { };

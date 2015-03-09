@@ -22,12 +22,12 @@ HiLoControlFlowGraph::HiLoControlFlowGraph() {
 	numberOfProgramVariables = 5;
 	programVariables = new int[numberOfProgramVariables] { };
 
-	rangeForEachParameter[0][0] = 0;
-	rangeForEachParameter[0][1] = 50;
-	rangeForEachParameter[1][0] = 0;
-	rangeForEachParameter[1][1] = 50;
+	rangeForEachParameter[0][0] = 1;
+	rangeForEachParameter[0][1] = 100;
+	rangeForEachParameter[1][0] = 1;
+	rangeForEachParameter[1][1] = 100;
 	rangeForEachParameter[2][0] = 0;
-	rangeForEachParameter[2][1] = 3500;
+	rangeForEachParameter[2][1] = 15000;
 }
 
 int HiLoControlFlowGraph::getNumberOfEdges() {
@@ -206,13 +206,13 @@ void HiLoControlFlowGraph::block8() {
 	{
 		testCase->addEdgeCoverage(edges::B8toB9);
 		testCase->addPredicateCoverage(predicates::B8_T);
-		block5();
+		block9();
 	}
 	else
 	{
 		testCase->addEdgeCoverage(edges::B8toB10);
 		testCase->addPredicateCoverage(predicates::B8_F);
-		block6();
+		block10();
 	}
 }
 void HiLoControlFlowGraph::block9() {
