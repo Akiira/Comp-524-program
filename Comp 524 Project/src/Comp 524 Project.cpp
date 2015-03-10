@@ -59,7 +59,7 @@ void hiLoSimulationTest() {
 	ControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
 
 	targetCFG = hiLoCFG;
-	Simulation* hiLoSim = new Simulation { 10000, 10, 2, .02, 1, 10000 };
+	Simulation* hiLoSim = new Simulation { 10000, 10, 2, .02, 1, 100000 };
 	hiLoSim->run();
 }
 
@@ -88,8 +88,8 @@ int main() {
     chrono::duration<double> elapsed_seconds = end-start;
     time_t end_time = std::chrono::system_clock::to_time_t(end);
 
-    cout << "finished computation at " << std::ctime(&end_time)
-              << "elapsed time: " << elapsed_seconds.count() << "s\n";
+    cout << "finished computation at " << std::ctime(&end_time);
+    cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
 	return 0;
 }
