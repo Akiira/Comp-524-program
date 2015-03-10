@@ -56,7 +56,7 @@ void Organism::mutate(double mutationProb) {
 		}
 	}
 
-	evaluated = false;
+	evaluateBaseFitness();
 }
 
 void Organism::evaluateBaseFitness(){
