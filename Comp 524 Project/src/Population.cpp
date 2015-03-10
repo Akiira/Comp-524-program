@@ -24,8 +24,7 @@ Population::Population(int popSize, int initialTestSuiteSize) {
 	this->initialTestSuiteSize = initialTestSuiteSize;
 
 	for (int i = 0; i < popSize; i++) {
-		// This constructor also set the fitness so no need to do it
-		population[i] = new Organism(initialTestSuiteSize);
+		population[i] = new Organism { initialTestSuiteSize };
 	}
 	totalFitness = 0;
 	setPopulationFitness();
@@ -138,7 +137,16 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 	}
 }
 
+void Population::scaleFitness() {
 
+	// Exponential scaling
+	auto base = 1.25;
+	auto power = 0;
+	for(int i = populationSize - 1; i > 0; i--) {
+		population[i]->setFitness(pow(base, power));
+		power++;
+	}
+}
 
 int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 	assert(numCutPoints < upperBound);
@@ -222,7 +230,7 @@ void Population::setPopulationFitness() {
 	int i, j;
 	totalFitness = 0;
 	for (i = 0; i < populationSize; i++) {
-		totalFitness += population[i]->setFitness();
+		totalFitness += population[i]->getFitness();
 	}
 
 	//now sort popArray so that the organisms are in order of fitness
