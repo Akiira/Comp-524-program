@@ -120,29 +120,30 @@ void TestSuite::printOnlyTestSuiteCoverage() {
 	targetCFG->printTestSuiteCoverage(this);
 }
 
+void TestSuite::resetCoverage() {
+	for (int j = 0; j < numberOfEdges; j++) {
+		duplicateEdgesCovered[j] = 0;
+	}
+
+	for (int j = 0; j < numberOfPredicates; j++) {
+		duplicatePredicatesCovered[j] = 0;
+	}
+}
+
 // This code is ridiculously inefficient, maybe we can switch to bitsets instead,
 //	then use |= on entire bitsets.
 void TestSuite::calculateTestSuiteCoverage() {
 	for (int i = 0; i < numberOfTestCases; i++) {
 		for (int j = 0; j < numberOfEdges; j++) {
-			if( i == 0 ) {
-				duplicateEdgesCovered[j] = testCases[i]->getEdgesCovered()[j];
-			} else {
-				duplicateEdgesCovered[j] += testCases[i]->getEdgesCovered()[j];
-			}
+			duplicateEdgesCovered[j] += testCases[i]->getEdgesCovered()[j];
 		}
 	}
 
 	for (int i = 0; i < numberOfTestCases; i++) {
 		for (int j = 0; j < numberOfPredicates; j++) {
-			if( i == 0 ) {
-				duplicatePredicatesCovered[j] = testCases[i]->getPredicatesCovered()[j];
-			} else {
-				duplicatePredicatesCovered[j] += testCases[i]->getPredicatesCovered()[j];
-			}
+			duplicatePredicatesCovered[j] += testCases[i]->getPredicatesCovered()[j];
 		}
 	}
-
 }
 
 TestSuite& TestSuite::operator =(const TestSuite& other) {
