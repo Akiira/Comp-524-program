@@ -139,6 +139,17 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 
 void Population::scaleFitness() {
 
+	// Linear Scaling
+	int max { getBestOrganism()->fitness },
+		min { population[populationSize - 1]->getFitness() };
+	auto a = max;
+	auto b = -min / populationSize;
+
+	for(int i = 0; i < populationSize; i++) {
+		auto f = population[i]->getFitness();
+		population[i]->setFitness(a + b * f);
+	}
+
 	// Exponential scaling
 	auto base = 1.25;
 	auto power = 0;
