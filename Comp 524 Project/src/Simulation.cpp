@@ -25,9 +25,11 @@ Simulation::Simulation(int populationSize, int initialTestSuiteSize,
 	this->numberOfCutPoints = numberOfCutPoints;
 	probabilityForMutation = mutationProb;
 	probabilityForCrossover = crossOverProb;
-	bestOrganismSeen = 0;
 
 	population = new Population { populationSize, initialTestSuiteSize };
+
+	bestOrganismSeen = new Organism { numberOfCutPoints };
+	*bestOrganismSeen = *population->getBestOrganism();
 }
 
 
