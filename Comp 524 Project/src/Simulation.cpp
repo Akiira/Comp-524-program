@@ -28,10 +28,6 @@ Simulation::Simulation(int populationSize, int initialTestSuiteSize,
 	bestOrganismSeen = 0;
 
 	population = new Population { populationSize, initialTestSuiteSize };
-
-
-	//once the population is initialized each organism needs to be evaluated
-	// once each organism is evaluated we can set bestOrganismSeen
 }
 
 
@@ -56,12 +52,9 @@ void Simulation::run(){
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 		child1->mutate(probabilityForMutation);
-		child1->setFitness();
 		child2->mutate(probabilityForMutation);
-		child2->setFitness();
 
-		assert(child1);
-		assert(child2);
+		assert(child1 && child2);
 		//cout << "Children" << endl;
 		//child1->printFitnessAndCoverage();
 		//child2->printFitnessAndCoverage();
