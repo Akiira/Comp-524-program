@@ -22,8 +22,8 @@ Organism::~Organism(){
 Organism::Organism(int numOfTestCases, TestCase** testCases) {
 	chromosome = new TestSuite { numOfTestCases, testCases };
 	initialized = true;
-	evaluateBaseFitness();
-	evaluated = true;
+	evaluated = false;
+	fitness = 0;
 }
 
 Organism::Organism(int numOfTestCases ) {
@@ -47,20 +47,17 @@ int Organism::getFitness() const{
 void Organism::mutate(double mutationProb) {
 	assert(initialized == true);
 	int numberOfTestCases = chromosome->getNumberOfTestCases();
-	auto mutated = false;
+
 	for (int i = 0; i < numberOfTestCases; i++) {
 		double toss = uniform01();
 		if (toss < mutationProb) {
 			TestCase* newTestCase = new TestCase();
 			targetCFG->setCoverageOfTestCase(newTestCase);
 			chromosome->setTestCase(i, newTestCase);
-			mutated = true;
 		}
 	}
-	if( mutated ) {
-		chromosome->resetCoverage();
-		evaluateBaseFitness();
-	}
+
+	evaluateBaseFitness();
 }
 
 void Organism::evaluateBaseFitness(){
