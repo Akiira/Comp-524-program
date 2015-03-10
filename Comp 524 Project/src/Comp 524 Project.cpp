@@ -88,8 +88,9 @@ int main() {
     chrono::duration<double> elapsed_seconds = end-start;
     time_t end_time = std::chrono::system_clock::to_time_t(end);
 
-    cout << "finished computation at " << std::ctime(&end_time);
     cout << "elapsed time: " << elapsed_seconds.count() << endl;
+    cout << "finished computation at " << std::ctime(&end_time);
+
 
 	return 0;
 }
