@@ -32,7 +32,7 @@ Population::Population(int popSize, int initialTestSuiteSize) {
 }
 
 void Population::crossover(const Organism& parent1, const Organism& parent2,
-		Organism*& offspring1, Organism*& offspring2, int numberOfCutPoints) {
+		Organism*& child1, Organism*& child2, int numberOfCutPoints) {
 
 	int parent1NumberOfTestCases = parent1.getNumberOfTestCases();
 	int parent2NumberOfTestCases = parent2.getNumberOfTestCases();
@@ -96,8 +96,8 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 		child1TestCases[j] = new TestCase { *parent1TestCases[j] };
 	}
 
-	offspring1 = new Organism { parent1.getNumberOfTestCases(), child1TestCases };
-	offspring2 = new Organism { parent2.getNumberOfTestCases(),	child2TestCases };
+	child1 = new Organism { parent1.getNumberOfTestCases(), child1TestCases };
+	child2 = new Organism { parent2.getNumberOfTestCases(),	child2TestCases };
 }
 
 int* Population::selectCutPoints(int numCutPoints, int upperBound) {
