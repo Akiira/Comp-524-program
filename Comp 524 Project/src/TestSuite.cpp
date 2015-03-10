@@ -162,8 +162,8 @@ TestSuite& TestSuite::operator =(const TestSuite& other) {
 
 		using std::memcpy;
 
-		memcpy(duplicateEdgesCovered, other.duplicateEdgesCovered, sizeof(numberOfEdges * sizeof(int)));
-		memcpy(duplicatePredicatesCovered, other.duplicatePredicatesCovered, sizeof(numberOfEdges * sizeof(int)));
+		memcpy(duplicateEdgesCovered, other.duplicateEdgesCovered, sizeof(int) * numberOfEdges);
+		memcpy(duplicatePredicatesCovered, other.duplicatePredicatesCovered, sizeof(int) * numberOfPredicates);
 
 		for(int i = 0; i < numberOfTestCases; i++){
 			testCases[i] = new TestCase { *other.testCases[i] };

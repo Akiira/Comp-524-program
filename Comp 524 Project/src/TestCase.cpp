@@ -52,13 +52,13 @@ TestCase::TestCase(const TestCase& that) {
 	numberOfPredicates = that.numberOfPredicates;
 
 	edgesCovered = new bool[numberOfEdges] { };
-	memcpy(edgesCovered, that.edgesCovered, sizeof *edgesCovered * numberOfEdges);
+	memcpy(edgesCovered, that.edgesCovered, sizeof(bool) * numberOfEdges);
 
 	predicatesCovered = new bool[numberOfPredicates] { };
-	memcpy(predicatesCovered, that.predicatesCovered, sizeof *predicatesCovered * numberOfPredicates);
+	memcpy(predicatesCovered, that.predicatesCovered, sizeof(bool) * numberOfPredicates);
 
 	inputParameters = new int[numberOfParameters] { };
-	memcpy(inputParameters, that.inputParameters, sizeof *inputParameters * numberOfParameters);
+	memcpy(inputParameters, that.inputParameters, sizeof(int) * numberOfParameters);
 }
 
 
@@ -161,9 +161,9 @@ TestCase& TestCase::operator =(const TestCase& org) {
 		predicatesCovered = new bool[numberOfPredicates] { };
 
 		using std::memcpy;
-		memcpy(edgesCovered, org.edgesCovered, sizeof(org.numberOfEdges * sizeof(bool)));
-		memcpy(inputParameters, org.inputParameters, sizeof(org.numberOfParameters * 4));
-		memcpy(predicatesCovered, org.predicatesCovered, sizeof(org.numberOfPredicates * sizeof(bool)));
+		memcpy(edgesCovered, org.edgesCovered, sizeof(bool) * org.numberOfEdges);
+		memcpy(inputParameters, org.inputParameters, sizeof(int) * org.numberOfParameters);
+		memcpy(predicatesCovered, org.predicatesCovered, sizeof(bool) * org.numberOfPredicates);
 	}
 	return *this;
 }
