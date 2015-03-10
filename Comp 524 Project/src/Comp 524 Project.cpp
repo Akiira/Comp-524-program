@@ -13,7 +13,7 @@
 
 using namespace std;
 
-ControlFlowGraph* targetCFG;
+ControlFlowGraph*targetCFG { };
 
 void simpleIfElseControlFlowGraphTest_testSuite_version() {
 	cout << endl << "SimpleIfElse Test Suite Test: " << endl;
@@ -59,7 +59,7 @@ void hiLoSimulationTest() {
 	ControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
 
 	targetCFG = hiLoCFG;
-	Simulation* hiLoSim = new Simulation(10000, 10, 2, .02, 1, 100000);
+	Simulation* hiLoSim = new Simulation { 10000, 10, 2, .02, 1, 100000 };
 	hiLoSim->run();
 }
 
@@ -69,7 +69,7 @@ void simpleIfElseSimulationTest() {
 
 	ControlFlowGraph* simpleIfElseCFG = new SimpleIfElseControlFlowGraph { };
 	targetCFG = simpleIfElseCFG;
-	Simulation* simpleIfElseSim = new Simulation(10, 100, 2, 1, 1, 10);
+	Simulation* simpleIfElseSim = new Simulation { 10, 100, 2, 1, 1, 10 };
 	simpleIfElseSim->run();
 }
 
@@ -78,7 +78,7 @@ int main() {
 	//simpleIfElseControlFlowGraphTest_testSuite_version();
 	//hiLoControlFlowGraphTest_testSuite_version();
 
-    chrono::time_point<chrono::system_clock> start, end;
+	chrono::time_point<chrono::system_clock> start { }, end { };
     start = chrono::system_clock::now();
 
     hiLoSimulationTest();
@@ -90,11 +90,6 @@ int main() {
 
     cout << "finished computation at " << std::ctime(&end_time)
               << "elapsed time: " << elapsed_seconds.count() << "s\n";
-
-
-
-
-
 
 	return 0;
 }
