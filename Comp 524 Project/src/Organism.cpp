@@ -111,6 +111,11 @@ bool Organism::operator<=(const Organism& right) { //overloaded operator <=
 	return (fitness <= right.fitness) ? true : false;
 } //operator<=
 
+bool Organism::operator<(const Organism& right) { //overloaded operator <=
+	assert(evaluated == true);
+	return (fitness < right.fitness) ? true : false;
+} //operator<=
+
 bool Organism::operator==(const Organism& right) { //overloaded operator ==
 	assert(evaluated == true);										   //TODO implement function
 	return false;

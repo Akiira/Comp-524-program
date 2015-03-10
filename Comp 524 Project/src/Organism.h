@@ -32,6 +32,7 @@ public:
 	int getNumberOfTestCases() const;
 
 	bool operator<=(const Organism& right);
+	bool operator<(const Organism& right);
 	bool operator==(const Organism& right);
 	Organism& operator=(const Organism& org);
 
