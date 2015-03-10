@@ -218,27 +218,26 @@ Organism* Population::fitnessProportionalSelect()
 // Straight from GA0
 // Changed it to use getFitness instead of setFitness, since we made the
 //	random organism constructor call setFitness()
-void Population::setPopulationFitness()
-{
-  int i, j;
-  totalFitness = 0;
-  for (i = 0; i < populationSize; i++){
-    totalFitness += population[i]->setFitness();
-  }
+void Population::setPopulationFitness() {
+	int i, j;
+	totalFitness = 0;
+	for (i = 0; i < populationSize; i++) {
+		totalFitness += population[i]->setFitness();
+	}
 
-  //now sort popArray so that the organisms are in order of fitness
-  //from highest to lowest.
-  Organism* tmp;
-  for (i = populationSize - 1; i > 1; i--){
-    for (j = 0; j < i; j++){
-      if (population[j]->fitness < population[j+1]->fitness){
-		tmp = population[j];
-		population[j] = population[j+1];
-		population[j+1] = tmp;
-      }
-    }//for
-  }//for
-}//setPopulationFitness
+	//now sort popArray so that the organisms are in order of fitness
+	//from highest to lowest.
+	Organism* tmp;
+	for (i = populationSize - 1; i > 1; i--) {
+		for (j = 0; j < i; j++) {
+			if (population[j]->fitness < population[j + 1]->fitness) {
+				tmp = population[j];
+				population[j] = population[j + 1];
+				population[j + 1] = tmp;
+			}
+		}  //for
+	}  //for
+}  //setPopulationFitness
 
 void Population::printPopulationFitness() {
 	int bestFitness = population[0]->getFitness();
