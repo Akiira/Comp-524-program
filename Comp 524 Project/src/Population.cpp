@@ -32,7 +32,7 @@ Population::Population(int popSize, int initialTestSuiteSize) {
 }
 
 void Population::crossover(const Organism& parent1, const Organism& parent2,
-		Organism*& offspring1, Organism*& offspring2, int numberOfCutPoints) {
+		Organism*& child1, Organism*& child2, int numberOfCutPoints) {
 
 	int parent1NumberOfTestCases = parent1.getNumberOfTestCases();
 	int parent2NumberOfTestCases = parent2.getNumberOfTestCases();
@@ -96,11 +96,53 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 		child1TestCases[j] = new TestCase { *parent1TestCases[j] };
 	}
 
-	offspring1 = new Organism { parent1.getNumberOfTestCases(), child1TestCases };
-	offspring2 = new Organism { parent2.getNumberOfTestCases(),	child2TestCases };
+	child1 = new Organism { parent1.getNumberOfTestCases(), child1TestCases };
+	child2 = new Organism { parent2.getNumberOfTestCases(),	child2TestCases };
 }
 
+void Population::crossover(const TestCase& parent1, const TestCase& parent2,
+		TestCase*& child1, TestCase*& child2, int numberOfCutPoints) {
+	auto cutPoints = selectCutPoints(numberOfCutPoints, parent1.getNumberOfParameters());
+	bool alternate { true };
+	int current { 0 };
+
+	for (int i = 0; i < numberOfCutPoints; i++) {
+		if (alternate) {
+			for (int j = current; j <= cutPoints[i]; j++) {
+				child1->setInputParameterAtIndex(j, parent1.getInputParameterAtIndex(j));
+				child2->setInputParameterAtIndex(j, parent2.getInputParameterAtIndex(j));
+			}
+		}  //if
+		else {
+			for (int j = current; j <= cutPoints[i]; j++) {
+				child1->setInputParameterAtIndex(j, parent2.getInputParameterAtIndex(j));
+				child2->setInputParameterAtIndex(j, parent1.getInputParameterAtIndex(j));
+			}
+		}
+		current = cutPoints[i] + 1;
+		alternate = !alternate;
+	}
+
+	delete[] cutPoints;
+
+	if (alternate) {
+		for (int j = current; j < parent1.getNumberOfParameters(); j++) {
+			child1->setInputParameterAtIndex(j, parent1.getInputParameterAtIndex(j));
+			child2->setInputParameterAtIndex(j, parent2.getInputParameterAtIndex(j));
+		}
+	} else {
+		for (int j = current; j < parent1.getNumberOfParameters(); j++) {
+			child1->setInputParameterAtIndex(j, parent2.getInputParameterAtIndex(j));
+			child2->setInputParameterAtIndex(j, parent1.getInputParameterAtIndex(j));
+		}
+	}
+}
+
+
+
 int* Population::selectCutPoints(int numCutPoints, int upperBound) {
+	assert(numCutPoints < upperBound);
+
 	//select numCutPoints randomly in the range [0..orgLength-1]
 	//and store their locations in the cutPoints array
 	int* cutPoints = new int[numCutPoints];

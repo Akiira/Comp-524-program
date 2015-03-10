@@ -24,10 +24,10 @@ public:
 
 	void mutate();
 
-	bool* getEdgesCovered();
-	bool* getPredicatesCovered();
-	int* getInputParameters();
-	int getInputParameterAtIndex(int index);
+	bool* getEdgesCovered() const;
+	bool* getPredicatesCovered() const;
+	int* getInputParameters() const;
+	int getInputParameterAtIndex(int index) const;
 
 	void addEdgeCoverage(int edge);
 	void addPredicateCoverage(int predicate);
@@ -38,6 +38,10 @@ public:
 	void print(ControlFlowGraph* cfg);
 
 	TestCase& operator=(const TestCase& org);
+
+	int getNumberOfParameters() const {
+		return numberOfParameters;
+	}
 
 private:
 	int numberOfParameters;

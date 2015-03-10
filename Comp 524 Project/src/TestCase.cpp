@@ -109,19 +109,19 @@ void TestCase::print(ControlFlowGraph* cfg) {
 	cfg->printTestCaseCoverage(this);
 }
 
-bool* TestCase::getEdgesCovered(){
+bool* TestCase::getEdgesCovered() const{
 	return  edgesCovered;
 }
 
-bool* TestCase::getPredicatesCovered(){
+bool* TestCase::getPredicatesCovered() const{
 	return  predicatesCovered;
 }
 
-int* TestCase::getInputParameters(){
+int* TestCase::getInputParameters() const{
 	return  inputParameters;
 }
 
-int TestCase::getInputParameterAtIndex(int index) {
+int TestCase::getInputParameterAtIndex(int index) const{
 	assert(index >= 0 && index < numberOfParameters);
 	return inputParameters[index];
 }
