@@ -22,25 +22,15 @@ Organism::~Organism(){
 Organism::Organism(int numOfTestCases, TestCase** testCases) {
 	chromosome = new TestSuite { numOfTestCases, testCases };
 	initialized = true;
-	evaluated = false;
-	fitness = 0;
+	setFitness();
+	evaluated = true;
 }
 
-/**
- * Removed SetFitness()
- * The idea is to keep things consistent between the Organism constructors. Above
- * we can't set the fitness yet because it is used in crossover but the fitness
- * shouldn't be calculated until after mutation. Here we could set the fitness
- * but it seems better to maintain consistency and require that when you create
- * an organism you must call setFitness yourself at an appropriate time. This
- * constructor is used by the population constructor which calls setPopulationFitness
- * to evaluate the fitness of all individuals and sort them.
- */
 Organism::Organism(int numOfTestCases ) {
 	chromosome = new TestSuite { numOfTestCases };
 	initialized = true;
-	evaluated = false;
-	fitness = 0;
+	setFitness();
+	evaluated = true;
 }
 
 TestSuite* Organism::getChromosome() const{
@@ -69,7 +59,7 @@ void Organism::mutate(double mutationProb) {
 	evaluated = false;
 }
 
-int Organism::setFitness(){
+void Organism::setFitness(){
 	assert(initialized == true);
 	fitness = 0;
 	chromosome->calculateTestSuiteCoverage();
@@ -95,7 +85,6 @@ int Organism::setFitness(){
 	}
 
 	evaluated = true;
-	return fitness;
 }
 
 void Organism::printSimple() {

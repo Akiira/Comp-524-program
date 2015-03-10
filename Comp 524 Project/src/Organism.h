@@ -27,8 +27,7 @@ public:
 	TestSuite* getChromosome() const;
 	void mutate(double mutationProb);
 
-	// Also returns fitness
-	int setFitness();
+	void setFitness();
 	int getFitness() const;
 	int getNumberOfTestCases() const;
 
