@@ -16,6 +16,8 @@ class TestSuite
 {
 private:
 	int numberOfTestCases;
+	int maxNumberOfTestCases;
+
 
 	int numberOfParameters;
 	int numberOfEdges;
@@ -28,7 +30,7 @@ private:
 
 
 	// SHared code between constructors
-	void initializeMembersAndAllocateMemory(int numberOfTestCases);
+	void initializeMembersAndAllocateMemory(int numberOfTestCases, int maxNumberOfTestCases);
 	void fillTestSuiteWithRandomTestCases();
 
 
@@ -36,8 +38,8 @@ public:
 	virtual ~TestSuite();
 
 	TestSuite(const TestSuite&);
-	TestSuite(int numberOfTestCases);
-	TestSuite(int numberOfTestCases, TestCase** testCasesToCopy);
+	TestSuite(int numberOfTestCases, int maxNumberOfTestCases);
+	TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCasesToCopy);
 
 	TestCase** getAllTestCases() const;
 	TestCase* getTestCase(int index);

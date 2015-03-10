@@ -19,9 +19,9 @@ void simpleIfElseControlFlowGraphTest_testSuite_version() {
 	cout << endl << "SimpleIfElse Test Suite Test: " << endl;
 	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
 	targetCFG = testCFG;
-	TestSuite* testSuite = new TestSuite { 10 };
+	//TestSuite* testSuite = new TestSuite { 10 };
 
-	testSuite->print();
+	//testSuite->print();
 }
 
 void simpleIfElseControlFlowGraphTest_testCase_version() {
@@ -49,9 +49,9 @@ void hiLoControlFlowGraphTest_testSuite_version() {
 	cout << endl << "HiLo Test Suite Test: " << endl;
 	ControlFlowGraph* testCFG = new HiLoControlFlowGraph { };
 	targetCFG = testCFG;
-	TestSuite* testSuite = new TestSuite { 10 };
+	//TestSuite* testSuite = new TestSuite { 10 };
 
-	testSuite->print();
+	//testSuite->print();
 }
 
 void hiLoSimulationTest() {

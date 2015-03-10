@@ -37,7 +37,7 @@ Organism::Organism(int numOfTestCases, TestCase** testCases) {
  * to evaluate the fitness of all individuals and sort them.
  */
 Organism::Organism(int numOfTestCases ) {
-	chromosome = new TestSuite { numOfTestCases };
+	chromosome = new TestSuite { numOfTestCases, 10 };
 	initialized = true;
 	evaluated = false;
 	fitness = 0;

@@ -24,52 +24,39 @@ TestSuite::~TestSuite(){
 }
 
 TestSuite::TestSuite(const TestSuite& testSuite) {
+	maxNumberOfTestCases = testSuite.maxNumberOfTestCases;
 	numberOfTestCases = testSuite.numberOfTestCases;
 	numberOfParameters = testSuite.numberOfParameters;
-	numberOfPredicates = testSuite.numberOfPredicates;
 	numberOfEdges = testSuite.numberOfEdges;
+	numberOfPredicates = testSuite.numberOfPredicates;
 
 	duplicateEdgesCovered = new int[numberOfEdges] { };
 	duplicatePredicatesCovered = new int[numberOfPredicates] { };
-
-	testCases = new TestCase*[numberOfTestCases] { };
+	testCases = new TestCase*[maxNumberOfTestCases] { };
 }
 
 // Fill the new suite with random test cases and evaluate the coverage of all the test cases
-TestSuite::TestSuite(int numberOfTestCases){
-	initializeMembersAndAllocateMemory(numberOfTestCases);
+// Note still need to call calculateTestSuiteCoverage which will be done by Organism.setFitness
+TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases){
+	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
+	this->testCases = new TestCase*[maxNumberOfTestCases] { };
 	fillTestSuiteWithRandomTestCases();
-	// This is now called directly by Organism.setFitness
-	//calculateTestSuiteCoverage();
 }
 
-TestSuite::TestSuite(int numberOfTestCases, TestCase** testCases) {
-	assert(numberOfTestCases > 0);
-
-	this->numberOfTestCases = numberOfTestCases;
-	this->numberOfParameters = targetCFG->getNumberOfParameters();
-	this->numberOfEdges = targetCFG->getNumberOfEdges();
-	this->numberOfPredicates = targetCFG->getNumberOfPredicates();
-
-
-	duplicateEdgesCovered = new int[numberOfEdges] { };
-	duplicatePredicatesCovered = new int[numberOfPredicates] { };
+TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCases) {
+	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
 	this->testCases = testCases;
-	// This is now called directly by Organism.setFitness
-	//calculateTestSuiteCoverage();
 }
 
-void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases) {
+void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, int maxNumberOfTestCases) {
 	assert(numberOfTestCases > 0);
+	this->maxNumberOfTestCases = maxNumberOfTestCases;
 	this->numberOfTestCases = numberOfTestCases;
 	this->numberOfParameters = targetCFG->getNumberOfParameters();
 	this->numberOfEdges = targetCFG->getNumberOfEdges();
 	this->numberOfPredicates = targetCFG->getNumberOfPredicates();
-
-
-	duplicateEdgesCovered = new int[numberOfEdges] { };
-	duplicatePredicatesCovered = new int[numberOfPredicates] { };
-	testCases = new TestCase*[numberOfTestCases] { };
+	this->duplicateEdgesCovered = new int[numberOfEdges] { };
+	this->duplicatePredicatesCovered = new int[numberOfPredicates] { };
 }
 
 void TestSuite::fillTestSuiteWithRandomTestCases() {
