@@ -22,14 +22,14 @@ Organism::~Organism(){
 Organism::Organism(int numOfTestCases, TestCase** testCases) {
 	chromosome = new TestSuite { numOfTestCases, testCases };
 	initialized = true;
-	setFitness();
+	evaluateBaseFitness();
 	evaluated = true;
 }
 
 Organism::Organism(int numOfTestCases ) {
 	chromosome = new TestSuite { numOfTestCases };
 	initialized = true;
-	setFitness();
+	evaluateBaseFitness();
 	evaluated = true;
 }
 
@@ -59,7 +59,7 @@ void Organism::mutate(double mutationProb) {
 	evaluated = false;
 }
 
-void Organism::setFitness(){
+void Organism::evaluateBaseFitness(){
 	assert(initialized == true);
 	fitness = 0;
 	chromosome->calculateTestSuiteCoverage();

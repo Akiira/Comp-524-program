@@ -27,7 +27,7 @@ public:
 	TestSuite* getChromosome() const;
 	void mutate(double mutationProb);
 
-	void setFitness();
+	void evaluateBaseFitness();
 	int getFitness() const;
 	int getNumberOfTestCases() const;
 
@@ -38,6 +38,10 @@ public:
 
 	void printSimple();
 	void printFitnessAndCoverage();
+
+	void setFitness(int fitness) {
+		this->fitness = fitness;
+	}
 
 	friend class Population;
 
