@@ -39,8 +39,6 @@ TestSuite::TestSuite(const TestSuite& testSuite) {
 TestSuite::TestSuite(int numberOfTestCases){
 	initializeMembersAndAllocateMemory(numberOfTestCases);
 	fillTestSuiteWithRandomTestCases();
-	// This is now called directly by Organism.setFitness
-	//calculateTestSuiteCoverage();
 }
 
 TestSuite::TestSuite(int numberOfTestCases, TestCase** testCases) {
@@ -55,8 +53,6 @@ TestSuite::TestSuite(int numberOfTestCases, TestCase** testCases) {
 	duplicateEdgesCovered = new int[numberOfEdges] { };
 	duplicatePredicatesCovered = new int[numberOfPredicates] { };
 	this->testCases = testCases;
-	// This is now called directly by Organism.setFitness
-	//calculateTestSuiteCoverage();
 }
 
 void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases) {
@@ -127,15 +123,23 @@ void TestSuite::printOnlyTestSuiteCoverage() {
 // This code is ridiculously inefficient, maybe we can switch to bitsets instead,
 //	then use |= on entire bitsets.
 void TestSuite::calculateTestSuiteCoverage() {
-	for (int i =0; i < numberOfTestCases; i++) {
+	for (int i = 0; i < numberOfTestCases; i++) {
 		for (int j = 0; j < numberOfEdges; j++) {
-			duplicateEdgesCovered[j] += testCases[i]->getEdgesCovered()[j];
+			if( i == 0 ) {
+				duplicateEdgesCovered[j] = testCases[i]->getEdgesCovered()[j];
+			} else {
+				duplicateEdgesCovered[j] += testCases[i]->getEdgesCovered()[j];
+			}
 		}
 	}
 
-	for (int i =0; i < numberOfTestCases; i++) {
+	for (int i = 0; i < numberOfTestCases; i++) {
 		for (int j = 0; j < numberOfPredicates; j++) {
-			duplicatePredicatesCovered[j] += testCases[i]->getPredicatesCovered()[j];
+			if( i == 0 ) {
+				duplicatePredicatesCovered[j] = testCases[i]->getPredicatesCovered()[j];
+			} else {
+				duplicatePredicatesCovered[j] += testCases[i]->getPredicatesCovered()[j];
+			}
 		}
 	}
 

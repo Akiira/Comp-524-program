@@ -89,7 +89,7 @@ int main() {
     time_t end_time = std::chrono::system_clock::to_time_t(end);
 
     cout << "finished computation at " << std::ctime(&end_time);
-    cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+    cout << "elapsed time: " << elapsed_seconds.count() << endl;
 
 	return 0;
 }
