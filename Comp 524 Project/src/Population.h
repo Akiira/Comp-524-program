@@ -9,6 +9,7 @@
 #define EA_BE7C8399_4BC5_48f6_93FA_2B1C440AB247__INCLUDED_
 
 #include "Organism.h"
+#include "GlobalVariables.h"
 #include "ControlFlowGraph.h"
 
 class Population
@@ -25,7 +26,7 @@ public:
 	Organism* randomSelect();
 	Organism* select();
 	Organism* fitnessProportionalSelect();
-	void scaleFitness();
+	void scalePopulationsFitness(typeOfScaling scaling);
 	void printPopulationFitness();
 
 	Organism* getBestOrganism() const;

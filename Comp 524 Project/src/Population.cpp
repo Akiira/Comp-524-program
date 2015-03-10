@@ -9,7 +9,7 @@
 #include "Random.h"
 
 #include <cassert>
-#include "GlobalVariables.h"
+
 
 Population::~Population() {
 
@@ -137,7 +137,7 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 	}
 }
 
-void Population::scaleFitness() {
+void Population::scalePopulationsFitness(typeOfScaling scaling) {
 
 	// Linear Scaling
 	int max { getBestOrganism()->fitness },
