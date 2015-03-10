@@ -72,8 +72,12 @@ void Simulation::run(){
 
 		i++;
 
+		if( *bestOrganismSeen < *population->getBestOrganism() ) {
+			*bestOrganismSeen = *population->getBestOrganism();
+		}
+
 	}while(i < numberOfGenerations);
-	bestOrganismSeen = population->getBestOrganism();
+
 	bestOrganismSeen->printFitnessAndCoverage();
 	population->printPopulationFitness();
 
