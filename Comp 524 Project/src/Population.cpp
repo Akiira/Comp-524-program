@@ -12,7 +12,10 @@
 
 
 Population::~Population() {
-
+	for (int i = 0; i < populationSize; i++) {
+		delete population[i];
+	}
+	delete[] population;
 }
 
 /**
