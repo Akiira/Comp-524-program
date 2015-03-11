@@ -18,7 +18,7 @@ class Simulation
 public:
 	virtual ~Simulation();
 
-	Simulation(int populationSize, int initalTestSuiteSize,
+	Simulation(int populationSize, int initalTestSuiteSize, int maxTestSuiteSize,
 			int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations);
 
 	TestSuite* getBestTestSuite();
@@ -32,6 +32,7 @@ private:
 	int numberOfGenerations;
 	int populationSize;
 	int initialTestSuiteSize;
+	int maxTestSuiteSize;
 	int numberOfCutPoints;
 	double probabilityForCrossover;
 	double probabilityForMutation;

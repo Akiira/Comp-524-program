@@ -19,8 +19,8 @@ Organism::~Organism(){
 }
 
 
-Organism::Organism(int numOfTestCases, TestCase** testCases) {
-	chromosome = new TestSuite { numOfTestCases, testCases };
+Organism::Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** testCases) {
+	chromosome = new TestSuite { numOfTestCases, maxNumberOfTestCases, testCases };
 	initialized = true;
 	evaluated = false;
 	fitness = 0;
@@ -36,8 +36,8 @@ Organism::Organism(int numOfTestCases, TestCase** testCases) {
  * constructor is used by the population constructor which calls setPopulationFitness
  * to evaluate the fitness of all individuals and sort them.
  */
-Organism::Organism(int numOfTestCases ) {
-	chromosome = new TestSuite { numOfTestCases, 10 };
+Organism::Organism(int numOfTestCases, int maxNumberOfTestCases ) {
+	chromosome = new TestSuite { numOfTestCases, maxNumberOfTestCases};
 	initialized = true;
 	evaluated = false;
 	fitness = 0;
@@ -110,6 +110,13 @@ void Organism::printFitnessAndCoverage() {
 int Organism::getNumberOfTestCases() const {
 	if(chromosome)
 		return chromosome->getNumberOfTestCases();
+	else
+		return -1;
+}
+
+int Organism::getMaxNumberOfTestCases() const {
+	if(chromosome)
+		return chromosome->getMaxNumberOfTestCases();
 	else
 		return -1;
 }

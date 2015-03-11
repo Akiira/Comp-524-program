@@ -18,8 +18,8 @@ class Organism
 public:
 	virtual ~Organism();
 
-	Organism(int numOfTestCases);
-	Organism(int numOfTestCases, TestCase** testCases);
+	Organism(int numOfTestCases, int maxNumberOfTestCases);
+	Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** testCases);
 
 	void initializeRandomChromosome(int numberOfTestCases);
 	void initializeChromosomeFromTestCases(int numberOfTestCases, TestCase** testCases);
@@ -31,6 +31,7 @@ public:
 	int setFitness();
 	int getFitness() const;
 	int getNumberOfTestCases() const;
+	int getMaxNumberOfTestCases() const;
 
 	bool operator<=(const Organism& right);
 	bool operator==(const Organism& right);

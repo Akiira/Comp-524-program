@@ -16,18 +16,19 @@ Simulation::~Simulation(){
 	delete population;
 }
 
-Simulation::Simulation(int populationSize, int initialTestSuiteSize,
+Simulation::Simulation(int populationSize, int initialTestSuiteSize, int maxTestSuiteSize,
 		int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations){
 
 	this->populationSize = populationSize;
 	this->initialTestSuiteSize = initialTestSuiteSize;
+	this->maxTestSuiteSize = maxTestSuiteSize;
 	this->numberOfGenerations = numberOfGenerations;
 	this->numberOfCutPoints = numberOfCutPoints;
 	probabilityForMutation = mutationProb;
 	probabilityForCrossover = crossOverProb;
 	bestOrganismSeen = 0;
 
-	population = new Population { populationSize, initialTestSuiteSize };
+	population = new Population { populationSize, initialTestSuiteSize, maxTestSuiteSize };
 
 
 	//once the population is initialized each organism needs to be evaluated

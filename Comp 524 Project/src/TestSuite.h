@@ -63,6 +63,10 @@ public:
 		return numberOfTestCases;
 	}
 
+	int getMaxNumberOfTestCases() const {
+		return maxNumberOfTestCases;
+	}
+
 	void setNumberOfTestCases(int numberOfTestCases) {
 		this->numberOfTestCases = numberOfTestCases;
 	}

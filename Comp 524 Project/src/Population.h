@@ -17,7 +17,7 @@ class Population
 public:
 	virtual ~Population();
 
-	Population(int popSize, int initialTestSuiteSize);
+	Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSize);
 	void crossover(const Organism& parent1, const Organism& parent2, Organism*& offspring1, Organism*& offspring2, int numberOfCutPoints);
 	void replace(Organism* offspring);
 	Organism* randomSelect();

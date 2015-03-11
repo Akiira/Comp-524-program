@@ -18,14 +18,14 @@ Population::~Population() {
 /**
  * Creates a new population of random test suites
  */
-Population::Population(int popSize, int initialTestSuiteSize) {
+Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSize) {
 	population = new Organism*[popSize];
 	populationSize = popSize;
 	this->initialTestSuiteSize = initialTestSuiteSize;
 
 	for (int i = 0; i < popSize; i++) {
 		// This constructor also set the fitness so no need to do it
-		population[i] = new Organism(initialTestSuiteSize);
+		population[i] = new Organism(initialTestSuiteSize, maxTestSuiteSize);
 	}
 	totalFitness = 0;
 	setPopulationFitness();
@@ -96,8 +96,8 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 		child1TestCases[j] = new TestCase { *parent1TestCases[j] };
 	}
 
-	offspring1 = new Organism { parent1.getNumberOfTestCases(), child1TestCases };
-	offspring2 = new Organism { parent2.getNumberOfTestCases(),	child2TestCases };
+	offspring1 = new Organism { parent1.getNumberOfTestCases(), parent1.getMaxNumberOfTestCases(), child1TestCases };
+	offspring2 = new Organism { parent2.getNumberOfTestCases(),	parent2.getMaxNumberOfTestCases(), child2TestCases };
 }
 
 int* Population::selectCutPoints(int numCutPoints, int upperBound) {
