@@ -40,6 +40,9 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 	int parent1NumberOfTestCases = parent1.getNumberOfTestCases();
 	int parent2NumberOfTestCases = parent2.getNumberOfTestCases();
 
+	int parent1MaxNumberOfTestCases = parent1.getMaxNumberOfTestCases();
+	int parent2MaxNumberOfTestCases = parent2.getMaxNumberOfTestCases();
+
 	TestCase**parent1TestCases { };
 	TestCase**parent2TestCases { };
 
@@ -59,8 +62,8 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 	// Use parent2NumberOfTestCases as the upperBound of cutpoints since parent2 must be <= parent1
 	int* cutPoints = selectCutPoints(numberOfCutPoints,	parent2NumberOfTestCases);
 
-	TestCase** child1TestCases = new TestCase*[parent1NumberOfTestCases] { };
-	TestCase** child2TestCases = new TestCase*[parent2NumberOfTestCases] { };
+	TestCase** child1TestCases = new TestCase*[parent1MaxNumberOfTestCases] { };
+	TestCase** child2TestCases = new TestCase*[parent2MaxNumberOfTestCases] { };
 
 	bool alternate { true };
 	int current { 0 }; //the overall finger through all chromosomes (parents & offspring)

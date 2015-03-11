@@ -7,6 +7,7 @@
 
 #include "TestSuite.h"
 #include "GlobalVariables.h"
+#include "Random.h"
 #include <iostream>
 #include <cassert>
 #include <cstring>
@@ -49,7 +50,7 @@ TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase**
 }
 
 void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, int maxNumberOfTestCases) {
-	assert(numberOfTestCases > 0);
+	assert(numberOfTestCases > 0 && maxNumberOfTestCases >= numberOfTestCases);
 	this->maxNumberOfTestCases = maxNumberOfTestCases;
 	this->numberOfTestCases = numberOfTestCases;
 	this->numberOfParameters = targetCFG->getNumberOfParameters();
@@ -82,6 +83,18 @@ TestCase* TestSuite::getTestCase(int index){
 void TestSuite::setTestCase(int index, TestCase* testCase) {
 	delete testCases[index];
 	testCases[index] = testCase;
+}
+
+// Just deletes it if there isn't room
+// Im thinking about only adding if it covers something new
+void TestSuite::addTestCase(TestCase* testCase) {
+	if (numberOfTestCases < maxNumberOfTestCases) {
+		testCases[numberOfTestCases] = testCase;
+		numberOfTestCases++;
+	}
+	else {
+		delete testCase;
+	}
 }
 
 void TestSuite::print() {
@@ -154,7 +167,7 @@ TestSuite& TestSuite::operator =(const TestSuite& other) {
 
 		duplicateEdgesCovered = new int[numberOfEdges] { };
 		duplicatePredicatesCovered = new int[numberOfPredicates] { };
-		testCases = new TestCase*[numberOfTestCases] { } ;
+		testCases = new TestCase*[maxNumberOfTestCases] { } ;
 
 		using std::memcpy;
 

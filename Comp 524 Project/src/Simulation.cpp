@@ -31,7 +31,7 @@ Simulation::Simulation(int populationSize, int initialTestSuiteSize, int maxTest
 
 	// I'm not sure there's a point to copying this every time
 	//	through the loop. We may not even need this bestOrganismSeen property
-	bestOrganismSeen = new Organism { numberOfCutPoints, 1 };
+	bestOrganismSeen = new Organism { 1, 1 };
 	*bestOrganismSeen = *population->getBestOrganism();
 }
 

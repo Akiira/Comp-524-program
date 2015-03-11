@@ -62,7 +62,13 @@ void Organism::mutate(double mutationProb) {
 		if (toss < mutationProb) {
 			TestCase* newTestCase = new TestCase();
 			targetCFG->setCoverageOfTestCase(newTestCase);
-			chromosome->setTestCase(i, newTestCase);
+			double toss2 = uniform01();
+			if (toss2 < .9) {
+				chromosome->setTestCase(i, newTestCase);
+			}
+			else {
+				chromosome->addTestCase(newTestCase);
+			}
 		}
 	}
 
