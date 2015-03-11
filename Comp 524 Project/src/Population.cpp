@@ -9,10 +9,13 @@
 #include "Random.h"
 
 #include <cassert>
-#include "GlobalVariables.h"
+
 
 Population::~Population() {
-
+	for (int i = 0; i < populationSize; i++) {
+		delete population[i];
+	}
+	delete[] population;
 }
 
 /**
@@ -32,7 +35,7 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 }
 
 void Population::crossover(const Organism& parent1, const Organism& parent2,
-		Organism*& offspring1, Organism*& offspring2, int numberOfCutPoints) {
+		Organism*& child1, Organism*& child2, int numberOfCutPoints) {
 
 	int parent1NumberOfTestCases = parent1.getNumberOfTestCases();
 	int parent2NumberOfTestCases = parent2.getNumberOfTestCases();
@@ -96,11 +99,73 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 		child1TestCases[j] = new TestCase { *parent1TestCases[j] };
 	}
 
-	offspring1 = new Organism { parent1.getNumberOfTestCases(), parent1.getMaxNumberOfTestCases(), child1TestCases };
-	offspring2 = new Organism { parent2.getNumberOfTestCases(),	parent2.getMaxNumberOfTestCases(), child2TestCases };
+	child1 = new Organism { parent1.getNumberOfTestCases(), parent1.getMaxNumberOfTestCases(), child1TestCases };
+	child2 = new Organism { parent2.getNumberOfTestCases(),	parent1.getMaxNumberOfTestCases(), child2TestCases };
+}
+
+void Population::crossover(const TestCase& parent1, const TestCase& parent2,
+		TestCase*& child1, TestCase*& child2, int numberOfCutPoints) {
+	auto cutPoints = selectCutPoints(numberOfCutPoints, parent1.getNumberOfParameters());
+	bool alternate { true };
+	int current { 0 };
+
+	for (int i = 0; i < numberOfCutPoints; i++) {
+		if (alternate) {
+			for (int j = current; j <= cutPoints[i]; j++) {
+				child1->setInputParameterAtIndex(j, parent1.getInputParameterAtIndex(j));
+				child2->setInputParameterAtIndex(j, parent2.getInputParameterAtIndex(j));
+			}
+		}  //if
+		else {
+			for (int j = current; j <= cutPoints[i]; j++) {
+				child1->setInputParameterAtIndex(j, parent2.getInputParameterAtIndex(j));
+				child2->setInputParameterAtIndex(j, parent1.getInputParameterAtIndex(j));
+			}
+		}
+		current = cutPoints[i] + 1;
+		alternate = !alternate;
+	}
+
+	delete[] cutPoints;
+
+	if (alternate) {
+		for (int j = current; j < parent1.getNumberOfParameters(); j++) {
+			child1->setInputParameterAtIndex(j, parent1.getInputParameterAtIndex(j));
+			child2->setInputParameterAtIndex(j, parent2.getInputParameterAtIndex(j));
+		}
+	} else {
+		for (int j = current; j < parent1.getNumberOfParameters(); j++) {
+			child1->setInputParameterAtIndex(j, parent2.getInputParameterAtIndex(j));
+			child2->setInputParameterAtIndex(j, parent1.getInputParameterAtIndex(j));
+		}
+	}
+}
+
+void Population::scalePopulationsFitness(typeOfScaling scaling) {
+
+	// Linear Scaling
+	int max { getBestOrganism()->fitness },
+		min { population[populationSize - 1]->getFitness() };
+	auto a = max;
+	auto b = -min / populationSize;
+
+	for(int i = 0; i < populationSize; i++) {
+		auto f = population[i]->getFitness();
+		population[i]->setFitness(a + b * f);
+	}
+
+	// Exponential scaling
+	auto base = 1.25;
+	auto power = 0;
+	for(int i = populationSize - 1; i > 0; i--) {
+		population[i]->setFitness(pow(base, power));
+		power++;
+	}
 }
 
 int* Population::selectCutPoints(int numCutPoints, int upperBound) {
+	assert(numCutPoints < upperBound);
+
 	//select numCutPoints randomly in the range [0..orgLength-1]
 	//and store their locations in the cutPoints array
 	int* cutPoints = new int[numCutPoints];
@@ -176,27 +241,26 @@ Organism* Population::fitnessProportionalSelect()
 // Straight from GA0
 // Changed it to use getFitness instead of setFitness, since we made the
 //	random organism constructor call setFitness()
-void Population::setPopulationFitness()
-{
-  int i, j;
-  totalFitness = 0;
-  for (i = 0; i < populationSize; i++){
-    totalFitness += population[i]->setFitness();
-  }
+void Population::setPopulationFitness() {
+	int i, j;
+	totalFitness = 0;
+	for (i = 0; i < populationSize; i++) {
+		totalFitness += population[i]->getFitness();
+	}
 
-  //now sort popArray so that the organisms are in order of fitness
-  //from highest to lowest.
-  Organism* tmp;
-  for (i = populationSize - 1; i > 1; i--){
-    for (j = 0; j < i; j++){
-      if (population[j]->fitness < population[j+1]->fitness){
-		tmp = population[j];
-		population[j] = population[j+1];
-		population[j+1] = tmp;
-      }
-    }//for
-  }//for
-}//setPopulationFitness
+	//now sort popArray so that the organisms are in order of fitness
+	//from highest to lowest.
+	Organism* tmp;
+	for (i = populationSize - 1; i > 1; i--) {
+		for (j = 0; j < i; j++) {
+			if (population[j]->fitness < population[j + 1]->fitness) {
+				tmp = population[j];
+				population[j] = population[j + 1];
+				population[j + 1] = tmp;
+			}
+		}  //for
+	}  //for
+}  //setPopulationFitness
 
 void Population::printPopulationFitness() {
 	int bestFitness = population[0]->getFitness();

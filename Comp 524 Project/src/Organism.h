@@ -18,6 +18,7 @@ class Organism
 public:
 	virtual ~Organism();
 
+	Organism(const Organism& org);
 	Organism(int numOfTestCases, int maxNumberOfTestCases);
 	Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** testCases);
 
@@ -27,18 +28,22 @@ public:
 	TestSuite* getChromosome() const;
 	void mutate(double mutationProb);
 
-	// Also returns fitness
-	int setFitness();
+	void evaluateBaseFitness();
 	int getFitness() const;
 	int getNumberOfTestCases() const;
 	int getMaxNumberOfTestCases() const;
 
 	bool operator<=(const Organism& right);
+	bool operator<(const Organism& right);
 	bool operator==(const Organism& right);
 	Organism& operator=(const Organism& org);
 
 	void printSimple();
 	void printFitnessAndCoverage();
+
+	void setFitness(int fitness) {
+		this->fitness = fitness;
+	}
 
 	friend class Population;
 

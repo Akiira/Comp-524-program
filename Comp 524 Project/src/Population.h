@@ -9,6 +9,7 @@
 #define EA_BE7C8399_4BC5_48f6_93FA_2B1C440AB247__INCLUDED_
 
 #include "Organism.h"
+#include "GlobalVariables.h"
 #include "ControlFlowGraph.h"
 
 class Population
@@ -19,11 +20,13 @@ public:
 
 	Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSize);
 	void crossover(const Organism& parent1, const Organism& parent2, Organism*& offspring1, Organism*& offspring2, int numberOfCutPoints);
+	void crossover(const TestCase& parent1, const TestCase& parent2,
+			TestCase*& child1, TestCase*& child2, int numberOfCutPoints);
 	void replace(Organism* offspring);
 	Organism* randomSelect();
 	Organism* select();
 	Organism* fitnessProportionalSelect();
-
+	void scalePopulationsFitness(typeOfScaling scaling);
 	void printPopulationFitness();
 
 	Organism* getBestOrganism() const;

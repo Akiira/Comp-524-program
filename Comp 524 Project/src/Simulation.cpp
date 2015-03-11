@@ -26,13 +26,13 @@ Simulation::Simulation(int populationSize, int initialTestSuiteSize, int maxTest
 	this->numberOfCutPoints = numberOfCutPoints;
 	probabilityForMutation = mutationProb;
 	probabilityForCrossover = crossOverProb;
-	bestOrganismSeen = 0;
 
 	population = new Population { populationSize, initialTestSuiteSize, maxTestSuiteSize };
 
-
-	//once the population is initialized each organism needs to be evaluated
-	// once each organism is evaluated we can set bestOrganismSeen
+	// I'm not sure there's a point to copying this every time
+	//	through the loop. We may not even need this bestOrganismSeen property
+	bestOrganismSeen = new Organism { numberOfCutPoints, 1 };
+	*bestOrganismSeen = *population->getBestOrganism();
 }
 
 
@@ -57,12 +57,9 @@ void Simulation::run(){
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 		child1->mutate(probabilityForMutation);
-		child1->setFitness();
 		child2->mutate(probabilityForMutation);
-		child2->setFitness();
 
-		assert(child1);
-		assert(child2);
+		assert(child1 && child2);
 		//cout << "Children" << endl;
 		//child1->printFitnessAndCoverage();
 		//child2->printFitnessAndCoverage();
@@ -78,8 +75,12 @@ void Simulation::run(){
 
 		i++;
 
+		if( *bestOrganismSeen < *population->getBestOrganism() ) {
+			*bestOrganismSeen = *population->getBestOrganism();
+		}
+
 	}while(i < numberOfGenerations);
-	bestOrganismSeen = population->getBestOrganism();
+
 	bestOrganismSeen->printFitnessAndCoverage();
 	population->printPopulationFitness();
 

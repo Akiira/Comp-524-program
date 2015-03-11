@@ -13,27 +13,25 @@
 
 using namespace std;
 
-ControlFlowGraph* targetCFG;
+ControlFlowGraph*targetCFG { };
 
 void simpleIfElseControlFlowGraphTest_testSuite_version() {
 	cout << endl << "SimpleIfElse Test Suite Test: " << endl;
 	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
 	targetCFG = testCFG;
-	//TestSuite* testSuite = new TestSuite { 10 };
+	TestSuite* testSuite = new TestSuite { 10, 10 };
 
-	//testSuite->print();
+	testSuite->print();
 }
 
 void simpleIfElseControlFlowGraphTest_testCase_version() {
 	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
 	targetCFG = testCFG;
 	cout << endl << "SimpleIfElse Test Case Test: " << endl;
-	TestCase* falseTestCase = new TestCase { testCFG->getNumberOfParameters(),
-			testCFG->getNumberOfEdges(), testCFG->getNumberOfPredicates() };
+	TestCase* falseTestCase = new TestCase { };
 	falseTestCase->setInputParameters(new int[1] {1});
 
-	TestCase* trueTestCase = new TestCase { testCFG->getNumberOfParameters(),
-			testCFG->getNumberOfEdges(), testCFG->getNumberOfPredicates() };
+	TestCase* trueTestCase = new TestCase { };
 	trueTestCase->setInputParameters(new int[1] {3});
 
 	testCFG->setCoverageOfTestCase(falseTestCase);
@@ -78,7 +76,7 @@ int main() {
 	//simpleIfElseControlFlowGraphTest_testSuite_version();
 	//hiLoControlFlowGraphTest_testSuite_version();
 
-    chrono::time_point<chrono::system_clock> start, end;
+	chrono::time_point<chrono::system_clock> start { }, end { };
     start = chrono::system_clock::now();
 
     hiLoSimulationTest();
@@ -88,12 +86,8 @@ int main() {
     chrono::duration<double> elapsed_seconds = end-start;
     time_t end_time = std::chrono::system_clock::to_time_t(end);
 
-    cout << "finished computation at " << std::ctime(&end_time)
-              << "elapsed time: " << elapsed_seconds.count() << "s\n";
-
-
-
-
+    cout << "elapsed time: " << elapsed_seconds.count() << endl;
+    cout << "finished computation at " << std::ctime(&end_time);
 
 
 	return 0;

@@ -62,7 +62,7 @@ void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, int ma
 void TestSuite::fillTestSuiteWithRandomTestCases() {
 	assert(testCases != 0);
 	for(int i = 0; i < numberOfTestCases; i++){
-		testCases[i] = new TestCase { numberOfParameters, numberOfEdges, numberOfPredicates };
+		testCases[i] = new TestCase { };
 		targetCFG->setCoverageOfTestCase(testCases[i]);
 	}
 }
@@ -111,21 +111,30 @@ void TestSuite::printOnlyTestSuiteCoverage() {
 	targetCFG->printTestSuiteCoverage(this);
 }
 
+void TestSuite::resetCoverage() {
+	for (int j = 0; j < numberOfEdges; j++) {
+		duplicateEdgesCovered[j] = 0;
+	}
+
+	for (int j = 0; j < numberOfPredicates; j++) {
+		duplicatePredicatesCovered[j] = 0;
+	}
+}
+
 // This code is ridiculously inefficient, maybe we can switch to bitsets instead,
 //	then use |= on entire bitsets.
 void TestSuite::calculateTestSuiteCoverage() {
-	for (int i =0; i < numberOfTestCases; i++) {
+	for (int i = 0; i < numberOfTestCases; i++) {
 		for (int j = 0; j < numberOfEdges; j++) {
 			duplicateEdgesCovered[j] += testCases[i]->getEdgesCovered()[j];
 		}
 	}
 
-	for (int i =0; i < numberOfTestCases; i++) {
+	for (int i = 0; i < numberOfTestCases; i++) {
 		for (int j = 0; j < numberOfPredicates; j++) {
 			duplicatePredicatesCovered[j] += testCases[i]->getPredicatesCovered()[j];
 		}
 	}
-
 }
 
 TestSuite& TestSuite::operator =(const TestSuite& other) {
@@ -149,8 +158,8 @@ TestSuite& TestSuite::operator =(const TestSuite& other) {
 
 		using std::memcpy;
 
-		memcpy(duplicateEdgesCovered, other.duplicateEdgesCovered, sizeof(numberOfEdges * sizeof(int)));
-		memcpy(duplicatePredicatesCovered, other.duplicatePredicatesCovered, sizeof(numberOfEdges * sizeof(int)));
+		memcpy(duplicateEdgesCovered, other.duplicateEdgesCovered, sizeof(int) * numberOfEdges);
+		memcpy(duplicatePredicatesCovered, other.duplicatePredicatesCovered, sizeof(int) * numberOfPredicates);
 
 		for(int i = 0; i < numberOfTestCases; i++){
 			testCases[i] = new TestCase { *other.testCases[i] };

@@ -21,18 +21,6 @@ TestCase::~TestCase(){
 	delete[] inputParameters;
 }
 
-TestCase::TestCase(int numberOfParameters, int numberOfEdges, int numberOfPredicates){
-	this->numberOfParameters = numberOfParameters;
-	this->numberOfEdges = numberOfEdges;
-	this->numberOfPredicates = numberOfPredicates;
-
-	edgesCovered = new bool[numberOfEdges] { };
-	predicatesCovered = new bool[numberOfPredicates] { };
-	inputParameters = new int[numberOfParameters] { };
-
-	generateRandomParameters();
-}
-
 TestCase::TestCase() {
 	numberOfEdges      = targetCFG->getNumberOfEdges();
 	numberOfParameters = targetCFG->getNumberOfParameters();
@@ -52,13 +40,13 @@ TestCase::TestCase(const TestCase& that) {
 	numberOfPredicates = that.numberOfPredicates;
 
 	edgesCovered = new bool[numberOfEdges] { };
-	memcpy(edgesCovered, that.edgesCovered, sizeof *edgesCovered * numberOfEdges);
+	memcpy(edgesCovered, that.edgesCovered, sizeof(bool) * numberOfEdges);
 
 	predicatesCovered = new bool[numberOfPredicates] { };
-	memcpy(predicatesCovered, that.predicatesCovered, sizeof *predicatesCovered * numberOfPredicates);
+	memcpy(predicatesCovered, that.predicatesCovered, sizeof(bool) * numberOfPredicates);
 
 	inputParameters = new int[numberOfParameters] { };
-	memcpy(inputParameters, that.inputParameters, sizeof *inputParameters * numberOfParameters);
+	memcpy(inputParameters, that.inputParameters, sizeof(int) * numberOfParameters);
 }
 
 
@@ -109,19 +97,19 @@ void TestCase::print(ControlFlowGraph* cfg) {
 	cfg->printTestCaseCoverage(this);
 }
 
-bool* TestCase::getEdgesCovered(){
+bool* TestCase::getEdgesCovered() const{
 	return  edgesCovered;
 }
 
-bool* TestCase::getPredicatesCovered(){
+bool* TestCase::getPredicatesCovered() const{
 	return  predicatesCovered;
 }
 
-int* TestCase::getInputParameters(){
+int* TestCase::getInputParameters() const{
 	return  inputParameters;
 }
 
-int TestCase::getInputParameterAtIndex(int index) {
+int TestCase::getInputParameterAtIndex(int index) const{
 	assert(index >= 0 && index < numberOfParameters);
 	return inputParameters[index];
 }
@@ -161,9 +149,9 @@ TestCase& TestCase::operator =(const TestCase& org) {
 		predicatesCovered = new bool[numberOfPredicates] { };
 
 		using std::memcpy;
-		memcpy(edgesCovered, org.edgesCovered, sizeof(org.numberOfEdges * sizeof(bool)));
-		memcpy(inputParameters, org.inputParameters, sizeof(org.numberOfParameters * 4));
-		memcpy(predicatesCovered, org.predicatesCovered, sizeof(org.numberOfPredicates * sizeof(bool)));
+		memcpy(edgesCovered, org.edgesCovered, sizeof(bool) * org.numberOfEdges);
+		memcpy(inputParameters, org.inputParameters, sizeof(int) * org.numberOfParameters);
+		memcpy(predicatesCovered, org.predicatesCovered, sizeof(bool) * org.numberOfPredicates);
 	}
 	return *this;
 }

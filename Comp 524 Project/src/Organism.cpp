@@ -26,19 +26,18 @@ Organism::Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** test
 	fitness = 0;
 }
 
-/**
- * Removed SetFitness()
- * The idea is to keep things consistent between the Organism constructors. Above
- * we can't set the fitness yet because it is used in crossover but the fitness
- * shouldn't be calculated until after mutation. Here we could set the fitness
- * but it seems better to maintain consistency and require that when you create
- * an organism you must call setFitness yourself at an appropriate time. This
- * constructor is used by the population constructor which calls setPopulationFitness
- * to evaluate the fitness of all individuals and sort them.
- */
+
 Organism::Organism(int numOfTestCases, int maxNumberOfTestCases ) {
 	chromosome = new TestSuite { numOfTestCases, maxNumberOfTestCases};
 	initialized = true;
+	evaluateBaseFitness();
+	evaluated = true;
+}
+
+// Added copy constructor
+Organism::Organism(const Organism& org) {
+	chromosome = 0;
+	initialized = false;
 	evaluated = false;
 	fitness = 0;
 }
@@ -57,6 +56,7 @@ int Organism::getFitness() const{
 void Organism::mutate(double mutationProb) {
 	assert(initialized == true);
 	int numberOfTestCases = chromosome->getNumberOfTestCases();
+
 	for (int i = 0; i < numberOfTestCases; i++) {
 		double toss = uniform01();
 		if (toss < mutationProb) {
@@ -66,10 +66,10 @@ void Organism::mutate(double mutationProb) {
 		}
 	}
 
-	evaluated = false;
+	evaluateBaseFitness();
 }
 
-int Organism::setFitness(){
+void Organism::evaluateBaseFitness(){
 	assert(initialized == true);
 	fitness = 0;
 	chromosome->calculateTestSuiteCoverage();
@@ -95,7 +95,6 @@ int Organism::setFitness(){
 	}
 
 	evaluated = true;
-	return fitness;
 }
 
 void Organism::printSimple() {
@@ -127,6 +126,11 @@ int Organism::getMaxNumberOfTestCases() const {
 bool Organism::operator<=(const Organism& right) { //overloaded operator <=
 	assert(evaluated == true);
 	return (fitness <= right.fitness) ? true : false;
+} //operator<=
+
+bool Organism::operator<(const Organism& right) { //overloaded operator <=
+	assert(evaluated == true);
+	return (fitness < right.fitness) ? true : false;
 } //operator<=
 
 bool Organism::operator==(const Organism& right) { //overloaded operator ==
