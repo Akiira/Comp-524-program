@@ -34,14 +34,6 @@ Organism::Organism(int numOfTestCases, int maxNumberOfTestCases ) {
 	evaluated = true;
 }
 
-// Added copy constructor
-Organism::Organism(const Organism& org) {
-	chromosome = 0;
-	initialized = false;
-	evaluated = false;
-	fitness = 0;
-}
-
 TestSuite* Organism::getChromosome() const{
 	assert(initialized == true);
 	return  chromosome;
@@ -63,7 +55,7 @@ void Organism::mutate(double mutationProb) {
 			TestCase* newTestCase = new TestCase();
 			targetCFG->setCoverageOfTestCase(newTestCase);
 			double toss2 = uniform01();
-			if (toss2 < .9) {
+			if (toss2 < .1) {
 				chromosome->setTestCase(i, newTestCase);
 			}
 			else {

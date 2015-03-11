@@ -102,8 +102,8 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 		child1TestCases[j] = new TestCase { *parent1TestCases[j] };
 	}
 
-	child1 = new Organism { parent1.getNumberOfTestCases(), parent1.getMaxNumberOfTestCases(), child1TestCases };
-	child2 = new Organism { parent2.getNumberOfTestCases(),	parent1.getMaxNumberOfTestCases(), child2TestCases };
+	child1 = new Organism { parent1NumberOfTestCases, parent1.getMaxNumberOfTestCases(), child1TestCases };
+	child2 = new Organism { parent2NumberOfTestCases,	parent2.getMaxNumberOfTestCases(), child2TestCases };
 }
 
 void Population::crossover(const TestCase& parent1, const TestCase& parent2,
