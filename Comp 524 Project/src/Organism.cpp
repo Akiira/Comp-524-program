@@ -55,7 +55,7 @@ void Organism::mutate(double mutationProb) {
 			TestCase* newTestCase = new TestCase();
 			targetCFG->setCoverageOfTestCase(newTestCase);
 			double toss2 = uniform01();
-			if (toss2 < .1) {
+			if (toss2 < .75) {
 				chromosome->setTestCase(i, newTestCase);
 			}
 			else {
@@ -101,7 +101,7 @@ void Organism::printSimple() {
 
 void Organism::printFitnessAndCoverage() {
 	cout << "Fitness: " << fitness << endl;
-	chromosome->printOnlyTestSuiteCoverage();
+	chromosome->print();
 }
 
 int Organism::getNumberOfTestCases() const {

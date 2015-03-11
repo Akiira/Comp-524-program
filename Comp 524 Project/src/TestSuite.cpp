@@ -88,12 +88,13 @@ void TestSuite::setTestCase(int index, TestCase* testCase) {
 // Just deletes it if there isn't room
 // Im thinking about only adding if it covers something new
 void TestSuite::addTestCase(TestCase* testCase) {
-	cout << numberOfTestCases << endl;
 	if (numberOfTestCases < maxNumberOfTestCases) {
-		testCases[numberOfTestCases] = new TestCase(*testCase);
+		testCases[numberOfTestCases] = testCase;
 		numberOfTestCases++;
 	}
-	delete testCase;
+	else {
+		delete testCase;
+	}
 }
 
 void TestSuite::print() {
