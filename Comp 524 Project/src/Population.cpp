@@ -146,23 +146,51 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 
 void Population::scalePopulationsFitness(typeOfScaling scaling) {
 
-	// Linear Scaling
-	int max { getBestOrganism()->fitness },
-		min { population[populationSize - 1]->getFitness() };
-	auto a = max;
-	auto b = -min / populationSize;
+	if( scaling == LINEAR ) {
+		totalFitness = 0;
+		// Linear Scaling
+		int max { getBestOrganism()->fitness },
+			min { population[populationSize - 1]->getFitness() };
+		auto a = max;
+		auto b = -min / populationSize;
 
-	for(int i = 0; i < populationSize; i++) {
-		auto f = population[i]->getFitness();
-		population[i]->setFitness(a + b * f);
+		for(int i = 0; i < populationSize; i++) {
+			auto f = population[i]->getFitness();
+			//population[i]->setFitness(a + b * f);
+			//population[i]->setScaledFitness(a + (b * f));
+			totalFitness += a + (b * f);
+		}
 	}
+	else if ( scaling == EXPONENTIAL ) {
+		totalFitness = 0;
+		// Exponential scaling
+//		auto base = 1.25;
+//		auto power = 0;
+//		for(int i = populationSize - 1; i > 0; i--) {
+//			//population[i]->setFitness(pow(base, power));
+//			cout << "Setting :" << i << " to :" << pow(base, power) << endl;
+//			population[i]->setScaledFitness(pow(base, power));
+//			power++;
+//		}
 
-	// Exponential scaling
-	auto base = 1.25;
-	auto power = 0;
-	for(int i = populationSize - 1; i > 0; i--) {
-		population[i]->setFitness(pow(base, power));
-		power++;
+		int start = 1;
+		auto delta = 1;
+		for(int i = populationSize - 1; i > 0; i--) {
+			//population[i]->setScaledFitness(start);
+			totalFitness += start;
+			assert(totalFitness > 0);
+			//cout << "\tStart : " << start << endl;
+			//system("pause");
+			if( i % 100 == 99 ) {
+				delta += 1;
+			}
+
+			start += delta;
+		}
+	} else { // no scaling //TODO this is just for testing, can be much more efficient when we dont scale
+		for(int i = 0; i < populationSize; i++) {
+			//population[i]->setScaledFitness(population[i]->getFitness());
+		}
 	}
 }
 
@@ -176,69 +204,64 @@ int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 	int m = 0;   // the number of points selected so far
 	int i = 0;  //index for cutPoints array
 
-	// GA0 also had (t <= orgLength) here, pretty sure it should be <, otherwise cutpoint could be orgLength
 	for (int t = 0; (t < upperBound) && (m < numCutPoints); t++) {
 		if (((upperBound - t) * uniform01()) < (numCutPoints - m)) {
 			cutPoints[i] = t;
 			i++;
 			m++;
 		}
-	}  //for
+	}
 	return cutPoints;
-}  //selectCutPoints
+}
 
-void Population::replace(Organism* child)
-{//attempts to replace the worst member of the population with child
-  int worst = populationSize - 1;
 
-  if (child->getFitness() >= population[worst]-> getFitness()){
-    totalFitness += child->getFitness() - population[worst]->getFitness();
-    delete population[worst];
-    population[worst] = child;
 
-    int i = populationSize - 1;
-    Organism* tmp;
-    //now move the new child to the correct position in the popArray
-    //remember that organisms are kept in order of decreasing fitness.
-    while ((i > 0) && (population[i]->getFitness() > population[i-1]->getFitness())){
-      tmp = population[i];
-      population[i] = population[i-1];
-      population[i-1] = tmp;
-      i--;
-    }
-  }
-  else {
-	  delete child;
-  }
-}//replace
+void Population::replace(Organism* child) {
+	int worst = populationSize - 1;
+
+	if (child->getFitness() >= population[worst]->getFitness()) {
+		totalFitness += child->getFitness() - population[worst]->getFitness();
+		delete population[worst];
+		population[worst] = child;
+
+		int i = populationSize - 1;
+		Organism* tmp;
+
+		//now move the new child to the correct position in the popArray
+		while ((i > 0)
+				&& (population[i]->getFitness()
+						> population[i - 1]->getFitness())) {
+			tmp = population[i];
+			population[i] = population[i - 1];
+			population[i - 1] = tmp;
+			i--;
+		}
+	} else {
+		delete child;
+	}
+}
 
 // Straight from GA0
-// I tried to have this return Organism like it was in GA0 and change only the
-//	relevant things in Simulation to pass the parents into crossover and it caused
-//	a the program to crash without error after a random number of generations. very confused
-Organism* Population::fitnessProportionalSelect()
-{//selects a member of the population using proportional selection scheme.
- //If totalFitness is zero then an organism is selected at random.
-  long toss;
-  int i = 0;
-  int sum;
+Organism* Population::fitnessProportionalSelect() {
+//If totalFitness is zero then an organism is selected at random.
+	long toss;
+	int i = 0;
+	int sum;
 
-  if (totalFitness == 0){
-    //    i = rand() % popSize;
-    i = uniformInRange(0, populationSize-1);
-  }
-  else{
-    sum  = population[0]->getFitness();
-    //toss = rand() % totalFitness;
-    toss = uniformInRange(0, totalFitness);
-    while (sum < toss){
-      i++;
-      sum += population[i]->getFitness();
-    }//while
-  }//else
-  //cout << "Selected: " << i << endl;
-  return population[i];
-}//select
+	if (totalFitness == 0) {
+		i = uniformInRange(0, populationSize - 1);
+	} else {
+		sum = population[0]->getFitness();
+		toss = uniformInRange(0, totalFitness);
+
+		while (sum < toss) {
+			i++;
+			sum += population[i]->getFitness();
+		}
+	}
+
+	return population[i];
+}
 
 
 // Straight from GA0
@@ -261,9 +284,9 @@ void Population::setPopulationFitness() {
 				population[j] = population[j + 1];
 				population[j + 1] = tmp;
 			}
-		}  //for
-	}  //for
-}  //setPopulationFitness
+		}
+	}
+}
 
 void Population::printPopulationFitness() {
 	int bestFitness = population[0]->getFitness();
