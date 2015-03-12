@@ -22,13 +22,13 @@ Population::~Population() {
  * Creates a new population of random test suites
  */
 Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSize) {
-	population = new Organism*[popSize];
+	population = new Organism*[popSize] { };
 	populationSize = popSize;
 	this->initialTestSuiteSize = initialTestSuiteSize;
 
 	for (int i = 0; i < popSize; i++) {
 		// This constructor also set the fitness so no need to do it
-		population[i] = new Organism(initialTestSuiteSize, maxTestSuiteSize);
+		population[i] = new Organism { initialTestSuiteSize, maxTestSuiteSize };
 	}
 	totalFitness = 0;
 	setPopulationFitness();
@@ -106,6 +106,7 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 	child2 = new Organism { parent2NumberOfTestCases,	parent2.getMaxNumberOfTestCases(), child2TestCases };
 }
 
+//TODO decide if we want this
 void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 		TestCase*& child1, TestCase*& child2, int numberOfCutPoints) {
 	auto cutPoints = selectCutPoints(numberOfCutPoints, parent1.getNumberOfParameters());
@@ -118,7 +119,7 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 				child1->setInputParameterAtIndex(j, parent1.getInputParameterAtIndex(j));
 				child2->setInputParameterAtIndex(j, parent2.getInputParameterAtIndex(j));
 			}
-		}  //if
+		}
 		else {
 			for (int j = current; j <= cutPoints[i]; j++) {
 				child1->setInputParameterAtIndex(j, parent2.getInputParameterAtIndex(j));
@@ -144,11 +145,10 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 	}
 }
 
-void Population::scalePopulationsFitness(typeOfScaling scaling) {
+void Population::scalePopulationsFitness() {
 
-	if( scaling == LINEAR ) {
+	if( SCALING == LINEAR ) {
 		totalFitness = 0;
-		// Linear Scaling
 		int max { getBestOrganism()->fitness },
 			min { population[populationSize - 1]->getFitness() };
 		auto a = max;
@@ -156,14 +156,13 @@ void Population::scalePopulationsFitness(typeOfScaling scaling) {
 
 		for(int i = 0; i < populationSize; i++) {
 			auto f = population[i]->getFitness();
-			//population[i]->setFitness(a + b * f);
-			//population[i]->setScaledFitness(a + (b * f));
+			population[i]->setScaledFitness(a + (b * f));
 			totalFitness += a + (b * f);
 		}
 	}
-	else if ( scaling == EXPONENTIAL ) {
+	else if ( SCALING == EXPONENTIAL ) {
 		totalFitness = 0;
-		// Exponential scaling
+//This kept overflowing, I think the paper i read left out some details
 //		auto base = 1.25;
 //		auto power = 0;
 //		for(int i = populationSize - 1; i > 0; i--) {
@@ -172,24 +171,31 @@ void Population::scalePopulationsFitness(typeOfScaling scaling) {
 //			population[i]->setScaledFitness(pow(base, power));
 //			power++;
 //		}
+		int start { 1 },
+		    delta { 1 };
 
-		int start = 1;
-		auto delta = 1;
 		for(int i = populationSize - 1; i > 0; i--) {
-			//population[i]->setScaledFitness(start);
+			population[i]->setScaledFitness(start);
 			totalFitness += start;
-			assert(totalFitness > 0);
-			//cout << "\tStart : " << start << endl;
-			//system("pause");
+			assert(totalFitness > 0); //assert we have not overflowed
 			if( i % 100 == 99 ) {
 				delta += 1;
 			}
 
 			start += delta;
 		}
+	}
+	else if ( SCALING == RANKED ) { //Ranking fitness
+		totalFitness = 0;
+		short rank { 1 };
+		for(int i = populationSize - 1; i > 0; i--) {
+				population[i]->setScaledFitness(rank);
+				totalFitness += rank;
+				rank++;
+			}
 	} else { // no scaling //TODO this is just for testing, can be much more efficient when we dont scale
 		for(int i = 0; i < populationSize; i++) {
-			//population[i]->setScaledFitness(population[i]->getFitness());
+			population[i]->setScaledFitness(population[i]->getFitness());
 		}
 	}
 }
@@ -265,8 +271,6 @@ Organism* Population::fitnessProportionalSelect() {
 
 
 // Straight from GA0
-// Changed it to use getFitness instead of setFitness, since we made the
-//	random organism constructor call setFitness()
 void Population::setPopulationFitness() {
 	int i, j;
 	totalFitness = 0;
