@@ -24,6 +24,7 @@ Organism::Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** test
 	initialized = true;
 	evaluated = false;
 	fitness = 0;
+	scaledFitness = 0;
 }
 
 
@@ -35,18 +36,15 @@ Organism::Organism(int numOfTestCases, int maxNumberOfTestCases ) {
 }
 
 TestSuite* Organism::getChromosome() const{
-	assert(initialized == true);
 	return  chromosome;
 }
 
 int Organism::getFitness() const{
-	assert(evaluated == true);
 	return fitness;
 }
 
 
 void Organism::mutate(double mutationProb) {
-	assert(initialized == true);
 	int numberOfTestCases = chromosome->getNumberOfTestCases();
 
 	for (int i = 0; i < numberOfTestCases; i++) {

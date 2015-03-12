@@ -45,11 +45,20 @@ public:
 		this->fitness = fitness;
 	}
 
+	int getScaledFitness() const {
+		return scaledFitness;
+	}
+
+	void setScaledFitness(int scaledFitness) {
+		this->scaledFitness = scaledFitness;
+	}
+
 	friend class Population;
 
 private:
 	TestSuite* chromosome;
 	bool initialized, evaluated;
 	int fitness;
+	int scaledFitness;
 };
 #endif // !defined(EA_FD308F31_83AB_4efc_8F0F_05730A9FF804__INCLUDED_)
