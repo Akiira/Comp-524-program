@@ -26,7 +26,7 @@ public:
 	Organism* randomSelect();
 	Organism* select();
 	Organism* fitnessProportionalSelect();
-	void scalePopulationsFitness(typeOfScaling scaling);
+	void scalePopulationsFitness();
 	void printPopulationFitness();
 
 	Organism* getBestOrganism() const;
