@@ -6,6 +6,7 @@
 #include "SimpleIfElseControlFlowGraph.h"
 #include "Simulation.h"
 #include "GlobalVariables.h"
+#include "RandomSearcher.h"
 
 #include <chrono>
 #include <ctime>
@@ -61,6 +62,20 @@ void hiLoSimulationTest() {
 	hiLoSim->run();
 }
 
+void hiLoRandomSearchEdges() {
+	ControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
+	targetCFG = hiLoCFG;
+	RandomSearcher* r = new RandomSearcher();
+	r->search();
+}
+
+void hiLoRandomSearchPredicates() {
+	ControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
+	targetCFG = hiLoCFG;
+	RandomSearcher* r = new RandomSearcher();
+	r->searchForPredicates();
+}
+
 void simpleIfElseSimulationTest() {
 	//Simulation::Simulation(int populationSize, int initialTestSuiteSize, int maxTestSuiteSize,
 	//		int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations)
@@ -79,7 +94,9 @@ int main() {
 	chrono::time_point<chrono::system_clock> start { }, end { };
     start = chrono::system_clock::now();
 
-    hiLoSimulationTest();
+    //hiLoSimulationTest();
+    hiLoRandomSearchEdges();
+    hiLoRandomSearchPredicates();
 
     end = chrono::system_clock::now();
 
