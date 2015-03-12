@@ -226,9 +226,11 @@ void Population::replace(Organism* child) {
 	int worst = populationSize - 1;
 
 	if (child->getFitness() >= population[worst]->getFitness()) {
-		totalFitness += child->getFitness() - population[worst]->getFitness();
+		//totalFitness += child->getFitness() - population[worst]->getFitness();
 		delete population[worst];
 		population[worst] = child;
+
+		scalePopulationsFitness();
 
 		int i = populationSize - 1;
 		Organism* tmp;
@@ -273,10 +275,11 @@ Organism* Population::fitnessProportionalSelect() {
 // Straight from GA0
 void Population::setPopulationFitness() {
 	int i, j;
-	totalFitness = 0;
-	for (i = 0; i < populationSize; i++) {
-		totalFitness += population[i]->getFitness();
-	}
+//	totalFitness = 0;
+//	for (i = 0; i < populationSize; i++) {
+//		totalFitness += population[i]->getFitness();
+//	}
+	scalePopulationsFitness();
 
 	//now sort popArray so that the organisms are in order of fitness
 	//from highest to lowest.
