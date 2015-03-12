@@ -259,12 +259,14 @@ Organism* Population::fitnessProportionalSelect() {
 	if (totalFitness == 0) {
 		i = uniformInRange(0, populationSize - 1);
 	} else {
-		sum = population[0]->getFitness();
+		//sum = population[0]->getFitness();
+		sum = population[0]->getScaledFitness();
 		toss = uniformInRange(0, totalFitness);
 
 		while (sum < toss) {
 			i++;
-			sum += population[i]->getFitness();
+			//sum += population[i]->getFitness();
+			sum += population[i]->getScaledFitness();
 		}
 	}
 
