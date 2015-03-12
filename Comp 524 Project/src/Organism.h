@@ -22,9 +22,6 @@ public:
 	Organism(int numOfTestCases, int maxNumberOfTestCases);
 	Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** testCases);
 
-	void initializeRandomChromosome(int numberOfTestCases);
-	void initializeChromosomeFromTestCases(int numberOfTestCases, TestCase** testCases);
-
 	TestSuite* getChromosome() const;
 	void mutate(double mutationProb);
 
@@ -57,7 +54,6 @@ public:
 
 private:
 	TestSuite* chromosome;
-	bool initialized, evaluated;
 	int fitness;
 	int scaledFitness;
 };

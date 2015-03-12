@@ -18,11 +18,8 @@ Organism::~Organism(){
 	delete chromosome;
 }
 
-
 Organism::Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** testCases) {
 	chromosome = new TestSuite { numOfTestCases, maxNumberOfTestCases, testCases };
-	initialized = true;
-	evaluated = false;
 	fitness = 0;
 	scaledFitness = 0;
 }
@@ -30,9 +27,8 @@ Organism::Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** test
 
 Organism::Organism(int numOfTestCases, int maxNumberOfTestCases ) {
 	chromosome = new TestSuite { numOfTestCases, maxNumberOfTestCases};
-	initialized = true;
 	evaluateBaseFitness();
-	evaluated = true;
+	scaledFitness = 0;
 }
 
 TestSuite* Organism::getChromosome() const{
@@ -66,7 +62,7 @@ void Organism::mutate(double mutationProb) {
 }
 
 void Organism::evaluateBaseFitness(){
-	assert(initialized == true);
+	//assert(initialized == true);
 	fitness = 0;
 	chromosome->calculateTestSuiteCoverage();
 	int* edgeCoverage = chromosome->getDuplicateEdgesCovered();
@@ -89,8 +85,6 @@ void Organism::evaluateBaseFitness(){
 			fitness += baseReward - predicateCoverage[i];
 		}
 	}
-
-	evaluated = true;
 }
 
 void Organism::printSimple() {
@@ -119,31 +113,24 @@ int Organism::getMaxNumberOfTestCases() const {
 
 //===========================OVERLOADED OPERATORS===========================
 
-bool Organism::operator<=(const Organism& right) { //overloaded operator <=
-	assert(evaluated == true);
+bool Organism::operator<=(const Organism& right) {
 	return (fitness <= right.fitness) ? true : false;
-} //operator<=
+}
 
-bool Organism::operator<(const Organism& right) { //overloaded operator <=
-	assert(evaluated == true);
+bool Organism::operator<(const Organism& right) {
 	return (fitness < right.fitness) ? true : false;
-} //operator<=
+}
 
-bool Organism::operator==(const Organism& right) { //overloaded operator ==
-	assert(evaluated == true);										   //TODO implement function
+bool Organism::operator==(const Organism& right) {    //TODO implement function
 	return false;
-	//return (strcmp(chromosome, right.chromosome) == 0)? true : false;
-}	//operator==
+}
 
-Organism& Organism::operator=(const Organism& org) {	//assignment operator
-	assert(org.initialized == true && org.evaluated == true);
+Organism& Organism::operator=(const Organism& org) {
 	if (this != &org) {
 		*chromosome = *org.chromosome;
 
 		assert(chromosome != NULL);
 		fitness = org.fitness;
-		initialized = org.initialized;
-		evaluated = org.evaluated;
-	}	//if
+	}
 	return *this;
-}//operator=
+}
