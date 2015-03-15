@@ -94,9 +94,9 @@ int main() {
 	chrono::time_point<chrono::system_clock> start { }, end { };
     start = chrono::system_clock::now();
 
-    //hiLoSimulationTest();
-    hiLoRandomSearchEdges();
-    hiLoRandomSearchPredicates();
+    hiLoSimulationTest();
+    //hiLoRandomSearchEdges();
+    //hiLoRandomSearchPredicates();
 
     end = chrono::system_clock::now();
 

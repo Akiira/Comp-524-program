@@ -50,7 +50,8 @@ TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase**
 }
 
 void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, int maxNumberOfTestCases) {
-	assert(numberOfTestCases > 0 && maxNumberOfTestCases >= numberOfTestCases);
+	assert(numberOfTestCases > 0 );
+	assert(maxNumberOfTestCases >= numberOfTestCases);
 	this->maxNumberOfTestCases = maxNumberOfTestCases;
 	this->numberOfTestCases = numberOfTestCases;
 	this->numberOfParameters = targetCFG->getNumberOfParameters();

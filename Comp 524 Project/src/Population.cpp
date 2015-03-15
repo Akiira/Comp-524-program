@@ -10,7 +10,6 @@
 
 #include <cassert>
 
-
 Population::~Population() {
 	for (int i = 0; i < populationSize; i++) {
 		delete population[i];
@@ -24,11 +23,17 @@ Population::~Population() {
 Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSize) {
 	population = new Organism*[popSize] { };
 	populationSize = popSize;
-	this->initialTestSuiteSize = initialTestSuiteSize;
+	int numOfGroups { (popSize / (maxTestSuiteSize-4)) };
+	int numOfTests { 3 };
 
 	for (int i = 0; i < popSize; i++) {
-		// This constructor also set the fitness so no need to do it
+
 		population[i] = new Organism { initialTestSuiteSize, maxTestSuiteSize };
+		//population[i] = new Organism { numOfTests, maxTestSuiteSize };
+
+		if( i % numOfGroups == 0 ) {
+			numOfTests++;
+		}
 	}
 	totalFitness = 0;
 	setPopulationFitness();

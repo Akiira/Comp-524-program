@@ -35,7 +35,6 @@ private:
 	Organism** population;
 	int populationSize;
 	int totalFitness;
-	int initialTestSuiteSize;
 
 	void setPopulationFitness();
 	int* selectCutPoints(int numberOfCutPoints, int upperBound);
