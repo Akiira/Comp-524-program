@@ -52,6 +52,7 @@ public:
 	void printSimple();
 	void printOnlyTestSuiteCoverage();
 	TestSuite& operator=(const TestSuite& org);
+	bool operator==(const TestSuite& right);
 
 	int* getDuplicateEdgesCovered() const {
 		return duplicateEdgesCovered;

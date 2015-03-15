@@ -183,3 +183,9 @@ TestSuite& TestSuite::operator =(const TestSuite& other) {
 
 	return *this;
 }
+
+bool TestSuite::operator==(const TestSuite& right) {
+	//TODO implement this
+	assert(false);
+	return false;
+}

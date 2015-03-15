@@ -126,8 +126,18 @@ bool Organism::operator<(const Organism& right) {
 	return (fitness < right.fitness) ? true : false;
 }
 
-bool Organism::operator==(const Organism& right) {    //TODO implement function
-	return false;
+bool Organism::operator==(const Organism* right) {
+
+	//They could be the same objects in memory or just have the same
+	// test cases and coverage
+	if( this->chromosome == right->chromosome ) {
+		return true;
+	}
+	else if ( *this->chromosome == *right->chromosome ) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 Organism& Organism::operator=(const Organism& org) {
