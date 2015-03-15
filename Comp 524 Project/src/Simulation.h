@@ -14,26 +14,29 @@
 
 class Simulation
 {
-
 public:
 	virtual ~Simulation();
 
 	Simulation(int populationSize, int initalTestSuiteSize, int maxTestSuiteSize,
 			int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations);
-
-	TestSuite* getBestTestSuite();
 	void run();
+
+	TestSuite* getBestTestSuite(){
+		return bestOrganismSeen->getChromosome();
+	}
 
 private:
 	Population* population;
 	Organism* bestOrganismSeen;
-	//ControlFlowGraph* targetCFG;
 
-	int numberOfGenerations;
 	int populationSize;
 	int initialTestSuiteSize;
 	int maxTestSuiteSize;
+
+	//TODO: I was think we could maybe just pass these into the run function since they are never
+	// 		used anywhere else.
 	int numberOfCutPoints;
+	int numberOfGenerations;
 	double probabilityForCrossover;
 	double probabilityForMutation;
 

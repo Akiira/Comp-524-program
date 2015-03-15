@@ -14,6 +14,7 @@ using std::endl;
 
 Simulation::~Simulation(){
 	delete population;
+	delete bestOrganismSeen;
 }
 
 Simulation::Simulation(int populationSize, int initialTestSuiteSize, int maxTestSuiteSize,
@@ -29,17 +30,9 @@ Simulation::Simulation(int populationSize, int initialTestSuiteSize, int maxTest
 
 	population = new Population { populationSize, initialTestSuiteSize, maxTestSuiteSize };
 
-	// I'm not sure there's a point to copying this every time
-	//	through the loop. We may not even need this bestOrganismSeen property
 	bestOrganismSeen = new Organism { 1, maxTestSuiteSize };
 	*bestOrganismSeen = *population->getBestOrganism();
 }
-
-
-TestSuite* Simulation::getBestTestSuite(){
-	return bestOrganismSeen->getChromosome();
-}
-
 
 void Simulation::run(){
 	int i { 0 };
@@ -51,18 +44,15 @@ void Simulation::run(){
 		auto parent2 = population->fitnessProportionalSelect();
 
 		cout << "Generation # " << i << endl;
-		//cout << "Parents" << endl;
-		//parent1->printFitnessAndCoverage();
-		//parent2->printFitnessAndCoverage();
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 		child1->mutate(probabilityForMutation);
 		child2->mutate(probabilityForMutation);
 
 		assert(child1 && child2);
-		//cout << "Children" << endl;
-		//child1->printFitnessAndCoverage();
-		//child2->printFitnessAndCoverage();
+
+		//TODO add a periodic call to some local optimization in this loop.
+		//TODO possibly add some periodic adaptation of parameters like mutation
 
 		if(child1 <= child2){
 			population->replace(child2);
@@ -75,6 +65,8 @@ void Simulation::run(){
 
 		i++;
 
+		//TODO Check if it looks like the last generation always have the best organism
+		//		and if so, we can remove this. We can check this when we are closer to final version
 		if( *bestOrganismSeen < *population->getBestOrganism() ) {
 			*bestOrganismSeen = *population->getBestOrganism();
 		}
