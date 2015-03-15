@@ -235,6 +235,8 @@ void Population::replaceParentWithChild(Organism* parent, Organism* child) {
 			break;
 		}
 	}
+
+	//TODO depending on when we do this, the population array may be out of order and need sorted
 }
 
 void Population::replace(Organism* child) {
