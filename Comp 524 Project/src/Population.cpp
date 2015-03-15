@@ -225,10 +225,20 @@ int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 	return cutPoints;
 }
 
+void Population::replaceParentWithChild(Organism* parent, Organism* child) {
 
+	for(int i = 0; i < populationSize; i++) {
+
+		if( population[i] == parent ) {
+			delete population[i];
+			population[i] = child;
+			break;
+		}
+	}
+}
 
 void Population::replace(Organism* child) {
-	int worst = populationSize - 1;
+	int worst { populationSize - 1 };
 
 	if (child->getFitness() >= population[worst]->getFitness()) {
 		//totalFitness += child->getFitness() - population[worst]->getFitness();
