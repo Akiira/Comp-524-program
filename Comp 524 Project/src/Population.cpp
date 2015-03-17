@@ -231,7 +231,15 @@ void Population::replaceParentWithChild(Organism* parent, Organism* child) {
 	for(int i = 0; i < populationSize; i++) {
 
 		if( population[i] == parent ) {
-			delete population[i]; //TODO update meta data
+
+			auto parentCov = parent->getChromosome()->getDuplicateEdgesCovered();
+			auto childCov = child->chromosome->getDuplicateEdgesCovered();
+			for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+				edgeCoverage[j] += childCov[j] - parentCov[j];
+			}
+			//TODO this change in meta data may require re-evaluation of entire populations fitness
+
+			delete population[i];
 			population[i] = child;
 			break;
 		}
@@ -243,8 +251,16 @@ void Population::replaceParentWithChild(Organism* parent, Organism* child) {
 void Population::replace(Organism* child) {
 	int worst { populationSize - 1 };
 
-	if (child->getFitness() >= population[worst]->getFitness()) { //TODO update meta data
+	if (child->getFitness() >= population[worst]->getFitness()) {
 		//totalFitness += child->getFitness() - population[worst]->getFitness();
+
+		auto worstCov = population[worst]->getChromosome()->getDuplicateEdgesCovered();
+		auto childCov = child->chromosome->getDuplicateEdgesCovered();
+		for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+			edgeCoverage[j] += childCov[j] - worstCov[j];
+		}
+		//TODO this change in meta data may require re-evaluation of entire populations fitness
+
 		delete population[worst];
 		population[worst] = child;
 
