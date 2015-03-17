@@ -43,33 +43,18 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 void Population::crossover(const Organism& parent1, const Organism& parent2,
 		Organism*& child1, Organism*& child2, int numberOfCutPoints) {
 
-	int parent1NumberOfTestCases = parent1.getNumberOfTestCases();
-	int parent2NumberOfTestCases = parent2.getNumberOfTestCases();
-
-	int parent1MaxNumberOfTestCases = parent1.getMaxNumberOfTestCases();
-	int parent2MaxNumberOfTestCases = parent2.getMaxNumberOfTestCases();
-
-	TestCase**parent1TestCases { };
-	TestCase**parent2TestCases { };
-
 	// Swap things so that parent1TestCases refers to the array with the most test cases
-	if (parent1NumberOfTestCases >= parent2NumberOfTestCases) {
-		parent1TestCases = parent1.chromosome->getAllTestCases();
-		parent2TestCases = parent2.chromosome->getAllTestCases();
-	} else {
-		parent1TestCases = parent2.chromosome->getAllTestCases();
-		parent2TestCases = parent1.chromosome->getAllTestCases();
-		int tmp = parent1NumberOfTestCases;
-		parent1NumberOfTestCases = parent2NumberOfTestCases;
-		parent2NumberOfTestCases = tmp;
-	}
+	TestCase** parent1TestCases = (parent1.getNumberOfTestCases() >= parent2.getNumberOfTestCases() ? parent1.chromosome->getAllTestCases() : parent2.chromosome->getAllTestCases());
+	TestCase** parent2TestCases = (parent1.getNumberOfTestCases() >= parent2.getNumberOfTestCases() ? parent2.chromosome->getAllTestCases() : parent1.chromosome->getAllTestCases());
 
+	int parent1NumberOfTestCases { ( parent1.getNumberOfTestCases() >= parent2.getNumberOfTestCases() ? parent1.getNumberOfTestCases() : parent2.getNumberOfTestCases()) };
+	int parent2NumberOfTestCases { ( parent1.getNumberOfTestCases() >= parent2.getNumberOfTestCases() ? parent2.getNumberOfTestCases() : parent1.getNumberOfTestCases()) };
 
 	// Use parent2NumberOfTestCases as the upperBound of cutpoints since parent2 must be <= parent1
 	int* cutPoints = selectCutPoints(numberOfCutPoints,	parent2NumberOfTestCases);
 
-	TestCase** child1TestCases = new TestCase*[parent1MaxNumberOfTestCases] { };
-	TestCase** child2TestCases = new TestCase*[parent2MaxNumberOfTestCases] { };
+	TestCase** child1TestCases = new TestCase*[parent1.getMaxNumberOfTestCases()] { };
+	TestCase** child2TestCases = new TestCase*[parent2.getMaxNumberOfTestCases()] { };
 
 	bool alternate { true };
 	int current { 0 }; //the overall finger through all chromosomes (parents & offspring)
