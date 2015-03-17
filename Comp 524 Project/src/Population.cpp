@@ -112,7 +112,7 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 	child2 = new Organism { parent2NumberOfTestCases,	parent2.getMaxNumberOfTestCases(), child2TestCases };
 }
 
-//TODO decide if we want this
+//TODO decide when we use this
 void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 		TestCase*& child1, TestCase*& child2, int numberOfCutPoints) {
 	auto cutPoints = selectCutPoints(numberOfCutPoints, parent1.getNumberOfParameters());
@@ -211,10 +211,10 @@ int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 
 	//select numCutPoints randomly in the range [0..orgLength-1]
 	//and store their locations in the cutPoints array
-	int* cutPoints = new int[numCutPoints];
+	int* cutPoints = new int[numCutPoints] { };
 
-	int m = 0;   // the number of points selected so far
-	int i = 0;  //index for cutPoints array
+	int m { 0 };   // the number of points selected so far
+	int i { 0 };  //index for cutPoints array
 
 	for (int t = 0; (t < upperBound) && (m < numCutPoints); t++) {
 		if (((upperBound - t) * uniform01()) < (numCutPoints - m)) {
