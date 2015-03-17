@@ -231,7 +231,7 @@ void Population::replaceParentWithChild(Organism* parent, Organism* child) {
 	for(int i = 0; i < populationSize; i++) {
 
 		if( population[i] == parent ) {
-			delete population[i];
+			delete population[i]; //TODO update meta data
 			population[i] = child;
 			break;
 		}
@@ -243,7 +243,7 @@ void Population::replaceParentWithChild(Organism* parent, Organism* child) {
 void Population::replace(Organism* child) {
 	int worst { populationSize - 1 };
 
-	if (child->getFitness() >= population[worst]->getFitness()) {
+	if (child->getFitness() >= population[worst]->getFitness()) { //TODO update meta data
 		//totalFitness += child->getFitness() - population[worst]->getFitness();
 		delete population[worst];
 		population[worst] = child;
