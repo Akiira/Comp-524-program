@@ -21,6 +21,7 @@ Population::~Population() {
  * Creates a new population of random test suites
  */
 Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSize) {
+	edgeCoverage = new int[targetCFG->getNumberOfEdges()] { };
 	population = new Organism*[popSize] { };
 	populationSize = popSize;
 	int numOfGroups { (popSize / (maxTestSuiteSize-4)) };
@@ -290,6 +291,16 @@ Organism* Population::fitnessProportionalSelect() {
 	return population[i];
 }
 
+void Population::computeEdgeCoverage() {
+
+	for (int i = 0; i < populationSize; ++i) {
+		auto cov = population[i]->chromosome->getDuplicateEdgesCovered();
+
+		for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+			edgeCoverage[j] += cov[j];
+		}
+	}
+}
 
 // Straight from GA0
 void Population::setPopulationFitness() {

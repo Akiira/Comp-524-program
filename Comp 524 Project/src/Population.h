@@ -36,9 +36,11 @@ private:
 	Organism** population;
 	int populationSize;
 	int totalFitness;
+	int* edgeCoverage;
 
 	void setPopulationFitness();
 	int* selectCutPoints(int numberOfCutPoints, int upperBound);
+	void computeEdgeCoverage();
 
 	//TODO remove hard coding of value
 	const static typeOfScaling SCALING = NONE;
