@@ -22,6 +22,7 @@ Population::~Population() {
  */
 Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSize) {
 	edgeCoverage = new int[targetCFG->getNumberOfEdges()] { };
+	predicateCoverage = new int[targetCFG->getNumberOfPredicates()] { };
 	population = new Organism*[popSize] { };
 	populationSize = popSize;
 	int numOfGroups { (popSize / (maxTestSuiteSize-4)) };
@@ -30,7 +31,6 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 	for (int i = 0; i < popSize; i++) {
 
 		population[i] = new Organism { initialTestSuiteSize, maxTestSuiteSize };
-		//population[i] = new Organism { numOfTests, maxTestSuiteSize };
 
 		if( i % numOfGroups == 0 ) {
 			numOfTests++;
