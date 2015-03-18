@@ -10,7 +10,6 @@
 
 #include "Organism.h"
 #include "GlobalVariables.h"
-#include "ControlFlowGraph.h"
 
 class Population
 {

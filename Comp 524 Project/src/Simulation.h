@@ -9,8 +9,8 @@
 #define EA_63CB5297_1E19_44f6_AF1B_16CF01DC9D73__INCLUDED_
 
 #include "TestSuite.h"
+#include "GlobalVariables.h"
 #include "Population.h"
-#include "ControlFlowGraph.h"
 
 class Simulation
 {

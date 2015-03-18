@@ -57,5 +57,9 @@ private:
 	TestSuite* chromosome;
 	int fitness;
 	int scaledFitness;
+
+	int fitnessFunction01();
+	int fitnessFunction02();
+	int fitnessFunction03();
 };
 #endif // !defined(EA_FD308F31_83AB_4efc_8F0F_05730A9FF804__INCLUDED_)

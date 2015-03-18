@@ -6,7 +6,6 @@
 ///////////////////////////////////////////////////////////
 
 #include "Simulation.h"
-#include "GlobalVariables.h"
 #include <iostream>
 #include <cassert>
 using std::cout;
