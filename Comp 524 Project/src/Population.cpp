@@ -25,15 +25,20 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 	predicatesCovered = new int[targetCFG->getNumberOfPredicates()] { };
 	population = new Organism*[popSize] { };
 	populationSize = popSize;
-	int numOfGroups { (popSize / (maxTestSuiteSize-4)) };
-	int numOfTests { 3 };
+
+	// Necessary for how this is set up now. There maybe a better way
+	assert(populationSize >= maxTestSuiteSize - initialTestSuiteSize + 1);
+	int numOfGroups = maxTestSuiteSize - initialTestSuiteSize + 1;
+	int suitesPerGroup { popSize / numOfGroups };
+	int testsPerSuite { initialTestSuiteSize };
 
 	for (int i = 0; i < popSize; i++) {
 
-		population[i] = new Organism { initialTestSuiteSize, maxTestSuiteSize };
-
-		if( i % numOfGroups == 0 ) {
-			numOfTests++;
+		//population[i] = new Organism { initialTestSuiteSize, maxTestSuiteSize };
+		population[i] = new Organism { testsPerSuite, maxTestSuiteSize };
+		cout << testsPerSuite << " " << suitesPerGroup << " " << maxTestSuiteSize << endl;
+		if( i != 0 && i % suitesPerGroup == 0 && i < suitesPerGroup * numOfGroups) {
+			testsPerSuite++;
 		}
 	}
 	totalFitness = 0;
@@ -68,14 +73,14 @@ void Population::sortPopulationByFitness() {
 void Population::moveOrganismToSortedPosition(int indexToSort) {
 	Organism* tmp;
 	int i = indexToSort;
-	// Move the child left while its fitness is less than it's right neighbor
+	// Move the child left while its fitness is greater than it's left neighbor
 	while ((i > 0) && (population[i]->getFitness() > population[i - 1]->getFitness())) {
 		tmp = population[i];
 		population[i] = population[i - 1];
 		population[i - 1] = tmp;
 		i--;
 	}
-
+	/*	Realized we don't need this because we're only replacing if its better
 	// Move the child right while its fitness is less than it's right neighbor
 	while ((i < populationSize - 1) && (population[i]->getFitness() < population[i + 1]->getFitness())) {
 		tmp = population[i];
@@ -83,6 +88,7 @@ void Population::moveOrganismToSortedPosition(int indexToSort) {
 		population[i + 1] = tmp;
 		i++;
 	}
+	*/
 }
 
 void Population::crossover(const Organism& parent1, const Organism& parent2,
@@ -182,7 +188,6 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 }
 
 void Population::scalePopulationsFitness() {
-
 	if( SCALING == LINEAR ) {
 		totalFitness = 0;
 		int max { getBestOrganism()->fitness },
@@ -231,7 +236,7 @@ void Population::scalePopulationsFitness() {
 			}
 	} else {
 		// This function should not be called if SCALING == NONE, the caller must enforce this check because likely
-		//	different logic for updating totalFitness will need to be done there. E.g. in replacement
+		//	different logic for updating totalFitness will need to be done there. E.g. in replacement vs in constructor
 		cout << "Population::scalePopulationsFitness() was called but SCALING is not set to a valid option." << endl;
 		assert(false);
 	}

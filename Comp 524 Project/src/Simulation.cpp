@@ -56,12 +56,18 @@ void Simulation::run(){
 		//TODO add a periodic call to some local optimization in this loop.
 		//TODO possibly add some periodic adaptation of parameters like mutation
 
+		// Attempt to replace the worst of the two parents
+		auto parentToReplace = parent2Index;
+		if (parent1 <= parent2) {
+			parentToReplace = parent1Index;
+		}
+
 		if(child1 <= child2){
-			population->replaceWorst(child2);
+			population->replaceParentThenReplaceWorst(parentToReplace, child2);
 			delete child1;
 		}
 		else {
-			population->replaceWorst(child1);
+			population->replaceParentThenReplaceWorst(parentToReplace, child1);
 			delete child2;
 		}
 
