@@ -48,9 +48,11 @@ public:
 	void resetCoverage();
 	void calculateTestSuiteCoverage();
 
-	void print();
-	void printSimple();
-	void printOnlyTestSuiteCoverage();
+	void printTestCaseInputsAndCoverage();
+	void printTestCaseInputsOnly();
+	void printTestSuiteCoverage();
+	void printAll();
+
 	TestSuite& operator=(const TestSuite& org);
 	bool operator==(const TestSuite& right);
 

@@ -93,8 +93,15 @@ void TestCase::clearCoverage() {
 	}
 }
 
-void TestCase::print(ControlFlowGraph* cfg) {
-	cfg->printTestCaseCoverage(this);
+void TestCase::printInputsAndCoverage() {
+	targetCFG->printTestCaseCoverage(this);
+}
+
+void TestCase::printInputsOnly() {
+	for (int i = 0; i < this->numberOfParameters; i++) {
+		cout << "\t" << inputParameters[i];
+	}
+	cout << endl;
 }
 
 bool* TestCase::getEdgesCovered() const{

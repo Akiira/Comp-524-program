@@ -90,14 +90,20 @@ void Organism::evaluateBaseFitness(){
 	scaledFitness = fitness;
 }
 
-void Organism::printSimple() {
-	chromosome->printSimple();
+void Organism::printAll() {
+	cout << "Fitness: " << fitness << endl;
+	chromosome->printAll();
+}
+void Organism::printFitnessAndTestSuiteCoverage() {
+	cout << "Fitness: " << fitness << endl;
+	chromosome->printTestSuiteCoverage();
+}
+void Organism::printFitnessAndTestSuiteCoverageAndTestCaseInputs() {
+	cout << "Fitness: " << fitness << endl;
+	chromosome->printTestSuiteCoverage();
+	chromosome->printTestCaseInputsOnly();
 }
 
-void Organism::printFitnessAndCoverage() {
-	cout << "Fitness: " << fitness << endl;
-	chromosome->print();
-}
 
 int Organism::getNumberOfTestCases() const {
 	if(chromosome)

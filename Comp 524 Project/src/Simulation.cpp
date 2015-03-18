@@ -75,7 +75,7 @@ void Simulation::run(){
 
 	}while(i < numberOfGenerations);
 
-	bestOrganismSeen->printFitnessAndCoverage();
+	bestOrganismSeen->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
 	population->printPopulationFitness();
 
 }

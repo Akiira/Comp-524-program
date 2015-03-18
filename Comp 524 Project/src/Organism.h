@@ -35,8 +35,9 @@ public:
 	bool operator==(const Organism* right);
 	Organism& operator=(const Organism& org);
 
-	void printSimple();
-	void printFitnessAndCoverage();
+	void printAll();
+	void printFitnessAndTestSuiteCoverage();
+	void printFitnessAndTestSuiteCoverageAndTestCaseInputs();
 
 	void setFitness(int fitness) {
 		this->fitness = fitness;

@@ -22,7 +22,7 @@ void simpleIfElseControlFlowGraphTest_testSuite_version() {
 	targetCFG = testCFG;
 	TestSuite* testSuite = new TestSuite { 10, 10 };
 
-	testSuite->print();
+	testSuite->printAll();
 }
 
 void simpleIfElseControlFlowGraphTest_testCase_version() {
@@ -39,9 +39,9 @@ void simpleIfElseControlFlowGraphTest_testCase_version() {
 	testCFG->setCoverageOfTestCase(trueTestCase);
 
 	cout << endl << "False Test Case:" ;
-	falseTestCase->print(testCFG);
+	falseTestCase->printInputsAndCoverage();
 	cout << endl << "True Test Case:";
-	trueTestCase->print(testCFG);
+	trueTestCase->printInputsAndCoverage();
 }
 
 void hiLoControlFlowGraphTest_testSuite_version() {
@@ -58,7 +58,7 @@ void hiLoSimulationTest() {
 	ControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
 
 	targetCFG = hiLoCFG;
-	Simulation* hiLoSim = new Simulation(10000, 10, 15, 2, .02, 1, 100000);
+	Simulation* hiLoSim = new Simulation(10000, 10, 15, 2, .02, 1, 10000);
 	hiLoSim->run();
 }
 

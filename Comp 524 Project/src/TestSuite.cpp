@@ -98,31 +98,31 @@ void TestSuite::addTestCase(TestCase* testCase) {
 	}
 }
 
-void TestSuite::print() {
+
+void TestSuite::printAll() {
+	printTestSuiteCoverage();
+	printTestCaseInputsAndCoverage();
+}
+
+void TestSuite::printTestSuiteCoverage() {
 	cout << "Test Suite Coverage:" << endl;
 	targetCFG->printTestSuiteCoverage(this);
+}
 
-	cout << endl << "Test Case Coverage:" << endl;
+void TestSuite::printTestCaseInputsAndCoverage() {
+	cout << endl << "Test Cases:" << endl;
 	for (int i = 0; i < numberOfTestCases; i++) {
-		std::cout << std::endl << "Test Case #" << i << std::endl;
-		testCases[i]->print(targetCFG);
+		std::cout << endl << "Test Case #" << i << endl;
+		testCases[i]->printInputsAndCoverage();
 	}
 }
 
-void TestSuite::printSimple() {
-	//cout << "Test Suite Coverage:" << endl;
-	//targetCFG->printTestSuiteCoverage(this);
-
-	//cout << endl << "First Parameter of Each test case:" << endl;
+void TestSuite::printTestCaseInputsOnly() {
+	cout << endl << "Test Cases:" << endl;
 	for (int i = 0; i < numberOfTestCases; i++) {
-		//std::cout << std::endl << "Test Case #" << i << std::endl;
-		cout << testCases[i]->getInputParameterAtIndex(0) << " ";
+		std::cout << "#" << i;
+		testCases[i]->printInputsOnly();
 	}
-	cout << endl;
-}
-
-void TestSuite::printOnlyTestSuiteCoverage() {
-	targetCFG->printTestSuiteCoverage(this);
 }
 
 void TestSuite::resetCoverage() {

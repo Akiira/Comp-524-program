@@ -34,7 +34,8 @@ public:
 	void setInputParameterAtIndex(int index, int newValue);
 
 	void clearCoverage();
-	void print(ControlFlowGraph* cfg);
+	void printInputsAndCoverage();
+	void printInputsOnly();
 
 	TestCase& operator=(const TestCase& org);
 
