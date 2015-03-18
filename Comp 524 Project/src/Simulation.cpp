@@ -40,8 +40,10 @@ void Simulation::run(){
 
 	do{
 		population->printPopulationFitness();
-		auto parent1 = population->fitnessProportionalSelect();
-		auto parent2 = population->fitnessProportionalSelect();
+		auto parent1Index = population->fitnessProportionalSelect();
+		auto parent2Index = population->fitnessProportionalSelect();
+		auto parent1 = population->getOrganismByIndex(parent1Index);
+		auto parent2 = population->getOrganismByIndex(parent2Index);
 
 		cout << "Generation # " << i << endl;
 

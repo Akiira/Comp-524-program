@@ -25,7 +25,7 @@ public:
 	void replaceParentWithChild(Organism* parent, Organism* child);
 	void replaceWorst(Organism* offspring);
 
-	Organism* fitnessProportionalSelect();
+	int fitnessProportionalSelect();
 	void scalePopulationsFitness();
 	void printPopulationFitness();
 
@@ -41,6 +41,10 @@ public:
 
 	Organism* getBestOrganism() const {
 		return population[0];
+	}
+
+	Organism* getOrganismByIndex(int index) const {
+		return population[index];
 	}
 
 	int getTotalFitness() const {

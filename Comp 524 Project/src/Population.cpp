@@ -329,8 +329,9 @@ void Population::updateCoverageBeforeReplacement(int organismToBeReplaced, Organ
 	}
 }
 
-// Straight from GA0
-Organism* Population::fitnessProportionalSelect() {
+// Return index instead to ultimately be able to pass it to replaceParent
+//	and save unnecessary looping to determine the index of the parent to replace
+int Population::fitnessProportionalSelect() {
 //If totalFitness is zero then an organism is selected at random.
 	long toss;
 	int i = 0;
@@ -350,7 +351,7 @@ Organism* Population::fitnessProportionalSelect() {
 		}
 	}
 
-	return population[i];
+	return i;
 }
 
 void Population::computeCoverage() {
