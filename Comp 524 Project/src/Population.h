@@ -24,8 +24,7 @@ public:
 			TestCase*& child1, TestCase*& child2, int numberOfCutPoints);
 	void replaceParentWithChild(Organism* parent, Organism* child);
 	void replaceWorst(Organism* offspring);
-	Organism* randomSelect();
-	Organism* select();
+
 	Organism* fitnessProportionalSelect();
 	void scalePopulationsFitness();
 	void printPopulationFitness();
@@ -51,12 +50,13 @@ private:
 	int* edgesCovered;
 	int* predicatesCovered;
 
-	void setPopulationFitness();
 	int* selectCutPoints(int numberOfCutPoints, int upperBound);
 	void computeCoverage();
 
 	// Clean up some duplicate code, will also be required if we ever add other replacement schemes.
 	void updateCoverageBeforeReplacement(int organismToBeReplaced, Organism* child);
+
+	void sortPopulationByFitness();
 
 	//TODO remove hard coding of value
 	const static typeOfScaling SCALING = NONE;

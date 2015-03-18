@@ -37,7 +37,11 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 		}
 	}
 	totalFitness = 0;
-	setPopulationFitness();
+	// Scale each organism's fitness and calculate population totalFitness
+	scalePopulationsFitness();
+	//now sort popArray so that the organisms are in order of fitness
+	//from highest to lowest.
+	sortPopulationByFitness();
 }
 
 void Population::crossover(const Organism& parent1, const Organism& parent2,
@@ -212,12 +216,15 @@ int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 }
 
 void Population::replaceParentWithChild(Organism* parent, Organism* child) {
-
+	// TODO: == check is pretty expensive, I plan on changin select to return the index and
+	//	add a getter to the population to get organism by index. THat way the index can just be sent in
+	//	here.
 	for(int i = 0; i < populationSize; i++) {
-
 		if( population[i] == parent ) {
 
 			updateCoverageBeforeReplacement(i, child);
+
+			//computeFitness();
 			//TODO this change in meta data may require re-evaluation of entire populations fitness
 
 			delete population[i];
@@ -320,17 +327,9 @@ void Population::computeCoverage() {
 	}
 }
 
-// Straight from GA0
-void Population::setPopulationFitness() {
-	int i, j;
-//	totalFitness = 0;
-//	for (i = 0; i < populationSize; i++) {
-//		totalFitness += population[i]->getFitness();
-//	}
-	scalePopulationsFitness();
 
-	//now sort popArray so that the organisms are in order of fitness
-	//from highest to lowest.
+void Population::sortPopulationByFitness() {
+	int i, j;
 	Organism* tmp;
 	for (i = populationSize - 1; i > 1; i--) {
 		for (j = 0; j < i; j++) {
