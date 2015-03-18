@@ -48,11 +48,12 @@ void Organism::mutate(double mutationProb) {
 			TestCase* newTestCase = new TestCase();
 			targetCFG->setCoverageOfTestCase(newTestCase);
 			double toss2 = uniform01();
-			if (toss2 < .75) {
+			// Removing add here since we are adding different size suites in the constructor
+			if (toss2 <= 1) {
 				chromosome->setTestCase(i, newTestCase);
 			}
 			else {
-				chromosome->addTestCase(newTestCase);
+				//chromosome->addTestCase(newTestCase);
 			}
 		}
 	}
