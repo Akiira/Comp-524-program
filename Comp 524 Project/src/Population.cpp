@@ -199,8 +199,14 @@ void Population::scalePopulationsFitness() {
 
 		for(int i = 0; i < populationSize; i++) {
 			auto f = population[i]->getFitness();
-			population[i]->setScaledFitness(a + (b * f));
-			totalFitness += a + (b * f);
+			if( a + (b * f) >= 0 ) {
+				population[i]->setScaledFitness(a + (b * f));
+				totalFitness += a + (b * f);
+			} else {
+				population[i]->setScaledFitness(0);
+				totalFitness += 0;
+			}
+
 		}
 	}
 	else if ( SCALING == EXPONENTIAL ) {
