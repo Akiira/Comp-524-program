@@ -44,6 +44,40 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 	sortPopulationByFitness();
 }
 
+void Population::sortPopulationByFitness() {
+	int i, j;
+	Organism* tmp;
+	for (i = populationSize - 1; i > 1; i--) {
+		for (j = 0; j < i; j++) {
+			if (population[j]->fitness < population[j + 1]->fitness) {
+				tmp = population[j];
+				population[j] = population[j + 1];
+				population[j + 1] = tmp;
+			}
+		}
+	}
+}
+
+void Population::moveOrganismToSortedPosition(int indexToSort) {
+	Organism* tmp;
+	int i = indexToSort;
+	// Move the child left while its fitness is less than it's right neighbor
+	while ((i > 0) && (population[i]->getFitness() > population[i - 1]->getFitness())) {
+		tmp = population[i];
+		population[i] = population[i - 1];
+		population[i - 1] = tmp;
+		i--;
+	}
+
+	// Move the child right while its fitness is less than it's right neighbor
+	while ((i < populationSize - 1) && (population[i]->getFitness() < population[i + 1]->getFitness())) {
+		tmp = population[i];
+		population[i] = population[i + 1];
+		population[i + 1] = tmp;
+		i++;
+	}
+}
+
 void Population::crossover(const Organism& parent1, const Organism& parent2,
 		Organism*& child1, Organism*& child2, int numberOfCutPoints) {
 
@@ -188,10 +222,11 @@ void Population::scalePopulationsFitness() {
 				totalFitness += rank;
 				rank++;
 			}
-	} else { // no scaling //TODO this is just for testing, can be much more efficient when we dont scale
-		for(int i = 0; i < populationSize; i++) {
-			population[i]->setScaledFitness(population[i]->getFitness());
-		}
+	} else {
+		// This function should not be called if SCALING == NONE, the caller must enforce this check because likely
+		//	different logic for updating totalFitness will need to be done there. E.g. in replacement
+		cout << "Population::scalePopulationsFitness() was called but SCALING is not set to a valid option." << endl;
+		assert(false);
 	}
 }
 
@@ -229,6 +264,19 @@ void Population::replaceParentWithChild(Organism* parent, Organism* child) {
 
 			delete population[i];
 			population[i] = child;
+
+			// If there's no scaling all there is to do is update totalFitness, otherwise
+			//	totalFitness will have to be completely recalculated in scalePopulationsFitness
+			if ( SCALING == NONE ) {
+				totalFitness += child->getFitness() - population[i]->getFitness();
+			}
+			else {
+				scalePopulationsFitness();
+			}
+
+			// TODO: I assume scaling will never change the order of organisms, so sorting on the fitness attribute
+			//	instead of scaledFitness attribute shouldn't be a problem.
+			moveOrganismToSortedPosition(i);
 			break;
 		}
 	}
@@ -240,7 +288,7 @@ void Population::replaceWorst(Organism* child) {
 	int worst { populationSize - 1 };
 
 	if (child->getFitness() >= population[worst]->getFitness()) {
-		//totalFitness += child->getFitness() - population[worst]->getFitness();
+
 
 		updateCoverageBeforeReplacement(worst, child);
 
@@ -249,20 +297,16 @@ void Population::replaceWorst(Organism* child) {
 		delete population[worst];
 		population[worst] = child;
 
-		scalePopulationsFitness();
-
-		int i = populationSize - 1;
-		Organism* tmp;
-
-		//now move the new child to the correct position in the popArray
-		while ((i > 0)
-				&& (population[i]->getFitness()
-						> population[i - 1]->getFitness())) {
-			tmp = population[i];
-			population[i] = population[i - 1];
-			population[i - 1] = tmp;
-			i--;
+		// If there's no scaling all there is to do is update totalFitness, otherwise
+		//	totalFitness will have to be completely recalculated in scalePopulationsFitness
+		if ( SCALING == NONE ) {
+			totalFitness += child->getFitness() - population[worst]->getFitness();
 		}
+		else {
+			scalePopulationsFitness();
+		}
+
+		moveOrganismToSortedPosition(worst);
 	} else {
 		delete child;
 	}
@@ -328,19 +372,7 @@ void Population::computeCoverage() {
 }
 
 
-void Population::sortPopulationByFitness() {
-	int i, j;
-	Organism* tmp;
-	for (i = populationSize - 1; i > 1; i--) {
-		for (j = 0; j < i; j++) {
-			if (population[j]->fitness < population[j + 1]->fitness) {
-				tmp = population[j];
-				population[j] = population[j + 1];
-				population[j + 1] = tmp;
-			}
-		}
-	}
-}
+
 
 void Population::printPopulationFitness() {
 	int bestFitness = population[0]->getFitness();

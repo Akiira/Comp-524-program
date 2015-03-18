@@ -43,6 +43,10 @@ public:
 		return population[0];
 	}
 
+	int getTotalFitness() const {
+		return totalFitness;
+	}
+
 private:
 	Organism** population;
 	int populationSize;
@@ -57,6 +61,7 @@ private:
 	void updateCoverageBeforeReplacement(int organismToBeReplaced, Organism* child);
 
 	void sortPopulationByFitness();
+	void moveOrganismToSortedPosition(int indexToSort);
 
 	//TODO remove hard coding of value
 	const static typeOfScaling SCALING = NONE;
