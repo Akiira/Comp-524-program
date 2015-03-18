@@ -28,7 +28,9 @@ Organism::Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** test
 Organism::Organism(int numOfTestCases, int maxNumberOfTestCases ) {
 	chromosome = new TestSuite { numOfTestCases, maxNumberOfTestCases};
 	evaluateBaseFitness();
-	scaledFitness = 0;
+	// Simply set scaledFitness to fitness here in case were not using scaling
+	//	if scaling is used this will be overwritten by a call to Population::scalePopulationFitness
+	scaledFitness = fitness;
 }
 
 TestSuite* Organism::getChromosome() const{
