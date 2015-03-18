@@ -30,8 +30,6 @@ public:
 	int getNumberOfTestCases() const;
 	int getMaxNumberOfTestCases() const;
 
-	bool isSimiliar(const Organism* child);
-
 	bool operator<=(const Organism& right);
 	bool operator<(const Organism& right);
 	bool operator==(const Organism* right);

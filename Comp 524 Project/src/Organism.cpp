@@ -87,11 +87,6 @@ void Organism::evaluateBaseFitness(){
 	}
 }
 
-bool Organism::isSimiliar(const Organism* child) {
-	assert(false); //TODO
-	return false;
-}
-
 void Organism::printSimple() {
 	chromosome->printSimple();
 }
