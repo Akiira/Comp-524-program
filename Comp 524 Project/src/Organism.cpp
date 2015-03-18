@@ -28,9 +28,6 @@ Organism::Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** test
 Organism::Organism(int numOfTestCases, int maxNumberOfTestCases ) {
 	chromosome = new TestSuite { numOfTestCases, maxNumberOfTestCases};
 	evaluateBaseFitness();
-	// Simply set scaledFitness to fitness here in case were not using scaling
-	//	if scaling is used this will be overwritten by a call to Population::scalePopulationFitness
-	scaledFitness = fitness;
 }
 
 TestSuite* Organism::getChromosome() const{
@@ -87,6 +84,10 @@ void Organism::evaluateBaseFitness(){
 			fitness += baseReward - predicateCoverage[i];
 		}
 	}
+
+	// Simply set scaledFitness to fitness here in case were not using scaling
+	//	if scaling is used this will be overwritten by a call to Population::scalePopulationFitness
+	scaledFitness = fitness;
 }
 
 void Organism::printSimple() {

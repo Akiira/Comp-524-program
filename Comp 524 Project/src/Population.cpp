@@ -38,7 +38,14 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 	}
 	totalFitness = 0;
 	// Scale each organism's fitness and calculate population totalFitness
-	scalePopulationsFitness();
+	if (SCALING == NONE) {
+		for (int i = 0; i < populationSize; i++) {
+			totalFitness += population[i]->getFitness();
+		}
+	}
+	else {
+		scalePopulationsFitness();
+	}
 	//now sort popArray so that the organisms are in order of fitness
 	//from highest to lowest.
 	sortPopulationByFitness();
@@ -288,8 +295,6 @@ void Population::replaceWorst(Organism* child) {
 	int worst { populationSize - 1 };
 
 	if (child->getFitness() >= population[worst]->getFitness()) {
-
-
 		updateCoverageBeforeReplacement(worst, child);
 
 		//TODO this change in meta data may require re-evaluation of entire populations fitness

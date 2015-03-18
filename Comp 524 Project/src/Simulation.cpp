@@ -71,6 +71,8 @@ void Simulation::run(){
 			*bestOrganismSeen = *population->getBestOrganism();
 		}
 
+		cout << "TotalFitness: " << population->getTotalFitness() << endl;
+
 	}while(i < numberOfGenerations);
 
 	bestOrganismSeen->printFitnessAndCoverage();
