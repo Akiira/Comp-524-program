@@ -217,11 +217,7 @@ void Population::replaceParentWithChild(Organism* parent, Organism* child) {
 
 		if( population[i] == parent ) {
 
-			auto parentCov = parent->getChromosome()->getDuplicateEdgesCovered();
-			auto childCov = child->chromosome->getDuplicateEdgesCovered();
-			for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-				edgeCoverage[j] += childCov[j] - parentCov[j];
-			}
+			updateCoverageBeforeReplacement(i, child);
 			//TODO this change in meta data may require re-evaluation of entire populations fitness
 
 			delete population[i];
@@ -233,17 +229,14 @@ void Population::replaceParentWithChild(Organism* parent, Organism* child) {
 	//TODO depending on when we do this, the population array may be out of order and need sorted
 }
 
-void Population::replace(Organism* child) {
+void Population::replaceWorst(Organism* child) {
 	int worst { populationSize - 1 };
 
 	if (child->getFitness() >= population[worst]->getFitness()) {
 		//totalFitness += child->getFitness() - population[worst]->getFitness();
 
-		auto worstCov = population[worst]->getChromosome()->getDuplicateEdgesCovered();
-		auto childCov = child->chromosome->getDuplicateEdgesCovered();
-		for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-			edgeCoverage[j] += childCov[j] - worstCov[j];
-		}
+		updateCoverageBeforeReplacement(worst, child);
+
 		//TODO this change in meta data may require re-evaluation of entire populations fitness
 
 		delete population[worst];
@@ -265,6 +258,18 @@ void Population::replace(Organism* child) {
 		}
 	} else {
 		delete child;
+	}
+}
+
+// Shared by all replacement schemes, should be called before the organismToBeReplaced is deleted
+void Population::updateCoverageBeforeReplacement(int organismToBeReplaced, Organism* child) {
+	auto replacedEdgeCov = population[organismToBeReplaced]->getChromosome()->getDuplicateEdgesCovered();
+	auto replacedPredCov = population[organismToBeReplaced]->getChromosome()->getDuplicatePredicatesCovered();
+	auto childEdgeCov = child->chromosome->getDuplicateEdgesCovered();
+	auto childPredCov = child->chromosome->getDuplicatePredicatesCovered();
+	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+		edgeCoverage[j] += childEdgeCov[j] - replacedEdgeCov[j];
+		predicateCoverage[j] += childPredCov[j] - replacedPredCov[j];
 	}
 }
 
@@ -292,13 +297,25 @@ Organism* Population::fitnessProportionalSelect() {
 	return population[i];
 }
 
-void Population::computeEdgeCoverage() {
+void Population::computeCoverage() {
+	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+		edgeCoverage[j] = 0;
+	}
+
+	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+		predicateCoverage[j] = 0;
+	}
 
 	for (int i = 0; i < populationSize; ++i) {
-		auto cov = population[i]->chromosome->getDuplicateEdgesCovered();
+		auto edgeCov = population[i]->chromosome->getDuplicateEdgesCovered();
+		auto predCov = population[i]->chromosome->getDuplicatePredicatesCovered();
 
 		for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-			edgeCoverage[j] += cov[j];
+			edgeCoverage[j] += edgeCov[j];
+		}
+
+		for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+			predicateCoverage[j] += predCov[j];
 		}
 	}
 }

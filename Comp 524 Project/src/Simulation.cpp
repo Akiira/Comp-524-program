@@ -55,11 +55,11 @@ void Simulation::run(){
 		//TODO possibly add some periodic adaptation of parameters like mutation
 
 		if(child1 <= child2){
-			population->replace(child2);
+			population->replaceWorst(child2);
 			delete child1;
 		}
 		else {
-			population->replace(child1);
+			population->replaceWorst(child1);
 			delete child2;
 		}
 

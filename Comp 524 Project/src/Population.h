@@ -23,7 +23,7 @@ public:
 	void crossover(const TestCase& parent1, const TestCase& parent2,
 			TestCase*& child1, TestCase*& child2, int numberOfCutPoints);
 	void replaceParentWithChild(Organism* parent, Organism* child);
-	void replace(Organism* offspring);
+	void replaceWorst(Organism* offspring);
 	Organism* randomSelect();
 	Organism* select();
 	Organism* fitnessProportionalSelect();
@@ -37,10 +37,14 @@ private:
 	int populationSize;
 	int totalFitness;
 	int* edgeCoverage;
+	int* predicateCoverage;
 
 	void setPopulationFitness();
 	int* selectCutPoints(int numberOfCutPoints, int upperBound);
-	void computeEdgeCoverage();
+	void computeCoverage();
+
+	// Clean up some duplicate code, will also be required if we ever add other replacement schemes.
+	void updateCoverageBeforeReplacement(int organismToBeReplaced, Organism* child);
 
 	//TODO remove hard coding of value
 	const static typeOfScaling SCALING = NONE;
