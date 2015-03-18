@@ -257,64 +257,48 @@ int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 	return cutPoints;
 }
 
-void Population::replaceParentWithChild(Organism* parent, Organism* child) {
-	// TODO: == check is pretty expensive, I plan on changin select to return the index and
-	//	add a getter to the population to get organism by index. THat way the index can just be sent in
-	//	here.
-	for(int i = 0; i < populationSize; i++) {
-		if( population[i] == parent ) {
-
-			updateCoverageBeforeReplacement(i, child);
-
-			//computeFitness();
-			//TODO this change in meta data may require re-evaluation of entire populations fitness
-
-			delete population[i];
-			population[i] = child;
-
-			// If there's no scaling all there is to do is update totalFitness, otherwise
-			//	totalFitness will have to be completely recalculated in scalePopulationsFitness
-			if ( SCALING == NONE ) {
-				totalFitness += child->getFitness() - population[i]->getFitness();
-			}
-			else {
-				scalePopulationsFitness();
-			}
-
-			// TODO: I assume scaling will never change the order of organisms, so sorting on the fitness attribute
-			//	instead of scaledFitness attribute shouldn't be a problem.
-			moveOrganismToSortedPosition(i);
-			break;
-		}
+void Population::replaceParentThenReplaceWorst(int parentIndex, Organism* child) {
+	if (child->getFitness() >= population[parentIndex]->getFitness()) {
+		replaceOrganismAtIndexWithChild(parentIndex, child);
 	}
-
-	//TODO depending on when we do this, the population array may be out of order and need sorted
+	else {
+		replaceWorst(child);
+	}
 }
 
 void Population::replaceWorst(Organism* child) {
 	int worst { populationSize - 1 };
 
 	if (child->getFitness() >= population[worst]->getFitness()) {
-		updateCoverageBeforeReplacement(worst, child);
-
-		//TODO this change in meta data may require re-evaluation of entire populations fitness
-
-		delete population[worst];
-		population[worst] = child;
-
-		// If there's no scaling all there is to do is update totalFitness, otherwise
-		//	totalFitness will have to be completely recalculated in scalePopulationsFitness
-		if ( SCALING == NONE ) {
-			totalFitness += child->getFitness() - population[worst]->getFitness();
-		}
-		else {
-			scalePopulationsFitness();
-		}
-
-		moveOrganismToSortedPosition(worst);
+		replaceOrganismAtIndexWithChild(worst, child);
 	} else {
 		delete child;
 	}
+}
+
+// A private utility function to perform the actual replacement, any checking of whether or not to
+//	perform the replacement must be done by the calling function.
+void Population::replaceOrganismAtIndexWithChild(int organismToReplace, Organism* child) {
+	updateCoverageBeforeReplacement(organismToReplace, child);
+
+	//TODO this change in meta data may require re-evaluation of entire populations fitness
+	//computeFitness();
+
+	delete population[organismToReplace];
+	population[organismToReplace] = child;
+
+	// If there's no scaling all there is to do is update totalFitness, otherwise
+	//	totalFitness will have to be completely recalculated in scalePopulationsFitness
+	if ( SCALING == NONE ) {
+		totalFitness += child->getFitness() - population[organismToReplace]->getFitness();
+	}
+	else {
+		scalePopulationsFitness();
+	}
+
+	moveOrganismToSortedPosition(organismToReplace);
+
+	//TODO depending on when we do this, the population array may be out of order and need sorted
 }
 
 // Shared by all replacement schemes, should be called before the organismToBeReplaced is deleted

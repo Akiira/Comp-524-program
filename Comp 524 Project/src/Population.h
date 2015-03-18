@@ -22,7 +22,8 @@ public:
 	void crossover(const Organism& parent1, const Organism& parent2, Organism*& offspring1, Organism*& offspring2, int numberOfCutPoints);
 	void crossover(const TestCase& parent1, const TestCase& parent2,
 			TestCase*& child1, TestCase*& child2, int numberOfCutPoints);
-	void replaceParentWithChild(Organism* parent, Organism* child);
+
+	void replaceParentThenReplaceWorst(int parentIndex, Organism* child);
 	void replaceWorst(Organism* offspring);
 
 	int fitnessProportionalSelect();
@@ -66,6 +67,8 @@ private:
 
 	void sortPopulationByFitness();
 	void moveOrganismToSortedPosition(int indexToSort);
+
+	void replaceOrganismAtIndexWithChild(int organismToReplace, Organism* child);
 
 	//TODO remove hard coding of value
 	const static typeOfScaling SCALING = LINEAR;
