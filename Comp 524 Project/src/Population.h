@@ -51,12 +51,17 @@ public:
 		return totalFitness;
 	}
 
+	int getProportionCovered() const {
+
+	}
+
 private:
 	Organism** population;
 	int populationSize;
 	int totalFitness;
 	int* edgesCovered;
 	int* predicatesCovered;
+	int totalProportionCovered;
 
 	int* selectCutPoints(int numberOfCutPoints, int upperBound);
 	void computeCoverage();

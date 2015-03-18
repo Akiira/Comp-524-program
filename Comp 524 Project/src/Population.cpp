@@ -54,7 +54,9 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 	//now sort popArray so that the organisms are in order of fitness
 	//from highest to lowest.
 	sortPopulationByFitness();
+	computeCoverage();
 }
+
 
 void Population::sortPopulationByFitness() {
 	int i, j;
