@@ -52,7 +52,7 @@ public:
 	}
 
 	int getProportionCovered() const {
-
+		return 0;
 	}
 
 private:

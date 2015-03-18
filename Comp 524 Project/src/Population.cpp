@@ -379,10 +379,15 @@ void Population::computeCoverage() {
 
 void Population::printPopulationFitness() {
 	int bestFitness = population[0]->getFitness();
+	int bestFitnessScaled = population[0]->getScaledFitness();
 	int worstFitness = population[populationSize-1]->getFitness();
+	int worstFitnessScaled = population[populationSize-1]->getScaledFitness();
 	cout << "Best Fitness: " << bestFitness << endl;
+	cout << "Best Fitness Scaled: " << bestFitnessScaled << endl;
 	cout << "Worst Fitness: " << worstFitness << endl;
+	cout << "Worst Fitness Scaled: " << worstFitnessScaled << endl;
 	cout << "Difference between best and worst: " << bestFitness - worstFitness << endl;
+	cout << "Difference between best and worst Scaled: " << bestFitnessScaled - worstFitnessScaled << endl << endl;
 }
 
 

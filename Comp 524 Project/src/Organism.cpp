@@ -121,7 +121,7 @@ void Organism::evaluateBaseFitness(){
 	fitness = 0;
 	chromosome->calculateTestSuiteCoverage();
 
-	fitness = fitnessFunction02();
+	fitness = fitnessFunction01();
 
 	// Simply set scaledFitness to fitness here in case were not using scaling
 	//	if scaling is used this will be overwritten by a call to Population::scalePopulationFitness
