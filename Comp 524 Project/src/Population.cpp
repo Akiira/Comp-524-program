@@ -21,8 +21,8 @@ Population::~Population() {
  * Creates a new population of random test suites
  */
 Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSize) {
-	edgeCoverage = new int[targetCFG->getNumberOfEdges()] { };
-	predicateCoverage = new int[targetCFG->getNumberOfPredicates()] { };
+	edgesCovered = new int[targetCFG->getNumberOfEdges()] { };
+	predicatesCovered = new int[targetCFG->getNumberOfPredicates()] { };
 	population = new Organism*[popSize] { };
 	populationSize = popSize;
 	int numOfGroups { (popSize / (maxTestSuiteSize-4)) };
@@ -268,8 +268,8 @@ void Population::updateCoverageBeforeReplacement(int organismToBeReplaced, Organ
 	auto childEdgeCov = child->chromosome->getDuplicateEdgesCovered();
 	auto childPredCov = child->chromosome->getDuplicatePredicatesCovered();
 	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-		edgeCoverage[j] += childEdgeCov[j] - replacedEdgeCov[j];
-		predicateCoverage[j] += childPredCov[j] - replacedPredCov[j];
+		edgesCovered[j] += childEdgeCov[j] - replacedEdgeCov[j];
+		predicatesCovered[j] += childPredCov[j] - replacedPredCov[j];
 	}
 }
 
@@ -299,11 +299,11 @@ Organism* Population::fitnessProportionalSelect() {
 
 void Population::computeCoverage() {
 	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-		edgeCoverage[j] = 0;
+		edgesCovered[j] = 0;
 	}
 
 	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-		predicateCoverage[j] = 0;
+		predicatesCovered[j] = 0;
 	}
 
 	for (int i = 0; i < populationSize; ++i) {
@@ -311,11 +311,11 @@ void Population::computeCoverage() {
 		auto predCov = population[i]->chromosome->getDuplicatePredicatesCovered();
 
 		for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-			edgeCoverage[j] += edgeCov[j];
+			edgesCovered[j] += edgeCov[j];
 		}
 
 		for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-			predicateCoverage[j] += predCov[j];
+			predicatesCovered[j] += predCov[j];
 		}
 	}
 }
@@ -351,6 +351,4 @@ void Population::printPopulationFitness() {
 	cout << "Difference between best and worst: " << bestFitness - worstFitness << endl;
 }
 
-Organism* Population::getBestOrganism() const {
-	return population[0];
-}
+

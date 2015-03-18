@@ -30,14 +30,26 @@ public:
 	void scalePopulationsFitness();
 	void printPopulationFitness();
 
-	Organism* getBestOrganism() const;
+	void printPopulationCoverage();
+
+	int* getEdgesCovered() const {
+		return edgesCovered;
+	}
+
+	int* getPredicatesCovered() const {
+		return predicatesCovered;
+	}
+
+	Organism* getBestOrganism() const {
+		return population[0];
+	}
 
 private:
 	Organism** population;
 	int populationSize;
 	int totalFitness;
-	int* edgeCoverage;
-	int* predicateCoverage;
+	int* edgesCovered;
+	int* predicatesCovered;
 
 	void setPopulationFitness();
 	int* selectCutPoints(int numberOfCutPoints, int upperBound);
