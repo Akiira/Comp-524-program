@@ -395,12 +395,11 @@ void Population::printPopulationCoverage() {
 void Population::linearScaling() {
 	totalFitness = 0;
 	//REFERENCE: http://www.cse.unr.edu/~sushil/class/gas/notes/scaling/index.html
-	//This factor "is a scaling constant that specifies the expected number
+	//This scalingFactor "is a scaling constant that specifies the expected number
 	//             of copies of the best individual in the next generation"
-	double scalingFactor { 20.0 };
+	double scalingFactor { 20.0 }, average = 0, a, b, d;
 	int max { getBestOrganism()->fitness },
 	    min { population[populationSize - 1]->getFitness() };
-	double average = 0, a, b, d;
 
 	//TODO: if we keep this scaling we should have a separate field for scaledTotalFitness so we
 	//		can avoid this extra loop
@@ -410,6 +409,7 @@ void Population::linearScaling() {
 
 	average /= populationSize;
 
+	// Find values for the scaling coefficients
 	if (min > ((scalingFactor * average - max) / (scalingFactor - 1.0))) {
 		d = max - average;
 		a = (scalingFactor - 1.0) * (average / d);
@@ -423,12 +423,14 @@ void Population::linearScaling() {
 		a = 1.0;
 		b = 0.0;
 	}
+
 	for (int i = 0; i < populationSize; i++) {
 		auto f = population[i]->getFitness();
+		auto scaledFitness = b + (a * f);
 		//cout << "Fitness: " << f << ", scaled: " << (b + (a*f)) << endl;
-		if (b + (a * f) >= 0) {
-			population[i]->setScaledFitness(b + (a * f));
-			totalFitness += b + (a * f);
+		if ( scaledFitness >= 0) {
+			population[i]->setScaledFitness(scaledFitness);
+			totalFitness += scaledFitness;
 		} else {
 			population[i]->setScaledFitness(0);
 			totalFitness += 0;
