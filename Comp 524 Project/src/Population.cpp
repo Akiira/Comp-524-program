@@ -44,9 +44,10 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 
 	totalFitness = 0;
 
+	sortPopulationByFitness();
 	scalePopulationsFitness(NULL, 0);
 	//now sort popArray so that the organisms are in order of fitness from highest to lowest.
-	sortPopulationByFitness();
+
 	// ANd compute the population level coverage metadata
 	computePopulationLevelCoverage();
 }
@@ -64,17 +65,49 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 void Population::scalePopulationsFitness(Organism* newOrganism, int replacedOrganismFitness) {
 	if( SCALING == LINEAR ) {
 		totalFitness = 0;
+
+		//REFERENCE: http://www.cse.unr.edu/~sushil/class/gas/notes/scaling/index.html
+
+		double scalingFactor { 0.8 };
+
 		int max { getBestOrganism()->fitness },
 			min { population[populationSize - 1]->getFitness() };
-		auto a = max;
-		auto b = -min / populationSize;
+		double average = 0;
+
+		//TODO: if we keep this scaling we should have a separate field for scaledTotalFitness so we
+		//		can avoid this extra loop
+		for (int i = 0; i < populationSize; ++i) {
+			average += population[i]->fitness;
+		}
+
+		average /= populationSize;
+		double d, a, b;
+
+		if( min > (( scalingFactor * average - max) / ( scalingFactor - 1.0 )) ) {
+			d = max - average;
+			a = ( scalingFactor - 1.0 ) * ( average / d );
+			b = average * ( max - ( scalingFactor * average ) ) / d;
+		} else {
+			d = average - min;
+			a = average / d;
+			b = -min * ( average / d );
+		}
+
+		if( d < 0.00001 && d > -0.00001 ) {
+			a = 1.0;
+			b = 0.0;
+		}
 
 		for(int i = 0; i < populationSize; i++) {
 			auto f = population[i]->getFitness();
-			if( a + (b * f) >= 0 ) {
-				population[i]->setScaledFitness(a + (b * f));
-				totalFitness += a + (b * f);
+
+			//cout << "Fitness: " << f << ", scaled: " << (b + (a*f)) << endl;
+
+			if( b + (a * f) >= 0 ) {
+				population[i]->setScaledFitness(b + (a * f));
+				totalFitness += b + (a * f);
 			} else {
+				assert(false);
 				population[i]->setScaledFitness(0);
 				totalFitness += 0;
 			}
@@ -355,7 +388,7 @@ void Population::replaceWorst(Organism* child) {
 // A private utility function to perform the actual replacement, any checking of whether or not to
 //	perform the replacement must be done by the calling function.
 void Population::replaceOrganismAtIndexWithChild(int organismToReplace, Organism* child) {
-	//TODO: this change in meta data may require re-evaluation of entire populations fitness
+
 	updateCoverageBeforeReplacement(organismToReplace, child);
 
 	// If there's no scaling, scalePopulationsFitness will add the first argument to the current totalFitness,
