@@ -92,7 +92,7 @@ void Population::scalePopulationsFitness() {
 	} else {
 
 		int fitness;
-		if ( totalFitness > 0 ) {// Called from the constructor, have to initialize all organisms
+		if ( totalFitness == 0 ) {// Called from the constructor, have to initialize all organisms
 			for (int i = 0; i < populationSize; i++) {
 				fitness = population[i]->getFitness();
 				population[i]->setScaledFitness(fitness);
@@ -405,16 +405,18 @@ void Population::linearScaling() {
 	//This factor "is a scaling constant that specifies the expected number
 	//             of copies of the best individual in the next generation"
 	double scalingFactor { 20.0 };
-	int max { getBestOrganism()->fitness }, min {
-			population[populationSize - 1]->getFitness() };
-	double average = 0;
+	int max { getBestOrganism()->fitness },
+	    min { population[populationSize - 1]->getFitness() };
+	double average = 0, a, b, d;
+
 	//TODO: if we keep this scaling we should have a separate field for scaledTotalFitness so we
 	//		can avoid this extra loop
 	for (int i = 0; i < populationSize; ++i) {
 		average += population[i]->fitness;
 	}
+
 	average /= populationSize;
-	double d, a, b;
+
 	if (min > ((scalingFactor * average - max) / (scalingFactor - 1.0))) {
 		d = max - average;
 		a = (scalingFactor - 1.0) * (average / d);
