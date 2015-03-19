@@ -41,22 +41,98 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 			testsPerSuite++;
 		}
 	}
+
 	totalFitness = 0;
-	// Scale each organism's fitness and calculate population totalFitness
-	if (SCALING == NONE) {
-		for (int i = 0; i < populationSize; i++) {
-			totalFitness += population[i]->getFitness();
-		}
-	}
-	else {
-		scalePopulationsFitness();
-	}
-	//now sort popArray so that the organisms are in order of fitness
-	//from highest to lowest.
+
+	scalePopulationsFitness(NULL, 0);
+	//now sort popArray so that the organisms are in order of fitness from highest to lowest.
 	sortPopulationByFitness();
-	computeCoverage();
+	// ANd compute the population level coverage metadata
+	computePopulationLevelCoverage();
 }
 
+/**	If SCALING != NONE, then the arguments will be ignored, the fitness of each Organism will
+ * 		be scaled using the selected algorithm, and the totalFitness will become the sum of these
+ * 		new scaledFitnesses.
+ *	If SCALING == NONE:
+ *		If newOrganism == NULL, the entire population will have scaledFitness set to their fitness
+ *			and the totalFitness will be summed. (Expected to be used by the constructor)
+ *		If newOrganism != NULL, only that organism will have scaledFitness set to their fitness
+ *			and the totalFitness will be updated by += newOrganismFitness - replacedOrganismFitness
+ *			Expected to be used by replacment algorithms.
+ */
+void Population::scalePopulationsFitness(Organism* newOrganism, int replacedOrganismFitness) {
+	if( SCALING == LINEAR ) {
+		totalFitness = 0;
+		int max { getBestOrganism()->fitness },
+			min { population[populationSize - 1]->getFitness() };
+		auto a = max;
+		auto b = -min / populationSize;
+
+		for(int i = 0; i < populationSize; i++) {
+			auto f = population[i]->getFitness();
+			if( a + (b * f) >= 0 ) {
+				population[i]->setScaledFitness(a + (b * f));
+				totalFitness += a + (b * f);
+			} else {
+				population[i]->setScaledFitness(0);
+				totalFitness += 0;
+			}
+
+		}
+	}
+	else if ( SCALING == EXPONENTIAL ) {
+		totalFitness = 0;
+//This kept overflowing, I think the paper i read left out some details
+//		auto base = 1.25;
+//		auto power = 0;
+//		for(int i = populationSize - 1; i > 0; i--) {
+//			//population[i]->setFitness(pow(base, power));
+//			cout << "Setting :" << i << " to :" << pow(base, power) << endl;
+//			population[i]->setScaledFitness(pow(base, power));
+//			power++;
+//		}
+		int start { 1 },
+		    delta { 1 };
+
+		for(int i = populationSize - 1; i > 0; i--) {
+			population[i]->setScaledFitness(start);
+			totalFitness += start;
+			assert(totalFitness > 0); //assert we have not overflowed
+			if( i % 100 == 99 ) {
+				delta += 1;
+			}
+
+			start += delta;
+		}
+	}
+	else if ( SCALING == RANKED ) { //Ranking fitness
+		totalFitness = 0;
+		short rank { 1 };
+		for(int i = populationSize - 1; i > 0; i--) {
+				population[i]->setScaledFitness(rank);
+				totalFitness += rank;
+				rank++;
+			}
+	} else { // No Scaling,
+		// Called from the constructor, have to initialize all organisms
+		int fitness;
+		if (newOrganism == NULL) {
+			for (int i = 0; i < populationSize; i++) {
+				fitness = population[i]->getFitness();
+				population[i]->setScaledFitness(fitness);
+				totalFitness += fitness;
+			}
+		}
+		else {
+			// Catch any weird errors while were still testing this stuff.
+			assert(replacedOrganismFitness > 0);
+			fitness = newOrganism->getFitness();
+			newOrganism->setScaledFitness(fitness);
+			totalFitness += fitness - replacedOrganismFitness;
+		}
+	}
+}
 
 void Population::sortPopulationByFitness() {
 	int i, j;
@@ -72,26 +148,54 @@ void Population::sortPopulationByFitness() {
 	}
 }
 
-void Population::moveOrganismToSortedPosition(int indexToSort) {
-	Organism* tmp;
-	int i = indexToSort;
-	// Move the child left while its fitness is greater than it's left neighbor
-	while ((i > 0) && (population[i]->getFitness() > population[i - 1]->getFitness())) {
-		tmp = population[i];
-		population[i] = population[i - 1];
-		population[i - 1] = tmp;
-		i--;
+void Population::computePopulationLevelCoverage() {
+	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+		edgesCovered[j] = 0;
 	}
-	/*	Realized we don't need this because we're only replacing if its better
-	// Move the child right while its fitness is less than it's right neighbor
-	while ((i < populationSize - 1) && (population[i]->getFitness() < population[i + 1]->getFitness())) {
-		tmp = population[i];
-		population[i] = population[i + 1];
-		population[i + 1] = tmp;
-		i++;
+
+	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+		predicatesCovered[j] = 0;
 	}
-	*/
+
+	for (int i = 0; i < populationSize; ++i) {
+		auto edgeCov = population[i]->chromosome->getDuplicateEdgesCovered();
+		auto predCov = population[i]->chromosome->getDuplicatePredicatesCovered();
+
+		for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+			edgesCovered[j] += edgeCov[j];
+		}
+
+		for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+			predicatesCovered[j] += predCov[j];
+		}
+	}
 }
+
+// Return index instead to ultimately be able to pass it to replaceParent
+//	and save unnecessary looping to determine the index of the parent to replace
+int Population::fitnessProportionalSelect() {
+//If totalFitness is zero then an organism is selected at random.
+	long toss;
+	int i = 0;
+	int sum;
+
+	if (totalFitness == 0) {
+		i = uniformInRange(0, populationSize - 1);
+	} else {
+		//sum = population[0]->getFitness();
+		sum = population[0]->getScaledFitness();
+		toss = uniformInRange(0, totalFitness);
+
+		while (sum < toss) {
+			i++;
+			//sum += population[i]->getFitness();
+			sum += population[i]->getScaledFitness();
+		}
+	}
+
+	return i;
+}
+
 
 void Population::crossover(const Organism& parent1, const Organism& parent2,
 		Organism*& child1, Organism*& child2, int numberOfCutPoints) {
@@ -189,67 +293,6 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 	}
 }
 
-void Population::scalePopulationsFitness() {
-	if( SCALING == LINEAR ) {
-		totalFitness = 0;
-		int max { getBestOrganism()->fitness },
-			min { population[populationSize - 1]->getFitness() };
-		auto a = max;
-		auto b = -min / populationSize;
-
-		for(int i = 0; i < populationSize; i++) {
-			auto f = population[i]->getFitness();
-			if( a + (b * f) >= 0 ) {
-				population[i]->setScaledFitness(a + (b * f));
-				totalFitness += a + (b * f);
-			} else {
-				population[i]->setScaledFitness(0);
-				totalFitness += 0;
-			}
-
-		}
-	}
-	else if ( SCALING == EXPONENTIAL ) {
-		totalFitness = 0;
-//This kept overflowing, I think the paper i read left out some details
-//		auto base = 1.25;
-//		auto power = 0;
-//		for(int i = populationSize - 1; i > 0; i--) {
-//			//population[i]->setFitness(pow(base, power));
-//			cout << "Setting :" << i << " to :" << pow(base, power) << endl;
-//			population[i]->setScaledFitness(pow(base, power));
-//			power++;
-//		}
-		int start { 1 },
-		    delta { 1 };
-
-		for(int i = populationSize - 1; i > 0; i--) {
-			population[i]->setScaledFitness(start);
-			totalFitness += start;
-			assert(totalFitness > 0); //assert we have not overflowed
-			if( i % 100 == 99 ) {
-				delta += 1;
-			}
-
-			start += delta;
-		}
-	}
-	else if ( SCALING == RANKED ) { //Ranking fitness
-		totalFitness = 0;
-		short rank { 1 };
-		for(int i = populationSize - 1; i > 0; i--) {
-				population[i]->setScaledFitness(rank);
-				totalFitness += rank;
-				rank++;
-			}
-	} else {
-		// This function should not be called if SCALING == NONE, the caller must enforce this check because likely
-		//	different logic for updating totalFitness will need to be done there. E.g. in replacement vs in constructor
-		cout << "Population::scalePopulationsFitness() was called but SCALING is not set to a valid option." << endl;
-		assert(false);
-	}
-}
-
 int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 	assert(numCutPoints < upperBound);
 
@@ -292,26 +335,20 @@ void Population::replaceWorst(Organism* child) {
 // A private utility function to perform the actual replacement, any checking of whether or not to
 //	perform the replacement must be done by the calling function.
 void Population::replaceOrganismAtIndexWithChild(int organismToReplace, Organism* child) {
+	//TODO: this change in meta data may require re-evaluation of entire populations fitness
 	updateCoverageBeforeReplacement(organismToReplace, child);
 
-	//TODO this change in meta data may require re-evaluation of entire populations fitness
-	//computeFitness();
+	// If there's no scaling, scalePopulationsFitness will add the first argument to the current totalFitness,
+	//	then set the scaledFitnesswill be added to the totalFitness, otherwise
+	//	totalFitness will be completely recalculated in scalePopulationsFitness after scaling is performed.
+	int replacedOrganismFitness = population[organismToReplace]->getScaledFitness();
 
 	delete population[organismToReplace];
 	population[organismToReplace] = child;
 
-	// If there's no scaling all there is to do is update totalFitness, otherwise
-	//	totalFitness will have to be completely recalculated in scalePopulationsFitness
-	if ( SCALING == NONE ) {
-		totalFitness += child->getFitness() - population[organismToReplace]->getFitness();
-	}
-	else {
-		scalePopulationsFitness();
-	}
+	scalePopulationsFitness(child, replacedOrganismFitness);
 
 	moveOrganismToSortedPosition(organismToReplace);
-
-	//TODO depending on when we do this, the population array may be out of order and need sorted
 }
 
 // Shared by all replacement schemes, should be called before the organismToBeReplaced is deleted
@@ -326,55 +363,20 @@ void Population::updateCoverageBeforeReplacement(int organismToBeReplaced, Organ
 	}
 }
 
-// Return index instead to ultimately be able to pass it to replaceParent
-//	and save unnecessary looping to determine the index of the parent to replace
-int Population::fitnessProportionalSelect() {
-//If totalFitness is zero then an organism is selected at random.
-	long toss;
-	int i = 0;
-	int sum;
-
-	if (totalFitness == 0) {
-		i = uniformInRange(0, populationSize - 1);
-	} else {
-		//sum = population[0]->getFitness();
-		sum = population[0]->getScaledFitness();
-		toss = uniformInRange(0, totalFitness);
-
-		while (sum < toss) {
-			i++;
-			//sum += population[i]->getFitness();
-			sum += population[i]->getScaledFitness();
-		}
-	}
-
-	return i;
-}
-
-void Population::computeCoverage() {
-	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-		edgesCovered[j] = 0;
-	}
-
-	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-		predicatesCovered[j] = 0;
-	}
-
-	for (int i = 0; i < populationSize; ++i) {
-		auto edgeCov = population[i]->chromosome->getDuplicateEdgesCovered();
-		auto predCov = population[i]->chromosome->getDuplicatePredicatesCovered();
-
-		for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-			edgesCovered[j] += edgeCov[j];
-		}
-
-		for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-			predicatesCovered[j] += predCov[j];
-		}
+// Note this method assumes the organism at indexToSort is >= the organism as indexToSort+1
+//	this is valid since all of our replacement schemes only occur if the replacement is better
+//	than the Organism that was replaced.
+void Population::moveOrganismToSortedPosition(int indexToSort) {
+	Organism* tmp;
+	int i = indexToSort;
+	// Move the child left while its fitness is greater than it's left neighbor
+	while ((i > 0) && (population[i]->getFitness() > population[i - 1]->getFitness())) {
+		tmp = population[i];
+		population[i] = population[i - 1];
+		population[i - 1] = tmp;
+		i--;
 	}
 }
-
-
 
 
 void Population::printPopulationFitness() {

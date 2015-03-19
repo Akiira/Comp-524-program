@@ -26,7 +26,7 @@ public:
 	void replaceWorst(Organism* offspring);
 
 	int fitnessProportionalSelect();
-	void scalePopulationsFitness();
+	void scalePopulationsFitness(Organism* newOrganism, int replacedOrganismFitness);
 	void printPopulationFitness();
 
 	void printPopulationCoverage();
@@ -64,7 +64,7 @@ private:
 	int totalProportionCovered;
 
 	int* selectCutPoints(int numberOfCutPoints, int upperBound);
-	void computeCoverage();
+	void computePopulationLevelCoverage();
 
 	// Clean up some duplicate code, will also be required if we ever add other replacement schemes.
 	void updateCoverageBeforeReplacement(int organismToBeReplaced, Organism* child);
