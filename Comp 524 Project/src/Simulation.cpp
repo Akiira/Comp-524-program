@@ -38,14 +38,14 @@ void Simulation::run(){
 	Organism *child1 { }, *child2 { };
 
 	do{
-		population->printPopulationFitness();
-		population->printPopulationCoverage();
+		//population->printPopulationFitness();
+		//population->printPopulationCoverage();
 		auto parent1Index = population->fitnessProportionalSelect();
 		auto parent2Index = population->fitnessProportionalSelect();
 		auto parent1 = population->getOrganismByIndex(parent1Index);
 		auto parent2 = population->getOrganismByIndex(parent2Index);
 
-		cout << "Generation # " << i << endl;
+		cout << "Generation # " << i << " CoverageRatio: " << population->getCoverageRatio() << endl;
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 		child1->mutate(probabilityForMutation);
@@ -79,9 +79,7 @@ void Simulation::run(){
 			*bestOrganismSeen = *population->getBestOrganism();
 		}
 
-		cout << "TotalFitness: " << population->getTotalFitness() << endl;
-
-	}while(i < numberOfGenerations);
+	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
 
 	bestOrganismSeen->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
 	population->printPopulationFitness();

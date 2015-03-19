@@ -154,6 +154,7 @@ void Population::sortPopulationByFitness() {
 }
 
 void Population::computePopulationLevelCoverage() {
+	// Clear any previous coverage
 	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
 		edgesCovered[j] = 0;
 	}
@@ -162,6 +163,7 @@ void Population::computePopulationLevelCoverage() {
 		predicatesCovered[j] = 0;
 	}
 
+	// Calculate new coverage
 	for (int i = 0; i < populationSize; ++i) {
 		auto edgeCov = population[i]->chromosome->getDuplicateEdgesCovered();
 		auto predCov = population[i]->chromosome->getDuplicatePredicatesCovered();
@@ -174,6 +176,19 @@ void Population::computePopulationLevelCoverage() {
 			predicatesCovered[j] += predCov[j];
 		}
 	}
+	// Calculate the coverage ratio
+	double numCovered = 0;
+	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+		if (edgesCovered[j] > 0) {
+			numCovered++;
+		}
+	}
+	for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
+		if (predicatesCovered[j] > 0) {
+			numCovered++;
+		}
+	}
+	coverageRatio = numCovered / (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
 }
 
 // Return index instead to ultimately be able to pass it to replaceParent
@@ -362,12 +377,21 @@ void Population::updateCoverageBeforeReplacement(int organismToBeReplaced, Organ
 	auto replacedPredCov = population[organismToBeReplaced]->getChromosome()->getDuplicatePredicatesCovered();
 	auto childEdgeCov = child->chromosome->getDuplicateEdgesCovered();
 	auto childPredCov = child->chromosome->getDuplicatePredicatesCovered();
+
+	double numCovered = 0;
 	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
 		edgesCovered[j] += childEdgeCov[j] - replacedEdgeCov[j];
+		if (edgesCovered[j] > 0) {
+			numCovered++;
+		}
 	}
 	for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
 		predicatesCovered[j] += childPredCov[j] - replacedPredCov[j];
+		if (predicatesCovered[j] > 0) {
+			numCovered++;
+		}
 	}
+	coverageRatio = numCovered / (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
 
 }
 
@@ -397,12 +421,13 @@ void Population::printPopulationFitness() {
 	cout << "Worst Fitness: " << worstFitness << endl;
 	cout << "Worst Fitness Scaled: " << worstFitnessScaled << endl;
 	cout << "Difference between best and worst: " << bestFitness - worstFitness << endl;
-	cout << "Difference between best and worst Scaled: " << bestFitnessScaled - worstFitnessScaled << endl << endl;
+	cout << "Difference between best and worst Scaled: " << bestFitnessScaled - worstFitnessScaled << endl;
 }
 
 void Population::printPopulationCoverage() {
 	cout << "Population Coverage:" << endl;
 	targetCFG->printPopulationCoverage(edgesCovered, predicatesCovered);
+	cout << "Coverage Ratio: " << coverageRatio << endl << endl;
 }
 
 

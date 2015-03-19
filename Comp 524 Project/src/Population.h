@@ -51,8 +51,8 @@ public:
 		return totalFitness;
 	}
 
-	int getProportionCovered() const {
-		return 0;
+	double getCoverageRatio() const {
+		return coverageRatio;
 	}
 
 private:
@@ -61,7 +61,7 @@ private:
 	int totalFitness;
 	int* edgesCovered;
 	int* predicatesCovered;
-	int totalProportionCovered;
+	double coverageRatio;
 
 	int* selectCutPoints(int numberOfCutPoints, int upperBound);
 	void computePopulationLevelCoverage();

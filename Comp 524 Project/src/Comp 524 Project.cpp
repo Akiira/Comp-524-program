@@ -82,7 +82,7 @@ void hiLoSimulationTest() {
 	ControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
 
 	targetCFG = hiLoCFG;
-	Simulation* hiLoSim = new Simulation(1000, 5, 15, 2, .02, 1, 50000);
+	Simulation* hiLoSim = new Simulation(1000, 5, 15, 2, .02, 1, 1000000);
 	hiLoSim->run();
 }
 
