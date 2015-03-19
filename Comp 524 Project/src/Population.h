@@ -61,23 +61,22 @@ private:
 	int* edgesCovered;
 	int* predicatesCovered;
 	double coverageRatio;
+	int lastReplaced;
+
+	//TODO remove hard coding of value
+	const static typeOfScaling SCALING = LINEAR;
 
 	int* selectCutPoints(int numberOfCutPoints, int upperBound);
 	void computePopulationLevelCoverage();
 
 	void scalePopulationsFitness();
+	void linearScaling();
 
-	// Clean up some duplicate code, will also be required if we ever add other replacement schemes.
 	void updateCoverageBeforeReplacement(int organismToBeReplaced, Organism* child);
 
 	void sortPopulationByFitness();
 	void moveOrganismToSortedPosition(int indexToSort);
 
 	void replaceOrganismAtIndexWithChild(int organismToReplace, Organism* child);
-	void linearScaling();
-
-	//TODO remove hard coding of value
-	const static typeOfScaling SCALING = LINEAR;
-
 };
 #endif // !defined(EA_BE7C8399_4BC5_48f6_93FA_2B1C440AB247__INCLUDED_)

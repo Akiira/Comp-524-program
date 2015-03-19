@@ -26,6 +26,9 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 	population = new Organism*[popSize] { };
 	populationSize = popSize;
 
+	//TODO: when i added the code for created test suites of many different sizes i was just messing around
+	//		if it doesnt look like it is helping we can remove it. I'm not sure the variable testSuite
+	//		size is going to be all that helpful, though i dont think it hurts either.
 	// Necessary for how this is set up now. There maybe a better way
 	assert(populationSize >= maxTestSuiteSize - initialTestSuiteSize + 1);
 	int numOfGroups = maxTestSuiteSize - initialTestSuiteSize + 1;
@@ -46,9 +49,6 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 
 	sortPopulationByFitness();
 	scalePopulationsFitness();
-	//now sort popArray so that the organisms are in order of fitness from highest to lowest.
-
-	// ANd compute the population level coverage metadata
 	computePopulationLevelCoverage();
 }
 
@@ -58,15 +58,7 @@ void Population::scalePopulationsFitness() {
 	}
 	else if ( SCALING == EXPONENTIAL ) {
 		totalFitness = 0;
-//This kept overflowing, I think the paper i read left out some details
-//		auto base = 1.25;
-//		auto power = 0;
-//		for(int i = populationSize - 1; i > 0; i--) {
-//			//population[i]->setFitness(pow(base, power));
-//			cout << "Setting :" << i << " to :" << pow(base, power) << endl;
-//			population[i]->setScaledFitness(pow(base, power));
-//			power++;
-//		}
+
 		int start { 1 },
 		    delta { 1 };
 
@@ -99,8 +91,8 @@ void Population::scalePopulationsFitness() {
 				totalFitness += fitness;
 			}
 		} else {
-			fitness = population[populationSize - 1]->fitness;
-			population[populationSize - 1]->setFitness(fitness);
+			fitness = population[lastReplaced]->fitness;
+			population[lastReplaced]->setFitness(fitness);
 			totalFitness += fitness;
 		}
 	}
@@ -333,6 +325,7 @@ void Population::replaceOrganismAtIndexWithChild(int organismToReplace, Organism
 	delete population[organismToReplace];
 	population[organismToReplace] = child;
 
+	lastReplaced = organismToReplace;
 	scalePopulationsFitness();
 
 	moveOrganismToSortedPosition(organismToReplace);
