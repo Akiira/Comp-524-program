@@ -134,6 +134,11 @@ void Population::scalePopulationsFitness(Organism* newOrganism, int replacedOrga
 	}
 }
 
+// TODO: Looking at this I realized that Population is a friend of Organism
+//	so fitness and chromosome and coverage can be accessed without getters.
+//	How much more efficient is this and should we go through and change all to
+//	be this way?
+//
 void Population::sortPopulationByFitness() {
 	int i, j;
 	Organism* tmp;
