@@ -39,6 +39,7 @@ void Simulation::run(){
 
 	do{
 		population->printPopulationFitness();
+		population->printPopulationCoverage();
 		auto parent1Index = population->fitnessProportionalSelect();
 		auto parent2Index = population->fitnessProportionalSelect();
 		auto parent1 = population->getOrganismByIndex(parent1Index);
@@ -84,6 +85,7 @@ void Simulation::run(){
 
 	bestOrganismSeen->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
 	population->printPopulationFitness();
+	population->printPopulationCoverage();
 
 }
 

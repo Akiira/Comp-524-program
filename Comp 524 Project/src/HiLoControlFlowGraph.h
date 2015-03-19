@@ -67,12 +67,12 @@ class HiLoControlFlowGraph : public ControlFlowGraph
 		void block9();
 		void block10();
 
-		void printInputParameters(int* inputParameters);
-		void printEdgesCovered(bool* edgesCovered);
-		void printPredicatesCovered(bool* predicatesCovered);
+		void printInputParameters(int* inputParameters) const;
+		void printEdgesCovered(bool* edgesCovered) const;
+		void printPredicatesCovered(bool* predicatesCovered) const;
 
-		void printEdgesCovered(int* edgesCovered);
-		void printPredicatesCovered(int* predicatesCovered);
+		void printEdgesCovered(int* edgesCovered) const;
+		void printPredicatesCovered(int* predicatesCovered) const;
 
 		virtual HiLoControlFlowGraph& operator=(const HiLoControlFlowGraph& other);
 };

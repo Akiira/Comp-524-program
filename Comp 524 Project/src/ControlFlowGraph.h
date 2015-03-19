@@ -10,6 +10,7 @@
 
 #include "TestCase.h"
 #include "TestSuite.h"
+
 #include <iostream>
 //Forward declaration
 class TestCase;
@@ -23,8 +24,9 @@ public:
 
 	void setCoverageOfTestCase(TestCase* testCase);
 
-	void printTestCaseCoverage(TestCase* testCase);
-	void printTestSuiteCoverage(TestSuite* testSuite);
+	void printTestCaseCoverage(TestCase* testCase) const;
+	void printTestSuiteCoverage(TestSuite* testSuite) const;
+	void printPopulationCoverage(int* edges, int* predicates) const;
 
 	virtual int getNumberOfEdges()=0;
 	virtual int getNumberOfPredicates()=0;
@@ -44,11 +46,11 @@ protected:
 	//	so it can ultimately be returned by setCOverageOfTestCase
 	virtual void runTestCase()=0;
 
-	virtual void printInputParameters(int* inputParameters)=0;
-	virtual void printEdgesCovered(bool* edgesCovered)=0;
-	virtual void printPredicatesCovered(bool* predicatesCovered)=0;
-	virtual void printEdgesCovered(int* edgesCovered)=0;
-	virtual void printPredicatesCovered(int* predicatesCovered)=0;
+	virtual void printInputParameters(int* inputParameters) const=0;
+	virtual void printEdgesCovered(bool* edgesCovered) const=0;
+	virtual void printPredicatesCovered(bool* predicatesCovered) const=0;
+	virtual void printEdgesCovered(int* edgesCovered) const=0;
+	virtual void printPredicatesCovered(int* predicatesCovered) const=0;
 
 
 	virtual ControlFlowGraph& operator=(const ControlFlowGraph& other);

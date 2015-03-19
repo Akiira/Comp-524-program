@@ -74,6 +74,7 @@ private:
 
 	void replaceOrganismAtIndexWithChild(int organismToReplace, Organism* child);
 
+
 	//TODO remove hard coding of value
 	const static typeOfScaling SCALING = NONE;
 

@@ -158,7 +158,7 @@ void Population::computePopulationLevelCoverage() {
 		edgesCovered[j] = 0;
 	}
 
-	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+	for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
 		predicatesCovered[j] = 0;
 	}
 
@@ -170,7 +170,7 @@ void Population::computePopulationLevelCoverage() {
 			edgesCovered[j] += edgeCov[j];
 		}
 
-		for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+		for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
 			predicatesCovered[j] += predCov[j];
 		}
 	}
@@ -364,8 +364,11 @@ void Population::updateCoverageBeforeReplacement(int organismToBeReplaced, Organ
 	auto childPredCov = child->chromosome->getDuplicatePredicatesCovered();
 	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
 		edgesCovered[j] += childEdgeCov[j] - replacedEdgeCov[j];
+	}
+	for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
 		predicatesCovered[j] += childPredCov[j] - replacedPredCov[j];
 	}
+
 }
 
 // Note this method assumes the organism at indexToSort is >= the organism as indexToSort+1
@@ -395,6 +398,11 @@ void Population::printPopulationFitness() {
 	cout << "Worst Fitness Scaled: " << worstFitnessScaled << endl;
 	cout << "Difference between best and worst: " << bestFitness - worstFitness << endl;
 	cout << "Difference between best and worst Scaled: " << bestFitnessScaled - worstFitnessScaled << endl << endl;
+}
+
+void Population::printPopulationCoverage() {
+	cout << "Population Coverage:" << endl;
+	targetCFG->printPopulationCoverage(edgesCovered, predicatesCovered);
 }
 
 

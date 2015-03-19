@@ -49,7 +49,7 @@ int HiLoControlFlowGraph::getUpperBoundForParameter(int parameter) {
 	return rangeForEachParameter[parameter][1];
 }
 
-void HiLoControlFlowGraph::printInputParameters(int* inputParameters){
+void HiLoControlFlowGraph::printInputParameters(int* inputParameters) const{
 	cout << endl << "Input Parameters" << endl;
 	cout << " Num1  Num2  Guess " << endl;
 	cout << "------------------" << endl;
@@ -59,7 +59,7 @@ void HiLoControlFlowGraph::printInputParameters(int* inputParameters){
 	cout << endl;
 }
 
-void HiLoControlFlowGraph::printEdgesCovered(bool* edgesCovered){
+void HiLoControlFlowGraph::printEdgesCovered(bool* edgesCovered) const{
 	cout << endl << "Edge Coverage" << endl;
 	cout << " B1toB2| B2toB3| B2toB4|B3toB10| B4toB5| B4toB6|B5toB10| B6toB7| B6toB8|B7toB10| B8toB9|B8toB10|B9toB10|B10toB2" << endl;
 	cout << "---------------------------------------------------------------------------------------------------------------" << endl;
@@ -71,7 +71,7 @@ void HiLoControlFlowGraph::printEdgesCovered(bool* edgesCovered){
 
 }
 
-void HiLoControlFlowGraph::printPredicatesCovered(bool* predicatesCovered){
+void HiLoControlFlowGraph::printPredicatesCovered(bool* predicatesCovered) const{
 	cout << endl << "Predicate Coverage" << endl;
 	cout << " B2_T | B2_F | B4_T | B4_F | B6_FF| B6_FT| B6_TF| B6_TT| B8_T | B8_F |B10_FF|B10_FT|B10_TF|B10_TT" << endl;
 	cout << "-------------------------------------------------------------------------------------------------" << endl;
@@ -82,7 +82,7 @@ void HiLoControlFlowGraph::printPredicatesCovered(bool* predicatesCovered){
 	cout << endl;
 }
 
-void HiLoControlFlowGraph::printEdgesCovered(int* edgesCovered){
+void HiLoControlFlowGraph::printEdgesCovered(int* edgesCovered) const{
 	cout << endl << "Edge Coverage" << endl;
 	cout << " B1toB2| B2toB3| B2toB4|B3toB10| B4toB5| B4toB6|B5toB10| B6toB7| B6toB8|B7toB10| B8toB9|B8toB10|B9toB10|B10toB2" << endl;
 	cout << "---------------------------------------------------------------------------------------------------------------" << endl;
@@ -93,7 +93,7 @@ void HiLoControlFlowGraph::printEdgesCovered(int* edgesCovered){
 	cout << endl;
 }
 
-void HiLoControlFlowGraph::printPredicatesCovered(int* predicatesCovered){
+void HiLoControlFlowGraph::printPredicatesCovered(int* predicatesCovered) const{
 	cout << endl << "Predicate Coverage" << endl;
 	cout << " B2_T | B2_F | B4_T | B4_F | B6_FF| B6_FT| B6_TF| B6_TT| B8_T | B8_F |B10_FF|B10_FT|B10_TF|B10_TT" << endl;
 	cout << "-------------------------------------------------------------------------------------------------" << endl;

@@ -20,7 +20,7 @@ void ControlFlowGraph::setCoverageOfTestCase(TestCase* testCase) {
 	runTestCase();
 }
 
-void ControlFlowGraph::printTestCaseCoverage(TestCase* testCase){
+void ControlFlowGraph::printTestCaseCoverage(TestCase* testCase) const{
 	int* inputParameters = testCase->getInputParameters();
 	bool* edgesCovered = testCase->getEdgesCovered();
 	bool* predicatesCovered = testCase->getPredicatesCovered();
@@ -30,12 +30,17 @@ void ControlFlowGraph::printTestCaseCoverage(TestCase* testCase){
 	printPredicatesCovered(predicatesCovered);
 }
 
-void ControlFlowGraph::printTestSuiteCoverage(TestSuite* testSuite){
+void ControlFlowGraph::printTestSuiteCoverage(TestSuite* testSuite) const{
 	int* edgesCovered = testSuite->getDuplicateEdgesCovered();
 	int* predicatesCovered = testSuite->getDuplicatePredicatesCovered();
 
 	printEdgesCovered(edgesCovered);
 	printPredicatesCovered(predicatesCovered);
+}
+
+void ControlFlowGraph::printPopulationCoverage(int* edges, int* predicates) const {
+	printEdgesCovered(edges);
+	printPredicatesCovered(predicates);
 }
 
 ControlFlowGraph& ControlFlowGraph::operator=(const ControlFlowGraph& other)

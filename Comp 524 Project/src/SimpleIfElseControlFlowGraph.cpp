@@ -43,13 +43,13 @@ int SimpleIfElseControlFlowGraph::getUpperBoundForParameter(int parameter) {
 	return rangeForEachParameter[parameter][1];
 }
 
-void SimpleIfElseControlFlowGraph::printInputParameters(int* inputParameters) {
+void SimpleIfElseControlFlowGraph::printInputParameters(int* inputParameters) const{
 	std::cout << endl << "Input Parameters" << std::endl;
 	std::cout << " x " << std::endl;
 	std::cout << "---" << std::endl;
 	std::cout << " " << inputParameters[0] << std::endl;
 }
-void SimpleIfElseControlFlowGraph::printEdgesCovered(bool* edgesCovered) {
+void SimpleIfElseControlFlowGraph::printEdgesCovered(bool* edgesCovered) const{
 	std::cout << endl << "Edge Coverage" << std::endl;
 	std::cout << " B1toB2 | B1toB3 | B2toB4 | B3toB4 " << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
@@ -59,7 +59,7 @@ void SimpleIfElseControlFlowGraph::printEdgesCovered(bool* edgesCovered) {
 	}
 	std::cout << std::endl;
 }
-void SimpleIfElseControlFlowGraph::printPredicatesCovered(bool* predicatesCovered) {
+void SimpleIfElseControlFlowGraph::printPredicatesCovered(bool* predicatesCovered) const{
 	std::cout << endl << "Predicate Coverage" << std::endl;
 	std::cout << " B1_T | B1_F " << std::endl;
 	std::cout << "-------------" << std::endl;
@@ -70,7 +70,7 @@ void SimpleIfElseControlFlowGraph::printPredicatesCovered(bool* predicatesCovere
 	std::cout << std::endl;
 }
 
-void SimpleIfElseControlFlowGraph::printEdgesCovered(int* edgesCovered) {
+void SimpleIfElseControlFlowGraph::printEdgesCovered(int* edgesCovered) const{
 	std::cout << endl << "Edge Coverage" << std::endl;
 	std::cout << " B1toB2 | B1toB3 | B2toB4 | B3toB4 " << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
@@ -80,7 +80,7 @@ void SimpleIfElseControlFlowGraph::printEdgesCovered(int* edgesCovered) {
 	}
 	std::cout << std::endl;
 }
-void SimpleIfElseControlFlowGraph::printPredicatesCovered(int* predicatesCovered) {
+void SimpleIfElseControlFlowGraph::printPredicatesCovered(int* predicatesCovered) const{
 	std::cout << endl << "Predicate Coverage" << std::endl;
 	std::cout << " B1_T | B1_F " << std::endl;
 	std::cout << "-------------" << std::endl;

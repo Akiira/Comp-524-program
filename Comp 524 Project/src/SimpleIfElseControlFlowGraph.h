@@ -37,12 +37,12 @@ private:
 	void block3();
 	void block4();
 
-	void printInputParameters(int* inputParameters);
-	void printEdgesCovered(bool* edgesCovered);
-	void printPredicatesCovered(bool* predicatesCovered);
+	void printInputParameters(int* inputParameters) const;
+	void printEdgesCovered(bool* edgesCovered) const;
+	void printPredicatesCovered(bool* predicatesCovered) const;
 
-	void printEdgesCovered(int* edgesCovered);
-	void printPredicatesCovered(int* predicatesCovered);
+	void printEdgesCovered(int* edgesCovered) const;
+	void printPredicatesCovered(int* predicatesCovered) const;
 
 	// same as superclass
 	//SimpleIfElseControlFlowGraph& operator=(const SimpleIfElseControlFlowGraph& other);
