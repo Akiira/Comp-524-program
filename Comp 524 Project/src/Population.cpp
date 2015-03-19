@@ -68,7 +68,9 @@ void Population::scalePopulationsFitness(Organism* newOrganism, int replacedOrga
 
 		//REFERENCE: http://www.cse.unr.edu/~sushil/class/gas/notes/scaling/index.html
 
-		double scalingFactor { 1.0 };
+		//This factor "is a scaling constant that specifies the expected number
+		//             of copies of the best individual in the next generation"
+		double scalingFactor { 20.0 };
 
 		int max { getBestOrganism()->fitness },
 			min { population[populationSize - 1]->getFitness() };
@@ -101,13 +103,12 @@ void Population::scalePopulationsFitness(Organism* newOrganism, int replacedOrga
 		for(int i = 0; i < populationSize; i++) {
 			auto f = population[i]->getFitness();
 
-			cout << "Fitness: " << f << ", scaled: " << (b + (a*f)) << endl;
+			//cout << "Fitness: " << f << ", scaled: " << (b + (a*f)) << endl;
 
 			if( b + (a * f) >= 0 ) {
 				population[i]->setScaledFitness(b + (a * f));
 				totalFitness += b + (a * f);
 			} else {
-				assert(false);
 				population[i]->setScaledFitness(0);
 				totalFitness += 0;
 			}
