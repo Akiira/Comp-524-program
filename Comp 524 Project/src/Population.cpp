@@ -54,56 +54,7 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 
 void Population::scalePopulationsFitness() {
 	if( SCALING == LINEAR ) {
-		totalFitness = 0;
-
-		//REFERENCE: http://www.cse.unr.edu/~sushil/class/gas/notes/scaling/index.html
-
-		//This factor "is a scaling constant that specifies the expected number
-		//             of copies of the best individual in the next generation"
-		double scalingFactor { 20.0 };
-
-		int max { getBestOrganism()->fitness },
-			min { population[populationSize - 1]->getFitness() };
-		double average = 0;
-
-		//TODO: if we keep this scaling we should have a separate field for scaledTotalFitness so we
-		//		can avoid this extra loop
-		for (int i = 0; i < populationSize; ++i) {
-			average += population[i]->fitness;
-		}
-
-		average /= populationSize;
-		double d, a, b;
-
-		if( min > (( scalingFactor * average - max) / ( scalingFactor - 1.0 )) ) {
-			d = max - average;
-			a = ( scalingFactor - 1.0 ) * ( average / d );
-			b = average * ( max - ( scalingFactor * average ) ) / d;
-		} else {
-			d = average - min;
-			a = average / d;
-			b = -min * ( average / d );
-		}
-
-		if( d < 0.00001 && d > -0.00001 ) {
-			a = 1.0;
-			b = 0.0;
-		}
-
-		for(int i = 0; i < populationSize; i++) {
-			auto f = population[i]->getFitness();
-
-			//cout << "Fitness: " << f << ", scaled: " << (b + (a*f)) << endl;
-
-			if( b + (a * f) >= 0 ) {
-				population[i]->setScaledFitness(b + (a * f));
-				totalFitness += b + (a * f);
-			} else {
-				population[i]->setScaledFitness(0);
-				totalFitness += 0;
-			}
-
-		}
+		linearScaling();
 	}
 	else if ( SCALING == EXPONENTIAL ) {
 		totalFitness = 0;
@@ -447,3 +398,45 @@ void Population::printPopulationCoverage() {
 }
 
 
+
+void Population::linearScaling() {
+	totalFitness = 0;
+	//REFERENCE: http://www.cse.unr.edu/~sushil/class/gas/notes/scaling/index.html
+	//This factor "is a scaling constant that specifies the expected number
+	//             of copies of the best individual in the next generation"
+	double scalingFactor { 20.0 };
+	int max { getBestOrganism()->fitness }, min {
+			population[populationSize - 1]->getFitness() };
+	double average = 0;
+	//TODO: if we keep this scaling we should have a separate field for scaledTotalFitness so we
+	//		can avoid this extra loop
+	for (int i = 0; i < populationSize; ++i) {
+		average += population[i]->fitness;
+	}
+	average /= populationSize;
+	double d, a, b;
+	if (min > ((scalingFactor * average - max) / (scalingFactor - 1.0))) {
+		d = max - average;
+		a = (scalingFactor - 1.0) * (average / d);
+		b = average * (max - (scalingFactor * average)) / d;
+	} else {
+		d = average - min;
+		a = average / d;
+		b = -min * (average / d);
+	}
+	if (d < 0.00001 && d > -0.00001) {
+		a = 1.0;
+		b = 0.0;
+	}
+	for (int i = 0; i < populationSize; i++) {
+		auto f = population[i]->getFitness();
+		//cout << "Fitness: " << f << ", scaled: " << (b + (a*f)) << endl;
+		if (b + (a * f) >= 0) {
+			population[i]->setScaledFitness(b + (a * f));
+			totalFitness += b + (a * f);
+		} else {
+			population[i]->setScaledFitness(0);
+			totalFitness += 0;
+		}
+	}
+}

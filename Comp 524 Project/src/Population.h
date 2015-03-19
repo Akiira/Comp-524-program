@@ -74,7 +74,7 @@ private:
 	void moveOrganismToSortedPosition(int indexToSort);
 
 	void replaceOrganismAtIndexWithChild(int organismToReplace, Organism* child);
-
+	void linearScaling();
 
 	//TODO remove hard coding of value
 	const static typeOfScaling SCALING = LINEAR;
