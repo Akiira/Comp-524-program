@@ -48,11 +48,11 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 	totalFitness = 0;
 
 	sortPopulationByFitness();
-	scalePopulationsFitness();
+	updatePopulationsFitness();
 	computePopulationLevelCoverage();
 }
 
-void Population::scalePopulationsFitness() {
+void Population::updatePopulationsFitness() {
 	if( SCALING == LINEAR ) {
 		linearScaling();
 	}
@@ -77,24 +77,23 @@ void Population::scalePopulationsFitness() {
 		totalFitness = 0;
 		short rank { 1 };
 		for(int i = populationSize - 1; i > 0; i--) {
-				population[i]->setScaledFitness(rank);
-				totalFitness += rank;
-				rank++;
-			}
-	} else {
-
+			population[i]->setScaledFitness(rank);
+			totalFitness += rank;
+			rank++;
+		}
+	} else if ( totalFitness == 0 ) { // No scaling, initializing fitness for the first time
 		int fitness;
-		if ( totalFitness == 0 ) {// Called from the constructor, have to initialize all organisms
-			for (int i = 0; i < populationSize; i++) {
-				fitness = population[i]->getFitness();
-				population[i]->setScaledFitness(fitness);
-				totalFitness += fitness;
-			}
-		} else {
-			fitness = population[lastReplaced]->fitness;
-			population[lastReplaced]->setFitness(fitness);
+		for (int i = 0; i < populationSize; i++) {
+			fitness = population[i]->getFitness();
+			population[i]->setScaledFitness(fitness);
 			totalFitness += fitness;
 		}
+
+	} else { // No scaling, only need to take one new organism into account
+		int fitness;
+		fitness = population[lastReplaced]->fitness;
+		population[lastReplaced]->setFitness(fitness);
+		totalFitness += fitness;
 	}
 }
 
@@ -326,7 +325,7 @@ void Population::replaceOrganismAtIndexWithChild(int organismToReplace, Organism
 	population[organismToReplace] = child;
 
 	lastReplaced = organismToReplace;
-	scalePopulationsFitness();
+	updatePopulationsFitness();
 
 	moveOrganismToSortedPosition(organismToReplace);
 }

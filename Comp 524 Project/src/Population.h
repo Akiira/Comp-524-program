@@ -69,7 +69,7 @@ private:
 	int* selectCutPoints(int numberOfCutPoints, int upperBound);
 	void computePopulationLevelCoverage();
 
-	void scalePopulationsFitness();
+	void updatePopulationsFitness();
 	void linearScaling();
 
 	void updateCoverageBeforeReplacement(int organismToBeReplaced, Organism* child);
