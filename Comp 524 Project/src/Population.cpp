@@ -45,24 +45,14 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 	totalFitness = 0;
 
 	sortPopulationByFitness();
-	scalePopulationsFitness(NULL, 0);
+	scalePopulationsFitness();
 	//now sort popArray so that the organisms are in order of fitness from highest to lowest.
 
 	// ANd compute the population level coverage metadata
 	computePopulationLevelCoverage();
 }
 
-/**	If SCALING != NONE, then the arguments will be ignored, the fitness of each Organism will
- * 		be scaled using the selected algorithm, and the totalFitness will become the sum of these
- * 		new scaledFitnesses.
- *	If SCALING == NONE:
- *		If newOrganism == NULL, the entire population will have scaledFitness set to their fitness
- *			and the totalFitness will be summed. (Expected to be used by the constructor)
- *		If newOrganism != NULL, only that organism will have scaledFitness set to their fitness
- *			and the totalFitness will be updated by += newOrganismFitness - replacedOrganismFitness
- *			Expected to be used by replacment algorithms.
- */
-void Population::scalePopulationsFitness(Organism* newOrganism, int replacedOrganismFitness) {
+void Population::scalePopulationsFitness() {
 	if( SCALING == LINEAR ) {
 		totalFitness = 0;
 
@@ -148,22 +138,19 @@ void Population::scalePopulationsFitness(Organism* newOrganism, int replacedOrga
 				totalFitness += rank;
 				rank++;
 			}
-	} else { // No Scaling,
-		// Called from the constructor, have to initialize all organisms
+	} else {
+
 		int fitness;
-		if (newOrganism == NULL) {
+		if ( totalFitness > 0 ) {// Called from the constructor, have to initialize all organisms
 			for (int i = 0; i < populationSize; i++) {
 				fitness = population[i]->getFitness();
 				population[i]->setScaledFitness(fitness);
 				totalFitness += fitness;
 			}
-		}
-		else {
-			// Catch any weird errors while were still testing this stuff.
-			assert(replacedOrganismFitness > 0);
-			fitness = newOrganism->getFitness();
-			newOrganism->setScaledFitness(fitness);
-			totalFitness += fitness - replacedOrganismFitness;
+		} else {
+			fitness = population[populationSize - 1]->fitness;
+			population[populationSize - 1]->setFitness(fitness);
+			totalFitness += fitness;
 		}
 	}
 }
@@ -236,13 +223,11 @@ int Population::fitnessProportionalSelect() {
 	if (totalFitness == 0) {
 		i = uniformInRange(0, populationSize - 1);
 	} else {
-		//sum = population[0]->getFitness();
 		sum = population[0]->getScaledFitness();
 		toss = uniformInRange(0, totalFitness);
 
 		while (sum < toss) {
 			i++;
-			//sum += population[i]->getFitness();
 			sum += population[i]->getScaledFitness();
 		}
 	}
@@ -392,15 +377,12 @@ void Population::replaceOrganismAtIndexWithChild(int organismToReplace, Organism
 
 	updateCoverageBeforeReplacement(organismToReplace, child);
 
-	// If there's no scaling, scalePopulationsFitness will add the first argument to the current totalFitness,
-	//	then set the scaledFitnesswill be added to the totalFitness, otherwise
-	//	totalFitness will be completely recalculated in scalePopulationsFitness after scaling is performed.
-	int replacedOrganismFitness = population[organismToReplace]->getScaledFitness();
+	totalFitness -= population[organismToReplace]->getScaledFitness();
 
 	delete population[organismToReplace];
 	population[organismToReplace] = child;
 
-	scalePopulationsFitness(child, replacedOrganismFitness);
+	scalePopulationsFitness();
 
 	moveOrganismToSortedPosition(organismToReplace);
 }
