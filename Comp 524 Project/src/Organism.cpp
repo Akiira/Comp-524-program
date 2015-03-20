@@ -18,6 +18,9 @@ Organism::~Organism(){
 	delete chromosome;
 }
 
+Organism::Organism(const Organism& org)
+		: Organism( org.chromosome->getNumberOfTestCases(), org.chromosome->getMaxNumberOfTestCases(), org.chromosome->getAllTestCases()) {}
+
 Organism::Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** testCases) {
 	chromosome = new TestSuite { numOfTestCases, maxNumberOfTestCases, testCases };
 	fitness = 0;
