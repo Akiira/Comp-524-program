@@ -131,3 +131,7 @@ void SimpleIfElseControlFlowGraph::block3() {
 void SimpleIfElseControlFlowGraph::block4() {
 	return;
 }
+
+TestCase* SimpleIfElseControlFlowGraph::localOptVersion1(int int1, bool bool1) {
+	return 0;
+}

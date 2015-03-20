@@ -28,6 +28,8 @@ public:
 	void printTestSuiteCoverage(TestSuite* testSuite) const;
 	void printPopulationCoverage(int* edges, int* predicates) const;
 
+	virtual TestCase* localOptVersion1(int, bool)=0;
+
 	virtual int getNumberOfEdges()=0;
 	virtual int getNumberOfPredicates()=0;
 	virtual int getNumberOfParameters()=0;

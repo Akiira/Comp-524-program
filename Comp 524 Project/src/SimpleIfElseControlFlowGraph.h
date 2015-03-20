@@ -20,7 +20,7 @@ public:
 	int getNumberOfParameters();
 	int getLowerBoundForParameter(int);
 	int getUpperBoundForParameter(int);
-
+	TestCase* localOptVersion1(int, bool);
 
 private:
 	struct edges {
