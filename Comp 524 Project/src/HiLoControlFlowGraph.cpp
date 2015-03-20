@@ -137,8 +137,6 @@ TestCase* HiLoControlFlowGraph::localOptVersion1(int edgeToCover) {
 			this->setCoverageOfTestCase(tc);
 
 			if( tc->getEdgesCovered()[edgeToCover] ) {
-				tc->printInputsAndCoverage();
-
 				cout << "Took about " << i * 10 << " tries. " << endl;
 				return tc;
 			}
