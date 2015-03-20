@@ -232,7 +232,7 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 	}
 
 	child1 = new Organism { parent1NumberOfTestCases, parent1.getMaxNumberOfTestCases(), child1TestCases };
-	child2 = new Organism { parent2NumberOfTestCases,	parent2.getMaxNumberOfTestCases(), child2TestCases };
+	child2 = new Organism { parent2NumberOfTestCases, parent2.getMaxNumberOfTestCases(), child2TestCases };
 }
 
 //TODO decide when we use this
@@ -310,6 +310,29 @@ void Population::replaceWorst(Organism* child) {
 		replaceOrganismAtIndexWithChild(worst, child);
 	} else {
 		delete child;
+		child = NULL;
+	}
+}
+
+//This first version always tries to optimize best organism, we could try other versions as well.
+void Population::tryLocalOptimization() {
+	bool edgeOrPredicate { true };
+	Organism* bestOrganism = population[0];
+	int uncovered = bestOrganism->getUncoveredEdge();
+
+	if( uncovered == -1 ) {
+		edgeOrPredicate = false;
+		uncovered = bestOrganism->getUncoveredPredicate();
+	}
+
+	TestCase* tc = targetCFG->localOptVersion1(uncovered, edgeOrPredicate);
+
+	if (tc != NULL) {
+		Organism* temp = new Organism { *bestOrganism };
+		temp->chromosome->replaceRandomTestCase(tc);
+		temp->evaluateBaseFitness();
+
+		replaceOrganismAtIndexWithChild(0, temp);
 	}
 }
 
@@ -339,6 +362,7 @@ void Population::updateCoverageBeforeReplacement(int organismToBeReplaced, Organ
 
 	double numCovered = 0;
 	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+
 		edgesCovered[j] += childEdgeCov[j] - replacedEdgeCov[j];
 		if (edgesCovered[j] > 0) {
 			numCovered++;

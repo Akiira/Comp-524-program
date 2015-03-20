@@ -25,6 +25,8 @@ public:
 	void replaceParentThenReplaceWorst(int parentIndex, Organism* child);
 	void replaceWorst(Organism* offspring);
 
+	void tryLocalOptimization();
+
 	int fitnessProportionalSelect();
 	void printPopulationFitness();
 
