@@ -88,11 +88,15 @@ void hiLoSimulationTest() {
 
 void localOptTest() {
 	HiLoControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
+	bool EDGE = true, PREDICATE = false;
 	targetCFG = hiLoCFG;
 
-	hiLoCFG->localOptVersion1(HiLoControlFlowGraph::edges::B8toB10);
+	hiLoCFG->localOptVersion1(HiLoControlFlowGraph::edges::B8toB10, EDGE);
 
-	hiLoCFG->localOptVersion1(HiLoControlFlowGraph::predicates::B10_FF);
+	hiLoCFG->localOptVersion1(HiLoControlFlowGraph::predicates::B10_FF, PREDICATE);
+	hiLoCFG->localOptVersion1(HiLoControlFlowGraph::predicates::B10_FT, PREDICATE);
+	hiLoCFG->localOptVersion1(HiLoControlFlowGraph::predicates::B10_TF, PREDICATE);
+	hiLoCFG->localOptVersion1(HiLoControlFlowGraph::predicates::B10_TT, PREDICATE);
 }
 
 int main() {

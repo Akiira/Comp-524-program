@@ -121,7 +121,7 @@ void HiLoControlFlowGraph::runTestCase() {
 	block1();
 }
 
-TestCase* HiLoControlFlowGraph::localOptVersion1(int edgeToCover) {
+TestCase* HiLoControlFlowGraph::localOptVersion1(int thingToCover, bool edgeOrPredicate) {
 	TestCase* tc = new TestCase { };
 	int* parameters = new int[3] { };
 	int NeighborhoodSize { 0 };
@@ -136,7 +136,8 @@ TestCase* HiLoControlFlowGraph::localOptVersion1(int edgeToCover) {
 			}
 			this->setCoverageOfTestCase(tc);
 
-			if( tc->getEdgesCovered()[edgeToCover] ) {
+			auto coverage = ( edgeOrPredicate ? tc->getEdgesCovered() : tc->getPredicatesCovered() );
+			if( coverage[thingToCover] ) {
 				cout << "Took about " << i * 10 << " tries. " << endl;
 				return tc;
 			}
