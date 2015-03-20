@@ -26,6 +26,9 @@ public:
 	void mutate(double mutationProb);
 
 	void evaluateBaseFitness();
+
+	int getUncoveredEdge() const;
+	int getUncoveredPredicate() const;
 	int getFitness() const;
 	int getNumberOfTestCases() const;
 	int getMaxNumberOfTestCases() const;

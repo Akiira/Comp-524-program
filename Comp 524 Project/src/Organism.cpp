@@ -24,20 +24,10 @@ Organism::Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** test
 	scaledFitness = 0;
 }
 
-
 Organism::Organism(int numOfTestCases, int maxNumberOfTestCases ) {
 	chromosome = new TestSuite { numOfTestCases, maxNumberOfTestCases};
 	evaluateBaseFitness();
 }
-
-TestSuite* Organism::getChromosome() const{
-	return  chromosome;
-}
-
-int Organism::getFitness() const{
-	return fitness;
-}
-
 
 void Organism::mutate(double mutationProb) {
 	int numberOfTestCases = chromosome->getNumberOfTestCases();
@@ -128,6 +118,8 @@ void Organism::evaluateBaseFitness(){
 	scaledFitness = fitness;
 }
 
+//============================PRINT FUNCTIONS=======================//
+
 void Organism::printAll() {
 	cout << "Fitness: " << fitness << endl;
 	chromosome->printAll();
@@ -142,6 +134,43 @@ void Organism::printFitnessAndTestSuiteCoverageAndTestCaseInputs() {
 	chromosome->printTestCaseInputsOnly();
 }
 
+//============================GETTER FUNCTIONS=======================//
+
+int Organism::getUncoveredEdge() const {
+	int uncoveredEdge { -1 };
+
+	auto edges = chromosome->getDuplicateEdgesCovered();
+
+	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
+		if( edges[i] == 0 ) {
+			uncoveredEdge = i;
+			break;
+		}
+	}
+	return uncoveredEdge;
+}
+
+int Organism::getUncoveredPredicate() const {
+	int uncoveredPred { -1 };
+
+	auto preds = chromosome->getDuplicatePredicatesCovered();
+
+	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
+		if( preds[i] == 0 ) {
+			uncoveredPred = i;
+			break;
+		}
+	}
+	return uncoveredPred;
+}
+
+TestSuite* Organism::getChromosome() const{
+	return  chromosome;
+}
+
+int Organism::getFitness() const{
+	return fitness;
+}
 
 int Organism::getNumberOfTestCases() const {
 	if(chromosome)
