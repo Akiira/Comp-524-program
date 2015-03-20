@@ -53,7 +53,6 @@ void Simulation::run(){
 
 		assert(child1 && child2);
 
-		//TODO add a periodic call to some local optimization in this loop.
 		//TODO possibly add some periodic adaptation of parameters like mutation
 
 		// Attempt to replace the worst of the two parents
@@ -71,7 +70,8 @@ void Simulation::run(){
 			delete child2;
 		}
 
-		if( i % 10000 == 9999 || population->getCoverageRatio() > 0.95 ) {
+		//TODO: there are many different ways we could call/use this. Think about the most appropiate.
+		if( i % 9 == 0 || population->getCoverageRatio() > 0.95 ) {
 			population->tryLocalOptimization();
 		}
 
