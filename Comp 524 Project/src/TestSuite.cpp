@@ -17,11 +17,15 @@ using std::endl;
 
 TestSuite::~TestSuite(){
 	delete[] duplicateEdgesCovered;
+	duplicateEdgesCovered = NULL;
 	delete[] duplicatePredicatesCovered;
+	duplicatePredicatesCovered = NULL;
 	for(int i = 0; i < numberOfTestCases; i++){
 		delete testCases[i];
+		testCases[i] = NULL;
 	}
 	delete[] testCases;
+	testCases = NULL;
 }
 
 TestSuite::TestSuite(const TestSuite& testSuite) {
@@ -34,6 +38,10 @@ TestSuite::TestSuite(const TestSuite& testSuite) {
 	duplicateEdgesCovered = new int[numberOfEdges] { };
 	duplicatePredicatesCovered = new int[numberOfPredicates] { };
 	testCases = new TestCase*[maxNumberOfTestCases] { };
+
+	for (int i = 0; i < numberOfTestCases; ++i) {
+		testCases[i] = new TestCase { *testSuite.testCases[i] };
+	}
 }
 
 // Fill the new suite with random test cases and evaluate the coverage of all the test cases
@@ -97,7 +105,6 @@ void TestSuite::addTestCase(TestCase* testCase) {
 		delete testCase;
 	}
 }
-
 
 void TestSuite::printAll() {
 	printTestSuiteCoverage();
