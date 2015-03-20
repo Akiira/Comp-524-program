@@ -16,10 +16,16 @@ using std::endl;
 
 Organism::~Organism(){
 	delete chromosome;
+	chromosome = NULL;
 }
 
-Organism::Organism(const Organism& org)
-		: Organism( org.chromosome->getNumberOfTestCases(), org.chromosome->getMaxNumberOfTestCases(), org.chromosome->getAllTestCases()) {}
+Organism::Organism(const Organism& org) {
+	chromosome = new TestSuite { *org.chromosome };
+
+	fitness = 0;
+	scaledFitness = 0;
+	evaluateBaseFitness();
+}
 
 Organism::Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** testCases) {
 	chromosome = new TestSuite { numOfTestCases, maxNumberOfTestCases, testCases };
@@ -111,7 +117,7 @@ int Organism::fitnessFunction03() {
 	//int* populationPredicateCoverage = population->getPredicatesCovered();
 }
 void Organism::evaluateBaseFitness(){
-	fitness = 0;
+	chromosome->resetCoverage();
 	chromosome->calculateTestSuiteCoverage();
 
 	fitness = fitnessFunction01();
