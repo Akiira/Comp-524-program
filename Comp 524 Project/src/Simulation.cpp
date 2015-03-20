@@ -71,6 +71,22 @@ void Simulation::run(){
 			delete child2;
 		}
 
+		if( i % 10000 == 9999 ) {
+			bool edgeOrPredicate { true };
+			int uncovered = bestOrganismSeen->getUncoveredEdge();
+
+			if( uncovered == -1 ) {
+				edgeOrPredicate = false;
+				uncovered = bestOrganismSeen->getUncoveredPredicate();
+			}
+
+			auto tc = targetCFG->localOptVersion1(uncovered, edgeOrPredicate);
+
+			if( tc ) {
+				bestOrganismSeen->getChromosome()->addTestCase(tc);
+			}
+		}
+
 		i++;
 
 		//TODO Check if it looks like the last generation always have the best organism
