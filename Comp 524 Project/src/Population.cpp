@@ -360,7 +360,7 @@ void Population::updateCoverageBeforeReplacement(int organismToBeReplaced, Organ
 	auto childEdgeCov = child->chromosome->getDuplicateEdgesCovered();
 	auto childPredCov = child->chromosome->getDuplicatePredicatesCovered();
 
-	double numCovered = 0;
+	int numCovered = 0;
 	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
 
 		edgesCovered[j] += childEdgeCov[j] - replacedEdgeCov[j];
@@ -374,7 +374,7 @@ void Population::updateCoverageBeforeReplacement(int organismToBeReplaced, Organ
 			numCovered++;
 		}
 	}
-	coverageRatio = numCovered / (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
+	coverageRatio = ((double) numCovered) / (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
 
 }
 
