@@ -136,7 +136,7 @@ void TestCase::setInputParameters(int newValues[]) {
 	}
 }
 
-void TestCase::setInputParameters(int* newValues[]) {
+void TestCase::setInputParametersWithReference(int* newValues[]) {
 
 	delete inputParameters;
 	inputParameters = *newValues;

@@ -31,7 +31,7 @@ public:
 	void addEdgeCoverage(int edge);
 	void addPredicateCoverage(int predicate);
 	void setInputParameters(int[]);
-	void setInputParameters(int* []);
+	void setInputParametersWithReference(int* []);
 	void setInputParameterAtIndex(int index, int newValue);
 
 	void clearCoverage();

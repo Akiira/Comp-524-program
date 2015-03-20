@@ -126,7 +126,7 @@ void HiLoControlFlowGraph::localOptVersion1(int edgeToCover) {
 	int* parameters = new int[3] { };
 	int NeighborhoodSize { 0 };
 
-	tc->setInputParameters(&parameters);
+	tc->setInputParametersWithReference(&parameters);
 
 	for(int i = 0; i < 100; ++i) {
 
