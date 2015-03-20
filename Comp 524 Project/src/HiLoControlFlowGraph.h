@@ -21,14 +21,17 @@ class HiLoControlFlowGraph : public ControlFlowGraph
 		int getNumberOfParameters();
 		int getLowerBoundForParameter(int);
 		int getUpperBoundForParameter(int);
+		void localOptVersion1(int);
+
+		// This enumeration type stores the edges of the Control Flow Graph (CFG)
+				// Full branch coverage is achieved if all edges have been executed
+				struct edges {
+					enum { B1toB2, B2toB3, B2toB4, B3toB10, B4toB5, B4toB6, B5toB10,
+						B6toB7, B6toB8, B7toB10, B8toB9, B8toB10, B9toB10, B10toB2};
+				};
 
 	private:
-		// This enumeration type stores the edges of the Control Flow Graph (CFG)
-		// Full branch coverage is achieved if all edges have been executed
-		struct edges {
-			enum { B1toB2, B2toB3, B2toB4, B3toB10, B4toB5, B4toB6, B5toB10,
-				B6toB7, B6toB8, B7toB10, B8toB9, B8toB10, B9toB10, B10toB2};
-		};
+
 
 		// This enumeration type stores the predicates of the Control Flow Graph (CFG)
 		// Full Multiple COndition Coverage is achieved if all predicates have been
@@ -75,6 +78,8 @@ class HiLoControlFlowGraph : public ControlFlowGraph
 		void printPredicatesCovered(int* predicatesCovered) const;
 
 		virtual HiLoControlFlowGraph& operator=(const HiLoControlFlowGraph& other);
+
+
 };
 
 

@@ -5,6 +5,7 @@
  *      Author: Austin and Randall
  */
 #include "HiLoControlFlowGraph.h"
+#include "Random.h"
 #include <cstring>
 #include <cassert>
 using std::endl;
@@ -119,6 +120,47 @@ void HiLoControlFlowGraph::runTestCase() {
 	programVariables[LOOP_COUNTER] = 0;
 	block1();
 }
+
+void HiLoControlFlowGraph::localOptVersion1(int edgeToCover) {
+	TestCase* tc = new TestCase { };
+	int* parameters = new int[3] { };
+	int NeighborhoodSize { 0 };
+
+	for (int var = 0; var < 3; ++var) {
+		parameters[var] = uniformInRange(-NeighborhoodSize, NeighborhoodSize);
+	}
+
+	tc->setInputParameters(&parameters);
+
+	this->setCoverageOfTestCase(tc);
+	//tc->printInputsAndCoverage();
+
+	for(int i = 0; i < 100; ++i) {
+
+		for (int j = 0; j < 10; ++j) {
+			for (int var = 0; var < 3; ++var) {
+				parameters[var] = uniformInRange(-NeighborhoodSize, NeighborhoodSize);
+			}
+			this->setCoverageOfTestCase(tc);
+
+			if( tc->getEdgesCovered()[edgeToCover] ) {
+				tc->printInputsAndCoverage();
+
+				cout << "Took about " << i * 10 << " tries. " << endl;
+				goto label;
+			}
+
+		}
+
+		NeighborhoodSize += 5;
+	}
+
+	cout << "Failed to cover edge " << endl;
+
+	label:
+	return;
+}
+
 
 void HiLoControlFlowGraph::block1() {
 	testCase->addEdgeCoverage(edges::B1toB2);
