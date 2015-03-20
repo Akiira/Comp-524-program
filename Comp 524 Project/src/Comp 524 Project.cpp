@@ -91,6 +91,8 @@ void localOptTest() {
 	targetCFG = hiLoCFG;
 
 	hiLoCFG->localOptVersion1(HiLoControlFlowGraph::edges::B8toB10);
+
+	hiLoCFG->localOptVersion1(HiLoControlFlowGraph::predicates::B10_FF);
 }
 
 int main() {
