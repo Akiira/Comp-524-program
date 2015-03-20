@@ -17,8 +17,11 @@
 TestCase::~TestCase(){
 
 	delete[] edgesCovered;
+	edgesCovered = NULL;
 	delete[] predicatesCovered;
+	predicatesCovered = NULL;
 	delete[] inputParameters;
+	inputParameters = NULL;
 }
 
 TestCase::TestCase() {
