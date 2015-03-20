@@ -126,14 +126,7 @@ void HiLoControlFlowGraph::localOptVersion1(int edgeToCover) {
 	int* parameters = new int[3] { };
 	int NeighborhoodSize { 0 };
 
-	for (int var = 0; var < 3; ++var) {
-		parameters[var] = uniformInRange(-NeighborhoodSize, NeighborhoodSize);
-	}
-
 	tc->setInputParameters(&parameters);
-
-	this->setCoverageOfTestCase(tc);
-	//tc->printInputsAndCoverage();
 
 	for(int i = 0; i < 100; ++i) {
 
