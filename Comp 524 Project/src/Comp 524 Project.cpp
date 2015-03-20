@@ -86,6 +86,13 @@ void hiLoSimulationTest() {
 	hiLoSim->run();
 }
 
+void localOptTest() {
+	HiLoControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
+	targetCFG = hiLoCFG;
+
+	hiLoCFG->localOptVersion1(HiLoControlFlowGraph::edges::B8toB10);
+}
+
 int main() {
 	//simpleIfElseControlFlowGraphTest_testCase_version();
 	//simpleIfElseControlFlowGraphTest_testSuite_version();
@@ -94,7 +101,8 @@ int main() {
 	chrono::time_point<chrono::system_clock> start { }, end { };
     start = chrono::system_clock::now();
 
-    hiLoSimulationTest();
+    localOptTest();
+    //hiLoSimulationTest();
     //hiLoRandomSearchEdges();
     //hiLoRandomSearchPredicates();
 
