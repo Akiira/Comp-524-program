@@ -121,7 +121,7 @@ void HiLoControlFlowGraph::runTestCase() {
 	block1();
 }
 
-void HiLoControlFlowGraph::localOptVersion1(int edgeToCover) {
+TestCase* HiLoControlFlowGraph::localOptVersion1(int edgeToCover) {
 	TestCase* tc = new TestCase { };
 	int* parameters = new int[3] { };
 	int NeighborhoodSize { 0 };
@@ -140,18 +140,15 @@ void HiLoControlFlowGraph::localOptVersion1(int edgeToCover) {
 				tc->printInputsAndCoverage();
 
 				cout << "Took about " << i * 10 << " tries. " << endl;
-				goto label;
+				return tc;
 			}
-
 		}
 
 		NeighborhoodSize += 5;
 	}
 
 	cout << "Failed to cover edge " << endl;
-
-	label:
-	return;
+	return NULL;
 }
 
 
