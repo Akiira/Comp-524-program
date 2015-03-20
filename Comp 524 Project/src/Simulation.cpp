@@ -71,20 +71,8 @@ void Simulation::run(){
 			delete child2;
 		}
 
-		if( i % 10000 == 9999 ) {
-			bool edgeOrPredicate { true };
-			int uncovered = bestOrganismSeen->getUncoveredEdge();
-
-			if( uncovered == -1 ) {
-				edgeOrPredicate = false;
-				uncovered = bestOrganismSeen->getUncoveredPredicate();
-			}
-
-			auto tc = targetCFG->localOptVersion1(uncovered, edgeOrPredicate);
-
-			if( tc ) {
-				bestOrganismSeen->getChromosome()->addTestCase(tc);
-			}
+		if( i % 10000 == 9999 || population->getCoverageRatio() > 0.95 ) {
+			population->tryLocalOptimization();
 		}
 
 		i++;
