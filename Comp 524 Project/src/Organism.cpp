@@ -21,9 +21,6 @@ Organism::~Organism(){
 
 Organism::Organism(const Organism& org) {
 	chromosome = new TestSuite { *org.chromosome };
-
-	fitness = 0;
-	scaledFitness = 0;
 	evaluateBaseFitness();
 }
 
