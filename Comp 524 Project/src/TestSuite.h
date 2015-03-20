@@ -42,6 +42,7 @@ public:
 	TestCase** getAllTestCases() const;
 	TestCase* getTestCase(int index);
 	void setTestCase(int index, TestCase* testCase);
+	void replaceRandomTestCase(TestCase* testCase);
 	void addTestCase(TestCase* testCase);
 	void resetCoverage();
 	void calculateTestSuiteCoverage();

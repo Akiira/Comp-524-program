@@ -94,6 +94,13 @@ void TestSuite::setTestCase(int index, TestCase* testCase) {
 	testCases[index] = testCase;
 }
 
+//TODO we could improve upon this by replacing a duplicate
+void TestSuite::replaceRandomTestCase(TestCase* testCase) {
+	int index = uniformInRange(0, numberOfTestCases);
+	delete testCases[index];
+	testCases[index] = testCase;
+}
+
 // Just deletes it if there isn't room
 // Im thinking about only adding if it covers something new
 void TestSuite::addTestCase(TestCase* testCase) {
