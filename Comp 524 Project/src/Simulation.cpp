@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////
 
 #include "Simulation.h"
+#include "Random.h"
 #include <iostream>
 #include <cassert>
 using std::cout;
@@ -72,7 +73,7 @@ void Simulation::run(){
 
 		//TODO: there are many different ways we could call/use this. Think about the most appropiate.
 		if( i % 9 == 0 || population->getCoverageRatio() > 0.95 ) {
-			population->tryLocalOptimization();
+			tryLocalOptimization();
 		}
 
 		i++;
@@ -91,9 +92,57 @@ void Simulation::run(){
 
 }
 
+//This first version always tries to optimize best organism, we could try other versions as well.
+void Simulation::tryLocalOptimization() {
+	bool edgeOrPredicate { true };
+	Organism* bestOrganism = population->getBestOrganism();
+	int uncovered = bestOrganism->getUncoveredEdge();
+
+	if( uncovered == -1 ) {
+		edgeOrPredicate = false;
+		uncovered = bestOrganism->getUncoveredPredicate();
+	}
+
+	TestCase* tc = localOptVersion1(uncovered, edgeOrPredicate);
+
+	if (tc != NULL) {
+		Organism* temp = new Organism { *bestOrganism };
+		temp->getChromosome()->replaceRandomTestCase(tc);
+		temp->evaluateBaseFitness();
+
+		population->replaceOrganismAtIndexWithChild(0, temp);
+	}
+}
 
 
+TestCase* Simulation::localOptVersion1 (int thingToCover, bool edgeOrPredicate) {
+	TestCase* tc = new TestCase { };
+	int* parameters = new int[3] { };
+	int NeighborhoodSize { 0 };
 
+	tc->setInputParametersWithReference(&parameters);
+
+	for(int i = 0; i < 100; ++i) {
+
+		for (int j = 0; j < 10; ++j) {
+			for (int var = 0; var < 3; ++var) {
+				parameters[var] = uniformInRange(-NeighborhoodSize, NeighborhoodSize);
+			}
+			targetCFG->setCoverageOfTestCase(tc);
+
+			auto coverage = ( edgeOrPredicate ? tc->getEdgesCovered() : tc->getPredicatesCovered() );
+			if( coverage[thingToCover] ) {
+				cout << "Took about " << i * 10 << " tries. " << endl;
+				return tc;
+			}
+		}
+
+		NeighborhoodSize += 5;
+	}
+
+	cout << "Failed to cover edge " << endl;
+	return NULL;
+}
 
 
 

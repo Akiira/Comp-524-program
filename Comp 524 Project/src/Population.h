@@ -24,12 +24,10 @@ public:
 
 	void replaceParentThenReplaceWorst(int parentIndex, Organism* child);
 	void replaceWorst(Organism* offspring);
-
-	void tryLocalOptimization();
+	void replaceOrganismAtIndexWithChild(int organismToReplace, Organism* child);
 
 	int fitnessProportionalSelect();
 	void printPopulationFitness();
-
 	void printPopulationCoverage();
 
 	int* getEdgesCovered() const {
@@ -79,6 +77,6 @@ private:
 	void sortPopulationByFitness();
 	void moveOrganismToSortedPosition(int indexToSort);
 
-	void replaceOrganismAtIndexWithChild(int organismToReplace, Organism* child);
+
 };
 #endif // !defined(EA_BE7C8399_4BC5_48f6_93FA_2B1C440AB247__INCLUDED_)

@@ -20,6 +20,8 @@ public:
 	Simulation(int populationSize, int initalTestSuiteSize, int maxTestSuiteSize,
 			int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations);
 	void run();
+	void tryLocalOptimization();
+	TestCase* localOptVersion1(int thingToCover, bool edgeOrPredicate);
 
 	TestSuite* getBestTestSuite(){
 		return bestOrganismSeen->getChromosome();

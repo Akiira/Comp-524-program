@@ -21,7 +21,6 @@ class HiLoControlFlowGraph : public ControlFlowGraph
 		int getNumberOfParameters();
 		int getLowerBoundForParameter(int);
 		int getUpperBoundForParameter(int);
-		TestCase* localOptVersion1(int, bool);
 
 		// This enumeration type stores the edges of the Control Flow Graph (CFG)
 		// Full branch coverage is achieved if all edges have been executed

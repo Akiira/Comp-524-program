@@ -314,28 +314,6 @@ void Population::replaceWorst(Organism* child) {
 	}
 }
 
-//This first version always tries to optimize best organism, we could try other versions as well.
-void Population::tryLocalOptimization() {
-	bool edgeOrPredicate { true };
-	Organism* bestOrganism = population[0];
-	int uncovered = bestOrganism->getUncoveredEdge();
-
-	if( uncovered == -1 ) {
-		edgeOrPredicate = false;
-		uncovered = bestOrganism->getUncoveredPredicate();
-	}
-
-	TestCase* tc = targetCFG->localOptVersion1(uncovered, edgeOrPredicate);
-
-	if (tc != NULL) {
-		Organism* temp = new Organism { *bestOrganism };
-		temp->chromosome->replaceRandomTestCase(tc);
-		temp->evaluateBaseFitness();
-
-		replaceOrganismAtIndexWithChild(0, temp);
-	}
-}
-
 // A private utility function to perform the actual replacement, any checking of whether or not to
 //	perform the replacement must be done by the calling function.
 void Population::replaceOrganismAtIndexWithChild(int organismToReplace, Organism* child) {
