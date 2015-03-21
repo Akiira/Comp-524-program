@@ -103,7 +103,8 @@ void Simulation::tryLocalOptimization() {
 		uncovered = bestOrganism->getUncoveredPredicate();
 	}
 	auto oldTC = bestOrganism->getChromosome()->getTestCase(uniformInRange(0, bestOrganism->getNumberOfTestCases() - 1));
-	TestCase* tc = localOptVersion2(oldTC, uncovered, edgeOrPredicate);
+
+	TestCase* tc = localOptFromGivenParams(oldTC, uncovered, edgeOrPredicate);
 	//TestCase* tc = localOptVersion1(uncovered, edgeOrPredicate);
 
 	if (tc != NULL) {
@@ -145,7 +146,7 @@ TestCase* Simulation::localOptVersion1 (int thingToCover, bool edgeOrPredicate) 
 	return NULL;
 }
 
-TestCase* Simulation::localOptVersion2 (TestCase* orig, int thingToCover, bool edgeOrPredicate) {
+TestCase* Simulation::localOptFromGivenParams (TestCase* orig, int thingToCover, bool edgeOrPredicate) {
 	TestCase* tc = new TestCase { };
 	int* parameters = new int[targetCFG->getNumberOfParameters()] { };
 	int NeighborhoodSize { 1 };
@@ -175,7 +176,7 @@ TestCase* Simulation::localOptVersion2 (TestCase* orig, int thingToCover, bool e
 }
 
 
-TestCase* Simulation::localOptVersion3 (int thingToCover, bool edgeOrPredicate) {
+TestCase* Simulation::localOptFromMiddle (int thingToCover, bool edgeOrPredicate) {
 	TestCase* tc = new TestCase { };
 	int* parameters = new int[targetCFG->getNumberOfParameters()] { };
 	int NeighborhoodSize { 1 };

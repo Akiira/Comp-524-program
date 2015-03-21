@@ -109,7 +109,7 @@ void localOptTest2() {
 for (int var = 0; var < 50; ++var) {
 	TestCase* tc = new TestCase{};
 
-	hiLoSim->localOptVersion2(tc, HiLoControlFlowGraph::edges::B8toB10, EDGE);
+	hiLoSim->localOptFromGivenParams(tc, HiLoControlFlowGraph::edges::B8toB10, EDGE);
 }
 
 
