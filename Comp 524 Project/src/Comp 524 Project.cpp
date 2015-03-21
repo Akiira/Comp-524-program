@@ -4,6 +4,7 @@
 #include "ControlFlowGraph.h"
 #include "HiLoControlFlowGraph.h"
 #include "SimpleIfElseControlFlowGraph.h"
+#include "TriangleProblemGraph.h"
 #include "Simulation.h"
 #include "GlobalVariables.h"
 #include "RandomSearcher.h"
@@ -118,6 +119,44 @@ for (int var = 0; var < 50; ++var) {
 //	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_TF, PREDICATE);
 //	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_TT, PREDICATE);
 }
+
+void triangleSimulationTest() {
+	ControlFlowGraph* triangleCFG = new TriangleProblemGraph { };
+
+	targetCFG = triangleCFG;
+	Simulation* hiLoSim = new Simulation { 100, 5, 25, 2, .02, 1, 100000 };
+	hiLoSim->run();
+}
+
+void localOptTest3() {
+	ControlFlowGraph* triangleCFG = new TriangleProblemGraph { };
+	targetCFG = triangleCFG;
+	bool EDGE { true }, PREDICATE { false };
+
+	Simulation* hiLoSim = new Simulation(1000, 5, 15, 2, .02, 1, 1000000);
+
+for (int var = 0; var < 5; ++var) {
+	TestCase* tc = new TestCase{};
+
+//	cout << "From Random: " ;
+//	hiLoSim->localOptFromGivenParams(tc, TriangleProblemGraph::edges::B5toB6, EDGE);
+//	cout << "From middle: " ;
+//	hiLoSim->localOptFromMiddle(TriangleProblemGraph::edges::B5toB6, EDGE);
+//	cout << "From zero: " ;
+//	hiLoSim->localOptFromZero(TriangleProblemGraph::edges::B5toB6, EDGE);
+//	cout << "\n";
+
+	cout << "From Random: " ;
+	hiLoSim->localOptFromGivenParams(tc, TriangleProblemGraph::predicates::B0_TFT, PREDICATE);
+	cout << "From middle: " ;
+	hiLoSim->localOptFromMiddle(TriangleProblemGraph::predicates::B0_TFT, PREDICATE);
+	cout << "From zero: " ;
+	hiLoSim->localOptFromZero(TriangleProblemGraph::predicates::B0_TFT, PREDICATE);
+	cout << "\n";
+}
+
+}
+
 int main() {
 	//simpleIfElseControlFlowGraphTest_testCase_version();
 	//simpleIfElseControlFlowGraphTest_testSuite_version();
@@ -128,9 +167,11 @@ int main() {
 
     //localOptTest();
     //localOptTest2();
-    hiLoSimulationTest();
+    localOptTest3();
+    //hiLoSimulationTest();
     //hiLoRandomSearchEdges();
     //hiLoRandomSearchPredicates();
+    //triangleSimulationTest();
 
     end = chrono::system_clock::now();
 

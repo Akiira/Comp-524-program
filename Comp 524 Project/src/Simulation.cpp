@@ -120,18 +120,10 @@ TestCase* Simulation::callRandomLocalOpt() {
 			tc = localOptFromGivenParams(oldTC, uncovered, edgeOrPredicate);
 			break;
 		case 1:
-			//tc = localOptFromZero(uncovered, edgeOrPredicate);
-
-			//TODO using this one because other is too fast.
-			oldTC = bestOrganism->getChromosome()->getTestCase(uniformInRange(0, bestOrganism->getNumberOfTestCases() - 1));
-			tc = localOptFromGivenParams(oldTC, uncovered, edgeOrPredicate);
+			tc = localOptFromZero(uncovered, edgeOrPredicate);
 			break;
 		case 2:
-			//tc = localOptFromMiddle(uncovered, edgeOrPredicate);//Same as zero local opt in some cases
-
-			//TODO using this one because other is too fast.
-			oldTC = bestOrganism->getChromosome()->getTestCase(uniformInRange(0, bestOrganism->getNumberOfTestCases() - 1));
-			tc = localOptFromGivenParams(oldTC, uncovered, edgeOrPredicate);
+			tc = localOptFromMiddle(uncovered, edgeOrPredicate);//Same as zero local opt in some cases
 			break;
 		default:
 			assert(false);
@@ -177,7 +169,7 @@ TestCase* Simulation::localOptFromGivenParams (TestCase* orig, int thingToCover,
 
 	tc->setInputParametersWithReference(&parameters);
 
-	for(int i = 0; i < 500; ++i) {
+	for(int i = 0; i < 250; ++i) {
 
 		for (int j = 0; j < (10 + NeighborhoodSize/15); ++j) {
 			for (int var = 0; var < targetCFG->getNumberOfParameters(); ++var) {
@@ -203,6 +195,7 @@ TestCase* Simulation::localOptFromGivenParams (TestCase* orig, int thingToCover,
 TestCase* Simulation::localOptFromMiddle (int thingToCover, bool edgeOrPredicate) {
 	TestCase* tc = new TestCase { };
 	int* parameters = new int[targetCFG->getNumberOfParameters()] { };
+	int* middles = new int[targetCFG->getNumberOfParameters()] { };
 	int NeighborhoodSize { 1 };
 
 	tc->setInputParametersWithReference(&parameters);
@@ -210,14 +203,14 @@ TestCase* Simulation::localOptFromMiddle (int thingToCover, bool edgeOrPredicate
 	for (int var = 0; var < targetCFG->getNumberOfParameters(); ++var) {
 		int middle { (targetCFG->getLowerBoundForParameter(var)
 				+ targetCFG->getUpperBoundForParameter(var)) / 2 };
-		parameters[var] = middle;
+		middles[var] = middle;
 	}
 
 	for(int i = 0; i < 100; ++i) {
 
 		for (int j = 0; j < (10 + NeighborhoodSize); ++j) {
 			for (int var = 0; var < 3; ++var) {
-				parameters[var] += uniformInRange(-NeighborhoodSize, NeighborhoodSize);
+				parameters[var] = middles[var] + uniformInRange(-NeighborhoodSize, NeighborhoodSize);
 			}
 			targetCFG->setCoverageOfTestCase(tc);
 
