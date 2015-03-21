@@ -99,7 +99,25 @@ void localOptTest() {
 	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_TF, PREDICATE);
 	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_TT, PREDICATE);
 }
+void localOptTest2() {
+	HiLoControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
+	bool EDGE { true }, PREDICATE { false };
+	targetCFG = hiLoCFG;
 
+	Simulation* hiLoSim = new Simulation(1000, 5, 15, 2, .02, 1, 1000000);
+
+for (int var = 0; var < 50; ++var) {
+	TestCase* tc = new TestCase{};
+
+	hiLoSim->localOptVersion2(tc, HiLoControlFlowGraph::edges::B8toB10, EDGE);
+}
+
+
+//	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_FF, PREDICATE);
+//	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_FT, PREDICATE);
+//	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_TF, PREDICATE);
+//	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_TT, PREDICATE);
+}
 int main() {
 	//simpleIfElseControlFlowGraphTest_testCase_version();
 	//simpleIfElseControlFlowGraphTest_testSuite_version();
@@ -109,6 +127,7 @@ int main() {
     start = chrono::system_clock::now();
 
     //localOptTest();
+    //localOptTest2();
     hiLoSimulationTest();
     //hiLoRandomSearchEdges();
     //hiLoRandomSearchPredicates();

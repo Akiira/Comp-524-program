@@ -102,8 +102,9 @@ void Simulation::tryLocalOptimization() {
 		edgeOrPredicate = false;
 		uncovered = bestOrganism->getUncoveredPredicate();
 	}
-
-	TestCase* tc = localOptVersion1(uncovered, edgeOrPredicate);
+	auto oldTC = bestOrganism->getChromosome()->getTestCase(uniformInRange(0, bestOrganism->getNumberOfTestCases() - 1));
+	TestCase* tc = localOptVersion2(oldTC, uncovered, edgeOrPredicate);
+	//TestCase* tc = localOptVersion1(uncovered, edgeOrPredicate);
 
 	if (tc != NULL) {
 		Organism* temp = new Organism { *bestOrganism };
@@ -144,6 +145,34 @@ TestCase* Simulation::localOptVersion1 (int thingToCover, bool edgeOrPredicate) 
 	return NULL;
 }
 
+TestCase* Simulation::localOptVersion2 (TestCase* orig, int thingToCover, bool edgeOrPredicate) {
+	TestCase* tc = new TestCase { };
+	int* parameters = new int[targetCFG->getNumberOfParameters()] { };
+	int NeighborhoodSize { 0 };
+
+	tc->setInputParametersWithReference(&parameters);
+
+	for(int i = 0; i < 500; ++i) {
+
+		for (int j = 0; j < 10; ++j) {
+			for (int var = 0; var < 3; ++var) {
+				parameters[var] = orig->getInputParameterAtIndex(var) + uniformInRange(-NeighborhoodSize, NeighborhoodSize);
+			}
+			targetCFG->setCoverageOfTestCase(tc);
+
+			auto coverage = ( edgeOrPredicate ? tc->getEdgesCovered() : tc->getPredicatesCovered() );
+			if( coverage[thingToCover] ) {
+				cout << "Took about " << i * 10 << " tries. " << endl;
+				return tc;
+			}
+		}
+
+		NeighborhoodSize += 20;
+	}
+
+	cout << "Failed to cover edge " << endl;
+	return NULL;
+}
 
 
 
