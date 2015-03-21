@@ -23,6 +23,7 @@ public:
 	void tryLocalOptimization();
 	TestCase* localOptVersion1(int thingToCover, bool edgeOrPredicate);
 	TestCase* localOptVersion2 (TestCase* orig, int thingToCover, bool edgeOrPredicate);
+	TestCase* localOptVersion3 (int thingToCover, bool edgeOrPredicate);
 
 	TestSuite* getBestTestSuite(){
 		return bestOrganismSeen->getChromosome();

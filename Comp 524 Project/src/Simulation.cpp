@@ -119,7 +119,7 @@ void Simulation::tryLocalOptimization() {
 TestCase* Simulation::localOptVersion1 (int thingToCover, bool edgeOrPredicate) {
 	TestCase* tc = new TestCase { };
 	int* parameters = new int[3] { };
-	int NeighborhoodSize { 0 };
+	int NeighborhoodSize { 1 };
 
 	tc->setInputParametersWithReference(&parameters);
 
@@ -148,14 +148,14 @@ TestCase* Simulation::localOptVersion1 (int thingToCover, bool edgeOrPredicate) 
 TestCase* Simulation::localOptVersion2 (TestCase* orig, int thingToCover, bool edgeOrPredicate) {
 	TestCase* tc = new TestCase { };
 	int* parameters = new int[targetCFG->getNumberOfParameters()] { };
-	int NeighborhoodSize { 0 };
+	int NeighborhoodSize { 1 };
 
 	tc->setInputParametersWithReference(&parameters);
 
 	for(int i = 0; i < 500; ++i) {
 
-		for (int j = 0; j < 10; ++j) {
-			for (int var = 0; var < 3; ++var) {
+		for (int j = 0; j < (10 + NeighborhoodSize/15); ++j) {
+			for (int var = 0; var < targetCFG->getNumberOfParameters(); ++var) {
 				parameters[var] = orig->getInputParameterAtIndex(var) + uniformInRange(-NeighborhoodSize, NeighborhoodSize);
 			}
 			targetCFG->setCoverageOfTestCase(tc);
@@ -168,6 +168,42 @@ TestCase* Simulation::localOptVersion2 (TestCase* orig, int thingToCover, bool e
 		}
 
 		NeighborhoodSize += 20;
+	}
+
+	cout << "Failed to cover edge " << endl;
+	return NULL;
+}
+
+
+TestCase* Simulation::localOptVersion3 (int thingToCover, bool edgeOrPredicate) {
+	TestCase* tc = new TestCase { };
+	int* parameters = new int[targetCFG->getNumberOfParameters()] { };
+	int NeighborhoodSize { 1 };
+
+	tc->setInputParametersWithReference(&parameters);
+
+	for (int var = 0; var < targetCFG->getNumberOfParameters(); ++var) {
+		int middle { (targetCFG->getLowerBoundForParameter(var)
+				+ targetCFG->getUpperBoundForParameter(var)) / 2 };
+		parameters[var] = middle;
+	}
+
+	for(int i = 0; i < 100; ++i) {
+
+		for (int j = 0; j < (10 + NeighborhoodSize); ++j) {
+			for (int var = 0; var < 3; ++var) {
+				parameters[var] += uniformInRange(-NeighborhoodSize, NeighborhoodSize);
+			}
+			targetCFG->setCoverageOfTestCase(tc);
+
+			auto coverage = ( edgeOrPredicate ? tc->getEdgesCovered() : tc->getPredicatesCovered() );
+			if( coverage[thingToCover] ) {
+				cout << "Took about " << i * 10 << " tries. " << endl;
+				return tc;
+			}
+		}
+
+		NeighborhoodSize += 5;
 	}
 
 	cout << "Failed to cover edge " << endl;
