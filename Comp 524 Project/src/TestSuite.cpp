@@ -96,7 +96,7 @@ void TestSuite::setTestCase(int index, TestCase* testCase) {
 
 //TODO we could improve upon this by replacing a duplicate
 void TestSuite::replaceRandomTestCase(TestCase* testCase) {
-	int index = uniformInRange(0, numberOfTestCases);
+	int index = uniformInRange(0, numberOfTestCases - 1);
 	delete testCases[index];
 	testCases[index] = testCase;
 }
