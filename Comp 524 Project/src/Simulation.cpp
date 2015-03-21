@@ -117,7 +117,7 @@ void Simulation::tryLocalOptimization() {
 }
 
 
-TestCase* Simulation::localOptVersion1 (int thingToCover, bool edgeOrPredicate) {
+TestCase* Simulation::localOptFromZero (int thingToCover, bool edgeOrPredicate) {
 	TestCase* tc = new TestCase { };
 	int* parameters = new int[3] { };
 	int NeighborhoodSize { 1 };

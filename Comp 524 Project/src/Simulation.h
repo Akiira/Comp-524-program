@@ -21,7 +21,7 @@ public:
 			int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations);
 	void run();
 	void tryLocalOptimization();
-	TestCase* localOptVersion1(int thingToCover, bool edgeOrPredicate);
+	TestCase* localOptFromZero(int thingToCover, bool edgeOrPredicate);
 	TestCase* localOptFromGivenParams (TestCase* orig, int thingToCover, bool edgeOrPredicate);
 	TestCase* localOptFromMiddle (int thingToCover, bool edgeOrPredicate);
 

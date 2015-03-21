@@ -92,12 +92,12 @@ void localOptTest() {
 	targetCFG = hiLoCFG;
 
 	Simulation* hiLoSim = new Simulation(1000, 5, 15, 2, .02, 1, 1000000);
-	hiLoSim->localOptVersion1(HiLoControlFlowGraph::edges::B8toB10, EDGE);
+	hiLoSim->localOptFromZero(HiLoControlFlowGraph::edges::B8toB10, EDGE);
 
-	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_FF, PREDICATE);
-	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_FT, PREDICATE);
-	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_TF, PREDICATE);
-	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_TT, PREDICATE);
+	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_FF, PREDICATE);
+	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_FT, PREDICATE);
+	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_TF, PREDICATE);
+	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_TT, PREDICATE);
 }
 void localOptTest2() {
 	HiLoControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
