@@ -72,7 +72,7 @@ void Simulation::run(){
 		}
 
 		//TODO: there are many different ways we could call/use this. Think about the most appropiate.
-		if( i % 9 == 0 || population->getCoverageRatio() > 0.95 ) {
+		if( i % 100 == 0 || population->getCoverageRatio() > 0.95 ) {
 			tryLocalOptimization();
 		}
 
@@ -94,18 +94,8 @@ void Simulation::run(){
 
 //This first version always tries to optimize best organism, we could try other versions as well.
 void Simulation::tryLocalOptimization() {
-	bool edgeOrPredicate { true };
 	Organism* bestOrganism = population->getBestOrganism();
-	int uncovered = bestOrganism->getUncoveredEdge();
-
-	if( uncovered == -1 ) {
-		edgeOrPredicate = false;
-		uncovered = bestOrganism->getUncoveredPredicate();
-	}
-	auto oldTC = bestOrganism->getChromosome()->getTestCase(uniformInRange(0, bestOrganism->getNumberOfTestCases() - 1));
-
-	TestCase* tc = localOptFromGivenParams(oldTC, uncovered, edgeOrPredicate);
-	//TestCase* tc = localOptVersion1(uncovered, edgeOrPredicate);
+	auto tc = callRandomLocalOpt();
 
 	if (tc != NULL) {
 		Organism* temp = new Organism { *bestOrganism };
@@ -116,6 +106,44 @@ void Simulation::tryLocalOptimization() {
 	}
 }
 
+TestCase* Simulation::callRandomLocalOpt() {
+	TestCase* tc = NULL;
+	TestCase* oldTC = NULL;
+	bool edgeOrPredicate { true };
+	Organism* bestOrganism = population->getBestOrganism();
+	int uncovered = bestOrganism->getUncoveredEdge();
+
+	if( uncovered == -1 ) {
+		edgeOrPredicate = false;
+		uncovered = bestOrganism->getUncoveredPredicate();
+	}
+
+	switch (uniformInRange(0, 2)) {
+		case 0:
+			oldTC = bestOrganism->getChromosome()->getTestCase(uniformInRange(0, bestOrganism->getNumberOfTestCases() - 1));
+			tc = localOptFromGivenParams(oldTC, uncovered, edgeOrPredicate);
+			break;
+		case 1:
+			//tc = localOptFromZero(uncovered, edgeOrPredicate);
+
+			//TODO using this one because other is too fast.
+			oldTC = bestOrganism->getChromosome()->getTestCase(uniformInRange(0, bestOrganism->getNumberOfTestCases() - 1));
+			tc = localOptFromGivenParams(oldTC, uncovered, edgeOrPredicate);
+			break;
+		case 2:
+			//tc = localOptFromMiddle(uncovered, edgeOrPredicate);//Same as zero local opt in some cases
+
+			//TODO using this one because other is too fast.
+			oldTC = bestOrganism->getChromosome()->getTestCase(uniformInRange(0, bestOrganism->getNumberOfTestCases() - 1));
+			tc = localOptFromGivenParams(oldTC, uncovered, edgeOrPredicate);
+			break;
+		default:
+			assert(false);
+			break;
+	}
+
+	return tc;
+}
 
 TestCase* Simulation::localOptFromZero (int thingToCover, bool edgeOrPredicate) {
 	TestCase* tc = new TestCase { };
