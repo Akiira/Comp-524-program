@@ -37,7 +37,7 @@ Simulation::Simulation(int populationSize, int initialTestSuiteSize, int maxTest
 void Simulation::run(){
 	int i { 0 };
 	Organism *child1 { }, *child2 { };
-
+	//TODO possibly add some periodic adaptation of parameters like mutation
 	do{
 		//population->printPopulationFitness();
 		//population->printPopulationCoverage();
@@ -51,10 +51,6 @@ void Simulation::run(){
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 		child1->mutate(probabilityForMutation);
 		child2->mutate(probabilityForMutation);
-
-		assert(child1 && child2);
-
-		//TODO possibly add some periodic adaptation of parameters like mutation
 
 		// Attempt to replace the worst of the two parents
 		auto parentToReplace = parent2Index;
