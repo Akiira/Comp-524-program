@@ -39,7 +39,7 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 
 		//population[i] = new Organism { initialTestSuiteSize, maxTestSuiteSize };
 		population[i] = new Organism { testsPerSuite, maxTestSuiteSize };
-		cout << testsPerSuite << " " << suitesPerGroup << " " << maxTestSuiteSize << endl;
+		//cout << testsPerSuite << " " << suitesPerGroup << " " << maxTestSuiteSize << endl;
 		if( i != 0 && i % suitesPerGroup == 0 && i < suitesPerGroup * numOfGroups) {
 			testsPerSuite++;
 		}
