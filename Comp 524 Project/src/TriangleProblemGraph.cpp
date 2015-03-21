@@ -2,7 +2,7 @@
  * TriangleProblemGraph.cpp
  *
  *  Created on: Mar 21, 2015
- *      Author: Kitty
+ *      Author: Randall and Austin
  */
 
 #include "TriangleProblemGraph.h"
@@ -120,9 +120,11 @@ void TriangleProblemGraph::block4() {
 	if( A == B ) {
 		testCase->addEdgeCoverage(edges::B4toB5);
 		testCase->addPredicateCoverage(predicates::B4_T);
+		block5();
 	} else {
 		testCase->addEdgeCoverage(edges::B4toB8);
 		testCase->addPredicateCoverage(predicates::B4_F);
+		block8();
 	}
 }
 void TriangleProblemGraph::block5() {
@@ -142,6 +144,7 @@ void TriangleProblemGraph::block8() {
 	} else {
 		testCase->addEdgeCoverage(edges::B8toB10);
 		testCase->addPredicateCoverage(predicates::B8_F);
+		block10();
 	}
 }
 
@@ -153,4 +156,59 @@ void TriangleProblemGraph::block10() {
 		testCase->addEdgeCoverage(edges::B10toB12);
 		testCase->addPredicateCoverage(predicates::B10_F);
 	}
+}
+
+void TriangleProblemGraph::printInputParameters(int* inputParameters) const{
+	cout << endl << "Input Parameters" << endl;
+	cout << " A    B    C " << endl;
+	cout << "------------------" << endl;
+	for (int i = 0; i < numberOfParameters; i++) {
+		cout << "  " << inputParameters[i] << "  |";
+	}
+	cout << endl;
+}
+
+void TriangleProblemGraph::printEdgesCovered(bool* edgesCovered) const{
+	cout << endl << "Edge Coverage" << endl;
+	cout << " B0toB1 | B0toB2 | B2toB3 | B2toB4 | B4toB5 | B5toB6 | B5toB7 | B4toB8 | B8toB9 | B8toB10 | B10toB11 | B10toB12" << endl;
+	cout << "---------------------------------------------------------------------------------------------------------------" << endl;
+	for(int i = 0; i < numberOfEdges; i++)
+	{
+		cout << "   " << edgesCovered[i] << "   |";
+	}
+	cout << endl;
+
+}
+
+void TriangleProblemGraph::printPredicatesCovered(bool* predicatesCovered) const{
+	cout << endl << "Predicate Coverage" << endl;
+	cout << " B0_TTT | B0_TTF | B0_TFT | B0_FTT | B0_TFF | B0_FFT | B0_FTF | B0_FFF | B2_TTT | B2_TTF | B2_TFT | B2_FTT | B2_TFF | B2_FFT | B2_FTF | B2_FFF | B4_T | B4_F | B5_T | B5_F | B8_T | B8_F | B10_T | B10_F" << endl;
+	cout << "-------------------------------------------------------------------------------------------------" << endl;
+	for(int i = 0; i < numberOfPredicates; i++)
+	{
+		cout << "  " << predicatesCovered[i] << "   |";
+	}
+	cout << endl;
+}
+
+void TriangleProblemGraph::printEdgesCovered(int* edgesCovered) const{
+	cout << endl << "Edge Coverage" << endl;
+	cout << " B0toB1 | B0toB2 | B2toB3 | B2toB4 | B4toB5 | B5toB6 | B5toB7 | B4toB8 | B8toB9 | B8toB10 | B10toB11 | B10toB12" << endl;
+	cout << "---------------------------------------------------------------------------------------------------------------" << endl;
+	for(int i = 0; i < numberOfEdges; i++)
+	{
+		cout << "   " << edgesCovered[i] << "   |";
+	}
+	cout << endl;
+}
+
+void TriangleProblemGraph::printPredicatesCovered(int* predicatesCovered) const{
+	cout << endl << "Predicate Coverage" << endl;
+	cout << " B0_TTT | B0_TTF | B0_TFT | B0_FTT | B0_TFF | B0_FFT | B0_FTF | B0_FFF | B2_TTT | B2_TTF | B2_TFT | B2_FTT | B2_TFF | B2_FFT | B2_FTF | B2_FFF | B4_T | B4_F | B5_T | B5_F | B8_T | B8_F | B10_T | B10_F" << endl;
+	cout << "-------------------------------------------------------------------------------------------------" << endl;
+	for(int i = 0; i < numberOfPredicates; i++)
+	{
+		cout << "  " << predicatesCovered[i] << "   |";
+	}
+	cout << endl;
 }
