@@ -68,6 +68,20 @@ void hiLoRandomSearchPredicates() {
 	r->searchForPredicates();
 }
 
+void triangleRandomSearchEdges() {
+	ControlFlowGraph* hiLoCFG = new TriangleProblemGraph { };
+	targetCFG = hiLoCFG;
+	RandomSearcher* r = new RandomSearcher();
+	r->search();
+}
+
+void triangleRandomSearchPredicates() {
+	ControlFlowGraph* hiLoCFG = new TriangleProblemGraph { };
+	targetCFG = hiLoCFG;
+	RandomSearcher* r = new RandomSearcher();
+	r->searchForPredicates();
+}
+
 void simpleIfElseSimulationTest() {
 	//Simulation::Simulation(int populationSize, int initialTestSuiteSize, int maxTestSuiteSize,
 	//		int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations)
@@ -167,11 +181,13 @@ int main() {
 
     //localOptTest();
     //localOptTest2();
-    localOptTest3();
+    //localOptTest3();
     //hiLoSimulationTest();
     //hiLoRandomSearchEdges();
     //hiLoRandomSearchPredicates();
     //triangleSimulationTest();
+
+    triangleRandomSearchEdges();
 
     end = chrono::system_clock::now();
 
