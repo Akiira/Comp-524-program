@@ -138,7 +138,7 @@ void triangleSimulationTest() {
 	ControlFlowGraph* triangleCFG = new TriangleProblemGraph { };
 
 	targetCFG = triangleCFG;
-	Simulation* hiLoSim = new Simulation { 100, 5, 25, 2, .02, 1, 100000 };
+	Simulation* hiLoSim = new Simulation { 100, 5, 35, 2, .02, 1, 200000 };
 	hiLoSim->run();
 }
 
@@ -185,9 +185,9 @@ int main() {
     //hiLoSimulationTest();
     //hiLoRandomSearchEdges();
     //hiLoRandomSearchPredicates();
-    //triangleSimulationTest();
+    triangleSimulationTest();
 
-    triangleRandomSearchEdges();
+    //triangleRandomSearchEdges();
 
     end = chrono::system_clock::now();
 
