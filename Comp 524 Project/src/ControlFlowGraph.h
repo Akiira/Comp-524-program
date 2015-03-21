@@ -28,12 +28,12 @@ public:
 	void printTestSuiteCoverage(TestSuite* testSuite) const;
 	void printPopulationCoverage(int* edges, int* predicates) const;
 
-	virtual int getNumberOfEdges()=0;
-	virtual int getNumberOfPredicates()=0;
-	virtual int getNumberOfParameters()=0;
+	int getNumberOfEdges() const;
+	int getNumberOfParameters() const;
+	int getNumberOfPredicates() const;
 	virtual int getLowerBoundForParameter(int)=0;
 	virtual int getUpperBoundForParameter(int)=0;
-
+	TestCase* getTestCase() const;
 
 protected:
 	TestCase* testCase;

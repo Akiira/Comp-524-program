@@ -43,6 +43,8 @@ void ControlFlowGraph::printPopulationCoverage(int* edges, int* predicates) cons
 	printPredicatesCovered(predicates);
 }
 
+
+
 ControlFlowGraph& ControlFlowGraph::operator=(const ControlFlowGraph& other)
 {
 	if (this != &other) {
@@ -53,4 +55,20 @@ ControlFlowGraph& ControlFlowGraph::operator=(const ControlFlowGraph& other)
 		numberOfParameters = other.numberOfParameters;
 	}	//if
 	return *this;
-}//operator=
+}	//operator=
+
+int ControlFlowGraph::getNumberOfEdges() const {
+	return numberOfEdges;
+}
+
+int ControlFlowGraph::getNumberOfParameters() const {
+	return numberOfParameters;
+}
+
+int ControlFlowGraph::getNumberOfPredicates() const {
+	return numberOfPredicates;
+}
+
+TestCase* ControlFlowGraph::getTestCase() const {
+	return testCase;
+}

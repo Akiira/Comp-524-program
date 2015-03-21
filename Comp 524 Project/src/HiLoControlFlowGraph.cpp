@@ -31,16 +31,6 @@ HiLoControlFlowGraph::HiLoControlFlowGraph() {
 	rangeForEachParameter[2][1] = 15000;
 }
 
-int HiLoControlFlowGraph::getNumberOfEdges() {
-	return numberOfEdges;
-}
-int HiLoControlFlowGraph::getNumberOfPredicates() {
-	return numberOfPredicates;
-}
-int HiLoControlFlowGraph::getNumberOfParameters() {
-	return numberOfParameters;
-}
-
 int HiLoControlFlowGraph::getLowerBoundForParameter(int parameter) {
 	assert(parameter >= 0 && parameter < numberOfParameters);
 	return rangeForEachParameter[parameter][0];
