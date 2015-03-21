@@ -43,6 +43,9 @@ void RandomSearcher::search() {
 			if(edges[i] == false)
 				t = false;
 		}
+
+		delete test;
+
 		if(t)
 			break;
 		attempts++;
@@ -73,6 +76,9 @@ void RandomSearcher::searchForPredicates() {
 			if(preds[i] == false)
 				t = false;
 		}
+
+		delete test;
+
 		if(t)
 			break;
 		attempts++;
