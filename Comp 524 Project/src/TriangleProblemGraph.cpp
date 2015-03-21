@@ -17,7 +17,7 @@ TriangleProblemGraph::~TriangleProblemGraph() {
 
 TriangleProblemGraph::TriangleProblemGraph() {
 	numberOfEdges = 12;
-	numberOfPredicates = 24;
+	numberOfPredicates = 20;
 
 	// Target isn't an input since its always num1 * num2
 	numberOfParameters = 3;
@@ -44,7 +44,7 @@ int TriangleProblemGraph::getUpperBoundForParameter(int parameter) {
 	return rangeForEachParameter[parameter][1];
 }
 
-void TriangleProblemGraph::runTestCase() {
+inline void TriangleProblemGraph::runTestCase() {
 	testCase->clearCoverage();
 
 	A = testCase->getInputParameterAtIndex(0);
@@ -81,11 +81,12 @@ void TriangleProblemGraph::runTestCase() {
 	}
 }
 
-void TriangleProblemGraph::block2() {
+inline void TriangleProblemGraph::block2() {
 
 	int sum { A + B + C };
 
 	if( 2*A < sum && 2*B < sum && 2*C < sum ) {
+		testCase->addPredicateCoverage(predicates::B2_TTT);
 		testCase->addEdgeCoverage(edges::B2toB4);
 		block4();
 	} else {
@@ -99,23 +100,13 @@ void TriangleProblemGraph::block2() {
 		}
 		else if( 2*A < sum && 2*C < sum ) {
 			testCase->addPredicateCoverage(predicates::B2_TFT);
-		}
-		else if( 2*A < sum ) {
-			testCase->addPredicateCoverage(predicates::B2_TFF);
-		}
-		else if( 2*B < sum ) {
-			testCase->addPredicateCoverage(predicates::B2_FTF);
-		}
-		else if( 2*C < sum ) {
-			testCase->addPredicateCoverage(predicates::B2_FFT);
 		} else {
-			testCase->addPredicateCoverage(predicates::B2_FFF);
+			assert(false);
 		}
 	}
-
 }
 
-void TriangleProblemGraph::block4() {
+inline void TriangleProblemGraph::block4() {
 
 	if( A == B ) {
 		testCase->addEdgeCoverage(edges::B4toB5);
@@ -127,7 +118,7 @@ void TriangleProblemGraph::block4() {
 		block8();
 	}
 }
-void TriangleProblemGraph::block5() {
+inline void TriangleProblemGraph::block5() {
 	if( B == C ) {
 		testCase->addEdgeCoverage(edges::B5toB6);
 		testCase->addPredicateCoverage(predicates::B5_T);
@@ -137,7 +128,7 @@ void TriangleProblemGraph::block5() {
 	}
 }
 
-void TriangleProblemGraph::block8() {
+inline void TriangleProblemGraph::block8() {
 	if( A == C ) {
 		testCase->addEdgeCoverage(edges::B8toB9);
 		testCase->addPredicateCoverage(predicates::B8_T);
@@ -148,7 +139,7 @@ void TriangleProblemGraph::block8() {
 	}
 }
 
-void TriangleProblemGraph::block10() {
+inline void TriangleProblemGraph::block10() {
 	if( B == C ) {
 		testCase->addEdgeCoverage(edges::B10toB11);
 		testCase->addPredicateCoverage(predicates::B10_T);
