@@ -395,10 +395,13 @@ void Population::printPopulationCoverage() {
 
 void Population::linearScaling() {
 	totalFitness = 0;
+
+	//TODO scaling factor needs to be updated dynamicly based on the current population
+
 	//REFERENCE: http://www.cse.unr.edu/~sushil/class/gas/notes/scaling/index.html
 	//This scalingFactor "is a scaling constant that specifies the expected number
 	//             of copies of the best individual in the next generation"
-	double scalingFactor { 20.0 }, average = 0, a, b, d;
+	double scalingFactor { 5.0 }, average = 0, a, b, d;
 	int max { getBestOrganism()->fitness },
 	    min { population[populationSize - 1]->getFitness() };
 
