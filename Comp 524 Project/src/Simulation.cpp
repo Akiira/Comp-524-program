@@ -49,8 +49,12 @@ void Simulation::run(){
 		cout << "Generation # " << i << " CoverageRatio: " << population->getCoverageRatio() << endl;
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
-		child1->mutate(probabilityForMutation);
-		child2->mutate(probabilityForMutation);
+		double newProb;
+		//newProb = adaptMutationBasedOnOrganismsCoverage(child1) * probabilityForMutation;
+		newProb = adaptMutationBasedOnCoverageRatio(probabilityForMutation);
+		child1->mutate(newProb);
+		//newProb = adaptMutationBasedOnOrganismsCoverage(child1) * probabilityForMutation;
+		child2->mutate(newProb);
 
 		// Attempt to replace the worst of the two parents
 		auto parentToReplace = parent2Index;
@@ -67,10 +71,10 @@ void Simulation::run(){
 			delete child2;
 		}
 
-		//TODO: there are many different ways we could call/use this. Think about the most appropiate.
-		if( i % 100 == 0 || population->getCoverageRatio() > 0.95 ) {
-			tryLocalOptimization();
-		}
+//		//TODO: there are many different ways we could call/use this. Think about the most appropiate.
+//		if( i % 100 == 0 || population->getCoverageRatio() > 0.95 ) {
+//			tryLocalOptimization();
+//		}
 
 		i++;
 
@@ -86,6 +90,53 @@ void Simulation::run(){
 	population->printPopulationFitness();
 	population->printPopulationCoverage();
 
+}
+
+double Simulation::adaptMutationBasedOnCoverageRatio(double pM) {
+	auto cr = population->getCoverageRatio();
+	if( cr < 0.25 ) {
+		return pM;
+	}
+	else if( cr < 0.50 ) {
+		return pM * 0.75;
+	}
+	else if( cr < 0.75 ) {
+		return pM * 0.60;
+	}
+	else if ( cr < 0.90 ) {
+		return pM * 0.50;
+	}
+	else {
+		return pM * 0.40;
+	}
+}
+
+double Simulation::adaptMutationBasedOnOrganismsCoverage(Organism* org) {
+	auto edges = population->getEdgesCovered();
+	auto preds = population->getPredicatesCovered();
+	auto orgsEdges = org->getChromosome()->getDuplicateEdgesCovered();
+	auto orgsPreds = org->getChromosome()->getDuplicatePredicatesCovered();
+	double change = 1.0;
+
+	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
+		if( edges[i] > 100 && orgsEdges[i] > 0 ) {
+			change += 0.02;
+		}
+		else if( edges[i] < 10 && orgsEdges[i] > 0 ) { //If this organism is one of the few to cover a
+			return 0.0;								// certain edge, then save it.
+		}
+	}
+
+	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
+		if( preds[i] > 100 && orgsPreds[i] > 0 ) {
+			change += 0.02;
+		}
+		else if( preds[i] < 10 && orgsPreds[i] > 0 ) { //If this organism is one of the few to cover a
+			return 0.0;								// certain edge, then save it.
+		}
+	}
+
+	return change;
 }
 
 //This first version always tries to optimize best organism, we could try other versions as well.

@@ -138,7 +138,7 @@ void triangleSimulationTest() {
 	ControlFlowGraph* triangleCFG = new TriangleProblemGraph { };
 
 	targetCFG = triangleCFG;
-	Simulation* hiLoSim = new Simulation { 100, 5, 35, 2, .02, 1, 200000 };
+	Simulation* hiLoSim = new Simulation { 100, 5, 35, 2, .02, 1, 70000 };
 	hiLoSim->run();
 }
 
