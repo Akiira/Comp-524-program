@@ -78,6 +78,20 @@ void TestSuite::fillTestSuiteWithRandomTestCases() {
 	}
 }
 
+void TestSuite::sortTestSuiteByCoverageCounts() {
+	int i, j;
+	TestCase* tmp;
+	for (i = numberOfTestCases - 1; i > 1; i--) {
+		for (j = 0; j < i; j++) {
+			if (testCases[j]->getNumberCovered() < testCases[j + 1]->getNumberCovered() ) {
+				tmp = testCases[j];
+				testCases[j] = testCases[j + 1];
+				testCases[j + 1] = tmp;
+			}
+		}
+	}
+}
+
 TestCase** TestSuite::getAllTestCases() const{
 	return  testCases;
 }

@@ -80,6 +80,8 @@ public:
 		this->numberOfTestCases = numberOfTestCases;
 	}
 
+	void sortTestSuiteByCoverageCounts();
+
 	TestCase* getTestCaseThatCoversPredicate(int predicateNumber);
 	TestCase* getTestCaseThatCoversEdge(int edgeNumber);
 };
