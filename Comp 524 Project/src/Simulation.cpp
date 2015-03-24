@@ -202,9 +202,20 @@ Organism* Simulation::constructFinalOrganism() {
 		}
 	}
 
+	minimizeOrganism(finalOrg);
 	finalOrg->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
 	return finalOrg;
 }
+
+void Simulation::minimizeOrganism(Organism* orgToMinimize) {
+	TestSuite* suite = orgToMinimize->getChromosome();
+	for (int i = orgToMinimize->getNumberOfTestCases()-1; i >= 0; i--) {
+		if (suite->canRemoveTestCaseWithoutChangingCoverage(i)) {
+			suite->removeTestCase(i);
+		}
+	}
+}
+
 
 //This first version always tries to optimize best organism, we could try other versions as well.
 void Simulation::tryLocalOptimization() {
