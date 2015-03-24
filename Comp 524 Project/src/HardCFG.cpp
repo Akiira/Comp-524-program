@@ -13,8 +13,8 @@
 using std::numeric_limits;
 
 HardCFG::HardCFG() {
-	//numberOfEdges = 28;
-	//numberOfPredicates = 20;
+	//numberOfEdges = 79;
+	//numberOfPredicates = 90;
 
 	numberOfParameters = 10;
 
@@ -46,6 +46,9 @@ inline void HardCFG::runTestCase() {
 	calculateDeviation(testCase->getInputParameters());
 	calculateSums(testCase->getInputParameters());
 
+	//TODO added missing edge coverages
+	//TODO add all predicates coverage
+	//TODO test all edges and predicates are actually reachable
 
 	if( Mu <= 500 ) {
 		testCase->addEdgeCoverage(edges::B0toB1);

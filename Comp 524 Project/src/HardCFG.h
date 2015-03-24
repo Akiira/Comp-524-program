@@ -18,11 +18,13 @@ public:
 	int getLowerBoundForParameter(int);
 	int getUpperBoundForParameter(int);
 
+	//TODO bottom level of tree (this CFG looks like a tree)
 	struct edges { enum { B0toB1, B1toB3, B1toB4, B3toB7, B3toB8, B4toB9, B4toB10, B7toB15,
 						  B7toB16, B8toB17, B8toB18, B9toB19, B9toB20, B10toB21, B10toB22,
 						  B0toB2, B2toB5, B2toB6, B5toB11, B5toB12, B6toB13, B6toB14, B11toB23,
 						  B11toB24, B12toB25, B12toB26, B13toB27, B13toB28, B14toB29, B14toB30, }; };
 
+	//TODO all the predicates
 	struct predicates { enum { B0_TTT, B0_TTF, B0_TFT, B0_FTT, B0_TFF, B0_FFT, B0_FTF, B0_FFF,
 							   B2_TTT, B2_TTF, B2_TFT, B2_FTT,
 							   B4_T, B4_F, B5_T, B5_F, B8_T, B8_F, B10_T, B10_F}; };
