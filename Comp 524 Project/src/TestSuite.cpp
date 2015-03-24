@@ -170,6 +170,25 @@ void TestSuite::removeTestCase(int index) {
 	numberOfTestCases--;
 }
 
+bool TestSuite::canRemoveTestCaseWithoutChangingCoverage(int index) {
+	assert(index >= 0 && index < numberOfTestCases);
+	bool* edges = testCases[index]->getEdgesCovered();
+	bool* preds = testCases[index]->getPredicatesCovered();
+
+	for (int i = 0; i < targetCFG->getNumberOfEdges(); i++) {
+		if (edges[i] && duplicateEdgesCovered[i] == 1) {
+			return false;
+		}
+	}
+
+	for (int i = 0; i < targetCFG->getNumberOfPredicates(); i++) {
+		if (preds[i] && duplicatePredicatesCovered[i] == 1) {
+			return false;
+		}
+	}
+	return true;
+}
+
 void TestSuite::printAll() {
 	printTestSuiteCoverage();
 	printTestCaseInputsAndCoverage();

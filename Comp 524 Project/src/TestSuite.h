@@ -46,6 +46,7 @@ public:
 	void replaceRandomTestCase(TestCase* testCase);
 	void addTestCase(TestCase* testCase);
 	void removeTestCase(int index);
+	bool canRemoveTestCaseWithoutChangingCoverage(int index);
 
 	void resetCoverage();
 	void calculateTestSuiteCoverage();
