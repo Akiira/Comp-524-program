@@ -48,8 +48,10 @@ inline void HardCFG::runTestCase() {
 
 
 	if( Mu <= 500 ) {
+		testCase->addEdgeCoverage(edges::B0toB1);
 		block1();
 	} else {
+		testCase->addEdgeCoverage(edges::B0toB2);
 		block2();
 	}
 }
@@ -58,8 +60,10 @@ void HardCFG::block1() {
 	//mu <= 500
 
 	if( sigma < 100 ) {
+		testCase->addEdgeCoverage(edges::B1toB3);
 		block3();
 	} else {
+		testCase->addEdgeCoverage(edges::B1toB4);
 		block4();
 	}
 }
@@ -68,8 +72,10 @@ void HardCFG::block2() {
 	//mu > 500
 
 	if( sigma > 100 ) {
+		testCase->addEdgeCoverage(edges::B2toB5);
 		block5();
 	} else {
+		testCase->addEdgeCoverage(edges::B2toB6);
 		block6();
 	}
 }
@@ -78,8 +84,10 @@ void HardCFG::block3() {
 	//mu <= 500 sigma < 100
 
 	if( sigma < 50 ) {
+		testCase->addEdgeCoverage(edges::B3toB7);
 		block7();
 	} else {
+		testCase->addEdgeCoverage(edges::B3toB8);
 		block8();
 	}
 }
@@ -87,9 +95,11 @@ void HardCFG::block3() {
 void HardCFG::block4() {
 	//mu <= 500 sigma >= 100
 
-	if( sumOfFirstHalf < 0 && sumOfSecondHalf > 0 ) {
+	if( sigma > 500 ) {
+		testCase->addEdgeCoverage(edges::B4toB9);
 		block9();
 	} else {
+		testCase->addEdgeCoverage(edges::B4toB10);
 		block10();
 	}
 }
@@ -98,8 +108,10 @@ void HardCFG::block5() {
 	//mu > 500 sigma > 100
 
 	if( sigma > 500 ) {
+		testCase->addEdgeCoverage(edges::B5toB11);
 		block11();
 	} else {
+		testCase->addEdgeCoverage(edges::B5toB12);
 		block12();
 	}
 }
@@ -107,8 +119,10 @@ void HardCFG::block5() {
 void HardCFG::block6() {
 	//mu > 500 sigma <= 100
 	if( sigma < 50 ) {
+		testCase->addEdgeCoverage(edges::B6toB13);
 		block13();
 	} else {
+		testCase->addEdgeCoverage(edges::B6toB14);
 		block14();
 	}
 }
@@ -117,8 +131,10 @@ void HardCFG::block7() {
 	//mu <= 500 sigma < 50
 
 	if( sigma < 25 ) {
+		testCase->addEdgeCoverage(edges::B7toB15);
 		block15();
 	} else {
+		testCase->addEdgeCoverage(edges::B7toB16);
 		block16();
 	}
 }
@@ -127,26 +143,45 @@ void HardCFG::block8() {
 	//mu <= 500 sigma >= 50 sigma < 100
 
 	if( sigma > 75 ) {
+		testCase->addEdgeCoverage(edges::B8toB17);
 		block17();
 	} else {
+		testCase->addEdgeCoverage(edges::B8toB18);
 		block18();
 	}
 }
 
 void HardCFG::block9() {
+	//mu <= 500 sigma > 500
 
+	if( sigma > 1000 ) {
+		testCase->addEdgeCoverage(edges::B9toB19);
+		block19();
+	} else {
+		testCase->addEdgeCoverage(edges::B9toB20);
+		block20();
+	}
 }
 
 void HardCFG::block10() {
-
+	//mu <= 500 sigma >= 100 sigma < 500
+	if( sigma > 250 ) {
+		testCase->addEdgeCoverage(edges::B10toB21);
+		block21();
+	} else {
+		testCase->addEdgeCoverage(edges::B10toB22);
+		block22();
+	}
 }
 
 void HardCFG::block11() {
 	//mu > 500 sigma > 500
 
 	if( sigma > 1000 ) {
+		testCase->addEdgeCoverage(edges::B11toB23);
 		block23();
 	} else {
+		testCase->addEdgeCoverage(edges::B11toB24);
 		block24();
 	}
 }
@@ -155,8 +190,10 @@ void HardCFG::block12() {
 	//mu > 500 sigma > 100 sigma < 500
 
 	if( sigma > 250 ) {
+		testCase->addEdgeCoverage(edges::B12toB25);
 		block25();
 	} else {
+		testCase->addEdgeCoverage(edges::B12toB26);
 		block26();
 	}
 }
@@ -164,17 +201,21 @@ void HardCFG::block12() {
 void HardCFG::block13() {
 	//mu > 500 sigma <= 100
 	if( sigma < 25 ) {
+		testCase->addEdgeCoverage(edges::B13toB27);
 		block27();
 	} else {
+		testCase->addEdgeCoverage(edges::B13toB28);
 		block28();
 	}
 }
 
 void HardCFG::block14() {
 	if( sigma < 25 ) {
-		block25();
+		testCase->addEdgeCoverage(edges::B14toB29);
+		block29();
 	} else {
-		block26();
+		testCase->addEdgeCoverage(edges::B14toB29);
+		block30();
 	}
 }
 
@@ -241,6 +282,7 @@ void HardCFG::block18() {
 }
 
 void HardCFG::block19() {
+	//mu <= 500 sigma > 1000
 	int a1 = testCase->getInputParameterAtIndex(0),
 		a2 = testCase->getInputParameterAtIndex(0),
 		a3 = testCase->getInputParameterAtIndex(0);
@@ -260,6 +302,7 @@ void HardCFG::block19() {
 }
 
 void HardCFG::block20() {
+	//mu <= 500 sigma > 500 sigma < 1000
 	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0) {
 
 	} else if ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll > 0) {
@@ -270,6 +313,7 @@ void HardCFG::block20() {
 }
 
 void HardCFG::block21() {
+	//mu <= 500 sigma > 250 sigma < 500
 	int a1 = testCase->getInputParameterAtIndex(0),
 		a2 = testCase->getInputParameterAtIndex(0),
 		a3 = testCase->getInputParameterAtIndex(0);
@@ -289,6 +333,7 @@ void HardCFG::block21() {
 }
 
 void HardCFG::block22() {
+	//mu <= 500 sigma >= 100 sigma <= 250
 	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0) {
 
 	} else if ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll > 0) {
