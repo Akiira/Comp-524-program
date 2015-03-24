@@ -72,8 +72,14 @@ public:
 		return maxNumberOfTestCases;
 	}
 
+	double getCoverageRatio() const {
+		return coverageRatio;
+	}
+
 	void setNumberOfTestCases(int numberOfTestCases) {
 		this->numberOfTestCases = numberOfTestCases;
 	}
+
+	TestCase* getTestCaseThatCoversPredicate(int predicateNumber);
 };
 #endif // !defined(EA_04823F4F_8B3F_4bb8_9DBC_42A1717DC256__INCLUDED_)

@@ -37,6 +37,7 @@ TestSuite::TestSuite(const TestSuite& testSuite) {
 
 	duplicateEdgesCovered = new int[numberOfEdges] { };
 	duplicatePredicatesCovered = new int[numberOfPredicates] { };
+	coverageRatio = 0;
 	testCases = new TestCase*[maxNumberOfTestCases] { };
 
 	for (int i = 0; i < numberOfTestCases; ++i) {
@@ -87,6 +88,22 @@ TestCase* TestSuite::getTestCase(int index){
 	assert(index >= 0  &&  index < numberOfTestCases);
 
 	return  testCases[index];
+}
+
+TestCase* TestSuite::getTestCaseThatCoversPredicate(int predicateNumber) {
+	if (!duplicatePredicatesCovered[predicateNumber] > 0) {
+		return NULL;
+	}
+	else {
+		for (int i = 0; i < numberOfTestCases; i++) {
+			if (testCases[i]->getPredicatesCovered()[predicateNumber]) {
+				return testCases[i];
+			}
+		}
+	}
+	// It makes no sense to ever get here, but c++ requires a return stmt.
+	assert(false);
+	return NULL;
 }
 
 void TestSuite::setTestCase(int index, TestCase* testCase) {
@@ -147,6 +164,7 @@ void TestSuite::resetCoverage() {
 	for (int j = 0; j < numberOfPredicates; j++) {
 		duplicatePredicatesCovered[j] = 0;
 	}
+	coverageRatio = 0;
 }
 
 

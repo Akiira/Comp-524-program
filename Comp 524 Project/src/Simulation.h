@@ -46,5 +46,7 @@ private:
 	double adaptMutationBasedOnOrganismsCoverage(Organism* org);
 	double adaptMutationBasedOnCoverageRatio(double pM);
 
+	TestSuite* constructFinalTestSuite();
+
 };
 #endif // !defined(EA_63CB5297_1E19_44f6_AF1B_16CF01DC9D73__INCLUDED_)

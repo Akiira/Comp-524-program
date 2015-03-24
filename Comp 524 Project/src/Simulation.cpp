@@ -135,6 +135,27 @@ double Simulation::adaptMutationBasedOnOrganismsCoverage(Organism* org) {
 	return change;
 }
 
+TestSuite* Simulation::constructFinalTestSuite() {
+
+	TestSuite finalOrg {*population->getBestOrganism()->getChromosome()};
+	double populationCoverageRatio = population->getCoverageRatio();
+
+	int* finalOrgPredicates = finalOrg.getDuplicatePredicatesCovered();
+	for (int predicateNum = 0; predicateNum < targetCFG->getNumberOfPredicates(); predicateNum++) {
+		if (finalOrgPredicates[predicateNum] == 0) {
+			for (int j = 0; j < populationSize; j++) {
+				TestCase* missingTestCase = population->getOrganismByIndex(j)->getChromosome()->getTestCaseThatCoversPredicate(predicateNum);
+				if (missingTestCase != NULL) {
+					// TODO: THis will go over the max number of test cases, figure out what makes the most sense
+					finalOrg.addTestCase(missingTestCase);
+				}
+			}
+
+		}
+	}
+
+
+}
 //This first version always tries to optimize best organism, we could try other versions as well.
 void Simulation::tryLocalOptimization() {
 	Organism* bestOrganism = population->getBestOrganism();
