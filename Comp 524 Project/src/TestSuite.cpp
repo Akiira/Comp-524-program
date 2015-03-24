@@ -149,8 +149,7 @@ void TestSuite::resetCoverage() {
 	}
 }
 
-// This code is ridiculously inefficient, maybe we can switch to bitsets instead,
-//	then use |= on entire bitsets.
+
 void TestSuite::calculateTestSuiteCoverage() {
 	for (int i = 0; i < numberOfTestCases; i++) {
 		for (int j = 0; j < numberOfEdges; j++) {
@@ -163,6 +162,20 @@ void TestSuite::calculateTestSuiteCoverage() {
 			duplicatePredicatesCovered[j] += testCases[i]->getPredicatesCovered()[j];
 		}
 	}
+
+	// Calculate the coverage ratio
+	double numCovered = 0;
+	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+		if (duplicateEdgesCovered[j] > 0) {
+			numCovered++;
+		}
+	}
+	for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
+		if (duplicatePredicatesCovered[j] > 0) {
+			numCovered++;
+		}
+	}
+	coverageRatio = numCovered / (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
 }
 
 TestSuite& TestSuite::operator =(const TestSuite& other) {

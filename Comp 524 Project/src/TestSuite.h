@@ -26,6 +26,7 @@ private:
 
 	TestCase** testCases;
 
+	double coverageRatio;
 
 	// SHared code between constructors
 	void initializeMembersAndAllocateMemory(int numberOfTestCases, int maxNumberOfTestCases);
