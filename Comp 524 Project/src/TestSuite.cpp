@@ -228,6 +228,7 @@ void TestSuite::resetCoverage() {
 
 
 void TestSuite::calculateTestSuiteCoverage() {
+	resetCoverage();
 	for (int i = 0; i < numberOfTestCases; i++) {
 		for (int j = 0; j < numberOfEdges; j++) {
 			duplicateEdgesCovered[j] += testCases[i]->getEdgesCovered()[j];

@@ -212,6 +212,7 @@ void Simulation::minimizeOrganism(Organism* orgToMinimize) {
 	for (int i = orgToMinimize->getNumberOfTestCases()-1; i >= 0; i--) {
 		if (suite->canRemoveTestCaseWithoutChangingCoverage(i)) {
 			suite->removeTestCase(i);
+			suite->calculateTestSuiteCoverage();
 		}
 	}
 }
