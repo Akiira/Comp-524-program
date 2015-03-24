@@ -136,11 +136,11 @@ double Simulation::adaptMutationBasedOnOrganismsCoverage(Organism* org) {
 	return change;
 }
 
-bool Simulation::hasEquivalentCoverageToPopulation(TestSuite* testSuite) {
+bool Simulation::hasEquivalentCoverageToPopulation(Organism* organism) {
 	int* populationEdges = population->getEdgesCovered();
 	int* populationPredicates = population->getPredicatesCovered();
-	int* testSuiteEdges = testSuite->getDuplicateEdgesCovered();
-	int* testSuitePredicates = testSuite->getDuplicatePredicatesCovered();
+	int* testSuiteEdges = organism->getChromosome()->getDuplicateEdgesCovered();
+	int* testSuitePredicates = organism->getChromosome()->getDuplicatePredicatesCovered();
 
 	for (int i = 0; i < targetCFG->getNumberOfEdges(); i++) {
 		if (testSuiteEdges[i] == 0 && populationEdges[i] > 0) {
@@ -159,7 +159,7 @@ bool Simulation::hasEquivalentCoverageToPopulation(TestSuite* testSuite) {
 Organism* Simulation::constructFinalOrganism() {
 	Organism* finalOrg;
 
-	if (hasEquivalentCoverageToPopulation(bestOrganismSeen->getChromosome())) {
+	if (hasEquivalentCoverageToPopulation(bestOrganismSeen)) {
 		cout << "Already has all the coverage" << endl;
 		finalOrg = new Organism(*bestOrganismSeen);
 	}
@@ -200,6 +200,8 @@ Organism* Simulation::constructFinalOrganism() {
 				}
 			}
 		}
+
+		assert(hasEquivalentCoverageToPopulation(finalOrg));
 	}
 
 	minimizeOrganism(finalOrg);

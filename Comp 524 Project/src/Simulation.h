@@ -47,7 +47,7 @@ private:
 	double adaptMutationBasedOnCoverageRatio(double pM);
 
 	Organism* constructFinalOrganism();
-	bool hasEquivalentCoverageToPopulation(TestSuite* testSuite);
+	bool hasEquivalentCoverageToPopulation(Organism* organism);
 	void minimizeOrganism(Organism* orgToMinimize);
 
 };
