@@ -17,8 +17,7 @@ class Simulation
 public:
 	virtual ~Simulation();
 
-	Simulation(int populationSize, int initalTestSuiteSize, int maxTestSuiteSize,
-			int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations);
+	Simulation(int populationSize, int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations);
 	void run();
 	void tryLocalOptimization();
 	TestCase* callRandomLocalOpt();
@@ -35,8 +34,7 @@ private:
 	Organism* bestOrganismSeen;
 
 	int populationSize;
-	int initialTestSuiteSize;
-	int maxTestSuiteSize;
+	int testSuiteSize;
 
 	//TODO: I was think we could maybe just pass these into the run function since they are never
 	// 		used anywhere else.

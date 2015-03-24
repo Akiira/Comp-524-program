@@ -26,23 +26,8 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 	population = new Organism*[popSize] { };
 	populationSize = popSize;
 
-	//TODO: when i added the code for created test suites of many different sizes i was just messing around
-	//		if it doesnt look like it is helping we can remove it. I'm not sure the variable testSuite
-	//		size is going to be all that helpful, though i dont think it hurts either.
-	// Necessary for how this is set up now. There maybe a better way
-	assert(populationSize >= maxTestSuiteSize - initialTestSuiteSize + 1);
-	int numOfGroups = maxTestSuiteSize - initialTestSuiteSize + 1;
-	int suitesPerGroup { popSize / numOfGroups };
-	int testsPerSuite { initialTestSuiteSize };
-
 	for (int i = 0; i < popSize; i++) {
-
-		//population[i] = new Organism { initialTestSuiteSize, maxTestSuiteSize };
-		population[i] = new Organism { testsPerSuite, maxTestSuiteSize };
-		//cout << testsPerSuite << " " << suitesPerGroup << " " << maxTestSuiteSize << endl;
-		if( i != 0 && i % suitesPerGroup == 0 && i < suitesPerGroup * numOfGroups) {
-			testsPerSuite++;
-		}
+		population[i] = new Organism { initialTestSuiteSize, maxTestSuiteSize };
 	}
 
 	totalFitness = 0;

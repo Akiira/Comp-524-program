@@ -17,20 +17,18 @@ Simulation::~Simulation(){
 	delete bestOrganismSeen;
 }
 
-Simulation::Simulation(int populationSize, int initialTestSuiteSize, int maxTestSuiteSize,
-		int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations){
+Simulation::Simulation(int populationSize, int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations){
 
 	this->populationSize = populationSize;
-	this->initialTestSuiteSize = initialTestSuiteSize;
-	this->maxTestSuiteSize = maxTestSuiteSize;
+	this->testSuiteSize = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
 	this->numberOfGenerations = numberOfGenerations;
 	this->numberOfCutPoints = numberOfCutPoints;
 	probabilityForMutation = mutationProb;
 	probabilityForCrossover = crossOverProb;
 
-	population = new Population { populationSize, initialTestSuiteSize, maxTestSuiteSize };
+	population = new Population { populationSize, testSuiteSize, testSuiteSize };
 
-	bestOrganismSeen = new Organism { 1, maxTestSuiteSize };
+	bestOrganismSeen = new Organism { 1, testSuiteSize };
 	*bestOrganismSeen = *population->getBestOrganism();
 }
 
@@ -50,10 +48,8 @@ void Simulation::run(){
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 		double newProb;
-		//newProb = adaptMutationBasedOnOrganismsCoverage(child1) * probabilityForMutation;
 		newProb = adaptMutationBasedOnCoverageRatio(probabilityForMutation);
 		child1->mutate(newProb);
-		//newProb = adaptMutationBasedOnOrganismsCoverage(child1) * probabilityForMutation;
 		child2->mutate(newProb);
 
 		// Attempt to replace the worst of the two parents
