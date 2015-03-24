@@ -45,6 +45,8 @@ public:
 	void setTestCase(int index, TestCase* testCase);
 	void replaceRandomTestCase(TestCase* testCase);
 	void addTestCase(TestCase* testCase);
+	void removeTestCase(int index);
+
 	void resetCoverage();
 	void calculateTestSuiteCoverage();
 

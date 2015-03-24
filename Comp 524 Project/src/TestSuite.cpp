@@ -160,6 +160,16 @@ void TestSuite::addTestCase(TestCase* testCase) {
 	}
 }
 
+void TestSuite::removeTestCase(int index) {
+	assert(index >= 0 && index < numberOfTestCases);
+
+	delete testCases[index];
+	for (int i = index; i < numberOfTestCases-1; i++) {
+		testCases[i] = testCases[i+1];
+	}
+	numberOfTestCases--;
+}
+
 void TestSuite::printAll() {
 	printTestSuiteCoverage();
 	printTestCaseInputsAndCoverage();
