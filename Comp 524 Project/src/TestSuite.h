@@ -81,5 +81,6 @@ public:
 	}
 
 	TestCase* getTestCaseThatCoversPredicate(int predicateNumber);
+	TestCase* getTestCaseThatCoversEdge(int edgeNumber);
 };
 #endif // !defined(EA_04823F4F_8B3F_4bb8_9DBC_42A1717DC256__INCLUDED_)

@@ -137,7 +137,6 @@ double Simulation::adaptMutationBasedOnOrganismsCoverage(Organism* org) {
 }
 
 bool Simulation::hasEquivalentCoverageToPopulation(TestSuite* testSuite) {
-	// Its predicates
 	int* populationEdges = population->getEdgesCovered();
 	int* populationPredicates = population->getPredicatesCovered();
 	int* testSuiteEdges = testSuite->getDuplicateEdgesCovered();
@@ -180,6 +179,20 @@ Organism* Simulation::constructFinalOrganism() {
 		while((predicateNum = finalOrg->getUncoveredPredicate()) != -1) {
 			for (int j = 0; j < populationSize; j++) {
 				TestCase* missingTestCase = population->getOrganismByIndex(j)->getChromosome()->getTestCaseThatCoversPredicate(predicateNum);
+				if (missingTestCase != NULL) {
+					finalSuite->addTestCase(new TestCase(*missingTestCase));
+					finalSuite->calculateTestSuiteCoverage();
+					break; // Done with this predicate, find the next
+				}
+			}
+		}
+
+		// I don't believe this is actually necessary since hitting all the predicates should always imply hitting all the edges,
+		//	but I included it anyway just in case.
+		int edgeNum = -1;
+		while((edgeNum = finalOrg->getUncoveredEdge()) != -1) {
+			for (int j = 0; j < populationSize; j++) {
+				TestCase* missingTestCase = population->getOrganismByIndex(j)->getChromosome()->getTestCaseThatCoversEdge(edgeNum);
 				if (missingTestCase != NULL) {
 					finalSuite->addTestCase(new TestCase(*missingTestCase));
 					finalSuite->calculateTestSuiteCoverage();

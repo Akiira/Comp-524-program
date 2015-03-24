@@ -106,6 +106,22 @@ TestCase* TestSuite::getTestCaseThatCoversPredicate(int predicateNumber) {
 	return NULL;
 }
 
+TestCase* TestSuite::getTestCaseThatCoversEdge(int edgeNumber) {
+	if (!duplicateEdgesCovered[edgeNumber] > 0) {
+		return NULL;
+	}
+	else {
+		for (int i = 0; i < numberOfTestCases; i++) {
+			if (testCases[i]->getEdgesCovered()[edgeNumber]) {
+				return testCases[i];
+			}
+		}
+	}
+	// It makes no sense to ever get here, but c++ requires a return stmt.
+	assert(false);
+	return NULL;
+}
+
 void TestSuite::setTestCase(int index, TestCase* testCase) {
 	delete testCases[index];
 	testCases[index] = testCase;
