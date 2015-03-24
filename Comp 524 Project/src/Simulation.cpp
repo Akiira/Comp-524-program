@@ -196,7 +196,7 @@ Organism* Simulation::constructFinalOrganism() {
 				if (missingTestCase != NULL) {
 					finalSuite->addTestCase(new TestCase(*missingTestCase));
 					finalSuite->calculateTestSuiteCoverage();
-					break; // Done with this predicate, find the next
+					break; // Done with this edge, find the next
 				}
 			}
 		}
@@ -209,6 +209,7 @@ Organism* Simulation::constructFinalOrganism() {
 
 void Simulation::minimizeOrganism(Organism* orgToMinimize) {
 	TestSuite* suite = orgToMinimize->getChromosome();
+	suite->sortTestSuiteByCoverageCounts();
 	for (int i = orgToMinimize->getNumberOfTestCases()-1; i >= 0; i--) {
 		if (suite->canRemoveTestCaseWithoutChangingCoverage(i)) {
 			suite->removeTestCase(i);
