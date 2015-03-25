@@ -863,7 +863,7 @@ void HardCFG::printEdgesCovered(bool* edgesCovered) const{
 }
 
 void HardCFG::printPredicatesCovered(bool* predicatesCovered) const{
-	cout << "\tTODO" << endl;
+	cout << "\tTODO" << endl; //TODO printPredicatesCovered
 }
 
 void HardCFG::printEdgesCovered(int* edgesCovered) const{
@@ -926,6 +926,6 @@ void HardCFG::printEdgesCovered(int* edgesCovered) const{
 }
 
 void HardCFG::printPredicatesCovered(int* predicatesCovered) const{
-	cout << "\tTODO" << endl;
+	cout << "\tTODO" << endl;//TODO printPredicatesCovered
 
 }
