@@ -24,6 +24,11 @@ Organism::Organism(const Organism& org) {
 	evaluateBaseFitness();
 }
 
+//TODO remove this, I only added it to test somthing
+Organism::Organism( ) {
+	chromosome = new TestSuite { 50, 50};
+	evaluateBaseFitness();
+}
 Organism::Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** testCases) {
 	chromosome = new TestSuite { numOfTestCases, maxNumberOfTestCases, testCases };
 	fitness = 0;
