@@ -8,6 +8,7 @@
 #include "Simulation.h"
 #include "GlobalVariables.h"
 #include "RandomSearcher.h"
+#include "HardCFG.h"
 
 #include <chrono>
 #include <ctime>
@@ -185,7 +186,18 @@ int main() {
     //hiLoSimulationTest();
     //hiLoRandomSearchEdges();
     //hiLoRandomSearchPredicates();
-    triangleSimulationTest();
+    //triangleSimulationTest();
+
+    targetCFG = new HardCFG { };
+    auto tc = new TestCase();
+    targetCFG->setCoverageOfTestCase(tc);
+    //auto ts = new TestSuite(100000, 100000);
+    //tc->printInputsAndCoverage();
+
+    //ts->calculateTestSuiteCoverage();
+    //ts->printTestSuiteCoverage();
+    Simulation* hardSim = new Simulation(1000, 2, .02, 1, 1000);
+    hardSim->run();
 
     //triangleRandomSearchEdges();
 
