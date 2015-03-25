@@ -67,10 +67,10 @@ void Simulation::run(){
 			delete child2;
 		}
 
-		//TODO: there are many different ways we could call/use this. Think about the most appropiate.
-		if( i % 100 == 0 || population->getCoverageRatio() > 0.95 ) {
-			tryLocalOptimization();
-		}
+//		//TODO: there are many different ways we could call/use this. Think about the most appropiate.
+//		if( i % 100 == 0 || population->getCoverageRatio() > 0.95 ) {
+//			tryLocalOptimization();
+//		}
 
 		i++;
 
@@ -190,7 +190,7 @@ TestCase* Simulation::localOptFromZero (int thingToCover, bool edgeOrPredicate) 
 	for(int i = 0; i < 100; ++i) {
 
 		for (int j = 0; j < 10; ++j) {
-			for (int var = 0; var < targetCFG->getNumberOfParameters(); ++var) {
+			for (int var = 0; var < 3; ++var) {
 				parameters[var] = uniformInRange(-NeighborhoodSize, NeighborhoodSize);
 			}
 			targetCFG->setCoverageOfTestCase(tc);
