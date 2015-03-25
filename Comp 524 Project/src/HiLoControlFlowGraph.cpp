@@ -111,13 +111,13 @@ void HiLoControlFlowGraph::runTestCase() {
 	block1();
 }
 
-void HiLoControlFlowGraph::block1() {
+inline void HiLoControlFlowGraph::block1() {
 	testCase->addEdgeCoverage(edges::B1toB2);
 	block2();
 }
 
 
-void HiLoControlFlowGraph::block2()  {
+inline void HiLoControlFlowGraph::block2()  {
 	// Since its a do-while loop, increment counter here.
 	programVariables[LOOP_COUNTER]++;
 
@@ -135,13 +135,13 @@ void HiLoControlFlowGraph::block2()  {
 	}
 }
 
-void HiLoControlFlowGraph::block3()  {
+inline void HiLoControlFlowGraph::block3()  {
 	testCase->addEdgeCoverage(edges::B3toB10);
 	block10();
 }
 
 
-void HiLoControlFlowGraph::block4()  {
+inline void HiLoControlFlowGraph::block4()  {
 	if (programVariables[GUESS] >programVariables[TARGET])
 	{
 		testCase->addEdgeCoverage(edges::B4toB5);
@@ -155,11 +155,11 @@ void HiLoControlFlowGraph::block4()  {
 		block6();
 	}
 }
-void HiLoControlFlowGraph::block5()  {
+inline void HiLoControlFlowGraph::block5()  {
 	testCase->addEdgeCoverage(edges::B5toB10);
 	block10();
 }
-void HiLoControlFlowGraph::block6()  {
+inline void HiLoControlFlowGraph::block6()  {
 	if (programVariables[GUESS] < programVariables[NUM1])
 	{
 		if (programVariables[GUESS] < programVariables[NUM2])
@@ -188,11 +188,11 @@ void HiLoControlFlowGraph::block6()  {
 		block8();
 	}
 }
-void HiLoControlFlowGraph::block7()  {
+inline void HiLoControlFlowGraph::block7()  {
 	testCase->addEdgeCoverage(edges::B7toB10);
 	block10();
 }
-void HiLoControlFlowGraph::block8() {
+inline void HiLoControlFlowGraph::block8() {
 	if (programVariables[GUESS] != 0 )
 	{
 		testCase->addEdgeCoverage(edges::B8toB9);
@@ -206,11 +206,11 @@ void HiLoControlFlowGraph::block8() {
 		block10();
 	}
 }
-void HiLoControlFlowGraph::block9() {
+inline void HiLoControlFlowGraph::block9() {
 	testCase->addEdgeCoverage(edges::B9toB10);
 	block10();
 }
-void HiLoControlFlowGraph::block10() {
+inline void HiLoControlFlowGraph::block10() {
 	if (programVariables[GUESS] != programVariables[TARGET])
 	{
 		if (programVariables[GUESS] != 0)

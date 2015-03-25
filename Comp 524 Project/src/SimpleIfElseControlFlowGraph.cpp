@@ -95,7 +95,8 @@ void SimpleIfElseControlFlowGraph::runTestCase() {
 	testCase->clearCoverage();
 	block1();
 }
-void SimpleIfElseControlFlowGraph::block1() {
+
+inline void SimpleIfElseControlFlowGraph::block1() {
 	int* parameters = testCase->getInputParameters();
 
 	if(parameters[0] > 2)
@@ -116,22 +117,18 @@ void SimpleIfElseControlFlowGraph::block1() {
 	}
 }
 
-void SimpleIfElseControlFlowGraph::block2() {
+inline void SimpleIfElseControlFlowGraph::block2() {
 	//testCase->edgesCovered[SimpleIfElseControlFlowGraph::edges::B2toB4] = true;
 	testCase->addEdgeCoverage(edges::B2toB4);
 	block4();
 }
 
-void SimpleIfElseControlFlowGraph::block3() {
+inline void SimpleIfElseControlFlowGraph::block3() {
 	//testCase->edgesCovered[SimpleIfElseControlFlowGraph::edges::B3toB4] = true;
 	testCase->addEdgeCoverage(edges::B3toB4);
 	block4();
 }
 
-void SimpleIfElseControlFlowGraph::block4() {
+inline void SimpleIfElseControlFlowGraph::block4() {
 	return;
-}
-
-TestCase* SimpleIfElseControlFlowGraph::localOptVersion1(int int1, bool bool1) {
-	return 0;
 }
