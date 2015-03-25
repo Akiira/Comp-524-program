@@ -67,10 +67,10 @@ void Simulation::run(){
 			delete child2;
 		}
 
-//		//TODO: there are many different ways we could call/use this. Think about the most appropiate.
-//		if( i % 100 == 0 || population->getCoverageRatio() > 0.95 ) {
-//			tryLocalOptimization();
-//		}
+		//TODO: there are many different ways we could call/use this. Think about the most appropiate.
+		if( i % 100 == 0 || population->getCoverageRatio() > 0.95 ) {
+			tryLocalOptimization();
+		}
 
 		i++;
 
