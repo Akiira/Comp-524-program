@@ -37,6 +37,7 @@ TestSuite::TestSuite(const TestSuite& testSuite) {
 
 	duplicateEdgesCovered = new int[numberOfEdges] { };
 	duplicatePredicatesCovered = new int[numberOfPredicates] { };
+	coverageRatio = 0;
 	testCases = new TestCase*[maxNumberOfTestCases] { };
 
 	for (int i = 0; i < numberOfTestCases; ++i) {
@@ -58,7 +59,7 @@ TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase**
 }
 
 void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, int maxNumberOfTestCases) {
-	assert(numberOfTestCases > 0 );
+	assert(numberOfTestCases >= 0 );
 	assert(maxNumberOfTestCases >= numberOfTestCases);
 	this->maxNumberOfTestCases = maxNumberOfTestCases;
 	this->numberOfTestCases = numberOfTestCases;
@@ -77,6 +78,20 @@ void TestSuite::fillTestSuiteWithRandomTestCases() {
 	}
 }
 
+void TestSuite::sortTestSuiteByCoverageCounts() {
+	int i, j;
+	TestCase* tmp;
+	for (i = numberOfTestCases - 1; i > 1; i--) {
+		for (j = 0; j < i; j++) {
+			if (testCases[j]->getNumberCovered() < testCases[j + 1]->getNumberCovered() ) {
+				tmp = testCases[j];
+				testCases[j] = testCases[j + 1];
+				testCases[j + 1] = tmp;
+			}
+		}
+	}
+}
+
 TestCase** TestSuite::getAllTestCases() const{
 	return  testCases;
 }
@@ -87,6 +102,38 @@ TestCase* TestSuite::getTestCase(int index){
 	assert(index >= 0  &&  index < numberOfTestCases);
 
 	return  testCases[index];
+}
+
+TestCase* TestSuite::getTestCaseThatCoversPredicate(int predicateNumber) {
+	if (!duplicatePredicatesCovered[predicateNumber] > 0) {
+		return NULL;
+	}
+	else {
+		for (int i = 0; i < numberOfTestCases; i++) {
+			if (testCases[i]->getPredicatesCovered()[predicateNumber]) {
+				return testCases[i];
+			}
+		}
+	}
+	// It makes no sense to ever get here, but c++ requires a return stmt.
+	assert(false);
+	return NULL;
+}
+
+TestCase* TestSuite::getTestCaseThatCoversEdge(int edgeNumber) {
+	if (!duplicateEdgesCovered[edgeNumber] > 0) {
+		return NULL;
+	}
+	else {
+		for (int i = 0; i < numberOfTestCases; i++) {
+			if (testCases[i]->getEdgesCovered()[edgeNumber]) {
+				return testCases[i];
+			}
+		}
+	}
+	// It makes no sense to ever get here, but c++ requires a return stmt.
+	assert(false);
+	return NULL;
 }
 
 void TestSuite::setTestCase(int index, TestCase* testCase) {
@@ -111,6 +158,35 @@ void TestSuite::addTestCase(TestCase* testCase) {
 	else {
 		delete testCase;
 	}
+}
+
+void TestSuite::removeTestCase(int index) {
+	assert(index >= 0 && index < numberOfTestCases);
+
+	delete testCases[index];
+	for (int i = index; i < numberOfTestCases-1; i++) {
+		testCases[i] = testCases[i+1];
+	}
+	numberOfTestCases--;
+}
+
+bool TestSuite::canRemoveTestCaseWithoutChangingCoverage(int index) {
+	assert(index >= 0 && index < numberOfTestCases);
+	bool* edges = testCases[index]->getEdgesCovered();
+	bool* preds = testCases[index]->getPredicatesCovered();
+
+	for (int i = 0; i < targetCFG->getNumberOfEdges(); i++) {
+		if (edges[i] && duplicateEdgesCovered[i] == 1) {
+			return false;
+		}
+	}
+
+	for (int i = 0; i < targetCFG->getNumberOfPredicates(); i++) {
+		if (preds[i] && duplicatePredicatesCovered[i] == 1) {
+			return false;
+		}
+	}
+	return true;
 }
 
 void TestSuite::printAll() {
@@ -147,11 +223,12 @@ void TestSuite::resetCoverage() {
 	for (int j = 0; j < numberOfPredicates; j++) {
 		duplicatePredicatesCovered[j] = 0;
 	}
+	coverageRatio = 0;
 }
 
-// This code is ridiculously inefficient, maybe we can switch to bitsets instead,
-//	then use |= on entire bitsets.
+
 void TestSuite::calculateTestSuiteCoverage() {
+	resetCoverage();
 	for (int i = 0; i < numberOfTestCases; i++) {
 		for (int j = 0; j < numberOfEdges; j++) {
 			duplicateEdgesCovered[j] += testCases[i]->getEdgesCovered()[j];
@@ -163,6 +240,20 @@ void TestSuite::calculateTestSuiteCoverage() {
 			duplicatePredicatesCovered[j] += testCases[i]->getPredicatesCovered()[j];
 		}
 	}
+
+	// Calculate the coverage ratio
+	double numCovered = 0;
+	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+		if (duplicateEdgesCovered[j] > 0) {
+			numCovered++;
+		}
+	}
+	for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
+		if (duplicatePredicatesCovered[j] > 0) {
+			numCovered++;
+		}
+	}
+	coverageRatio = numCovered / (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
 }
 
 TestSuite& TestSuite::operator =(const TestSuite& other) {

@@ -89,6 +89,7 @@ void Simulation::run(){
 	population->printPopulationFitness();
 	population->printPopulationCoverage();
 
+	Organism* final = constructFinalOrganism();
 }
 
 double Simulation::adaptMutationBasedOnCoverageRatio(double pM) {
@@ -137,6 +138,91 @@ double Simulation::adaptMutationBasedOnOrganismsCoverage(Organism* org) {
 
 	return change;
 }
+
+bool Simulation::hasEquivalentCoverageToPopulation(Organism* organism) {
+	int* populationEdges = population->getEdgesCovered();
+	int* populationPredicates = population->getPredicatesCovered();
+	int* testSuiteEdges = organism->getChromosome()->getDuplicateEdgesCovered();
+	int* testSuitePredicates = organism->getChromosome()->getDuplicatePredicatesCovered();
+
+	for (int i = 0; i < targetCFG->getNumberOfEdges(); i++) {
+		if (testSuiteEdges[i] == 0 && populationEdges[i] > 0) {
+			return false;
+		}
+	}
+
+	for (int i = 0; i < targetCFG->getNumberOfPredicates(); i++) {
+		if (testSuitePredicates[i] == 0 && populationPredicates[i] > 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
+Organism* Simulation::constructFinalOrganism() {
+	Organism* finalOrg;
+
+	if (hasEquivalentCoverageToPopulation(bestOrganismSeen)) {
+		cout << "Already has all the coverage" << endl;
+		finalOrg = new Organism(*bestOrganismSeen);
+	}
+	else {
+		cout << "Doesn't have all the coverage" << endl;
+		// Start with a copy of bestOrganismSeen, with room to grow
+		TestCase** bestTestCasesSeen = bestOrganismSeen->getChromosome()->getAllTestCases();
+		finalOrg = new Organism(0, testSuiteSize * 2, new TestCase*[testSuiteSize * 2] { });
+
+		TestSuite* finalSuite = finalOrg->getChromosome();
+		for (int i = 0; i < testSuiteSize; i++) {
+			finalSuite->addTestCase(new TestCase { *bestTestCasesSeen[i] });
+		}
+		finalSuite->calculateTestSuiteCoverage();
+
+		int predicateNum = -1;
+		while((predicateNum = finalOrg->getUncoveredPredicate()) != -1) {
+			for (int j = 0; j < populationSize; j++) {
+				TestCase* missingTestCase = population->getOrganismByIndex(j)->getChromosome()->getTestCaseThatCoversPredicate(predicateNum);
+				if (missingTestCase != NULL) {
+					finalSuite->addTestCase(new TestCase(*missingTestCase));
+					finalSuite->calculateTestSuiteCoverage();
+					break; // Done with this predicate, find the next
+				}
+			}
+		}
+
+		// I don't believe this is actually necessary since hitting all the predicates should always imply hitting all the edges,
+		//	but I included it anyway just in case.
+		int edgeNum = -1;
+		while((edgeNum = finalOrg->getUncoveredEdge()) != -1) {
+			for (int j = 0; j < populationSize; j++) {
+				TestCase* missingTestCase = population->getOrganismByIndex(j)->getChromosome()->getTestCaseThatCoversEdge(edgeNum);
+				if (missingTestCase != NULL) {
+					finalSuite->addTestCase(new TestCase(*missingTestCase));
+					finalSuite->calculateTestSuiteCoverage();
+					break; // Done with this edge, find the next
+				}
+			}
+		}
+
+		assert(hasEquivalentCoverageToPopulation(finalOrg));
+	}
+
+	minimizeOrganism(finalOrg);
+	finalOrg->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
+	return finalOrg;
+}
+
+void Simulation::minimizeOrganism(Organism* orgToMinimize) {
+	TestSuite* suite = orgToMinimize->getChromosome();
+	suite->sortTestSuiteByCoverageCounts();
+	for (int i = orgToMinimize->getNumberOfTestCases()-1; i >= 0; i--) {
+		if (suite->canRemoveTestCaseWithoutChangingCoverage(i)) {
+			suite->removeTestCase(i);
+			suite->calculateTestSuiteCoverage();
+		}
+	}
+}
+
 
 //This first version always tries to optimize best organism, we could try other versions as well.
 void Simulation::tryLocalOptimization() {

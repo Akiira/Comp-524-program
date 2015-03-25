@@ -26,6 +26,7 @@ private:
 
 	TestCase** testCases;
 
+	double coverageRatio;
 
 	// SHared code between constructors
 	void initializeMembersAndAllocateMemory(int numberOfTestCases, int maxNumberOfTestCases);
@@ -44,6 +45,9 @@ public:
 	void setTestCase(int index, TestCase* testCase);
 	void replaceRandomTestCase(TestCase* testCase);
 	void addTestCase(TestCase* testCase);
+	void removeTestCase(int index);
+	bool canRemoveTestCaseWithoutChangingCoverage(int index);
+
 	void resetCoverage();
 	void calculateTestSuiteCoverage();
 
@@ -71,8 +75,17 @@ public:
 		return maxNumberOfTestCases;
 	}
 
+	double getCoverageRatio() const {
+		return coverageRatio;
+	}
+
 	void setNumberOfTestCases(int numberOfTestCases) {
 		this->numberOfTestCases = numberOfTestCases;
 	}
+
+	void sortTestSuiteByCoverageCounts();
+
+	TestCase* getTestCaseThatCoversPredicate(int predicateNumber);
+	TestCase* getTestCaseThatCoversEdge(int edgeNumber);
 };
 #endif // !defined(EA_04823F4F_8B3F_4bb8_9DBC_42A1717DC256__INCLUDED_)

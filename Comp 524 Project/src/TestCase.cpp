@@ -33,6 +33,7 @@ TestCase::TestCase() {
 	edgesCovered = new bool[numberOfEdges] { };
 	predicatesCovered = new bool[numberOfPredicates] { };
 	inputParameters = new int[numberOfParameters] { };
+	numCovered = 0;
 
 	generateRandomParameters();
 }
@@ -42,6 +43,7 @@ TestCase::TestCase(const TestCase& that) {
 	numberOfEdges = that.numberOfEdges;
 	numberOfParameters = that.numberOfParameters;
 	numberOfPredicates = that.numberOfPredicates;
+	numCovered = that.numCovered;
 
 	edgesCovered = new bool[numberOfEdges] { };
 	memcpy(edgesCovered, that.edgesCovered, sizeof(bool) * numberOfEdges);
@@ -126,11 +128,17 @@ int TestCase::getInputParameterAtIndex(int index) const{
 }
 
 void TestCase::addEdgeCoverage(int edge) {
-	edgesCovered[edge] = true;
+	if (!edgesCovered[edge]) {
+		numCovered++;
+		edgesCovered[edge] = true;
+	}
 }
 
 void TestCase::addPredicateCoverage(int predicate) {
-	predicatesCovered[predicate] = true;
+	if (!predicatesCovered[predicate]) {
+		numCovered++;
+		predicatesCovered[predicate] = true;
+	}
 }
 
 void TestCase::setInputParameters(int newValues[]) {

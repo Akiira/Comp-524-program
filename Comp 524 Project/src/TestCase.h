@@ -44,6 +44,10 @@ public:
 		return numberOfParameters;
 	}
 
+	int getNumberCovered() const {
+		return numCovered;
+	}
+
 private:
 	int numberOfParameters;
 	int numberOfEdges;
@@ -52,6 +56,9 @@ private:
 	int* inputParameters;
 	bool* edgesCovered;
 	bool* predicatesCovered;
+
+	// Total count of edges and predicates covered, used for sorting in test suite.
+	int numCovered;
 
 	void generateRandomParameters();
 
