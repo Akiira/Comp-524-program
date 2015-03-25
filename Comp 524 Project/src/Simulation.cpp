@@ -62,10 +62,12 @@ void Simulation::run(){
 		if(child1 <= child2){
 			population->replaceParentThenReplaceWorst(parentToReplace, child2);
 			delete child1;
+			child1 = NULL;
 		}
 		else {
 			population->replaceParentThenReplaceWorst(parentToReplace, child1);
 			delete child2;
+			child2 = NULL;
 		}
 
 		//TODO: there are many different ways we could call/use this. Think about the most appropiate.
