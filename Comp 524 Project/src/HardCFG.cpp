@@ -10,11 +10,13 @@
 #include <cassert>
 #include <cmath>
 
+using std::endl;
+using std::cout;
 using std::numeric_limits;
 
 HardCFG::HardCFG() {
-	//numberOfEdges = 79;
-	//numberOfPredicates = 90;
+	numberOfEdges = 79;
+	numberOfPredicates = 90;
 
 	numberOfParameters = 10;
 
@@ -61,7 +63,7 @@ inline void HardCFG::runTestCase() {
 
 void HardCFG::block1() {
 	//mu <= 500
-
+	//cout << "\t" << sigma << endl;
 	if( sigma < 100 ) {
 		testCase->addEdgeCoverage(edges::B1toB3);
 		block3();
@@ -411,4 +413,101 @@ void HardCFG::calculateSums(const int* values) {
 		}
 	}
 	sumOfAll = sumOfFirstHalf + sumOfSecondHalf;
+}
+
+void HardCFG::printInputParameters(int* inputParameters) const{
+	cout << endl << "Input Parameters" << endl;
+	cout << " A    B    C    D    E    F    G    H    I    J" << endl;
+	cout << "------------------" << endl;
+	for (int i = 0; i < numberOfParameters; i++) {
+		cout << "  " << inputParameters[i] << "  |";
+	}
+	cout << endl;
+}
+
+void HardCFG::printEdgesCovered(bool* edgesCovered) const{
+	cout << endl << "Edge Coverage" << endl;
+	cout << " B0toB1-B1toB3-B1toB4-B3toB7-B3toB8-B4toB9-B4toB10-B7toB15," << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for (int j = 0; j < 8; j++) {
+		cout << "   " << edgesCovered[j] << "   |";
+	}
+	cout << endl;
+	cout << "B7toB16-B8toB17-B8toB18-B9toB19-B9toB20-B10toB21-B10toB22" << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for(int j = 0; j < 7; j++)
+	{
+		cout << "   " << edgesCovered[8 + j] << "   |";
+	}
+	cout << endl;
+	cout << "B0toB2-B2toB5-B2toB6-B5toB11-B5toB12-B6toB13-B6toB14-B11toB23," << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for(int j = 0; j < 8; j++)
+	{
+		cout << "   " << edgesCovered[15 + j] << "   |";
+	}
+	cout << endl;
+	cout << "B11toB24-B12toB25-B12toB26-B13toB27-B13toB28-B14toB29-B14toB30 " << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for(int j = 0; j < 7; j++)
+	{
+		cout << "   " << edgesCovered[23 + j] << "   |";
+	}
+	cout << endl;
+}
+
+void HardCFG::printPredicatesCovered(bool* predicatesCovered) const{
+	cout << "\tTEST1" << endl;
+	cout << endl << "Predicate Coverage" << endl;
+	cout << " B0_TTT | B0_TTF | B0_TFT | B0_FTT | B0_TFF | B0_FFT | B0_FTF | B0_FFF | B2_TTT | B2_TTF | B2_TFT | B2_FTT | B2_TFF | B2_FFT | B2_FTF | B2_FFF | B4_T | B4_F | B5_T | B5_F | B8_T | B8_F | B10_T | B10_F" << endl;
+	cout << "-------------------------------------------------------------------------------------------------" << endl;
+	for(int i = 0; i < numberOfPredicates; i++)
+	{
+		cout << "  " << predicatesCovered[i] << "   |";
+	}
+	cout << endl;
+}
+
+void HardCFG::printEdgesCovered(int* edgesCovered) const{
+	cout << "\tTEST2" << endl;
+	cout << endl << "Edge Coverage" << endl;
+	cout << " B0toB1 | B1toB3 | 1toB4 | 3toB7 | 3toB8 | 4toB9 | 4toB10 | 7toB15," << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for (int j = 0; j < 8; j++) {
+		cout << "   " << edgesCovered[j] << "   |";
+	}
+	cout << endl;
+	cout << " B7toB16 | B8toB17 | B8toB18 | B9toB19 | B9toB20 | B10toB21 | B10toB22, " << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for(int j = 0; j < 7; j++)
+	{
+		cout << "   " << edgesCovered[8 + j] << "   |";
+	}
+	cout << endl;
+	cout << " B0toB2 | B2toB5 | B2toB6 | B5toB11 | B5toB12 | B6toB13 | B6toB14 | B11toB23," << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for(int j = 0; j < 8; j++)
+	{
+		cout << "   " << edgesCovered[15 + j] << "   |";
+	}
+	cout << endl;
+	cout << " B11toB24 | B12toB25 | B12toB26 | B13toB27 | B13toB28 | B14toB29 | B14toB30 " << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for(int j = 0; j < 7; j++)
+	{
+		cout << "   " << edgesCovered[23 + j] << "   |";
+	}
+	cout << endl;
+}
+
+void HardCFG::printPredicatesCovered(int* predicatesCovered) const{
+	cout << "\tTEST3" << endl;
+	cout << endl << "Predicate Coverage" << endl;
+	cout << " B0_TTT | B0_TTF | B0_TFT | B0_FTT | B0_TFF | B0_FFT | B0_FTF | B0_FFF | B2_TTT | B2_TTF | B2_TFT | B2_FTT | B2_TFF | B2_FFT | B2_FTF | B2_FFF | B4_T | B4_F | B5_T | B5_F | B8_T | B8_F | B10_T | B10_F" << endl;
+	cout << "-------------------------------------------------------------------------------------------------" << endl;
+	for(int i = 0; i < numberOfPredicates; i++)
+	{
+		cout << "  " << predicatesCovered[i] << "   |";
+	}
+	cout << endl;
 }
