@@ -28,8 +28,8 @@ Simulation::Simulation(int populationSize, int numberOfCutPoints, double mutatio
 
 	population = new Population { populationSize, testSuiteSize, testSuiteSize };
 
-	bestOrganismSeen = new Organism { 1, testSuiteSize };
-	*bestOrganismSeen = *population->getBestOrganism();
+//	bestOrganismSeen = new Organism { testSuiteSize, testSuiteSize };
+//	*bestOrganismSeen = *population->getBestOrganism();
 }
 
 void Simulation::run(){
@@ -47,6 +47,7 @@ void Simulation::run(){
 		cout << "Generation # " << i << " CoverageRatio: " << population->getCoverageRatio() << endl;
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
+
 		double newProb;
 		newProb = adaptMutationBasedOnCoverageRatio(probabilityForMutation);
 		child1->mutate(newProb);
@@ -74,15 +75,15 @@ void Simulation::run(){
 
 		i++;
 
-		//TODO Check if it looks like the last generation always have the best organism
-		//		and if so, we can remove this. We can check this when we are closer to final version
-		if( *bestOrganismSeen < *population->getBestOrganism() ) {
-			*bestOrganismSeen = *population->getBestOrganism();
-		}
+//		//TODO Check if it looks like the last generation always have the best organism
+//		//		and if so, we can remove this. We can check this when we are closer to final version
+//		if( *bestOrganismSeen < *population->getBestOrganism() ) {
+//			*bestOrganismSeen = *population->getBestOrganism();
+//		}
 
 	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
 
-	bestOrganismSeen->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
+	population->getBestOrganism()->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
 	population->printPopulationFitness();
 	population->printPopulationCoverage();
 
@@ -143,6 +144,7 @@ void Simulation::tryLocalOptimization() {
 	if (tc != NULL) {
 		Organism* temp = new Organism { *bestOrganism };
 		temp->getChromosome()->replaceRandomTestCase(tc);
+
 		temp->evaluateBaseFitness();
 
 		population->replaceOrganismAtIndexWithChild(0, temp);
@@ -182,7 +184,7 @@ TestCase* Simulation::callRandomLocalOpt() {
 
 TestCase* Simulation::localOptFromZero (int thingToCover, bool edgeOrPredicate) {
 	TestCase* tc = new TestCase { };
-	int* parameters = new int[3] { };
+	int* parameters = new int[targetCFG->getNumberOfParameters()] { };
 	int NeighborhoodSize { 1 };
 
 	tc->setInputParametersWithReference(&parameters);
@@ -256,7 +258,7 @@ TestCase* Simulation::localOptFromMiddle (int thingToCover, bool edgeOrPredicate
 	for(int i = 0; i < 100; ++i) {
 
 		for (int j = 0; j < (10 + NeighborhoodSize); ++j) {
-			for (int var = 0; var < 3; ++var) {
+			for (int var = 0; var < targetCFG->getNumberOfParameters(); ++var) {
 				parameters[var] = middles[var] + uniformInRange(-NeighborhoodSize, NeighborhoodSize);
 			}
 			targetCFG->setCoverageOfTestCase(tc);
