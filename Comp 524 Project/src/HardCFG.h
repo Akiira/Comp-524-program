@@ -2,7 +2,7 @@
  * HardCFG.h
  *
  *  Created on: Mar 24, 2015
- *      Author: Kitty
+ *      Author: Austin and Randall
  */
 
 #ifndef HARDCFG_H_
@@ -18,7 +18,6 @@ public:
 	int getLowerBoundForParameter(int);
 	int getUpperBoundForParameter(int);
 
-	//TODO bottom level of tree (this CFG looks like a tree)
 	struct edges { enum { B0toB1, B1toB3, B1toB4, B3toB7, B3toB8, B4toB9, B4toB10, B7toB15,
 						  B7toB16, B8toB17, B8toB18, B9toB19, B9toB20, B10toB21, B10toB22,
 						  B15toB31, B15toB32, B16toB33, B16toB34, B16toB35, B16toB36,
@@ -34,7 +33,6 @@ public:
 						  B29toB73, B29toB74, B30toB75, B30toB76, B30toB77, B30toB78
 	}; };
 
-	//TODO all the predicates
 	struct predicates { enum {
 	B0_T, B0_F,
 	B1_T, B1_F,

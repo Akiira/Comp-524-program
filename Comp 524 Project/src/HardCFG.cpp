@@ -2,7 +2,7 @@
  * HardCFG.cpp
  *
  *  Created on: Mar 24, 2015
- *      Author: Kitty
+ *      Author: Randall and Austin
  */
 
 #include "HardCFG.h"
@@ -27,10 +27,15 @@ HardCFG::HardCFG() {
 		rangeForEachParameter[i][1] = numeric_limits<int>::max() / ( i + 2 );
 	}
 
+	Mu = 0;
+	sigma = 0;
+	sumOfAll = 0;
+	sumOfFirstHalf = 0;
+	sumOfSecondHalf =0;
 }
 
 HardCFG::~HardCFG() {
-	// TODO Auto-generated destructor stub
+
 }
 
 int HardCFG::getLowerBoundForParameter(int parameter) {
@@ -48,8 +53,6 @@ inline void HardCFG::runTestCase() {
 	calculateDeviation(testCase->getInputParameters());
 	calculateSums(testCase->getInputParameters());
 
-	//TODO added missing edge coverages
-	//TODO add all predicates coverage
 	//TODO test all edges and predicates are actually reachable
 
 	if( Mu <= 500 ) {
@@ -63,9 +66,9 @@ inline void HardCFG::runTestCase() {
 	}
 }
 
-void HardCFG::block1() {
+inline void HardCFG::block1() {
 	//mu <= 500
-	//cout << "\t" << sigma << endl;
+
 	if( sigma < 100 ) {
 		testCase->addEdgeCoverage(edges::B1toB3);
 		testCase->addPredicateCoverage(predicates::B1_T);
@@ -77,7 +80,7 @@ void HardCFG::block1() {
 	}
 }
 
-void HardCFG::block2() {
+inline void HardCFG::block2() {
 	//mu > 500
 
 	if( sigma > 100 ) {
@@ -91,7 +94,7 @@ void HardCFG::block2() {
 	}
 }
 
-void HardCFG::block3() {
+inline void HardCFG::block3() {
 	//mu <= 500 sigma < 100
 
 	if( sigma < 50 ) {
@@ -105,7 +108,7 @@ void HardCFG::block3() {
 	}
 }
 
-void HardCFG::block4() {
+inline void HardCFG::block4() {
 	//mu <= 500 sigma >= 100
 
 	if( sigma > 500 ) {
@@ -119,7 +122,7 @@ void HardCFG::block4() {
 	}
 }
 
-void HardCFG::block5() {
+inline void HardCFG::block5() {
 	//mu > 500 sigma > 100
 
 	if( sigma > 500 ) {
@@ -133,7 +136,7 @@ void HardCFG::block5() {
 	}
 }
 
-void HardCFG::block6() {
+inline void HardCFG::block6() {
 	//mu > 500 sigma <= 100
 	if( sigma < 50 ) {
 		testCase->addEdgeCoverage(edges::B6toB13);
@@ -146,7 +149,7 @@ void HardCFG::block6() {
 	}
 }
 
-void HardCFG::block7() {
+inline void HardCFG::block7() {
 	//mu <= 500 sigma < 50
 
 	if( sigma < 25 ) {
@@ -160,7 +163,7 @@ void HardCFG::block7() {
 	}
 }
 
-void HardCFG::block8() {
+inline void HardCFG::block8() {
 	//mu <= 500 sigma >= 50 sigma < 100
 
 	if( sigma > 75 ) {
@@ -174,7 +177,7 @@ void HardCFG::block8() {
 	}
 }
 
-void HardCFG::block9() {
+inline void HardCFG::block9() {
 	//mu <= 500 sigma > 500
 
 	if( sigma > 1000 ) {
@@ -188,7 +191,7 @@ void HardCFG::block9() {
 	}
 }
 
-void HardCFG::block10() {
+inline void HardCFG::block10() {
 	//mu <= 500 sigma >= 100 sigma < 500
 	if( sigma > 250 ) {
 		testCase->addEdgeCoverage(edges::B10toB21);
@@ -201,7 +204,7 @@ void HardCFG::block10() {
 	}
 }
 
-void HardCFG::block11() {
+inline void HardCFG::block11() {
 	//mu > 500 sigma > 500
 
 	if( sigma > 1000 ) {
@@ -215,7 +218,7 @@ void HardCFG::block11() {
 	}
 }
 
-void HardCFG::block12() {
+inline void HardCFG::block12() {
 	//mu > 500 sigma > 100 sigma < 500
 
 	if( sigma > 250 ) {
@@ -229,7 +232,7 @@ void HardCFG::block12() {
 	}
 }
 
-void HardCFG::block13() {
+inline void HardCFG::block13() {
 	//mu > 500 sigma <= 100
 	if( sigma < 25 ) {
 		testCase->addEdgeCoverage(edges::B13toB27);
@@ -242,7 +245,7 @@ void HardCFG::block13() {
 	}
 }
 
-void HardCFG::block14() {
+inline void HardCFG::block14() {
 	//mu > 500 sigma <= 100 sigma > 50
 	if( sigma < 75 ) {
 		testCase->addEdgeCoverage(edges::B14toB29);
@@ -255,7 +258,7 @@ void HardCFG::block14() {
 	}
 }
 
-void HardCFG::block15() {
+inline void HardCFG::block15() {
 	//mu <= 500 sigma < 25
 	int a1 = testCase->getInputParameterAtIndex(0),
 		a2 = testCase->getInputParameterAtIndex(0),
@@ -276,7 +279,7 @@ void HardCFG::block15() {
 	}
 }
 
-void HardCFG::block16() {
+inline void HardCFG::block16() {
 	//mu <= 500 sigma < 50 sigma > 25
 	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0 ) {
 		testCase->addEdgeCoverage(edges::B16toB33);
@@ -319,7 +322,7 @@ void HardCFG::block16() {
 	}
 }
 
-void HardCFG::block17() {
+inline void HardCFG::block17() {
 	//mu <= 500 sigma >= 75 sigma < 100
 	int a1 = testCase->getInputParameterAtIndex(0),
 		a2 = testCase->getInputParameterAtIndex(0),
@@ -340,7 +343,7 @@ void HardCFG::block17() {
 	}
 }
 
-void HardCFG::block18() {
+inline void HardCFG::block18() {
 	//mu <= 500 sigma >= 50 sigma <= 75
 	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0 ) {
 		testCase->addEdgeCoverage(edges::B18toB39);
@@ -382,7 +385,7 @@ void HardCFG::block18() {
 		}
 }
 
-void HardCFG::block19() {
+inline void HardCFG::block19() {
 	//mu <= 500 sigma > 1000
 	int a1 = testCase->getInputParameterAtIndex(0),
 		a2 = testCase->getInputParameterAtIndex(0),
@@ -403,7 +406,7 @@ void HardCFG::block19() {
 	}
 }
 
-void HardCFG::block20() {
+inline void HardCFG::block20() {
 	//mu <= 500 sigma > 500 sigma < 1000
 
 	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0 ) {
@@ -446,7 +449,7 @@ void HardCFG::block20() {
 		}
 }
 
-void HardCFG::block21() {
+inline void HardCFG::block21() {
 	//mu <= 500 sigma > 250 sigma < 500
 	int a1 = testCase->getInputParameterAtIndex(0),
 		a2 = testCase->getInputParameterAtIndex(0),
@@ -466,7 +469,7 @@ void HardCFG::block21() {
 	}
 }
 
-void HardCFG::block22() {
+inline void HardCFG::block22() {
 	//mu <= 500 sigma >= 100 sigma <= 250
 
 	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0) {
@@ -509,7 +512,7 @@ void HardCFG::block22() {
 	}
 }
 
-void HardCFG::block23() {
+inline void HardCFG::block23() {
 	//mu > 500 sigma > 1000
 	int a1 = testCase->getInputParameterAtIndex(0),
 		a2 = testCase->getInputParameterAtIndex(0),
@@ -529,7 +532,7 @@ void HardCFG::block23() {
 	}
 }
 
-void HardCFG::block24() {
+inline void HardCFG::block24() {
 	//mu > 500 sigma > 500 sigma < 1000
 
 	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000) {
@@ -566,7 +569,7 @@ void HardCFG::block24() {
 	}
 }
 
-void HardCFG::block25() {
+inline void HardCFG::block25() {
 	//mu > 500 sigma > 250 sigma < 500
 	int a1 = testCase->getInputParameterAtIndex(0),
 		a2 = testCase->getInputParameterAtIndex(0),
@@ -586,7 +589,7 @@ void HardCFG::block25() {
 	}
 }
 
-void HardCFG::block26() {
+inline void HardCFG::block26() {
 	//mu > 500 sigma > 100 sigma < 250
 
 	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000) {
@@ -623,7 +626,7 @@ void HardCFG::block26() {
 	}
 }
 
-void HardCFG::block27() {
+inline void HardCFG::block27() {
 	//mu > 500 sigma < 25
 	int a1 = testCase->getInputParameterAtIndex(0),
 		a2 = testCase->getInputParameterAtIndex(0),
@@ -643,7 +646,7 @@ void HardCFG::block27() {
 	}
 }
 
-void HardCFG::block28() {
+inline void HardCFG::block28() {
 	//mu > 500 sigma <= 100 sigma > 25
 
 	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000) {
@@ -680,7 +683,7 @@ void HardCFG::block28() {
 		}
 }
 
-void HardCFG::block29() {
+inline void HardCFG::block29() {
 	//mu > 500 sigma < 75 sigma > 50
 	int a1 = testCase->getInputParameterAtIndex(0),
 		a2 = testCase->getInputParameterAtIndex(0),
@@ -700,7 +703,7 @@ void HardCFG::block29() {
 	}
 }
 
-void HardCFG::block30() {
+inline void HardCFG::block30() {
 	//mu > 500 sigma <= 100 sigma >= 75
 
 	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000 ) {
