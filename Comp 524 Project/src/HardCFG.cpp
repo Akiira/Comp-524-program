@@ -16,7 +16,7 @@ using std::numeric_limits;
 
 HardCFG::HardCFG() {
 	numberOfEdges = 78;
-	numberOfPredicates = 90;
+	numberOfPredicates = 180;
 
 	numberOfParameters = 10;
 
