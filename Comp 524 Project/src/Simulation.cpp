@@ -190,7 +190,7 @@ TestCase* Simulation::localOptFromZero (int thingToCover, bool edgeOrPredicate) 
 	for(int i = 0; i < 100; ++i) {
 
 		for (int j = 0; j < 10; ++j) {
-			for (int var = 0; var < 3; ++var) {
+			for (int var = 0; var < targetCFG->getNumberOfParameters(); ++var) {
 				parameters[var] = uniformInRange(-NeighborhoodSize, NeighborhoodSize);
 			}
 			targetCFG->setCoverageOfTestCase(tc);
