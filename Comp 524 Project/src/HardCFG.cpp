@@ -469,21 +469,46 @@ void HardCFG::block21() {
 void HardCFG::block22() {
 	//mu <= 500 sigma >= 100 sigma <= 250
 
-	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0 ) {
+	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0) {
 		testCase->addEdgeCoverage(edges::B22toB51);
+		testCase->addPredicateCoverage(predicates::B22A_TT);
 	} else {
-	   if ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll > 0 ) {
-		   testCase->addEdgeCoverage(edges::B22toB52);
+		if (sumOfFirstHalf == sumOfSecondHalf) {
+			testCase->addPredicateCoverage(predicates::B22A_TF);
+		} else if (sumOfAll < 0) {
+			testCase->addPredicateCoverage(predicates::B22A_FT);
 		} else {
-			if ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll == 0 ) {
-				testCase->addEdgeCoverage(edges::B22toB53);
+			testCase->addPredicateCoverage(predicates::B22A_FF);
+		}
+
+		if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll > 0) {
+			testCase->addEdgeCoverage(edges::B22toB52);
+			testCase->addPredicateCoverage(predicates::B22B_TT);
+		} else {
+			if (sumOfFirstHalf == sumOfSecondHalf) {
+				testCase->addPredicateCoverage(predicates::B22B_TF);
+			} else if (sumOfAll > 0) {
+				testCase->addPredicateCoverage(predicates::B22B_FT);
 			} else {
+				testCase->addPredicateCoverage(predicates::B22B_FF);
+			}
+			if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll == 0) {
+				testCase->addEdgeCoverage(edges::B22toB53);
+				testCase->addPredicateCoverage(predicates::B22C_TT);
+			} else {
+				if (sumOfFirstHalf == sumOfSecondHalf) {
+					testCase->addPredicateCoverage(predicates::B22C_TF);
+				} else if (sumOfAll > 0) {
+					testCase->addPredicateCoverage(predicates::B22C_FT);
+				} else {
+					testCase->addPredicateCoverage(predicates::B22C_FF);
+				}
 				testCase->addEdgeCoverage(edges::B22toB54);
 			}
 		}
 	}
 }
-//-----------------------------------------
+
 void HardCFG::block23() {
 	//mu > 500 sigma > 1000
 	int a1 = testCase->getInputParameterAtIndex(0),
@@ -507,15 +532,34 @@ void HardCFG::block23() {
 void HardCFG::block24() {
 	//mu > 500 sigma > 500 sigma < 1000
 
-	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000 ) {
+	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000) {
 		testCase->addEdgeCoverage(edges::B24toB57);
+		testCase->addPredicateCoverage(predicates::B24A_TT);
 	} else {
-	   if ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll > -10000 ) {
-		   testCase->addEdgeCoverage(edges::B24toB58);
+		if (sumOfFirstHalf == sumOfSecondHalf) {
+			testCase->addPredicateCoverage(predicates::B24A_TF);
+		} else if (sumOfAll < 0) {
+			testCase->addPredicateCoverage(predicates::B24A_FT);
 		} else {
-			if ( sumOfFirstHalf <= sumOfSecondHalf) {
-				testCase->addEdgeCoverage(edges::B24toB59);
+			testCase->addPredicateCoverage(predicates::B24A_FF);
+		}
+
+		if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll > -10000) {
+			testCase->addEdgeCoverage(edges::B24toB58);
+			testCase->addPredicateCoverage(predicates::B24B_TT);
+		} else {
+			if (sumOfFirstHalf == sumOfSecondHalf) {
+				testCase->addPredicateCoverage(predicates::B24B_TF);
+			} else if (sumOfAll > 0) {
+				testCase->addPredicateCoverage(predicates::B24B_FT);
 			} else {
+				testCase->addPredicateCoverage(predicates::B24B_FF);
+			}
+			if (sumOfFirstHalf <= sumOfSecondHalf) {
+				testCase->addEdgeCoverage(edges::B24toB59);
+				testCase->addPredicateCoverage(predicates::B24C_T);
+			} else {
+				testCase->addPredicateCoverage(predicates::B24C_F);
 				testCase->addEdgeCoverage(edges::B24toB60);
 			}
 		}
@@ -545,15 +589,34 @@ void HardCFG::block25() {
 void HardCFG::block26() {
 	//mu > 500 sigma > 100 sigma < 250
 
-	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000 ) {
+	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000) {
 		testCase->addEdgeCoverage(edges::B26toB63);
+		testCase->addPredicateCoverage(predicates::B26A_TT);
 	} else {
-	   if ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll > -10000 ) {
-		   testCase->addEdgeCoverage(edges::B26toB64);
+		if (sumOfFirstHalf == sumOfSecondHalf) {
+			testCase->addPredicateCoverage(predicates::B26A_TF);
+		} else if (sumOfAll < 0) {
+			testCase->addPredicateCoverage(predicates::B26A_FT);
 		} else {
-			if ( sumOfFirstHalf <= sumOfSecondHalf) {
-				testCase->addEdgeCoverage(edges::B26toB65);
+			testCase->addPredicateCoverage(predicates::B26A_FF);
+		}
+
+		if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll > -10000) {
+			testCase->addEdgeCoverage(edges::B26toB64);
+			testCase->addPredicateCoverage(predicates::B26B_TT);
+		} else {
+			if (sumOfFirstHalf == sumOfSecondHalf) {
+				testCase->addPredicateCoverage(predicates::B26B_TF);
+			} else if (sumOfAll > 0) {
+				testCase->addPredicateCoverage(predicates::B26B_FT);
 			} else {
+				testCase->addPredicateCoverage(predicates::B26B_FF);
+			}
+			if (sumOfFirstHalf <= sumOfSecondHalf) {
+				testCase->addEdgeCoverage(edges::B26toB65);
+				testCase->addPredicateCoverage(predicates::B26C_T);
+			} else {
+				testCase->addPredicateCoverage(predicates::B26C_F);
 				testCase->addEdgeCoverage(edges::B26toB66);
 			}
 		}
@@ -582,19 +645,39 @@ void HardCFG::block27() {
 
 void HardCFG::block28() {
 	//mu > 500 sigma <= 100 sigma > 25
-	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000 ) {
-		testCase->addEdgeCoverage(edges::B28toB69);
-	} else {
-	   if ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll > -10000 ) {
-		   testCase->addEdgeCoverage(edges::B28toB70);
+
+	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000) {
+			testCase->addEdgeCoverage(edges::B28toB69);
+			testCase->addPredicateCoverage(predicates::B28A_TT);
 		} else {
-			if ( sumOfFirstHalf <= sumOfSecondHalf) {
-				testCase->addEdgeCoverage(edges::B28toB71);
+			if (sumOfFirstHalf == sumOfSecondHalf) {
+				testCase->addPredicateCoverage(predicates::B28A_TF);
+			} else if (sumOfAll < 0) {
+				testCase->addPredicateCoverage(predicates::B28A_FT);
 			} else {
-				testCase->addEdgeCoverage(edges::B28toB72);
+				testCase->addPredicateCoverage(predicates::B28A_FF);
+			}
+
+			if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll > -10000) {
+				testCase->addEdgeCoverage(edges::B28toB70);
+				testCase->addPredicateCoverage(predicates::B28B_TT);
+			} else {
+				if (sumOfFirstHalf == sumOfSecondHalf) {
+					testCase->addPredicateCoverage(predicates::B28B_TF);
+				} else if (sumOfAll > 0) {
+					testCase->addPredicateCoverage(predicates::B28B_FT);
+				} else {
+					testCase->addPredicateCoverage(predicates::B28B_FF);
+				}
+				if (sumOfFirstHalf <= sumOfSecondHalf) {
+					testCase->addEdgeCoverage(edges::B28toB71);
+					testCase->addPredicateCoverage(predicates::B28C_T);
+				} else {
+					testCase->addPredicateCoverage(predicates::B28C_F);
+					testCase->addEdgeCoverage(edges::B28toB72);
+				}
 			}
 		}
-	}
 }
 
 void HardCFG::block29() {
@@ -629,6 +712,39 @@ void HardCFG::block30() {
 			if ( sumOfFirstHalf <= sumOfSecondHalf) {
 				testCase->addEdgeCoverage(edges::B30toB77);
 			} else {
+				testCase->addEdgeCoverage(edges::B30toB78);
+			}
+		}
+	}
+
+	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000) {
+		testCase->addEdgeCoverage(edges::B30toB75);
+		testCase->addPredicateCoverage(predicates::B30A_TT);
+	} else {
+		if (sumOfFirstHalf == sumOfSecondHalf) {
+			testCase->addPredicateCoverage(predicates::B30A_TF);
+		} else if (sumOfAll < 0) {
+			testCase->addPredicateCoverage(predicates::B30A_FT);
+		} else {
+			testCase->addPredicateCoverage(predicates::B30A_FF);
+		}
+
+		if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll > -10000) {
+			testCase->addEdgeCoverage(edges::B30toB76);
+			testCase->addPredicateCoverage(predicates::B30B_TT);
+		} else {
+			if (sumOfFirstHalf == sumOfSecondHalf) {
+				testCase->addPredicateCoverage(predicates::B30B_TF);
+			} else if (sumOfAll > 0) {
+				testCase->addPredicateCoverage(predicates::B30B_FT);
+			} else {
+				testCase->addPredicateCoverage(predicates::B30B_FF);
+			}
+			if (sumOfFirstHalf <= sumOfSecondHalf) {
+				testCase->addEdgeCoverage(edges::B30toB77);
+				testCase->addPredicateCoverage(predicates::B30C_T);
+			} else {
+				testCase->addPredicateCoverage(predicates::B30C_F);
 				testCase->addEdgeCoverage(edges::B30toB78);
 			}
 		}
