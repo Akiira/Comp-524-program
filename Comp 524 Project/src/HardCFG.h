@@ -21,8 +21,18 @@ public:
 	//TODO bottom level of tree (this CFG looks like a tree)
 	struct edges { enum { B0toB1, B1toB3, B1toB4, B3toB7, B3toB8, B4toB9, B4toB10, B7toB15,
 						  B7toB16, B8toB17, B8toB18, B9toB19, B9toB20, B10toB21, B10toB22,
+						  B15toB31, B15toB32, B16toB33, B16toB34, B16toB35, B16toB36,
+						  B17toB37, B17toB38, B18toB39, B18toB40, B18toB41, B18toB42,
+						  B19toB43, B19toB44, B20toB45, B20toB46, B20toB47, B20toB48,
+						  B21toB49, B21toB50, B22toB51, B22toB52, B22toB53, B22toB54,
+
 						  B0toB2, B2toB5, B2toB6, B5toB11, B5toB12, B6toB13, B6toB14, B11toB23,
-						  B11toB24, B12toB25, B12toB26, B13toB27, B13toB28, B14toB29, B14toB30 }; };
+						  B11toB24, B12toB25, B12toB26, B13toB27, B13toB28, B14toB29, B14toB30,
+						  B23toB55, B23toB56, B24toB57, B24toB58, B24toB59, B24toB60,
+						  B25toB61, B25toB62, B26toB63, B26toB64, B26toB65, B26toB66,
+						  B27toB67, B27toB68, B28toB69, B28toB70, B28toB71, B28toB72,
+						  B29toB73, B29toB74, B30toB75, B30toB76, B30toB77, B30toB78
+	}; };
 
 	//TODO all the predicates
 	struct predicates { enum { B0_TTT, B0_TTF, B0_TFT, B0_FTT, B0_TFF, B0_FFT, B0_FTF, B0_FFF,
