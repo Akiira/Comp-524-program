@@ -19,6 +19,7 @@ public:
 	virtual ~Organism();
 
 	Organism(const Organism& org);
+	Organism( );
 	Organism(int numOfTestCases, int maxNumberOfTestCases);
 	Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** testCases);
 

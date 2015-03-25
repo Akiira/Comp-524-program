@@ -15,7 +15,6 @@ HiLoControlFlowGraph::HiLoControlFlowGraph() {
 	numberOfEdges = 14;
 	numberOfPredicates = 14;
 
-	// Target isn't an input since its always num1 * num2
 	numberOfParameters = 3;
 
 	testCase = 0;

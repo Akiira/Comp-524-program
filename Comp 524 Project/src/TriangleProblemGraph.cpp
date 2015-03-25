@@ -6,7 +6,6 @@
  */
 
 #include "TriangleProblemGraph.h"
-#include <cstring>
 #include <cassert>
 using std::endl;
 using std::cout;
@@ -19,7 +18,6 @@ TriangleProblemGraph::TriangleProblemGraph() {
 	numberOfEdges = 12;
 	numberOfPredicates = 20;
 
-	// Target isn't an input since its always num1 * num2
 	numberOfParameters = 3;
 
 	testCase = NULL;
