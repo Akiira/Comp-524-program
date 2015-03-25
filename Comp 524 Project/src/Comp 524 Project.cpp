@@ -196,7 +196,7 @@ int main() {
 
     //ts->calculateTestSuiteCoverage();
     //ts->printTestSuiteCoverage();
-    Simulation* hardSim = new Simulation(1000, 2, .02, 1, 1000);
+    Simulation* hardSim = new Simulation(1000, 2, .02, 1, 5000);
     hardSim->run();
 
     //triangleRandomSearchEdges();
