@@ -162,9 +162,9 @@ bool Simulation::hasEquivalentCoverageToPopulation(Organism* organism) {
 Organism* Simulation::constructFinalOrganism() {
 	Organism* finalOrg;
 
-	if (hasEquivalentCoverageToPopulation(bestOrganismSeen)) {
+	if (hasEquivalentCoverageToPopulation(population->getBestOrganism())) {
 		cout << "Already has all the coverage" << endl;
-		finalOrg = new Organism(*bestOrganismSeen);
+		finalOrg = new Organism(*population->getBestOrganism());
 	}
 	else {
 		cout << "Doesn't have all the coverage" << endl;
