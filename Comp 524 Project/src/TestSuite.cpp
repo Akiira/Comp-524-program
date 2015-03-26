@@ -151,7 +151,7 @@ void TestSuite::replaceDuplicateTestCase(TestCase* testCase) {
 	auto tc = getDuplicateTestCase();
 
 	if( tc ) {
-		tc = testCase;
+		*tc = *testCase;
 	}
 }
 

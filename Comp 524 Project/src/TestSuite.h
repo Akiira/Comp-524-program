@@ -68,6 +68,24 @@ public:
 	TestCase* getTestCaseThatCoversPredicate(int predicateNumber);
 	TestCase* getTestCaseThatCoversEdge(int edgeNumber);
 
+	bool* getAllUncoveredEdges() const {
+		auto unCovered = new bool[numberOfEdges];
+		for (int i = 0; i < numberOfEdges; ++i) {
+			unCovered[i] = ( edgeCoverageCounts[i] == 0 ? true : false );
+		}
+
+		return unCovered;
+	}
+
+	bool* getAllUncoveredPredicates() const {
+		auto unCovered = new bool[numberOfPredicates];
+		for (int i = 0; i < numberOfPredicates; ++i) {
+			unCovered[i] = ( edgeCoverageCounts[i] == 0 ? true : false );
+		}
+
+		return unCovered;
+	}
+
 	bool* getDuplicateEdges() const {
 		auto dupes = new bool[numberOfEdges];
 		for (int i = 0; i < numberOfEdges; ++i) {
@@ -104,10 +122,6 @@ public:
 
 	double getCoverageRatio() const {
 		return coverageRatio;
-	}
-
-	void setNumberOfTestCases(int numberOfTestCases) {
-		this->numberOfTestCases = numberOfTestCases;
 	}
 
 	//===========================OVERLOADED OPERATORS===========================
