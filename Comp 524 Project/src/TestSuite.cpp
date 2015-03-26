@@ -115,7 +115,7 @@ TestCase* TestSuite::getTestCaseThatCoversPredicate(int predicateNumber) {
 			}
 		}
 	}
-	// It makes no sense to ever get here, but c++ requires a return stmt.
+
 	assert(false);
 	return NULL;
 }
@@ -131,7 +131,7 @@ TestCase* TestSuite::getTestCaseThatCoversEdge(int edgeNumber) {
 			}
 		}
 	}
-	// It makes no sense to ever get here, but c++ requires a return stmt.
+
 	assert(false);
 	return NULL;
 }
@@ -152,6 +152,7 @@ void TestSuite::replaceDuplicateTestCase(TestCase* testCase) {
 
 	if( tc ) {
 		*tc = *testCase;
+		calculateTestSuiteCoverage();
 	}
 }
 
