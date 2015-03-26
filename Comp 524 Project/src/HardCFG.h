@@ -82,10 +82,10 @@ public:
 	B29_TT, B29_FT, B29_TF, B29_FF,
 	B30A_TT, B30A_FT, B30A_TF, B30A_FF, B30B_TT, B30B_FT, B30B_TF, B30B_FF, B30C_T, B30C_F
 	}; };
-
+	double Mu, sigma;
 private:
 	int rangeForEachParameter[10][2];
-	double Mu, sigma;
+
 	long long sumOfAll;
 	long long sumOfFirstHalf;
 	long long sumOfSecondHalf;

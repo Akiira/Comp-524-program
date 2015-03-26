@@ -83,7 +83,7 @@ inline void HardCFG::block1() {
 inline void HardCFG::block2() {
 	//mu > 500
 
-	if( sigma > 100 ) {
+	if( sigma > 1000 ) {
 		testCase->addEdgeCoverage(edges::B2toB5);
 		testCase->addPredicateCoverage(predicates::B2_T);
 		block5();
@@ -123,9 +123,9 @@ inline void HardCFG::block4() {
 }
 
 inline void HardCFG::block5() {
-	//mu > 500 sigma > 100
+	//mu > 500 sigma > 1000
 
-	if( sigma > 500 ) {
+	if( sigma > 5000 ) {
 		testCase->addEdgeCoverage(edges::B5toB11);
 		testCase->addPredicateCoverage(predicates::B5_T);
 		block11();
@@ -137,8 +137,8 @@ inline void HardCFG::block5() {
 }
 
 inline void HardCFG::block6() {
-	//mu > 500 sigma <= 100
-	if( sigma < 50 ) {
+	//mu > 500 sigma <= 1000
+	if( sigma < 500 ) {
 		testCase->addEdgeCoverage(edges::B6toB13);
 		testCase->addPredicateCoverage(predicates::B6_T);
 		block13();
@@ -205,9 +205,9 @@ inline void HardCFG::block10() {
 }
 
 inline void HardCFG::block11() {
-	//mu > 500 sigma > 500
+	//mu > 500 sigma > 5000
 
-	if( sigma > 1000 ) {
+	if( sigma > 10000 ) {
 		testCase->addEdgeCoverage(edges::B11toB23);
 		testCase->addPredicateCoverage(predicates::B11_T);
 		block23();
@@ -219,9 +219,9 @@ inline void HardCFG::block11() {
 }
 
 inline void HardCFG::block12() {
-	//mu > 500 sigma > 100 sigma < 500
+	//mu > 500 sigma > 1000 sigma < 5000
 
-	if( sigma > 250 ) {
+	if( sigma > 2500 ) {
 		testCase->addEdgeCoverage(edges::B12toB25);
 		testCase->addPredicateCoverage(predicates::B12_T);
 		block25();
@@ -233,8 +233,8 @@ inline void HardCFG::block12() {
 }
 
 inline void HardCFG::block13() {
-	//mu > 500 sigma <= 100
-	if( sigma < 25 ) {
+	//mu > 500 sigma < 500
+	if( sigma < 250 ) {
 		testCase->addEdgeCoverage(edges::B13toB27);
 		testCase->addPredicateCoverage(predicates::B13_T);
 		block27();
@@ -513,7 +513,7 @@ inline void HardCFG::block22() {
 }
 
 inline void HardCFG::block23() {
-	//mu > 500 sigma > 1000
+	//mu > 500 sigma > 10000
 	int a1 = testCase->getInputParameterAtIndex(0),
 		a2 = testCase->getInputParameterAtIndex(0),
 		a3 = testCase->getInputParameterAtIndex(0);
@@ -533,7 +533,7 @@ inline void HardCFG::block23() {
 }
 
 inline void HardCFG::block24() {
-	//mu > 500 sigma > 500 sigma < 1000
+	//mu > 500 sigma > 5000 sigma < 10000
 
 	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000) {
 		testCase->addEdgeCoverage(edges::B24toB57);
@@ -570,7 +570,7 @@ inline void HardCFG::block24() {
 }
 
 inline void HardCFG::block25() {
-	//mu > 500 sigma > 250 sigma < 500
+	//mu > 500 sigma > 2500 sigma < 5000
 	int a1 = testCase->getInputParameterAtIndex(0),
 		a2 = testCase->getInputParameterAtIndex(0),
 		a3 = testCase->getInputParameterAtIndex(0);
@@ -590,7 +590,7 @@ inline void HardCFG::block25() {
 }
 
 inline void HardCFG::block26() {
-	//mu > 500 sigma > 100 sigma < 250
+	//mu > 500 sigma > 1000 sigma < 2500
 
 	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000) {
 		testCase->addEdgeCoverage(edges::B26toB63);
@@ -627,7 +627,7 @@ inline void HardCFG::block26() {
 }
 
 inline void HardCFG::block27() {
-	//mu > 500 sigma < 25
+	//mu > 500 sigma < 250
 	int a1 = testCase->getInputParameterAtIndex(0),
 		a2 = testCase->getInputParameterAtIndex(0),
 		a3 = testCase->getInputParameterAtIndex(0);
@@ -860,6 +860,35 @@ void HardCFG::printEdgesCovered(bool* edgesCovered) const{
 		cout << "   " << edgesCovered[47 + j] << "   |";
 	}
 	cout << endl;
+
+	cout << "B23toB55, B23toB56, B24toB57, B24toB58, B24toB59, B24toB60," << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for(int j = 0; j < 6; j++)
+	{
+		cout << "   " << edgesCovered[54 + j] << "   |";
+	}
+	cout << endl;
+	cout << "B25toB61, B25toB62, B26toB63, B26toB64, B26toB65, B26toB66," << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for(int j = 0; j < 6; j++)
+	{
+		cout << "   " << edgesCovered[60 + j] << "   |";
+	}
+	cout << endl;
+	cout << "B27toB67, B27toB68, B28toB69, B28toB70, B28toB71, B28toB72," << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for(int j = 0; j < 6; j++)
+	{
+		cout << "   " << edgesCovered[66 + j] << "   |";
+	}
+	cout << endl;
+	cout << "B29toB73, B29toB74, B30toB75, B30toB76, B30toB77, B30toB78" << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for(int j = 0; j < 6; j++)
+	{
+		cout << "   " << edgesCovered[72 + j] << "   |";
+	}
+	cout << endl;
 }
 
 void HardCFG::printPredicatesCovered(bool* predicatesCovered) const{
@@ -921,6 +950,35 @@ void HardCFG::printEdgesCovered(int* edgesCovered) const{
 	for(int j = 0; j < 7; j++)
 	{
 		cout << "   " << edgesCovered[47 + j] << "   |";
+	}
+	cout << endl;
+
+	cout << "B23toB55, B23toB56, B24toB57, B24toB58, B24toB59, B24toB60," << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for(int j = 0; j < 6; j++)
+	{
+		cout << "   " << edgesCovered[54 + j] << "   |";
+	}
+	cout << endl;
+	cout << "B25toB61, B25toB62, B26toB63, B26toB64, B26toB65, B26toB66," << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for(int j = 0; j < 6; j++)
+	{
+		cout << "   " << edgesCovered[60 + j] << "   |";
+	}
+	cout << endl;
+	cout << "B27toB67, B27toB68, B28toB69, B28toB70, B28toB71, B28toB72," << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for(int j = 0; j < 6; j++)
+	{
+		cout << "   " << edgesCovered[66 + j] << "   |";
+	}
+	cout << endl;
+	cout << "B29toB73, B29toB74, B30toB75, B30toB76, B30toB77, B30toB78" << endl;
+	cout << "---------------------------------------------------------------------------" << endl;
+	for(int j = 0; j < 6; j++)
+	{
+		cout << "   " << edgesCovered[72 + j] << "   |";
 	}
 	cout << endl;
 }
