@@ -28,6 +28,15 @@ Simulation::Simulation(int populationSize, int numberOfCutPoints, double mutatio
 	population = new Population { populationSize, testSuiteSize, testSuiteSize };
 }
 
+Simulation::Simulation(int populationSize) {
+
+	this->populationSize = populationSize;
+	this->testSuiteSize = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+
+	population = new Population { populationSize, testSuiteSize, testSuiteSize };
+}
+
+//void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutationProb, double crossOverProb) {
 void Simulation::run(){
 	int i { 0 };
 	Organism *child1 { }, *child2 { };

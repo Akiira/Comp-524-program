@@ -18,6 +18,9 @@ public:
 	virtual ~Simulation();
 
 	Simulation(int populationSize, int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations);
+	Simulation(int populationSize);
+
+	void run(int numberOfGenerations, int numberOfCutPoints, double mutationProb, double crossOverProb);
 	void run();
 
 	void tryLocalOptimization(Organism* child);
