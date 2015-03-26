@@ -105,6 +105,8 @@ int Organism::fitnessFunction03() {
 	//	before moving forward.
 	//int* populationEdgeCoverage = population->getEdgesCovered();
 	//int* populationPredicateCoverage = population->getPredicatesCovered();
+	assert(false);
+	return 0;
 }
 void Organism::evaluateBaseFitness(){
 	chromosome->calculateTestSuiteCoverage();
