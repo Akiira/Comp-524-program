@@ -102,19 +102,19 @@ void hiLoSimulationTest() {
 	hiLoSim->run(1000, 5, 0.02);
 }
 
-void localOptTest() {
-	HiLoControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
-	bool EDGE { true }, PREDICATE { false };
-	targetCFG = hiLoCFG;
-
-	Simulation* hiLoSim = new Simulation(100);
-	hiLoSim->localOptFromZero(HiLoControlFlowGraph::edges::B8toB10, EDGE);
-
-	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_FF, PREDICATE);
-	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_FT, PREDICATE);
-	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_TF, PREDICATE);
-	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_TT, PREDICATE);
-}
+//void localOptTest() {
+//	HiLoControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
+//	bool EDGE { true }, PREDICATE { false };
+//	targetCFG = hiLoCFG;
+//
+//	Simulation* hiLoSim = new Simulation(100);
+//	hiLoSim->localOptFromZero(HiLoControlFlowGraph::edges::B8toB10, EDGE);
+//
+//	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_FF, PREDICATE);
+//	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_FT, PREDICATE);
+//	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_TF, PREDICATE);
+//	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_TT, PREDICATE);
+//}
 void localOptTest2() {
 	HiLoControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
 	bool EDGE { true };//, PREDICATE { false };
@@ -143,33 +143,33 @@ void triangleSimulationTest() {
 	hiLoSim->run(1000, 5, 0.02);
 }
 
-void localOptTest3() {
-	ControlFlowGraph* triangleCFG = new TriangleProblemGraph { };
-	targetCFG = triangleCFG;
-	bool PREDICATE { false };//EDGE { true },
-
-	Simulation* hiLoSim = new Simulation(100);
-
-	for (int var = 0; var < 5; ++var) {
-		TestCase* tc = new TestCase{};
-
-	//	cout << "From Random: " ;
-	//	hiLoSim->localOptFromGivenParams(tc, TriangleProblemGraph::edges::B5toB6, EDGE);
-	//	cout << "From middle: " ;
-	//	hiLoSim->localOptFromMiddle(TriangleProblemGraph::edges::B5toB6, EDGE);
-	//	cout << "From zero: " ;
-	//	hiLoSim->localOptFromZero(TriangleProblemGraph::edges::B5toB6, EDGE);
-	//	cout << "\n";
-
-		cout << "From Random: " ;
-		hiLoSim->localOptFromGivenParams(tc, TriangleProblemGraph::predicates::B0_TFT, PREDICATE);
-		cout << "From middle: " ;
-		hiLoSim->localOptFromMiddle(TriangleProblemGraph::predicates::B0_TFT, PREDICATE);
-		cout << "From zero: " ;
-		hiLoSim->localOptFromZero(TriangleProblemGraph::predicates::B0_TFT, PREDICATE);
-		cout << "\n";
-	}
-}
+//void localOptTest3() {
+//	ControlFlowGraph* triangleCFG = new TriangleProblemGraph { };
+//	targetCFG = triangleCFG;
+//	bool PREDICATE { false };//EDGE { true },
+//
+//	Simulation* hiLoSim = new Simulation(100);
+//
+//	for (int var = 0; var < 5; ++var) {
+//		TestCase* tc = new TestCase{};
+//
+//	//	cout << "From Random: " ;
+//	//	hiLoSim->localOptFromGivenParams(tc, TriangleProblemGraph::edges::B5toB6, EDGE);
+//	//	cout << "From middle: " ;
+//	//	hiLoSim->localOptFromMiddle(TriangleProblemGraph::edges::B5toB6, EDGE);
+//	//	cout << "From zero: " ;
+//	//	hiLoSim->localOptFromZero(TriangleProblemGraph::edges::B5toB6, EDGE);
+//	//	cout << "\n";
+//
+//		cout << "From Random: " ;
+//		hiLoSim->localOptFromGivenParams(tc, TriangleProblemGraph::predicates::B0_TFT, PREDICATE);
+//		cout << "From middle: " ;
+//		hiLoSim->localOptFromMiddle(TriangleProblemGraph::predicates::B0_TFT, PREDICATE);
+//		cout << "From zero: " ;
+//		hiLoSim->localOptFromZero(TriangleProblemGraph::predicates::B0_TFT, PREDICATE);
+//		cout << "\n";
+//	}
+//}
 
 void hardTest(){
 	targetCFG = new HardCFG { };
