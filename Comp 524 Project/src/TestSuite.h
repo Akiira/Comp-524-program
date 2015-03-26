@@ -68,6 +68,24 @@ public:
 	TestCase* getTestCaseThatCoversPredicate(int predicateNumber);
 	TestCase* getTestCaseThatCoversEdge(int edgeNumber);
 
+	bool* getDuplicateEdges() const {
+		auto dupes = new bool[numberOfEdges];
+		for (int i = 0; i < numberOfEdges; ++i) {
+			dupes[i] = ( edgeCoverageCounts[i] > 1 ? true : false );
+		}
+
+		return dupes;
+	}
+
+	bool* getDuplicatePredicates() const {
+		auto dupes = new bool[numberOfPredicates];
+		for (int i = 0; i < numberOfPredicates; ++i) {
+			dupes[i] = ( edgeCoverageCounts[i] > 1 ? true : false );
+		}
+
+		return dupes;
+	}
+
 	int* getEdgeCoverageCounts() const {
 		return edgeCoverageCounts;
 	}
