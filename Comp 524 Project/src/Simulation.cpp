@@ -49,23 +49,21 @@ void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double muta
 		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
 
 		if(child1 <= child2){
-			population->evaluateOrganismsFitness(child2);
-			tryLocalOptimization(child2);
+			if( i % 100 == 0 || population->getCoverageRatio() > 0.95 ) {
+				tryLocalOptimization(child2);
+			}
 			population->replaceParentThenReplaceWorst(parentToReplace, child2);
 			delete child1;
 			child1 = NULL;
 		}
 		else {
-			population->evaluateOrganismsFitness(child2);
-			tryLocalOptimization(child1);
+			if( i % 100 == 0 || population->getCoverageRatio() > 0.95 ) {
+				tryLocalOptimization(child1);
+			}
 			population->replaceParentThenReplaceWorst(parentToReplace, child1);
 			delete child2;
 			child2 = NULL;
 		}
-
-//		if( i % 100 == 0 || population->getCoverageRatio() > 0.95 ) {
-//			tryLocalOptimization();
-//		}
 
 		i++;
 
