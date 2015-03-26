@@ -50,10 +50,7 @@ void Simulation::run(){
 		child2->mutate(newProb);
 
 		// Attempt to replace the worst of the two parents
-		auto parentToReplace = parent2Index;
-		if (parent1 <= parent2) {
-			parentToReplace = parent1Index;
-		}
+		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
 
 		if(child1 <= child2){
 			population->replaceParentThenReplaceWorst(parentToReplace, child2);
