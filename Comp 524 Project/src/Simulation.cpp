@@ -14,7 +14,6 @@ using std::endl;
 
 Simulation::~Simulation(){
 	delete population;
-	delete bestOrganismSeen;
 }
 
 Simulation::Simulation(int populationSize, int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations){
@@ -27,15 +26,12 @@ Simulation::Simulation(int populationSize, int numberOfCutPoints, double mutatio
 	probabilityForCrossover = crossOverProb;
 
 	population = new Population { populationSize, testSuiteSize, testSuiteSize };
-
-//	bestOrganismSeen = new Organism { testSuiteSize, testSuiteSize };
-//	*bestOrganismSeen = *population->getBestOrganism();
 }
 
 void Simulation::run(){
 	int i { 0 };
 	Organism *child1 { }, *child2 { };
-	//TODO possibly add some periodic adaptation of parameters like mutation
+
 	do{
 		//population->printPopulationFitness();
 		//population->printPopulationCoverage();
@@ -70,18 +66,11 @@ void Simulation::run(){
 			child2 = NULL;
 		}
 
-		//TODO: there are many different ways we could call/use this. Think about the most appropiate.
 		if( i % 100 == 0 || population->getCoverageRatio() > 0.95 ) {
 			tryLocalOptimization();
 		}
 
 		i++;
-
-//		//TODO Check if it looks like the last generation always have the best organism
-//		//		and if so, we can remove this. We can check this when we are closer to final version
-//		if( *bestOrganismSeen < *population->getBestOrganism() ) {
-//			*bestOrganismSeen = *population->getBestOrganism();
-//		}
 
 	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
 
@@ -169,7 +158,7 @@ Organism* Simulation::constructFinalOrganism() {
 	else {
 		cout << "Doesn't have all the coverage" << endl;
 		// Start with a copy of bestOrganismSeen, with room to grow
-		TestCase** bestTestCasesSeen = bestOrganismSeen->getChromosome()->getAllTestCases();
+		TestCase** bestTestCasesSeen = population->getBestOrganism()->getChromosome()->getAllTestCases();
 		finalOrg = new Organism(0, testSuiteSize * 2, new TestCase*[testSuiteSize * 2] { });
 
 		TestSuite* finalSuite = finalOrg->getChromosome();

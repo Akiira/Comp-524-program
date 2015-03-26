@@ -25,13 +25,9 @@ public:
 	TestCase* localOptFromGivenParams (TestCase* orig, int thingToCover, bool edgeOrPredicate);
 	TestCase* localOptFromMiddle (int thingToCover, bool edgeOrPredicate);
 
-	TestSuite* getBestTestSuite(){
-		return bestOrganismSeen->getChromosome();
-	}
 
 private:
 	Population* population;
-	Organism* bestOrganismSeen;
 
 	int populationSize;
 	int testSuiteSize;
