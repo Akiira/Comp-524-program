@@ -49,19 +49,19 @@ void Population::evaluateOrganismsFitness(Organism* org) {
 	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
 		if ( edges[i] ) {
 			int timesCoveredByPopulation = edgesCovered[i];
-			if ( timesCoveredByPopulation < 5 ) {
-				base *= 10.0;
-			} else if ( timesCoveredByPopulation < 10 ) {
-				base *= 2.0;
-			} else if ( timesCoveredByPopulation < 20 ) {
+			if ( timesCoveredByPopulation < 5 && base < 5.0 ) {
+				base *= 6.0;
+			} else if ( timesCoveredByPopulation < 10 && base < 5.0 ) {
+				base *= 3.0;
+			} else if ( timesCoveredByPopulation < 20 && base < 5.0 ) {
 				base *= 1.5;
 			} else if ( timesCoveredByPopulation < 50 ) {
 				base *= 1.0;
-			} else if ( timesCoveredByPopulation < 100 ) {
+			} else if ( timesCoveredByPopulation < 100 && base > 0.5  ) {
 				base *= 0.95;
-			} else if ( timesCoveredByPopulation < 200 ) {
+			} else if ( timesCoveredByPopulation < 200 && base > 0.5  ) {
 				base *= 0.90;
-			} else {
+			} else if ( base > 0.5 ) {
 				base *= 0.85;
 			}
 		}
@@ -73,18 +73,18 @@ void Population::evaluateOrganismsFitness(Organism* org) {
 		if (preds[i]) {
 			int timesCoveredByPopulation = preds[i];
 			if (timesCoveredByPopulation < 5) {
-				base *= 10.0;
-			} else if (timesCoveredByPopulation < 10) {
-				base *= 2.0;
-			} else if (timesCoveredByPopulation < 20) {
+				base *= 6.0;
+			} else if (timesCoveredByPopulation < 10 && base < 5.0) {
+				base *= 3.0;
+			} else if (timesCoveredByPopulation < 20 && base < 5.0) {
 				base *= 1.5;
-			} else if (timesCoveredByPopulation < 50) {
+			} else if (timesCoveredByPopulation < 50 && base < 5.0) {
 				base *= 1.0;
-			} else if (timesCoveredByPopulation < 100) {
+			} else if (timesCoveredByPopulation < 100 && base > 0.5 ) {
 				base *= 0.95;
-			} else if (timesCoveredByPopulation < 200) {
+			} else if (timesCoveredByPopulation < 200 && base > 0.5 ) {
 				base *= 0.90;
-			} else {
+			} else if ( base > 0.5 ) {
 				base *= 0.85;
 			}
 		}
