@@ -89,8 +89,8 @@ void simpleIfElseSimulationTest() {
 
 	ControlFlowGraph* simpleIfElseCFG = new SimpleIfElseControlFlowGraph { };
 	targetCFG = simpleIfElseCFG;
-	Simulation* simpleIfElseSim = new Simulation(1000, 2, 1, 1, 10);
-	simpleIfElseSim->run();
+	Simulation* simpleIfElseSim = new Simulation(100);
+	simpleIfElseSim->run(1000, 5, 0.02);
 }
 
 void hiLoSimulationTest() {
@@ -98,8 +98,8 @@ void hiLoSimulationTest() {
 	ControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
 
 	targetCFG = hiLoCFG;
-	Simulation* hiLoSim = new Simulation(100, 2, .02, 1, 1000000);
-	hiLoSim->run();
+	Simulation* hiLoSim = new Simulation(100);
+	hiLoSim->run(1000, 5, 0.02);
 }
 
 void localOptTest() {
@@ -107,7 +107,7 @@ void localOptTest() {
 	bool EDGE { true }, PREDICATE { false };
 	targetCFG = hiLoCFG;
 
-	Simulation* hiLoSim = new Simulation(1000, 2, .02, 1, 1000000);
+	Simulation* hiLoSim = new Simulation(100);
 	hiLoSim->localOptFromZero(HiLoControlFlowGraph::edges::B8toB10, EDGE);
 
 	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_FF, PREDICATE);
@@ -120,7 +120,7 @@ void localOptTest2() {
 	bool EDGE { true };//, PREDICATE { false };
 	targetCFG = hiLoCFG;
 
-	Simulation* hiLoSim = new Simulation { 1000, 2, .02, 1, 1000000 };
+	Simulation* hiLoSim = new Simulation(100);
 
 for (int var = 0; var < 50; ++var) {
 	TestCase* tc = new TestCase{};
@@ -139,8 +139,8 @@ void triangleSimulationTest() {
 	ControlFlowGraph* triangleCFG = new TriangleProblemGraph { };
 
 	targetCFG = triangleCFG;
-	Simulation* hiLoSim = new Simulation { 100, 2, .02, 1, 70000 };
-	hiLoSim->run();
+	Simulation* hiLoSim = new Simulation(100);
+	hiLoSim->run(1000, 5, 0.02);
 }
 
 void localOptTest3() {
@@ -148,7 +148,7 @@ void localOptTest3() {
 	targetCFG = triangleCFG;
 	bool PREDICATE { false };//EDGE { true },
 
-	Simulation* hiLoSim = new Simulation(1000, 2, .02, 1, 1000000);
+	Simulation* hiLoSim = new Simulation(100);
 
 	for (int var = 0; var < 5; ++var) {
 		TestCase* tc = new TestCase{};
@@ -173,8 +173,8 @@ void localOptTest3() {
 
 void hardTest(){
 	targetCFG = new HardCFG { };
-	Simulation* hardSim = new Simulation(100, 2, .02, 1, 1000);
-	 hardSim->run();
+	Simulation* hardSim = new Simulation(100);
+	 hardSim->run(1000, 5, 0.02);
 }
 
 //-B10toB21
@@ -232,6 +232,20 @@ void testingHardCFGEdges(){
 //	tc->printInputsAndCoverage();
 }
 
+void testSomeNewFunctions() {
+	targetCFG = new HardCFG { };
+	Simulation* hardSim = new Simulation(100);
+
+	auto org = new Organism(258, 258);
+	auto ts = org->getChromosome();
+	auto tc = ts->getDuplicateTestCase();
+	int params [] = {-200, -200, 650, 1100, 1100, -200, -200, 650, 1100, 1100};
+	tc->setInputParameters(params);
+	targetCFG->setCoverageOfTestCase(tc);
+	cout << "Covered something new: " << hardSim->coveredAnyNewForPopulation(tc->getEdgesCovered(), true) << endl;
+
+}
+
 int main() {
 	//simpleIfElseControlFlowGraphTest_testCase_version();
 	//simpleIfElseControlFlowGraphTest_testSuite_version();
@@ -248,8 +262,10 @@ int main() {
     //hiLoRandomSearchPredicates();
     //triangleSimulationTest();
     //triangleRandomSearchEdges();
-    //hardTest();
-    testingHardCFGEdges();
+    hardTest();
+    //testingHardCFGEdges();
+
+    //testSomeNewFunctions();
 
     end = chrono::system_clock::now();
 

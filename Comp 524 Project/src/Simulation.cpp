@@ -16,18 +16,6 @@ Simulation::~Simulation(){
 	delete population;
 }
 
-Simulation::Simulation(int populationSize, int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations){
-
-	this->populationSize = populationSize;
-	this->testSuiteSize = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	this->numberOfGenerations = numberOfGenerations;
-	this->numberOfCutPoints = numberOfCutPoints;
-	probabilityForMutation = mutationProb;
-	probabilityForCrossover = crossOverProb;
-
-	population = new Population { populationSize, testSuiteSize, testSuiteSize };
-}
-
 Simulation::Simulation(int populationSize) {
 
 	this->populationSize = populationSize;
@@ -36,8 +24,7 @@ Simulation::Simulation(int populationSize) {
 	population = new Population { populationSize, testSuiteSize, testSuiteSize };
 }
 
-//void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutationProb, double crossOverProb) {
-void Simulation::run(){
+void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
 	int i { 0 };
 	Organism *child1 { }, *child2 { };
 
@@ -54,7 +41,7 @@ void Simulation::run(){
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 
 		double newProb;
-		newProb = adaptMutationBasedOnCoverageRatio(probabilityForMutation);
+		newProb = adaptMutationBasedOnCoverageRatio(mutationProb);
 		child1->mutate(newProb);
 		child2->mutate(newProb);
 

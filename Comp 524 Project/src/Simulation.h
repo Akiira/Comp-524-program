@@ -20,8 +20,7 @@ public:
 	Simulation(int populationSize, int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations);
 	Simulation(int populationSize);
 
-	void run(int numberOfGenerations, int numberOfCutPoints, double mutationProb, double crossOverProb);
-	void run();
+	void run(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
 
 	void tryLocalOptimization(Organism* child);
 	TestCase* callRandomLocalOpt(Organism* child);
@@ -40,13 +39,6 @@ private:
 
 	int populationSize;
 	int testSuiteSize;
-
-	//TODO: I was think we could maybe just pass these into the run function since they are never
-	// 		used anywhere else.
-	int numberOfCutPoints;
-	int numberOfGenerations;
-	double probabilityForCrossover;
-	double probabilityForMutation;
 
 	double adaptMutationBasedOnOrganismsCoverage(Organism* org);
 	double adaptMutationBasedOnCoverageRatio(double pM);
