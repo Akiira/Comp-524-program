@@ -19,6 +19,12 @@ public:
 
 	Simulation(int populationSize, int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations);
 	void run();
+
+	void tryLocalOptimization(Organism* child);
+	TestCase* callRandomLocalOpt(Organism* child);
+	TestCase* localOptFromZero (bool* uncovered, bool edgeOrPredicate, TestCase* oldTC);
+	bool coveredAnyNew(bool* uncovered, bool* covered, bool edge);
+	bool coveredAnyNewForPopulation(bool* uncovered, bool edge) ;
 	void tryLocalOptimization();
 	TestCase* callRandomLocalOpt();
 	TestCase* localOptFromZero(int thingToCover, bool edgeOrPredicate);

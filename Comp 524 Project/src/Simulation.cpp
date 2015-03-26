@@ -53,19 +53,23 @@ void Simulation::run(){
 		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
 
 		if(child1 <= child2){
+			population->evaluateOrganismsFitness(child2);
+			tryLocalOptimization(child2);
 			population->replaceParentThenReplaceWorst(parentToReplace, child2);
 			delete child1;
 			child1 = NULL;
 		}
 		else {
+			population->evaluateOrganismsFitness(child2);
+			tryLocalOptimization(child1);
 			population->replaceParentThenReplaceWorst(parentToReplace, child1);
 			delete child2;
 			child2 = NULL;
 		}
 
-		if( i % 100 == 0 || population->getCoverageRatio() > 0.95 ) {
-			tryLocalOptimization();
-		}
+//		if( i % 100 == 0 || population->getCoverageRatio() > 0.95 ) {
+//			tryLocalOptimization();
+//		}
 
 		i++;
 
@@ -100,8 +104,8 @@ double Simulation::adaptMutationBasedOnCoverageRatio(double pM) {
 double Simulation::adaptMutationBasedOnOrganismsCoverage(Organism* org) {
 	auto edges = population->getEdgesCovered();
 	auto preds = population->getPredicatesCovered();
-	auto orgsEdges = org->getChromosome()->getDuplicateEdgesCovered();
-	auto orgsPreds = org->getChromosome()->getDuplicatePredicatesCovered();
+	auto orgsEdges = org->getChromosome()->getEdgeCoverageCounts();
+	auto orgsPreds = org->getChromosome()->getPredicateCoverageCounts();
 	double change = 1.0;
 
 	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
@@ -128,8 +132,8 @@ double Simulation::adaptMutationBasedOnOrganismsCoverage(Organism* org) {
 bool Simulation::hasEquivalentCoverageToPopulation(Organism* organism) {
 	int* populationEdges = population->getEdgesCovered();
 	int* populationPredicates = population->getPredicatesCovered();
-	int* testSuiteEdges = organism->getChromosome()->getDuplicateEdgesCovered();
-	int* testSuitePredicates = organism->getChromosome()->getDuplicatePredicatesCovered();
+	int* testSuiteEdges = organism->getChromosome()->getEdgeCoverageCounts();
+	int* testSuitePredicates = organism->getChromosome()->getPredicateCoverageCounts();
 
 	for (int i = 0; i < targetCFG->getNumberOfEdges(); i++) {
 		if (testSuiteEdges[i] == 0 && populationEdges[i] > 0) {
@@ -209,51 +213,139 @@ void Simulation::minimizeOrganism(Organism* orgToMinimize) {
 	}
 }
 
+void Simulation::tryLocalOptimization(Organism* child) {
+	cout << "\tFitness before1: " << child->getFitness() << endl;
+	auto tc = callRandomLocalOpt(child);
 
-//This first version always tries to optimize best organism, we could try other versions as well.
-void Simulation::tryLocalOptimization() {
-	Organism* bestOrganism = population->getBestOrganism();
-	auto tc = callRandomLocalOpt();
-
-	if (tc != NULL) {
-		Organism* temp = new Organism { *bestOrganism };
-		temp->getChromosome()->replaceRandomTestCase(tc);
-
-		temp->evaluateBaseFitness();
-
-		population->replaceOrganismAtIndexWithChild(0, temp);
+	if( tc ) {
+		tc->printInputsAndCoverage();
+		cout << "---------------------------------------------" << endl;
+		cout << "\tFitness before2: " << child->getFitness() << "\n";
+		child->printFitnessAndTestSuiteCoverage();
+		cout << "---------------------------------------------" << endl;
+		child->getChromosome()->replaceDuplicateTestCase(tc);
+		child->getChromosome()->calculateTestSuiteCoverage();
+		child->printFitnessAndTestSuiteCoverage();
+		child->evaluateBaseFitness();
+		cout << "\tFitness before3: " << child->getFitness() << "\n";
+		population->evaluateOrganismsFitness(child);
+		cout << "\tFitness after: " << child->getFitness() << "\n";
+		population->updatePopulationsFitness();
 	}
 }
 
-TestCase* Simulation::callRandomLocalOpt() {
-	TestCase* tc = NULL;
-	TestCase* oldTC = NULL;
+TestCase* Simulation::callRandomLocalOpt(Organism* child){
+	TestCase* oldTC = child->getChromosome()->getDuplicateTestCase();
 	bool edgeOrPredicate { true };
-	Organism* bestOrganism = population->getBestOrganism();
-	int uncovered = bestOrganism->getUncoveredEdge();
+	int uncovered = child->getUncoveredEdge();
+	bool* allUncovered = NULL;
 
-	if( uncovered == -1 ) {
+	if( child->getUncoveredEdge() == -1 ) {
 		edgeOrPredicate = false;
-		uncovered = bestOrganism->getUncoveredPredicate();
+		uncovered = child->getUncoveredPredicate();
+		allUncovered = child->getChromosome()->getAllUncoveredPredicates();
+	} else {
+		allUncovered = child->getChromosome()->getAllUncoveredEdges();
 	}
+//	cout << "\n";
+//	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
+//		cout << "\t" << allUncovered[i] << "\t" << oldTC->getEdgesCovered()[i] << "\n";
+//	}
 
 	switch (uniformInRange(0, 2)) {
 		case 0:
-			oldTC = bestOrganism->getChromosome()->getTestCase(uniformInRange(0, bestOrganism->getNumberOfTestCases() - 1));
-			tc = localOptFromGivenParams(oldTC, uncovered, edgeOrPredicate);
+			return localOptFromZero(allUncovered, edgeOrPredicate, oldTC);
+			//return localOptFromGivenParams(oldTC, uncovered, edgeOrPredicate);
 			break;
 		case 1:
-			tc = localOptFromZero(uncovered, edgeOrPredicate);
+			return localOptFromZero(allUncovered, edgeOrPredicate, oldTC);
 			break;
 		case 2:
-			tc = localOptFromMiddle(uncovered, edgeOrPredicate);//Same as zero local opt in some cases
+			return localOptFromZero(allUncovered, edgeOrPredicate, oldTC);
+			//return localOptFromMiddle(uncovered, edgeOrPredicate);
 			break;
 		default:
 			assert(false);
 			break;
 	}
+}
 
-	return tc;
+TestCase* Simulation::localOptFromZero (bool* uncovered, bool edgeOrPredicate, TestCase* oldTC) {
+	int NeighborhoodSize { 1 };
+	int startingProbability = 30;
+	//oldTC->printInputsAndCoverage();
+	for(int i = 0; i < 1000; ++i) {
+		TestCase* tc = new TestCase { };
+		tc->setInputParameters(oldTC->getInputParameters());
+		for (int j = 0; j < 200; ++j) { //Try searching this particular neighborhood X times
+
+
+			for (int var = 0; var < targetCFG->getNumberOfParameters(); ++var) {
+
+				auto choice = uniformInRange(1, 100);
+
+				if( choice >= 5 ) { // set the value to somthing in the neighborhood
+					int newVal = uniformInRange(-NeighborhoodSize, NeighborhoodSize);
+					tc->setInputParameterAtIndex(var, newVal);
+				} else {//Move the value closer to zero
+					int newVal { tc->getInputParameterAtIndex(var) / (2 * (j + 1)) };
+					tc->setInputParameterAtIndex(var, newVal);
+				}
+			}
+			targetCFG->setCoverageOfTestCase(tc);
+
+			auto coverage = ( edgeOrPredicate ? tc->getEdgesCovered() : tc->getPredicatesCovered() );
+
+			if( coveredAnyNewForPopulation(coverage, edgeOrPredicate) ) {
+				cout << "\tTook about " << i * 200 << " tries. " << endl;
+				return tc;
+			}
+
+//			if( coveredAnyNew(uncovered, coverage, edgeOrPredicate) ) {
+//				//tc->printInputsAndCoverage();
+//
+//				if( population->getEdgesCovered() )
+//
+//				cout << "\tTook about " << i * 50 << " tries. " << endl;
+//				return tc;
+//			}
+
+
+		}
+		delete tc;
+		NeighborhoodSize += 5;
+
+//		if( i % 5 == 0 ) {
+//			startingProbability--;
+//		}
+	}
+
+	cout << "\tFailed to cover edge " << endl;
+	return NULL;
+}
+
+bool Simulation::coveredAnyNew(bool* uncovered, bool* covered, bool edge) {
+	int num = ( edge ? targetCFG->getNumberOfEdges() : targetCFG->getNumberOfPredicates() );
+
+	for (int i = 0; i < num; ++i) {
+		if( uncovered[i] && covered[i] ){
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool Simulation::coveredAnyNewForPopulation(bool* covered, bool edge) {
+	int num = ( edge ? targetCFG->getNumberOfEdges() : targetCFG->getNumberOfPredicates() );
+	auto popsCover = ( edge ? population->getEdgesCovered() : population->getPredicatesCovered() );
+	for (int i = 0; i < num; ++i) {
+		if( !popsCover[i] && covered[i] ){
+			return true;
+		}
+	}
+
+	return false;
 }
 
 TestCase* Simulation::localOptFromZero (int thingToCover, bool edgeOrPredicate) {
@@ -354,6 +446,50 @@ TestCase* Simulation::localOptFromMiddle (int thingToCover, bool edgeOrPredicate
 
 
 
+//This first version always tries to optimize best organism, we could try other versions as well.
+void Simulation::tryLocalOptimization() {
+	Organism* bestOrganism = population->getBestOrganism();
+	auto tc = callRandomLocalOpt();
+
+	if (tc != NULL) {
+		Organism* temp = new Organism { *bestOrganism };
+		temp->getChromosome()->replaceRandomTestCase(tc);
+
+		temp->evaluateBaseFitness();
+
+		population->replaceOrganismAtIndexWithChild(0, temp);
+	}
+}
 
 
 
+TestCase* Simulation::callRandomLocalOpt() {
+	TestCase* tc = NULL;
+	TestCase* oldTC = NULL;
+	bool edgeOrPredicate { true };
+	Organism* bestOrganism = population->getBestOrganism();
+	int uncovered = bestOrganism->getUncoveredEdge();
+
+	if( uncovered == -1 ) {
+		edgeOrPredicate = false;
+		uncovered = bestOrganism->getUncoveredPredicate();
+	}
+
+	switch (uniformInRange(0, 2)) {
+		case 0:
+			oldTC = bestOrganism->getChromosome()->getTestCase(uniformInRange(0, bestOrganism->getNumberOfTestCases() - 1));
+			tc = localOptFromGivenParams(oldTC, uncovered, edgeOrPredicate);
+			break;
+		case 1:
+			tc = localOptFromZero(uncovered, edgeOrPredicate);
+			break;
+		case 2:
+			tc = localOptFromMiddle(uncovered, edgeOrPredicate);//Same as zero local opt in some cases
+			break;
+		default:
+			assert(false);
+			break;
+	}
+
+	return tc;
+}
