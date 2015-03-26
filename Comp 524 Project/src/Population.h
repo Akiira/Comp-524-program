@@ -26,7 +26,10 @@ public:
 	void replaceWorst(Organism* offspring);
 	void replaceOrganismAtIndexWithChild(int organismToReplace, Organism* child);
 
+	void evaluateOrganismsFitness(Organism* org);
+	void updatePopulationsFitness();
 	int fitnessProportionalSelect();
+
 	void printPopulationFitness();
 	void printPopulationCoverage();
 
@@ -69,7 +72,7 @@ private:
 	int* selectCutPoints(int numberOfCutPoints, int upperBound);
 	void computePopulationLevelCoverage();
 
-	void updatePopulationsFitness();
+
 	void linearScaling();
 
 	void updateCoverageBeforeReplacement(int organismToBeReplaced, Organism* child);

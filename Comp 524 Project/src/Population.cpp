@@ -37,6 +37,58 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 	computePopulationLevelCoverage();
 }
 
+void Population::evaluateOrganismsFitness(Organism* org) {
+	double base = 1.0;
+	auto edges = org->getChromosome()->getEdgeCoverageCounts();
+
+	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
+		if ( edges[i] ) {
+			int timesCoveredByPopulation = edgesCovered[i];
+			if ( timesCoveredByPopulation < 5 ) {
+				base *= 4.0;
+			} else if ( timesCoveredByPopulation < 10 ) {
+				base *= 2.0;
+			} else if ( timesCoveredByPopulation < 20 ) {
+				base *= 1.5;
+			} else if ( timesCoveredByPopulation < 50 ) {
+				base *= 1.0;
+			} else if ( timesCoveredByPopulation < 100 ) {
+				base *= 0.8;
+			} else if ( timesCoveredByPopulation < 200 ) {
+				base *= 0.6;
+			} else {
+				base *= 0.3;
+			}
+		}
+	}
+
+	auto preds = org->getChromosome()->getPredicateCoverageCounts();
+
+	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
+		if (preds[i]) {
+			int timesCoveredByPopulation = preds[i];
+			if (timesCoveredByPopulation < 5) {
+				base *= 4.0;
+			} else if (timesCoveredByPopulation < 10) {
+				base *= 2.0;
+			} else if (timesCoveredByPopulation < 20) {
+				base *= 1.5;
+			} else if (timesCoveredByPopulation < 50) {
+				base *= 1.0;
+			} else if (timesCoveredByPopulation < 100) {
+				base *= 0.8;
+			} else if (timesCoveredByPopulation < 200) {
+				base *= 0.6;
+			} else {
+				base *= 0.3;
+			}
+		}
+	}
+	auto oldFitness = org->getFitness();
+	org->setFitness(oldFitness * base);
+	org->setScaledFitness(oldFitness * base);
+}
+
 void Population::updatePopulationsFitness() {
 	if( SCALING == LINEAR ) {
 		linearScaling();
