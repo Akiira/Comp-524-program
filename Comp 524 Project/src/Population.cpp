@@ -32,19 +32,20 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 
 	totalFitness = 0;
 
-	sortPopulationByFitness();
-	updatePopulationsFitness();
 	computePopulationLevelCoverage();
 
 	for (int i = 0; i < popSize; i++) {
 		evaluateOrganismsFitness(population[i]);
 	}
+
 	updatePopulationsFitness();
+	sortPopulationByFitness();
 }
 
 void Population::evaluateOrganismsFitness(Organism* org) {
 	double base = 1.0;
 	auto edges = org->getChromosome()->getEdgeCoverageCounts();
+	org->evaluateBaseFitness();
 
 	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
 		if ( edges[i] ) {
@@ -90,9 +91,7 @@ void Population::evaluateOrganismsFitness(Organism* org) {
 		}
 	}
 
-	auto oldFitness = org->getFitness();
-	org->setFitness(oldFitness * base);
-	org->setScaledFitness(oldFitness * base);
+	org->setFitness(org->getFitness() * base);
 }
 
 void Population::updatePopulationsFitness() {
@@ -131,12 +130,8 @@ void Population::updatePopulationsFitness() {
 			population[i]->setScaledFitness(fitness);
 			totalFitness += fitness;
 		}
-
 	} else { // No scaling, only need to take one new organism into account
-		int fitness;
-		fitness = population[lastReplaced]->fitness;
-		population[lastReplaced]->setFitness(fitness);
-		totalFitness += fitness;
+		totalFitness += lastReplacedFitness;
 	}
 }
 
@@ -368,7 +363,7 @@ void Population::replaceOrganismAtIndexWithChild(int organismToReplace, Organism
 	delete population[organismToReplace];
 	population[organismToReplace] = child;
 
-	lastReplaced = organismToReplace;
+	lastReplacedFitness = child->getFitness();
 	updatePopulationsFitness();
 
 	moveOrganismToSortedPosition(organismToReplace);

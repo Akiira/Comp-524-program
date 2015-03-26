@@ -57,6 +57,8 @@ public:
 		return coverageRatio;
 	}
 
+
+
 private:
 	Organism** population;
 	int populationSize;
@@ -64,7 +66,7 @@ private:
 	int* edgesCovered;
 	int* predicatesCovered;
 	double coverageRatio;
-	int lastReplaced;
+	int lastReplacedFitness;
 
 	//TODO remove hard coding of value
 	const static typeOfScaling SCALING = LINEAR;
