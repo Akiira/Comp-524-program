@@ -141,11 +141,18 @@ void TestSuite::setTestCase(int index, TestCase* testCase) {
 	testCases[index] = testCase;
 }
 
-//TODO we could improve upon this by replacing a duplicate
 void TestSuite::replaceRandomTestCase(TestCase* testCase) {
 	int index = uniformInRange(0, numberOfTestCases - 1);
 	delete testCases[index];
 	testCases[index] = testCase;
+}
+
+void TestSuite::replaceDuplicateTestCase(TestCase* testCase) {
+	auto tc = getDuplicateTestCase();
+
+	if( tc ) {
+		tc = testCase;
+	}
 }
 
 // Just deletes it if there isn't room
@@ -168,6 +175,17 @@ void TestSuite::removeTestCase(int index) {
 		testCases[i] = testCases[i+1];
 	}
 	numberOfTestCases--;
+}
+
+TestCase* TestSuite::getDuplicateTestCase() {
+
+	for (int i = 0; i < numberOfTestCases; ++i) {
+		if( canRemoveTestCaseWithoutChangingCoverage(i) ) {
+			return getTestCase(i);
+		}
+	}
+
+	return NULL;
 }
 
 bool TestSuite::canRemoveTestCaseWithoutChangingCoverage(int index) {
