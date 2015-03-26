@@ -180,7 +180,7 @@ void hardTest(){
 //-B10toB21
 //15toB32, B16toB33, B16toB34, B16toB35,
 //B17toB38, B18toB39, B18toB40, B18toB41,
-//B19toB44, B20toB47,
+//B19toB44,
 //B21toB49, B21toB50, B22toB51, B22toB52, B22toB53,
 //B2toB6 B5toB12-B6toB13-B6toB14
 //11toB24-B12toB25---B13toB28-B14toB29-B14toB30
@@ -210,11 +210,18 @@ void testingHardCFGEdges(){
 
 	//B20toB46: mu <= 500 sigma > 500 sigma < 1000 ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll > 0 )
 	//Covered: B0, B1, B4, B9, B20, B46
-	int params [] = {-200, -200, 650, 1100, 1100, -200, -200, 650, 1100, 1100};
-	tc->setInputParameters(params);
-	cfg->setCoverageOfTestCase(tc);
-	tc->printInputsAndCoverage();
-	cout << "Mean: " << cfg->Mu << endl;
+//	int params [] = {-200, -200, 650, 1100, 1100, -200, -200, 650, 1100, 1100};
+//	tc->setInputParameters(params);
+//	cfg->setCoverageOfTestCase(tc);
+//	tc->printInputsAndCoverage();
+//	cout << "Mean: " << cfg->Mu << endl;
+
+	//B20toB47: mu <= 500 sigma > 500 sigma < 1000 ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll == 0 )
+	//Covered: B0, B1, B4, B9, B20, B47
+//	int params [] = {-450, -450, -450, 900, 450, -450, -900, 450, 450, 450};
+//	tc->setInputParameters(params);
+//	cfg->setCoverageOfTestCase(tc);
+//	tc->printInputsAndCoverage();
 
 
 	//B2TOB6, mu > 500 sigma < 1000
@@ -230,6 +237,13 @@ void testingHardCFGEdges(){
 //	tc->setInputParameters(params3);
 //	cfg->setCoverageOfTestCase(tc);
 //	tc->printInputsAndCoverage();
+
+	//B29toB73: mu > 500 sigma < 750 sigma > 500 (a1 == a2) && (a2 == a3)
+	//Covered: B0, B2, B6, B14, B29, B73
+	int params [] = {150, 150, 150, 1500, 1050, 50, -300, 1050, 1050, 1050};
+	tc->setInputParameters(params);
+	cfg->setCoverageOfTestCase(tc);
+	tc->printInputsAndCoverage();
 }
 
 void testSomeNewFunctions() {
@@ -262,8 +276,8 @@ int main() {
     //hiLoRandomSearchPredicates();
     //triangleSimulationTest();
     //triangleRandomSearchEdges();
-    hardTest();
-    //testingHardCFGEdges();
+    //hardTest();
+    testingHardCFGEdges();
 
     //testSomeNewFunctions();
 

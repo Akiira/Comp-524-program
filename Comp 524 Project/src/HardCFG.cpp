@@ -246,8 +246,8 @@ inline void HardCFG::block13() {
 }
 
 inline void HardCFG::block14() {
-	//mu > 500 sigma <= 100 sigma > 50
-	if( sigma < 75 ) {
+	//mu > 500 sigma <= 1000 sigma > 500
+	if( sigma < 750 ) {
 		testCase->addEdgeCoverage(edges::B14toB29);
 		testCase->addPredicateCoverage(predicates::B14_T);
 		block29();
@@ -684,7 +684,7 @@ inline void HardCFG::block28() {
 }
 
 inline void HardCFG::block29() {
-	//mu > 500 sigma < 75 sigma > 50
+	//mu > 500 sigma < 750 sigma > 500
 	int a1 = testCase->getInputParameterAtIndex(0),
 		a2 = testCase->getInputParameterAtIndex(0),
 		a3 = testCase->getInputParameterAtIndex(0);
@@ -704,7 +704,7 @@ inline void HardCFG::block29() {
 }
 
 inline void HardCFG::block30() {
-	//mu > 500 sigma <= 100 sigma >= 75
+	//mu > 500 sigma <= 1000 sigma >= 750
 
 	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000 ) {
 		testCase->addEdgeCoverage(edges::B30toB75);
