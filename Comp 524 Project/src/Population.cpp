@@ -50,12 +50,12 @@ void Population::evaluateOrganismsFitness(Organism* org) {
 		if ( edges[i] ) {
 			int timesCoveredByPopulation = edgesCovered[i];
 			if ( timesCoveredByPopulation < 5 && base < 5.0 ) {
-				base *= 6.0;
-			} else if ( timesCoveredByPopulation < 10 && base < 5.0 ) {
 				base *= 3.0;
+			} else if ( timesCoveredByPopulation < 10 && base < 5.0 ) {
+				base *= 2.0;
 			} else if ( timesCoveredByPopulation < 20 && base < 5.0 ) {
 				base *= 1.5;
-			} else if ( timesCoveredByPopulation < 50 ) {
+			} else if ( timesCoveredByPopulation < 50 && base < 5.0 ) {
 				base *= 1.0;
 			} else if ( timesCoveredByPopulation < 100 && base > 0.5  ) {
 				base *= 0.95;
@@ -72,10 +72,10 @@ void Population::evaluateOrganismsFitness(Organism* org) {
 	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
 		if (preds[i]) {
 			int timesCoveredByPopulation = preds[i];
-			if (timesCoveredByPopulation < 5) {
-				base *= 6.0;
-			} else if (timesCoveredByPopulation < 10 && base < 5.0) {
+			if (timesCoveredByPopulation < 5 && base < 5.0) {
 				base *= 3.0;
+			} else if (timesCoveredByPopulation < 10 && base < 5.0) {
+				base *= 2.0;
 			} else if (timesCoveredByPopulation < 20 && base < 5.0) {
 				base *= 1.5;
 			} else if (timesCoveredByPopulation < 50 && base < 5.0) {
@@ -89,7 +89,7 @@ void Population::evaluateOrganismsFitness(Organism* org) {
 			}
 		}
 	}
-	cout << "\t\tBase: " << base << endl;
+
 	auto oldFitness = org->getFitness();
 	org->setFitness(oldFitness * base);
 	org->setScaledFitness(oldFitness * base);
