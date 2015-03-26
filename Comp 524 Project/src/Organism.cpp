@@ -57,8 +57,8 @@ void Organism::mutate(double mutationProb) {
 //	The hope is that this brings organisms that managed to cover the hard to reach test cases to the top
 int Organism::fitnessFunction01() {
 	int retval = 0;
-	int* edgeCoverage = chromosome->getDuplicateEdgesCovered();
-	int* predicateCoverage = chromosome->getDuplicatePredicatesCovered();
+	int* edgeCoverage = chromosome->getEdgeCoverageCounts();
+	int* predicateCoverage = chromosome->getPredicateCoverageCounts();
 	int baseReward = chromosome->getNumberOfTestCases() + 1;
 
 	for(int i = 0; i < (targetCFG->getNumberOfEdges()); i++){
@@ -78,8 +78,8 @@ int Organism::fitnessFunction01() {
 // Returns a small number between 0 and numOfEdges+numOfPredicates / numberOfTestCases
 int Organism::fitnessFunction02() {
 	int retval = 0;
-	int* edgeCoverage = chromosome->getDuplicateEdgesCovered();
-	int* predicateCoverage = chromosome->getDuplicatePredicatesCovered();
+	int* edgeCoverage = chromosome->getEdgeCoverageCounts();
+	int* predicateCoverage = chromosome->getPredicateCoverageCounts();
 
 	for(int i = 0; i < (targetCFG->getNumberOfEdges()); i++){
 		if (edgeCoverage[i] > 0) {
@@ -137,7 +137,7 @@ void Organism::printFitnessAndTestSuiteCoverageAndTestCaseInputs() {
 int Organism::getUncoveredEdge() const {
 	int uncoveredEdge { -1 };
 
-	auto edges = chromosome->getDuplicateEdgesCovered();
+	auto edges = chromosome->getEdgeCoverageCounts();
 
 	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
 		if( edges[i] == 0 ) {
@@ -151,7 +151,7 @@ int Organism::getUncoveredEdge() const {
 int Organism::getUncoveredPredicate() const {
 	int uncoveredPred { -1 };
 
-	auto preds = chromosome->getDuplicatePredicatesCovered();
+	auto preds = chromosome->getPredicateCoverageCounts();
 
 	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
 		if( preds[i] == 0 ) {

@@ -21,8 +21,8 @@ private:
 	int numberOfEdges;
 	int numberOfPredicates;
 
-	int* duplicateEdgesCovered;
-	int* duplicatePredicatesCovered;
+	int* edgeCoverageCounts;
+	int* predicateCoverageCounts;
 
 	TestCase** testCases;
 
@@ -40,33 +40,40 @@ public:
 	TestSuite(int numberOfTestCases, int maxNumberOfTestCases);
 	TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCasesToCopy);
 
-	TestCase** getAllTestCases() const;
-	TestCase* getTestCase(int index);
 	void setTestCase(int index, TestCase* testCase);
 	void replaceRandomTestCase(TestCase* testCase);
 	void replaceDuplicateTestCase(TestCase* testCase);
 	void addTestCase(TestCase* testCase);
 	void removeTestCase(int index);
-	TestCase* getDuplicateTestCase();
+
 	bool canRemoveTestCaseWithoutChangingCoverage(int index);
 
 	void resetCoverage();
 	void calculateTestSuiteCoverage();
+
+	void sortTestSuiteByCoverageCounts();
+
+	//============================PRINT FUNCTIONS=======================//
 
 	void printTestCaseInputsAndCoverage();
 	void printTestCaseInputsOnly();
 	void printTestSuiteCoverage();
 	void printAll();
 
-	TestSuite& operator=(const TestSuite& org);
-	bool operator==(const TestSuite& right);
+	//============================GETTER FUNCTIONS=======================//
 
-	int* getDuplicateEdgesCovered() const {
-		return duplicateEdgesCovered;
+	TestCase** getAllTestCases() const;
+	TestCase* getTestCase(int index);
+	TestCase* getDuplicateTestCase();
+	TestCase* getTestCaseThatCoversPredicate(int predicateNumber);
+	TestCase* getTestCaseThatCoversEdge(int edgeNumber);
+
+	int* getEdgeCoverageCounts() const {
+		return edgeCoverageCounts;
 	}
 
-	int* getDuplicatePredicatesCovered() const {
-		return duplicatePredicatesCovered;
+	int* getPredicateCoverageCounts() const {
+		return predicateCoverageCounts;
 	}
 
 	int getNumberOfTestCases() const {
@@ -85,9 +92,9 @@ public:
 		this->numberOfTestCases = numberOfTestCases;
 	}
 
-	void sortTestSuiteByCoverageCounts();
+	//===========================OVERLOADED OPERATORS===========================
 
-	TestCase* getTestCaseThatCoversPredicate(int predicateNumber);
-	TestCase* getTestCaseThatCoversEdge(int edgeNumber);
+	TestSuite& operator=(const TestSuite& org);
+	bool operator==(const TestSuite& right);
 };
 #endif // !defined(EA_04823F4F_8B3F_4bb8_9DBC_42A1717DC256__INCLUDED_)

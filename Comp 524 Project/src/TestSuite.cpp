@@ -16,10 +16,10 @@ using std::cout;
 using std::endl;
 
 TestSuite::~TestSuite(){
-	delete[] duplicateEdgesCovered;
-	duplicateEdgesCovered = NULL;
-	delete[] duplicatePredicatesCovered;
-	duplicatePredicatesCovered = NULL;
+	delete[] edgeCoverageCounts;
+	edgeCoverageCounts = NULL;
+	delete[] predicateCoverageCounts;
+	predicateCoverageCounts = NULL;
 	for(int i = 0; i < numberOfTestCases; i++){
 		delete testCases[i];
 		testCases[i] = NULL;
@@ -35,8 +35,8 @@ TestSuite::TestSuite(const TestSuite& testSuite) {
 	numberOfEdges = testSuite.numberOfEdges;
 	numberOfPredicates = testSuite.numberOfPredicates;
 
-	duplicateEdgesCovered = new int[numberOfEdges] { };
-	duplicatePredicatesCovered = new int[numberOfPredicates] { };
+	edgeCoverageCounts = new int[numberOfEdges] { };
+	predicateCoverageCounts = new int[numberOfPredicates] { };
 	coverageRatio = 0;
 	testCases = new TestCase*[maxNumberOfTestCases] { };
 
@@ -66,8 +66,8 @@ void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, int ma
 	this->numberOfParameters = targetCFG->getNumberOfParameters();
 	this->numberOfEdges = targetCFG->getNumberOfEdges();
 	this->numberOfPredicates = targetCFG->getNumberOfPredicates();
-	this->duplicateEdgesCovered = new int[numberOfEdges] { };
-	this->duplicatePredicatesCovered = new int[numberOfPredicates] { };
+	this->edgeCoverageCounts = new int[numberOfEdges] { };
+	this->predicateCoverageCounts = new int[numberOfPredicates] { };
 }
 
 void TestSuite::fillTestSuiteWithRandomTestCases() {
@@ -105,7 +105,7 @@ TestCase* TestSuite::getTestCase(int index){
 }
 
 TestCase* TestSuite::getTestCaseThatCoversPredicate(int predicateNumber) {
-	if (!duplicatePredicatesCovered[predicateNumber] > 0) {
+	if (!predicateCoverageCounts[predicateNumber] > 0) {
 		return NULL;
 	}
 	else {
@@ -121,7 +121,7 @@ TestCase* TestSuite::getTestCaseThatCoversPredicate(int predicateNumber) {
 }
 
 TestCase* TestSuite::getTestCaseThatCoversEdge(int edgeNumber) {
-	if (!duplicateEdgesCovered[edgeNumber] > 0) {
+	if (!edgeCoverageCounts[edgeNumber] > 0) {
 		return NULL;
 	}
 	else {
@@ -194,13 +194,13 @@ bool TestSuite::canRemoveTestCaseWithoutChangingCoverage(int index) {
 	bool* preds = testCases[index]->getPredicatesCovered();
 
 	for (int i = 0; i < targetCFG->getNumberOfEdges(); i++) {
-		if (edges[i] && duplicateEdgesCovered[i] == 1) {
+		if (edges[i] && edgeCoverageCounts[i] == 1) {
 			return false;
 		}
 	}
 
 	for (int i = 0; i < targetCFG->getNumberOfPredicates(); i++) {
-		if (preds[i] && duplicatePredicatesCovered[i] == 1) {
+		if (preds[i] && predicateCoverageCounts[i] == 1) {
 			return false;
 		}
 	}
@@ -235,11 +235,11 @@ void TestSuite::printTestCaseInputsOnly() {
 
 void TestSuite::resetCoverage() {
 	for (int j = 0; j < numberOfEdges; j++) {
-		duplicateEdgesCovered[j] = 0;
+		edgeCoverageCounts[j] = 0;
 	}
 
 	for (int j = 0; j < numberOfPredicates; j++) {
-		duplicatePredicatesCovered[j] = 0;
+		predicateCoverageCounts[j] = 0;
 	}
 	coverageRatio = 0;
 }
@@ -249,25 +249,25 @@ void TestSuite::calculateTestSuiteCoverage() {
 	resetCoverage();
 	for (int i = 0; i < numberOfTestCases; i++) {
 		for (int j = 0; j < numberOfEdges; j++) {
-			duplicateEdgesCovered[j] += testCases[i]->getEdgesCovered()[j];
+			edgeCoverageCounts[j] += testCases[i]->getEdgesCovered()[j];
 		}
 	}
 
 	for (int i = 0; i < numberOfTestCases; i++) {
 		for (int j = 0; j < numberOfPredicates; j++) {
-			duplicatePredicatesCovered[j] += testCases[i]->getPredicatesCovered()[j];
+			predicateCoverageCounts[j] += testCases[i]->getPredicatesCovered()[j];
 		}
 	}
 
 	// Calculate the coverage ratio
 	double numCovered = 0;
 	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-		if (duplicateEdgesCovered[j] > 0) {
+		if (edgeCoverageCounts[j] > 0) {
 			numCovered++;
 		}
 	}
 	for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
-		if (duplicatePredicatesCovered[j] > 0) {
+		if (predicateCoverageCounts[j] > 0) {
 			numCovered++;
 		}
 	}
@@ -276,8 +276,8 @@ void TestSuite::calculateTestSuiteCoverage() {
 
 TestSuite& TestSuite::operator =(const TestSuite& other) {
 	if(this != &other){
-		delete[] duplicateEdgesCovered;
-		delete[] duplicatePredicatesCovered;
+		delete[] edgeCoverageCounts;
+		delete[] predicateCoverageCounts;
 
 		for(int i = 0; i < numberOfTestCases; i++){
 			delete testCases[i];
@@ -290,14 +290,14 @@ TestSuite& TestSuite::operator =(const TestSuite& other) {
 		numberOfEdges = other.numberOfEdges;
 		numberOfPredicates = other.numberOfPredicates;
 
-		duplicateEdgesCovered = new int[numberOfEdges] { };
-		duplicatePredicatesCovered = new int[numberOfPredicates] { };
+		edgeCoverageCounts = new int[numberOfEdges] { };
+		predicateCoverageCounts = new int[numberOfPredicates] { };
 		testCases = new TestCase*[maxNumberOfTestCases] { } ;
 
 		using std::memcpy;
 
-		memcpy(duplicateEdgesCovered, other.duplicateEdgesCovered, sizeof(int) * numberOfEdges);
-		memcpy(duplicatePredicatesCovered, other.duplicatePredicatesCovered, sizeof(int) * numberOfPredicates);
+		memcpy(edgeCoverageCounts, other.edgeCoverageCounts, sizeof(int) * numberOfEdges);
+		memcpy(predicateCoverageCounts, other.predicateCoverageCounts, sizeof(int) * numberOfPredicates);
 
 		for(int i = 0; i < numberOfTestCases; i++){
 			testCases[i] = new TestCase { *other.testCases[i] };

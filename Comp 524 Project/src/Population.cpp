@@ -113,8 +113,8 @@ void Population::computePopulationLevelCoverage() {
 
 	// Calculate new coverage
 	for (int i = 0; i < populationSize; ++i) {
-		auto edgeCov = population[i]->chromosome->getDuplicateEdgesCovered();
-		auto predCov = population[i]->chromosome->getDuplicatePredicatesCovered();
+		auto edgeCov = population[i]->chromosome->getEdgeCoverageCounts();
+		auto predCov = population[i]->chromosome->getPredicateCoverageCounts();
 
 		for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
 			edgesCovered[j] += edgeCov[j];
@@ -318,10 +318,10 @@ void Population::replaceOrganismAtIndexWithChild(int organismToReplace, Organism
 
 // Shared by all replacement schemes, should be called before the organismToBeReplaced is deleted
 void Population::updateCoverageBeforeReplacement(int organismToBeReplaced, Organism* child) {
-	auto replacedEdgeCov = population[organismToBeReplaced]->getChromosome()->getDuplicateEdgesCovered();
-	auto replacedPredCov = population[organismToBeReplaced]->getChromosome()->getDuplicatePredicatesCovered();
-	auto childEdgeCov = child->chromosome->getDuplicateEdgesCovered();
-	auto childPredCov = child->chromosome->getDuplicatePredicatesCovered();
+	auto replacedEdgeCov = population[organismToBeReplaced]->getChromosome()->getEdgeCoverageCounts();
+	auto replacedPredCov = population[organismToBeReplaced]->getChromosome()->getPredicateCoverageCounts();
+	auto childEdgeCov = child->chromosome->getEdgeCoverageCounts();
+	auto childPredCov = child->chromosome->getPredicateCoverageCounts();
 
 	int numCovered = 0;
 	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
