@@ -26,9 +26,13 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 	population = new Organism*[popSize] { };
 	populationSize = popSize;
 
+	/*
 	for (int i = 0; i < popSize; i++) {
 		population[i] = new Organism { initialTestSuiteSize, maxTestSuiteSize };
 	}
+	*/
+
+	buildPopulationInRanges(initialTestSuiteSize);
 
 	totalFitness = 0;
 
@@ -40,6 +44,22 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 
 	updatePopulationsFitness();
 	sortPopulationByFitness();
+}
+
+void Population::buildPopulationInRanges(int baseTestSuiteSize) {
+	int testSuiteSize = baseTestSuiteSize * 1.25;
+	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+	int organismsPerRange = populationSize / edgesPlusPreds;
+	int currentOrg = 0;
+	for (int rangeNum = 1; rangeNum <= edgesPlusPreds; rangeNum++) {
+		for(; currentOrg < organismsPerRange * rangeNum; currentOrg++) {
+			population[currentOrg] = new Organism { testSuiteSize, testSuiteSize, rangeNum-1};
+		}
+	}
+	// Incase edgesPlusPreds does not divide populationSIze;
+	for (; currentOrg < populationSize; currentOrg++) {
+		population[currentOrg] = new Organism { testSuiteSize, testSuiteSize};
+	}
 }
 
 void Population::evaluateOrganismsFitness(Organism* org) {
