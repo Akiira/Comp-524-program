@@ -38,7 +38,6 @@ private:
 	Population* population;
 
 	int populationSize;
-	int testSuiteSize;
 
 	double adaptMutationBasedOnOrganismsCoverage(Organism* org);
 	double adaptMutationBasedOnCoverageRatio(double pM);

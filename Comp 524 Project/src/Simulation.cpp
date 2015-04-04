@@ -17,11 +17,8 @@ Simulation::~Simulation(){
 }
 
 Simulation::Simulation(int populationSize) {
-
 	this->populationSize = populationSize;
-	this->testSuiteSize = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-
-	population = new Population { populationSize, testSuiteSize, testSuiteSize };
+	population = new Population { populationSize };
 }
 
 void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
@@ -278,11 +275,12 @@ Organism* Simulation::constructFinalOrganism() {
 	else {
 		cout << "Doesn't have all the coverage" << endl;
 		// Start with a copy of bestOrganismSeen, with room to grow
-		TestCase** bestTestCasesSeen = population->getBestOrganism()->getChromosome()->getAllTestCases();
-		finalOrg = new Organism(0, testSuiteSize * 2, new TestCase*[testSuiteSize * 2] { });
+		TestSuite* bestChromosome = population->getBestOrganism()->getChromosome();
+		TestCase** bestTestCasesSeen = bestChromosome->getAllTestCases();
+		finalOrg = new Organism(0, bestChromosome->getNumberOfTestCases() * 2, new TestCase*[bestChromosome->getNumberOfTestCases() * 2] { });
 
 		TestSuite* finalSuite = finalOrg->getChromosome();
-		for (int i = 0; i < testSuiteSize; i++) {
+		for (int i = 0; i < bestChromosome->getNumberOfTestCases(); i++) {
 			finalSuite->addTestCase(new TestCase { *bestTestCasesSeen[i] });
 		}
 		finalSuite->calculateTestSuiteCoverage();

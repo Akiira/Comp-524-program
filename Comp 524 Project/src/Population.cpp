@@ -20,7 +20,7 @@ Population::~Population() {
 /**
  * Creates a new population of random test suites
  */
-Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSize) {
+Population::Population(int popSize) {
 	edgesCovered = new int[targetCFG->getNumberOfEdges()] { };
 	predicatesCovered = new int[targetCFG->getNumberOfPredicates()] { };
 	population = new Organism*[popSize] { };
@@ -32,7 +32,7 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 	}
 	*/
 
-	buildPopulationInRanges(initialTestSuiteSize);
+	buildPopulationInRanges();
 
 	totalFitness = 0;
 
@@ -46,9 +46,9 @@ Population::Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSi
 	sortPopulationByFitness();
 }
 
-void Population::buildPopulationInRanges(int baseTestSuiteSize) {
-	int testSuiteSize = baseTestSuiteSize * 1.25;
+void Population::buildPopulationInRanges() {
 	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+	int testSuiteSize = edgesPlusPreds * 1.25;
 	int organismsPerRange = populationSize / edgesPlusPreds;
 	int currentOrg = 0;
 	for (int rangeNum = 1; rangeNum <= edgesPlusPreds; rangeNum++) {
