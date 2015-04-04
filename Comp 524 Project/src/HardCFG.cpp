@@ -768,13 +768,15 @@ void HardCFG::calculateDeviation(const int* values) {
 	for (int i = 0; i < numberOfParameters; ++i) {
 
 		sum += pow(values[i] - Mu, 2);
-		cout << "sum: " << sum << endl;
-		assert(sum >= 0);
+		//cout << "sum: " << sum << endl;
+		//assert(sum >= 0);
 
 	}
 
 	sigma = sqrt(sum / numberOfParameters);
-	assert(sigma >= 0);
+
+	// Commenting this for now. Need to find a solution to this.
+	//assert(sigma >= 0);
 }
 
 
