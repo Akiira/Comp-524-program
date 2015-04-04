@@ -53,6 +53,12 @@ TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases){
 	fillTestSuiteWithRandomTestCases();
 }
 
+TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, int rangeNum){
+	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
+	this->testCases = new TestCase*[maxNumberOfTestCases] { };
+	fillTestSuiteWithRandomTestCasesInRange(rangeNum);
+}
+
 TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCases) {
 	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
 	this->testCases = testCases;
@@ -74,6 +80,14 @@ void TestSuite::fillTestSuiteWithRandomTestCases() {
 	assert(testCases != 0);
 	for(int i = 0; i < numberOfTestCases; i++){
 		testCases[i] = new TestCase { };
+		targetCFG->setCoverageOfTestCase(testCases[i]);
+	}
+}
+
+void TestSuite::fillTestSuiteWithRandomTestCasesInRange(int rangeNum) {
+	assert(testCases != 0);
+	for(int i = 0; i < numberOfTestCases; i++){
+		testCases[i] = new TestCase {rangeNum};
 		targetCFG->setCoverageOfTestCase(testCases[i]);
 	}
 }

@@ -31,6 +31,7 @@ private:
 	// SHared code between constructors
 	void initializeMembersAndAllocateMemory(int numberOfTestCases, int maxNumberOfTestCases);
 	void fillTestSuiteWithRandomTestCases();
+	void fillTestSuiteWithRandomTestCasesInRange(int rangeNum);
 
 
 public:
@@ -39,6 +40,7 @@ public:
 	TestSuite(const TestSuite&);
 	TestSuite(int numberOfTestCases, int maxNumberOfTestCases);
 	TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCasesToCopy);
+	TestSuite(int numberOfTestCases, int maxNumberOfTestCases, int rangeNum);
 
 	void setTestCase(int index, TestCase* testCase);
 	void replaceRandomTestCase(TestCase* testCase);
