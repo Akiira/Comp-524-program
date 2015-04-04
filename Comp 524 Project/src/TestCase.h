@@ -20,6 +20,7 @@ public:
 	TestCase();
 	// Copy constructor
 	TestCase(const TestCase& that);
+	TestCase(int rangeNum);
 
 	void mutate();
 
@@ -61,6 +62,7 @@ private:
 	int numCovered;
 
 	void generateRandomParameters();
+	void generateRandomParametersInRange(int rangeNum);
 
 };
 #endif // !defined(EA_B2C38A95_D3AD_472b_BE3C_F83540FB1055__INCLUDED_)

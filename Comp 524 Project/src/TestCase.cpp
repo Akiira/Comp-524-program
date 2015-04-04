@@ -38,6 +38,20 @@ TestCase::TestCase() {
 	generateRandomParameters();
 }
 
+TestCase::TestCase(int rangeNum) {
+	assert(rangeNum >= 1 && rangeNum <= targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
+	numberOfEdges      = targetCFG->getNumberOfEdges();
+	numberOfParameters = targetCFG->getNumberOfParameters();
+	numberOfPredicates = targetCFG->getNumberOfPredicates();
+
+	edgesCovered = new bool[numberOfEdges] { };
+	predicatesCovered = new bool[numberOfPredicates] { };
+	inputParameters = new int[numberOfParameters] { };
+	numCovered = 0;
+
+	generateRandomParametersInRange(rangeNum);
+}
+
 TestCase::TestCase(const TestCase& that) {
 
 	numberOfEdges = that.numberOfEdges;
@@ -84,6 +98,18 @@ void TestCase::generateRandomParameters() {
 	{
 		inputParameters[i] = uniformInRange(targetCFG->getLowerBoundForParameter(i),
 											targetCFG->getUpperBoundForParameter(i));
+	}
+}
+
+void TestCase::generateRandomParametersInRange(int rangeNum) {
+	assert(rangeNum >= 1 && rangeNum <= targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
+	//for each parameter generate a random value
+	for(int i = 0; i < numberOfParameters; i++)
+	{
+		long rangeSize = targetCFG->getLowerBoundForParameter(i) - targetCFG->getUpperBoundForParameter(i) / 2;
+		long lower = targetCFG->getLowerBoundForParameter(i) + rangeNum * rangeSize;
+		long upper = targetCFG->getUpperBoundForParameter(i) + ((rangeNum+1) * rangeSize) - 1;
+		inputParameters[i] = uniformInRange(lower, upper);
 	}
 }
 
