@@ -286,7 +286,7 @@ bool TestSuite::coversNewEdge(TestCase* tc) {
 
 	for (int i = 0; i < numberOfEdges; ++i) {
 		if(edges[i] == false && covEdges[i] == true){
-			delete edges;
+			delete[] edges;
 			return true;
 		}
 	}
@@ -296,7 +296,7 @@ bool TestSuite::coversNewEdge(TestCase* tc) {
 
 	for (int i = 0; i < numberOfPredicates; ++i) {
 		if(preds[i] == false && covPreds[i] == true){
-			delete preds;
+			delete[] preds;
 			return true;
 		}
 	}
