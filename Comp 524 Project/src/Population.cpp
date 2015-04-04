@@ -25,14 +25,12 @@ Population::Population(int popSize) {
 	predicatesCovered = new int[targetCFG->getNumberOfPredicates()] { };
 	population = new Organism*[popSize] { };
 	populationSize = popSize;
+	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+	int testSuiteSize = edgesPlusPreds * 1.25;
 
-	/*
 	for (int i = 0; i < popSize; i++) {
-		population[i] = new Organism { initialTestSuiteSize, maxTestSuiteSize };
+		population[i] = new Organism { testSuiteSize, testSuiteSize };
 	}
-	*/
-
-	buildPopulationInRanges();
 
 	totalFitness = 0;
 
@@ -44,22 +42,6 @@ Population::Population(int popSize) {
 
 	updatePopulationsFitness();
 	sortPopulationByFitness();
-}
-
-void Population::buildPopulationInRanges() {
-	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	int testSuiteSize = edgesPlusPreds * 1.25;
-	int organismsPerRange = populationSize / edgesPlusPreds;
-	int currentOrg = 0;
-	for (int rangeNum = 1; rangeNum <= edgesPlusPreds; rangeNum++) {
-		for(; currentOrg < organismsPerRange * rangeNum; currentOrg++) {
-			population[currentOrg] = new Organism { testSuiteSize, testSuiteSize, rangeNum-1};
-		}
-	}
-	// Incase edgesPlusPreds does not divide populationSIze;
-	for (; currentOrg < populationSize; currentOrg++) {
-		population[currentOrg] = new Organism { testSuiteSize, testSuiteSize};
-	}
 }
 
 void Population::evaluateOrganismsFitness(Organism* org) {

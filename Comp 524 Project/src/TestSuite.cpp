@@ -47,16 +47,18 @@ TestSuite::TestSuite(const TestSuite& testSuite) {
 
 // Fill the new suite with random test cases and evaluate the coverage of all the test cases
 // Note still need to call calculateTestSuiteCoverage which will be done by Organism.setFitness
-TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases){
+
+/*TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases){
 	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
 	this->testCases = new TestCase*[maxNumberOfTestCases] { };
 	fillTestSuiteWithRandomTestCases();
-}
+}*/
 
-TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, int rangeNum){
+// Replaces the other constructor, will fill testCase 0 - edges+preds with values in that range, the rest with random ranges
+TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases){
 	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
 	this->testCases = new TestCase*[maxNumberOfTestCases] { };
-	fillTestSuiteWithRandomTestCasesInRange(rangeNum);
+	fillTestSuiteWithRandomTestCasesInRanges();
 }
 
 TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCases) {
@@ -85,12 +87,13 @@ void TestSuite::fillTestSuiteWithRandomTestCases() {
 }
 
 // W
-void TestSuite::fillTestSuiteWithRandomTestCasesInRange(int rangeNum) {
+void TestSuite::fillTestSuiteWithRandomTestCasesInRanges() {
 	assert(testCases != 0);
 	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
 	assert(numberOfTestCases >= edgesPlusPreds);
+
 	for(int i = 0; i < edgesPlusPreds; i++){
-		testCases[i] = new TestCase {rangeNum};
+		testCases[i] = new TestCase {i};
 		targetCFG->setCoverageOfTestCase(testCases[i]);
 	}
 
