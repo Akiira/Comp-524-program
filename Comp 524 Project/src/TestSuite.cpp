@@ -191,13 +191,7 @@ TestCase* TestSuite::getDuplicateTestCase() {
 
 TestCase* TestSuite::getRandomTestCase() {
 
-	for (int i = 0; i < numberOfTestCases; ++i) {
-		if( canRemoveTestCaseWithoutChangingCoverage(i) ) {
-			return getTestCase(i);
-		}
-	}
-
-	return NULL;
+	return testCases[uniformInRange(0, numberOfTestCases - 1)];
 }
 
 bool TestSuite::canRemoveTestCaseWithoutChangingCoverage(int index) {
@@ -284,6 +278,30 @@ void TestSuite::calculateTestSuiteCoverage() {
 		}
 	}
 	coverageRatio = numCovered / (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
+}
+
+bool TestSuite::coversNewEdge(TestCase* tc) {
+	auto edges = getAllUncoveredEdges();
+	auto covEdges = tc->getEdgesCovered();
+
+	for (int i = 0; i < numberOfEdges; ++i) {
+		if(edges[i] == false && covEdges[i] == true){
+			delete edges;
+			return true;
+		}
+	}
+
+	auto preds = getAllUncoveredPredicates();
+	auto covPreds = tc->getPredicatesCovered();
+
+	for (int i = 0; i < numberOfPredicates; ++i) {
+		if(preds[i] == false && covPreds[i] == true){
+			delete preds;
+			return true;
+		}
+	}
+
+	return false;
 }
 
 TestSuite& TestSuite::operator =(const TestSuite& other) {

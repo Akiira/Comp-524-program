@@ -50,6 +50,7 @@ public:
 
 	void resetCoverage();
 	void calculateTestSuiteCoverage();
+	bool coversNewEdge(TestCase* );
 
 	void sortTestSuiteByCoverageCounts();
 
