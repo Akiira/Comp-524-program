@@ -65,6 +65,7 @@ public:
 	TestCase** getAllTestCases() const;
 	TestCase* getTestCase(int index);
 	TestCase* getDuplicateTestCase();
+	TestCase* getRandomTestCase();
 	TestCase* getTestCaseThatCoversPredicate(int predicateNumber);
 	TestCase* getTestCaseThatCoversEdge(int edgeNumber);
 

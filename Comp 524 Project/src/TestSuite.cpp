@@ -189,6 +189,17 @@ TestCase* TestSuite::getDuplicateTestCase() {
 	return NULL;
 }
 
+TestCase* TestSuite::getRandomTestCase() {
+
+	for (int i = 0; i < numberOfTestCases; ++i) {
+		if( canRemoveTestCaseWithoutChangingCoverage(i) ) {
+			return getTestCase(i);
+		}
+	}
+
+	return NULL;
+}
+
 bool TestSuite::canRemoveTestCaseWithoutChangingCoverage(int index) {
 	assert(index >= 0 && index < numberOfTestCases);
 	bool* edges = testCases[index]->getEdgesCovered();
