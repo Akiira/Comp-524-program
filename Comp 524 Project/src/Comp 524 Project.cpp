@@ -276,8 +276,8 @@ int main() {
     //hiLoRandomSearchPredicates();
     //triangleSimulationTest();
     //triangleRandomSearchEdges();
-    //hardTest();
-    testingHardCFGEdges();
+    hardTest();
+    //testingHardCFGEdges();
 
     //testSomeNewFunctions();
 
