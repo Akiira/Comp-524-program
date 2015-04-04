@@ -25,6 +25,7 @@ TestCase::~TestCase(){
 	inputParameters = NULL;
 }
 
+/*	Original constructor, just went between param max and min
 TestCase::TestCase() {
 	numberOfEdges      = targetCFG->getNumberOfEdges();
 	numberOfParameters = targetCFG->getNumberOfParameters();
@@ -37,9 +38,25 @@ TestCase::TestCase() {
 
 	generateRandomParameters();
 }
+*/
+
+// Make this pull from random ranges instead.
+TestCase::TestCase() {
+	numberOfEdges      = targetCFG->getNumberOfEdges();
+	numberOfParameters = targetCFG->getNumberOfParameters();
+	numberOfPredicates = targetCFG->getNumberOfPredicates();
+
+	edgesCovered = new bool[numberOfEdges] { };
+	predicatesCovered = new bool[numberOfPredicates] { };
+	inputParameters = new int[numberOfParameters] { };
+	numCovered = 0;
+
+	generateRandomParametersFromRandomRanges();
+}
 
 TestCase::TestCase(int rangeNum) {
-	assert(rangeNum >= 1 && rangeNum <= targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
+	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+	assert(rangeNum >= 0 && rangeNum < edgesPlusPreds);
 	numberOfEdges      = targetCFG->getNumberOfEdges();
 	numberOfParameters = targetCFG->getNumberOfParameters();
 	numberOfPredicates = targetCFG->getNumberOfPredicates();
@@ -69,6 +86,41 @@ TestCase::TestCase(const TestCase& that) {
 	memcpy(inputParameters, that.inputParameters, sizeof(int) * numberOfParameters);
 }
 
+// Not used anymore
+void TestCase::generateRandomParameters() {
+	//for each parameter generate a random value
+	for(int i = 0; i < numberOfParameters; i++)
+	{
+		inputParameters[i] = uniformInRange(targetCFG->getLowerBoundForParameter(i),
+											targetCFG->getUpperBoundForParameter(i));
+	}
+}
+
+void TestCase::generateRandomParametersInRange(int rangeNum) {
+	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+	assert(rangeNum >= 0 && rangeNum < edgesPlusPreds);
+
+	for(int i = 0; i < numberOfParameters; i++)
+	{
+		long rangeSize = (targetCFG->getUpperBoundForParameter(i) - targetCFG->getLowerBoundForParameter(i)) / edgesPlusPreds;
+		long lower = targetCFG->getLowerBoundForParameter(i) + rangeNum * rangeSize;
+		long upper = targetCFG->getUpperBoundForParameter(i) + ((rangeNum+1) * rangeSize) - 1;
+		inputParameters[i] = uniformInRange(lower, upper);
+	}
+}
+
+void TestCase::generateRandomParametersFromRandomRanges() {
+	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+	for(int i = 0; i < numberOfParameters; i++)
+	{
+		int rangeNum = uniformInRange(0, edgesPlusPreds-1);
+		long rangeSize = (targetCFG->getUpperBoundForParameter(i) - targetCFG->getLowerBoundForParameter(i)) / edgesPlusPreds;
+		long lower = targetCFG->getLowerBoundForParameter(i) + rangeNum * rangeSize;
+		long upper = targetCFG->getUpperBoundForParameter(i) + ((rangeNum+1) * rangeSize) - 1;
+		inputParameters[i] = uniformInRange(lower, upper);
+	}
+}
+
 
 //This is another type of mutation we could use, perhaps in addition to other operators.
 //The only thing that would need changing if we use this, is to change it from uniformInRange
@@ -89,27 +141,6 @@ void TestCase::mutate() {
 				inputParameters[i] = targetCFG->getLowerBoundForParameter(i);
 			}
 		}
-	}
-}
-
-void TestCase::generateRandomParameters() {
-	//for each parameter generate a random value
-	for(int i = 0; i < numberOfParameters; i++)
-	{
-		inputParameters[i] = uniformInRange(targetCFG->getLowerBoundForParameter(i),
-											targetCFG->getUpperBoundForParameter(i));
-	}
-}
-
-void TestCase::generateRandomParametersInRange(int rangeNum) {
-	assert(rangeNum >= 1 && rangeNum <= targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
-	//for each parameter generate a random value
-	for(int i = 0; i < numberOfParameters; i++)
-	{
-		long rangeSize = targetCFG->getLowerBoundForParameter(i) - targetCFG->getUpperBoundForParameter(i) / 2;
-		long lower = targetCFG->getLowerBoundForParameter(i) + rangeNum * rangeSize;
-		long upper = targetCFG->getUpperBoundForParameter(i) + ((rangeNum+1) * rangeSize) - 1;
-		inputParameters[i] = uniformInRange(lower, upper);
 	}
 }
 
