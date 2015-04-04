@@ -84,10 +84,18 @@ void TestSuite::fillTestSuiteWithRandomTestCases() {
 	}
 }
 
+// W
 void TestSuite::fillTestSuiteWithRandomTestCasesInRange(int rangeNum) {
 	assert(testCases != 0);
-	for(int i = 0; i < numberOfTestCases; i++){
+	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+	assert(numberOfTestCases >= edgesPlusPreds);
+	for(int i = 0; i < edgesPlusPreds; i++){
 		testCases[i] = new TestCase {rangeNum};
+		targetCFG->setCoverageOfTestCase(testCases[i]);
+	}
+
+	for (int i = edgesPlusPreds; i < numberOfTestCases; i++) {
+		testCases[i] = new TestCase {};
 		targetCFG->setCoverageOfTestCase(testCases[i]);
 	}
 }
