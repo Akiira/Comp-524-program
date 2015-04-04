@@ -40,6 +40,11 @@ void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double muta
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 
+		if(i % 5 == 4 ) {
+			population->crossover(child1);
+			population->crossover(child2);
+		}
+
 		double newProb;
 		newProb = adaptMutationBasedOnCoverageRatio(mutationProb);
 		child1->mutate(newProb);
@@ -146,6 +151,7 @@ TestCase* Simulation::localOptFromZero (bool* uncovered, bool edgeOrPredicate, T
 
 			if( coveredAnyNewForPopulation(coverage, edgeOrPredicate) ) {
 				cout << "Took about " << i * 100 << " tries. " << endl;
+				delete[] uncovered;
 				return tc;
 			}
 		}
