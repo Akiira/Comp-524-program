@@ -49,7 +49,7 @@ Population::Population(int popSize) {
 void Population::buildPopulationInRanges() {
 	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
 	int testSuiteSize = edgesPlusPreds * 1.25;
-	int organismsPerRange = populationSize / edgesPlusPreds;
+	int organismsPerRange = populationSize / NUM_OF_RANGES;
 	int currentOrg = 0;
 	for (int rangeNum = 1; rangeNum <= edgesPlusPreds; rangeNum++) {
 		for(; currentOrg < organismsPerRange * rangeNum; currentOrg++) {

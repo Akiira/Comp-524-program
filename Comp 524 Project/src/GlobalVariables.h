@@ -15,4 +15,5 @@ extern ControlFlowGraph* targetCFG;
 typedef int typeOfScaling;
 enum {NONE, LINEAR, EXPONENTIAL, RANKED};
 
+extern int NUM_OF_RANGES;
 #endif /* GLOBALVARIABLES_H_ */

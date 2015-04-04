@@ -171,9 +171,11 @@ void triangleSimulationTest() {
 //	}
 //}
 
+int NUM_OF_RANGES = 5000;
 void hardTest(){
 	targetCFG = new HardCFG { };
-	Simulation* hardSim = new Simulation(100);
+
+	Simulation* hardSim = new Simulation(5000);
 	 hardSim->run(1000, 5, 0.02);
 }
 
