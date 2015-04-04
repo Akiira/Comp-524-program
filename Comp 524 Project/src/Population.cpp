@@ -273,12 +273,46 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 	child2 = new Organism { parent2NumberOfTestCases, parent2.getMaxNumberOfTestCases(), child2TestCases };
 }
 
-//TODO decide when we use this
+void Population::crossover(Organism*& child) {
+	TestCase *child1 { }, *child2 { };
+	auto tc1 = child->chromosome->getRandomTestCase();
+	auto tc2 = child->chromosome->getRandomTestCase();
+
+	for (int i = 0; i < 100; ++i) {
+		do {
+			if(tc1 != tc2 ){
+				break;
+			}
+
+			tc1 = child->chromosome->getRandomTestCase();
+			tc2 = child->chromosome->getRandomTestCase();
+		} while (true);
+
+		crossover(*tc1, *tc2, child1, child2, targetCFG->getNumberOfParameters() * 0.5);
+
+		if( child->chromosome->coversNewEdge(child1) ) {
+			child->chromosome->replaceDuplicateTestCase(child1);
+			delete child2;
+			break;
+		}
+		else if( child->chromosome->coversNewEdge(child2) ) {
+			child->chromosome->replaceDuplicateTestCase(child2);
+			delete child1;
+			break;
+		} else {
+			delete child1;
+			delete child2;
+		}
+	}
+}
+
 void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 		TestCase*& child1, TestCase*& child2, int numberOfCutPoints) {
 	auto cutPoints = selectCutPoints(numberOfCutPoints, parent1.getNumberOfParameters());
 	bool alternate { true };
 	int current { 0 };
+	child1 = new TestCase();
+	child2 = new TestCase();
 
 	for (int i = 0; i < numberOfCutPoints; i++) {
 		if (alternate) {

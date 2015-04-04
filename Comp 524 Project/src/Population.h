@@ -19,6 +19,7 @@ public:
 
 	Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSize);
 	void crossover(const Organism& parent1, const Organism& parent2, Organism*& offspring1, Organism*& offspring2, int numberOfCutPoints);
+	void crossover(Organism*& child);
 	void crossover(const TestCase& parent1, const TestCase& parent2,
 			TestCase*& child1, TestCase*& child2, int numberOfCutPoints);
 
