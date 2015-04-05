@@ -91,8 +91,6 @@ void Simulation::tryLocalOptimization(Organism* child) {
 TestCase* Simulation::callRandomLocalOpt(Organism* child){
 	TestCase* oldTC = child->getChromosome()->getDuplicateTestCase();
 	bool edgeOrPredicate { true };
-	int uncovered = child->getUncoveredEdge();
-	bool* allUncovered = NULL;
 
 	if( child->getUncoveredEdge() == -1 )
 		edgeOrPredicate = false;

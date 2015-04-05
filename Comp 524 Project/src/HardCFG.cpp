@@ -9,6 +9,7 @@
 #include <limits>
 #include <cassert>
 #include <cmath>
+#include <iomanip>
 
 using std::endl;
 using std::cout;
@@ -794,20 +795,20 @@ void HardCFG::calculateSums(const int* values) {
 
 void HardCFG::printInputParameters(int* inputParameters) const{
 	cout << endl << "Input Parameters" << endl;
-	cout << " A    B    C    D    E    F    G    H    I    J" << endl;
+	cout << "     A        B        C        D        E        F        G        H        I        J" << endl;
 	cout << "-----------------------------------------------" << endl;
 	for (int i = 0; i < numberOfParameters; i++) {
-		cout << "  " << inputParameters[i] << "  |";
+		cout << "  " << std::setw(8) << inputParameters[i] << "  |";
 	}
 	cout << endl;
 }
 
 void HardCFG::printEdgesCovered(bool* edgesCovered) const{
 	cout << endl << "Edge Coverage" << endl;
-	cout << " B0toB1-B1toB3-B1toB4-B3toB7-B3toB8-B4toB9-B4toB10-B7toB15," << endl;
+	cout << " B0toB1 - B1toB3-B1toB4-B3toB7-B3toB8-B4toB9-B4toB10-B7toB15," << endl;
 	cout << "---------------------------------------------------------------------------" << endl;
 	for (int j = 0; j < 8; j++) {
-		cout << "   " << edgesCovered[j] << "   |";
+		cout << "   " << std::setw(8) << edgesCovered[j] << "   |";
 	}
 	cout << endl;
 	cout << "B7toB16-B8toB17-B8toB18-B9toB19-B9toB20-B10toB21-B10toB22" << endl;
