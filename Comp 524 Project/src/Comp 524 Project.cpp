@@ -171,14 +171,6 @@ void triangleSimulationTest() {
 //	}
 //}
 
-int NUM_OF_RANGES = 5000;
-void hardTest(){
-	targetCFG = new HardCFG { };
-
-	Simulation* hardSim = new Simulation(5000);
-	 hardSim->run(1000, 5, 0.02);
-}
-
 //-B10toB21
 //15toB32, B16toB33, B16toB34, B16toB35,
 //B17toB38, B18toB39, B18toB40, B18toB41,
@@ -260,6 +252,14 @@ void testSomeNewFunctions() {
 	targetCFG->setCoverageOfTestCase(tc);
 	cout << "Covered something new: " << hardSim->coveredAnyNewForPopulation(tc->getEdgesCovered(), true) << endl;
 
+}
+
+int NUM_OF_RANGES = 5000;
+void hardTest(){
+	targetCFG = new HardCFG { };
+
+	Simulation* hardSim = new Simulation(5000);
+	 hardSim->run(1000, 5, 0.02);
 }
 
 void hardTestWIthTournamentSelectAndCrossoverWithDominance(){
