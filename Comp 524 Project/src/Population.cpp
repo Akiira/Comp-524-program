@@ -215,6 +215,26 @@ int Population::fitnessProportionalSelect() {
 	return i;
 }
 
+
+int Population::randomSelect() {
+	return uniformInRange(0, populationSize-1);
+}
+
+int Population::tournamentSelect() {
+	int numSelected = .10 * populationSize;
+
+	int bestIndex, bestFitness;
+	for (int i = 0; i < numSelected; i++) {
+		int next = randomSelect();
+		if (population[next]->getScaledFitness() > bestFitness) {
+			bestIndex = i;
+			bestFitness = population[i]->getScaledFitness();
+		}
+	}
+
+	return bestIndex;
+}
+
 void Population::crossoverWithDominance(const Organism& parent1, const Organism& parent2, Organism*& child1) {
 	// This crossover assumes same sized parents
 	assert(parent1.getNumberOfTestCases() == parent2.getNumberOfTestCases());
@@ -222,16 +242,16 @@ void Population::crossoverWithDominance(const Organism& parent1, const Organism&
 	TestCase** betterTestCases;
 	TestCase** worseTestCases;
 
-	int betterParent { ( parent1.getFitness() >= parent2.getFitness() ? 1 : 2 ) };
+	int betterParent { ( parent1.getScaledFitness() >= parent2.getScaledFitness() ? 1 : 2 ) };
 	int tossBoundary = 0;
 	switch(betterParent) {
 		case 1:
-			tossBoundary = parent2.getFitness() / parent1.getFitness() * 50;
+			tossBoundary = parent2.getScaledFitness() / parent1.getScaledFitness() * 50;
 			betterTestCases = parent1.chromosome->getAllTestCases();
 			worseTestCases = parent2.chromosome->getAllTestCases();
 			break;
 		case 2:
-			tossBoundary = parent1.getFitness() / parent2.getFitness() * 50;
+			tossBoundary = parent1.getScaledFitness() / parent2.getScaledFitness() * 50;
 			betterTestCases = parent2.chromosome->getAllTestCases();
 			worseTestCases = parent1.chromosome->getAllTestCases();
 			break;

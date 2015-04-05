@@ -30,6 +30,9 @@ public:
 
 	void evaluateOrganismsFitness(Organism* org);
 	void updatePopulationsFitness();
+
+	int randomSelect();
+	int tournamentSelect();
 	int fitnessProportionalSelect();
 
 	void printPopulationFitness();
