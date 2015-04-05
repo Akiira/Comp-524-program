@@ -223,12 +223,12 @@ int Population::randomSelect() {
 int Population::tournamentSelect() {
 	int numSelected = .10 * populationSize;
 
-	int bestIndex, bestFitness;
+	int bestIndex = 0, bestFitness = -1;
 	for (int i = 0; i < numSelected; i++) {
 		int next = randomSelect();
 		if (population[next]->getScaledFitness() > bestFitness) {
-			bestIndex = i;
-			bestFitness = population[i]->getScaledFitness();
+			bestIndex = next;
+			bestFitness = population[next]->getScaledFitness();
 		}
 	}
 
