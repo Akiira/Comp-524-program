@@ -55,8 +55,7 @@ TestCase::TestCase() {
 }
 
 TestCase::TestCase(int rangeNum) {
-	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	assert(rangeNum >= 0 && rangeNum < edgesPlusPreds);
+	assert(rangeNum >= 0 && rangeNum < NUM_OF_RANGES);
 	numberOfEdges      = targetCFG->getNumberOfEdges();
 	numberOfParameters = targetCFG->getNumberOfParameters();
 	numberOfPredicates = targetCFG->getNumberOfPredicates();

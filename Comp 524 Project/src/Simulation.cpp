@@ -94,7 +94,7 @@ void Simulation::runWithTournamentSelectAndCrossoverWithDominance(int numberOfGe
 		// Attempt to replace the worst of the two parents
 		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
 
-		if( i % 25 == 0 || population->getCoverageRatio() > 0.95 ) {
+		if( /*i % 25 == 0 ||*/ population->getCoverageRatio() > 0.95 ) {
 			tryLocalOptimization(child1);
 		}
 		population->replaceParentThenReplaceWorst(parentToReplace, child1);

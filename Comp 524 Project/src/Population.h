@@ -89,7 +89,7 @@ private:
 	void moveOrganismToSortedPosition(int indexToSort);
 
 	void buildPopulationInRanges();
-
+	void buildPopulationInRangesWithWeighting();
 
 };
 #endif // !defined(EA_BE7C8399_4BC5_48f6_93FA_2B1C440AB247__INCLUDED_)
