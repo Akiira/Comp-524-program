@@ -102,39 +102,6 @@ void hiLoSimulationTest() {
 	hiLoSim->run(1000, 5, 0.02);
 }
 
-//void localOptTest() {
-//	HiLoControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
-//	bool EDGE { true }, PREDICATE { false };
-//	targetCFG = hiLoCFG;
-//
-//	Simulation* hiLoSim = new Simulation(100);
-//	hiLoSim->localOptFromZero(HiLoControlFlowGraph::edges::B8toB10, EDGE);
-//
-//	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_FF, PREDICATE);
-//	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_FT, PREDICATE);
-//	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_TF, PREDICATE);
-//	hiLoSim->localOptFromZero(HiLoControlFlowGraph::predicates::B10_TT, PREDICATE);
-//}
-void localOptTest2() {
-	HiLoControlFlowGraph* hiLoCFG = new HiLoControlFlowGraph { };
-	bool EDGE { true };//, PREDICATE { false };
-	targetCFG = hiLoCFG;
-
-	Simulation* hiLoSim = new Simulation(100);
-
-for (int var = 0; var < 50; ++var) {
-	TestCase* tc = new TestCase{};
-
-	hiLoSim->localOptFromGivenParams(tc, HiLoControlFlowGraph::edges::B8toB10, EDGE);
-}
-
-
-//	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_FF, PREDICATE);
-//	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_FT, PREDICATE);
-//	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_TF, PREDICATE);
-//	hiLoSim->localOptVersion1(HiLoControlFlowGraph::predicates::B10_TT, PREDICATE);
-}
-
 void triangleSimulationTest() {
 	ControlFlowGraph* triangleCFG = new TriangleProblemGraph { };
 
