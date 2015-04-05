@@ -22,6 +22,8 @@ public:
 	void crossover(const TestCase& parent1, const TestCase& parent2,
 			TestCase*& child1, TestCase*& child2, int numberOfCutPoints);
 
+	void crossoverWithDominance(const Organism& parent1, const Organism& parent2, Organism*& offspring1);
+
 	void replaceParentThenReplaceWorst(int parentIndex, Organism* child);
 	void replaceWorst(Organism* offspring);
 	void replaceOrganismAtIndexWithChild(int organismToReplace, Organism* child);

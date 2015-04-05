@@ -215,6 +215,45 @@ int Population::fitnessProportionalSelect() {
 	return i;
 }
 
+void Population::crossoverWithDominance(const Organism& parent1, const Organism& parent2, Organism*& child1) {
+	// This crossover assumes same sized parents
+	assert(parent1.getNumberOfTestCases() == parent2.getNumberOfTestCases());
+
+	TestCase** betterTestCases;
+	TestCase** worseTestCases;
+
+	int betterParent { ( parent1.getFitness() >= parent2.getFitness() ? 1 : 2 ) };
+	int tossBoundary = 0;
+	switch(betterParent) {
+		case 1:
+			tossBoundary = parent2.getFitness() / parent1.getFitness() * 50;
+			betterTestCases = parent1.chromosome->getAllTestCases();
+			worseTestCases = parent2.chromosome->getAllTestCases();
+			break;
+		case 2:
+			tossBoundary = parent1.getFitness() / parent2.getFitness() * 50;
+			betterTestCases = parent2.chromosome->getAllTestCases();
+			worseTestCases = parent1.chromosome->getAllTestCases();
+			break;
+	}
+
+	int testSuiteSize = parent1.getNumberOfTestCases();
+
+
+	TestCase** child1TestCases = new TestCase*[testSuiteSize] { };
+
+	for (int i = 0; i < parent1.getNumberOfTestCases(); i++) {
+		int toss = uniformInRange(1, 100);
+		if (toss < tossBoundary) {
+			child1TestCases[i] = new TestCase { *worseTestCases[i] };
+		}
+		else {
+			child1TestCases[i] = new TestCase { *betterTestCases[i] };
+		}
+	}
+
+	child1 = new Organism { testSuiteSize, testSuiteSize, child1TestCases };
+}
 
 void Population::crossover(const Organism& parent1, const Organism& parent2,
 		Organism*& child1, Organism*& child2, int numberOfCutPoints) {
