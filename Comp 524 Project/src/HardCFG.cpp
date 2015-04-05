@@ -766,17 +766,13 @@ void HardCFG::calculateMean(const int* values) {
 void HardCFG::calculateDeviation(const int* values) {
 	long long sum { 0 };
 	for (int i = 0; i < numberOfParameters; ++i) {
-
-		sum += pow(values[i] - Mu, 2);
 		//cout << "sum: " << sum << endl;
-		//assert(sum >= 0);
-
+		sum += (pow(values[i] - Mu, 2) / numberOfParameters);
+		assert(sum >= 0);
 	}
 
-	sigma = sqrt(sum / numberOfParameters);
-
-	// Commenting this for now. Need to find a solution to this.
-	//assert(sigma >= 0);
+	sigma = sqrt(sum);
+	assert(sigma >= 0);
 }
 
 

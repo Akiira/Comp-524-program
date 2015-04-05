@@ -73,6 +73,43 @@ void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double muta
 	//Organism* final = constructFinalOrganism();
 }
 
+void Simulation::runWithTournamentSelectAndCrossoverWithDominance(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
+	int i { 0 };
+	Organism *child1 { };
+
+	do{
+		auto parent1Index = population->tournamentSelect();
+		auto parent2Index = population->tournamentSelect();
+		auto parent1 = population->getOrganismByIndex(parent1Index);
+		auto parent2 = population->getOrganismByIndex(parent2Index);
+
+		cout << "Generation # " << i << " CoverageRatio: " << population->getCoverageRatio() << endl;
+
+		population->crossoverWithDominance(*parent1, *parent2, child1);
+
+		double newProb;
+		newProb = adaptMutationBasedOnCoverageRatio(mutationProb);
+		child1->mutate(newProb);
+
+		// Attempt to replace the worst of the two parents
+		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
+
+		if( i % 25 == 0 || population->getCoverageRatio() > 0.95 ) {
+			tryLocalOptimization(child1);
+		}
+		population->replaceParentThenReplaceWorst(parentToReplace, child1);
+
+		i++;
+
+	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
+
+	population->getBestOrganism()->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
+	population->printPopulationFitness();
+	population->printPopulationCoverage();
+
+	Organism* final = constructFinalOrganism();
+}
+
 void Simulation::tryLocalOptimization(Organism* child) {
 	auto tc = callRandomLocalOpt(child);
 
@@ -285,32 +322,39 @@ Organism* Simulation::constructFinalOrganism() {
 		}
 		finalSuite->calculateTestSuiteCoverage();
 
-		int predicateNum = -1;
-		while((predicateNum = finalOrg->getUncoveredPredicate()) != -1) {
-			for (int j = 0; j < populationSize; j++) {
-				TestCase* missingTestCase = population->getOrganismByIndex(j)->getChromosome()->getTestCaseThatCoversPredicate(predicateNum);
-				if (missingTestCase != NULL) {
-					finalSuite->addTestCase(new TestCase(*missingTestCase));
-					finalSuite->calculateTestSuiteCoverage();
-					break; // Done with this predicate, find the next
+		int* populationEdges = population->getEdgesCovered();
+		int* populationPredicates = population->getPredicatesCovered();
+
+		for (int predicateNum = 0; predicateNum < targetCFG->getNumberOfPredicates(); predicateNum++) {
+			bool* uncoveredPreds = finalOrg->getChromosome()->getAllUncoveredPredicates();
+			if (populationPredicates[predicateNum] > 0 && uncoveredPreds[predicateNum]) {
+				for (int j = 0; j < populationSize; j++) {
+					TestCase* missingTestCase = population->getOrganismByIndex(j)->getChromosome()->getTestCaseThatCoversPredicate(predicateNum);
+					if (missingTestCase != NULL) {
+						finalSuite->addTestCase(new TestCase(*missingTestCase));
+						finalSuite->calculateTestSuiteCoverage();
+						break; // Done with this predicate, find the next
+					}
 				}
 			}
 		}
 
 		// I don't believe this is actually necessary since hitting all the predicates should always imply hitting all the edges,
 		//	but I included it anyway just in case.
-		int edgeNum = -1;
-		while((edgeNum = finalOrg->getUncoveredEdge()) != -1) {
-			for (int j = 0; j < populationSize; j++) {
-				TestCase* missingTestCase = population->getOrganismByIndex(j)->getChromosome()->getTestCaseThatCoversEdge(edgeNum);
-				if (missingTestCase != NULL) {
-					finalSuite->addTestCase(new TestCase(*missingTestCase));
-					finalSuite->calculateTestSuiteCoverage();
-					break; // Done with this edge, find the next
+		for (int edgeNum = 0; edgeNum < targetCFG->getNumberOfEdges(); edgeNum++) {
+			bool* uncoveredEdges = finalOrg->getChromosome()->getAllUncoveredEdges();
+			if (populationEdges[edgeNum] > 0 && uncoveredEdges[edgeNum]) {
+				for (int j = 0; j < populationSize; j++) {
+					TestCase* missingTestCase = population->getOrganismByIndex(j)->getChromosome()->getTestCaseThatCoversEdge(edgeNum);
+					if (missingTestCase != NULL) {
+						finalSuite->addTestCase(new TestCase(*missingTestCase));
+						finalSuite->calculateTestSuiteCoverage();
+						break; // Done with this predicate, find the next
+					}
 				}
 			}
 		}
-
+		finalOrg->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
 		assert(hasEquivalentCoverageToPopulation(finalOrg));
 	}
 
