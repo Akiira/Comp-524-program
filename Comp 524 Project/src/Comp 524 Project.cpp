@@ -263,7 +263,7 @@ void testSomeNewFunctions() {
 void hardTestWIthTournamentSelectAndCrossoverWithDominance(){
 	targetCFG = new HardCFG { };
 	Simulation* hardSim = new Simulation(100);
-	hardSim->runWithTournamentSelectAndCrossoverWithDominance(10000, 5, 0.02);
+	hardSim->runWithTournamentSelectAndCrossoverWithDominance(1000, 5, 0.02);
 }
 
 int main() {
