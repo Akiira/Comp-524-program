@@ -25,15 +25,17 @@ Population::Population(int popSize) {
 	predicatesCovered = new int[targetCFG->getNumberOfPredicates()] { };
 	population = new Organism*[popSize] { };
 	populationSize = popSize;
+	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+	int testSuiteSize = edgesPlusPreds * 1.25;
 
 	/*
 	for (int i = 0; i < popSize; i++) {
-		population[i] = new Organism { initialTestSuiteSize, maxTestSuiteSize };
+		population[i] = new Organism { testSuiteSize, testSuiteSize };
 	}
-	*/
+*/
 
-	buildPopulationInRanges();
-	//buildPopulationInRangesWithWeighting();
+	//buildPopulationInRanges();
+	buildPopulationInRangesWithWeighting();
 	totalFitness = 0;
 
 	computePopulationLevelCoverage();
@@ -56,7 +58,8 @@ void Population::buildPopulationInRanges() {
 			population[currentOrg] = new Organism { testSuiteSize, testSuiteSize, rangeNum};
 		}
 	}
-	// Incase edgesPlusPreds does not divide populationSIze;
+	// Incase NUM_OF_RANGES does not divide populationSIze;
+	// NOTE: BY setting NUM_OF_RANGES > populationSIze you get completely random testcases
 	for (; currentOrg < populationSize; currentOrg++) {
 		population[currentOrg] = new Organism { testSuiteSize, testSuiteSize};
 	}
@@ -69,18 +72,16 @@ void Population::buildPopulationInRangesWithWeighting() {
 	for(int currentOrg = 0; currentOrg < populationSize; currentOrg++) {
 		rangeWeight = uniformInRange(1, 100);
 		if (rangeWeight < 10) {
-			rangeNum = uniformInRange(0, NUM_OF_RANGES / 100 * 50);
+			rangeNum = uniformInRange(0, NUM_OF_RANGES / 10 * 4);
 		}
 		else if (rangeWeight < 90) {
-			rangeNum = uniformInRange(NUM_OF_RANGES / 100 * 50 + 1, NUM_OF_RANGES / 100 * 51);
+			rangeNum = uniformInRange(NUM_OF_RANGES / 10 * 4 + 1, NUM_OF_RANGES / 10 * 5);
 		}
 		else {
-			rangeNum = uniformInRange(NUM_OF_RANGES / 100 * 51 + 1, NUM_OF_RANGES-1);
+			rangeNum = uniformInRange(NUM_OF_RANGES / 10 * 5 + 1, NUM_OF_RANGES-1);
 		}
 		population[currentOrg] = new Organism { testSuiteSize, testSuiteSize, rangeNum};
 	}
-	cout << "made it" << endl;
-
 }
 
 void Population::evaluateOrganismsFitness(Organism* org) {
@@ -267,7 +268,6 @@ int Population::tournamentSelect() {
 	int bestIndex = 0, bestFitness = -1;
 	for (int i = 0; i < numSelected; i++) {
 		int next = randomSelect();
-		cout << next << " " << bestIndex << endl;
 		if (population[next]->getScaledFitness() > bestFitness) {
 			bestIndex = next;
 			bestFitness = population[next]->getScaledFitness();

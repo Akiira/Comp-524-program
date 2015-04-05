@@ -103,11 +103,11 @@ void Simulation::runWithTournamentSelectAndCrossoverWithDominance(int numberOfGe
 
 	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
 
-	population->getBestOrganism()->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
+	Organism* final = constructFinalOrganism();
+
+	//population->getBestOrganism()->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
 	population->printPopulationFitness();
 	population->printPopulationCoverage();
-
-	Organism* final = constructFinalOrganism();
 }
 
 void Simulation::tryLocalOptimization(Organism* child) {

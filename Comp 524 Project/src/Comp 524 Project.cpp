@@ -254,7 +254,7 @@ void testSomeNewFunctions() {
 
 }
 
-int NUM_OF_RANGES = 10000000;
+int NUM_OF_RANGES = 1000;
 void hardTest(){
 	targetCFG = new HardCFG { };
 
@@ -265,7 +265,7 @@ void hardTest(){
 void hardTestWIthTournamentSelectAndCrossoverWithDominance(){
 	targetCFG = new HardCFG { };
 	Simulation* hardSim = new Simulation(100);
-	hardSim->runWithTournamentSelectAndCrossoverWithDominance(1000, 5, 0.02);
+	hardSim->runWithTournamentSelectAndCrossoverWithDominance(100000, 5, 0.02);
 }
 
 int main() {

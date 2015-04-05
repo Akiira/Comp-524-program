@@ -25,6 +25,8 @@ HardCFG::HardCFG() {
 	for (int i = 0; i < numberOfParameters; ++i) {
 		rangeForEachParameter[i][0] = numeric_limits<int>::min() / ( i + 2 );
 		rangeForEachParameter[i][1] = numeric_limits<int>::max() / ( i + 2 );
+		//rangeForEachParameter[i][0] = -100;
+		//rangeForEachParameter[i][1] = 100;
 	}
 
 	Mu = 0;
