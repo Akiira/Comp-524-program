@@ -31,6 +31,7 @@ private:
 	// SHared code between constructors
 	void initializeMembersAndAllocateMemory(int numberOfTestCases, int maxNumberOfTestCases);
 	void fillTestSuiteWithRandomTestCases();
+	void fillTestSuiteWithRandomTestCasesInRanges();
 
 
 public:

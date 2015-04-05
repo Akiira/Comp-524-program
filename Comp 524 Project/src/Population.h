@@ -18,6 +18,7 @@ public:
 	virtual ~Population();
 
 	Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSize);
+	Population(int popSize);
 	void crossover(const Organism& parent1, const Organism& parent2, Organism*& offspring1, Organism*& offspring2, int numberOfCutPoints);
 	void crossover(Organism*& child);
 	void crossover(const TestCase& parent1, const TestCase& parent2,
@@ -82,7 +83,5 @@ private:
 
 	void sortPopulationByFitness();
 	void moveOrganismToSortedPosition(int indexToSort);
-
-
 };
 #endif // !defined(EA_BE7C8399_4BC5_48f6_93FA_2B1C440AB247__INCLUDED_)
