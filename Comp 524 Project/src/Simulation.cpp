@@ -94,25 +94,19 @@ TestCase* Simulation::callRandomLocalOpt(Organism* child){
 	int uncovered = child->getUncoveredEdge();
 	bool* allUncovered = NULL;
 
-	if( child->getUncoveredEdge() == -1 ) {//TODO clean this up
+	if( child->getUncoveredEdge() == -1 )
 		edgeOrPredicate = false;
-		uncovered = child->getUncoveredPredicate();
-		allUncovered = child->getChromosome()->getAllUncoveredPredicates();
-	} else {
-		allUncovered = child->getChromosome()->getAllUncoveredEdges();
-	}
 
-	//TODO change probability based on how succesful they are
+	//TODO change probability based on how succesful they are, or try all each time
 	switch (uniformInRange(0, 2)) {
 		case 0:
-			//return localOptFromZero(allUncovered, edgeOrPredicate, oldTC);
-			return localOptFromGivenParams(oldTC, uncovered, edgeOrPredicate);
+			return localOptFromGivenParams(edgeOrPredicate, oldTC);
 			break;
 		case 1:
-			return localOptFromZero(allUncovered, edgeOrPredicate, oldTC);
+			return localOptFromZero(edgeOrPredicate, oldTC);
 			break;
 		case 2:
-			return localOptFromZero(allUncovered, edgeOrPredicate, oldTC);
+			return localOptFromZero(edgeOrPredicate, oldTC);
 			//return localOptFromMiddle(uncovered, edgeOrPredicate);
 			break;
 		default:
@@ -121,13 +115,13 @@ TestCase* Simulation::callRandomLocalOpt(Organism* child){
 	}
 }
 
-TestCase* Simulation::localOptFromZero (bool* uncovered, bool edgeOrPredicate, TestCase* oldTC) {
+TestCase* Simulation::localOptFromZero (bool edgeOrPredicate, TestCase* oldTC) {
 	int NeighborhoodSize { 1 };
 
 	for(int i = 0; i < 1000; ++i) {
 		TestCase* tc = new TestCase { };
 		tc->setInputParameters(oldTC->getInputParameters());
-		for (int j = 0; j < 100; ++j) { //Try searching this particular neighborhood X times
+		for (int j = 0; j < 150; ++j) { //Try searching this particular neighborhood X times
 
 
 			for (int var = 0; var < targetCFG->getNumberOfParameters(); ++var) {
@@ -148,7 +142,6 @@ TestCase* Simulation::localOptFromZero (bool* uncovered, bool edgeOrPredicate, T
 
 			if( coveredAnyNewForPopulation(coverage, edgeOrPredicate) ) {
 				cout << "Took about " << i * 100 << " tries. " << endl;
-				delete[] uncovered;
 				return tc;
 			}
 		}
@@ -160,7 +153,7 @@ TestCase* Simulation::localOptFromZero (bool* uncovered, bool edgeOrPredicate, T
 	return NULL;
 }
 
-TestCase* Simulation::localOptFromGivenParams (TestCase* orig, int thingToCover, bool edgeOrPredicate) {
+TestCase* Simulation::localOptFromGivenParams (bool edgeOrPredicate, TestCase* oldTC)  {
 	TestCase* tc = new TestCase { };
 	int* parameters = new int[targetCFG->getNumberOfParameters()] { };
 	int NeighborhoodSize { 1 };
@@ -169,9 +162,9 @@ TestCase* Simulation::localOptFromGivenParams (TestCase* orig, int thingToCover,
 
 	for(int i = 0; i < 500; ++i) {
 
-		for (int j = 0; j < (10 + NeighborhoodSize/15); ++j) {
+		for (int j = 0; j < (15 + NeighborhoodSize/15); ++j) {
 			for (int var = 0; var < targetCFG->getNumberOfParameters(); ++var) {
-				long newValue = orig->getInputParameterAtIndex(var) + uniformInRange(-NeighborhoodSize, NeighborhoodSize);
+				long newValue = oldTC->getInputParameterAtIndex(var) + uniformInRange(-NeighborhoodSize, NeighborhoodSize);
 
 				if( newValue > targetCFG->getUpperBoundForParameter(var) ) {
 					newValue = targetCFG->getUpperBoundForParameter(var);

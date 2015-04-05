@@ -24,13 +24,13 @@ public:
 
 	void tryLocalOptimization(Organism* child);
 	TestCase* callRandomLocalOpt(Organism* child);
-	TestCase* localOptFromZero (bool* uncovered, bool edgeOrPredicate, TestCase* oldTC);
+
 	bool coveredAnyNew(bool* uncovered, bool* covered, bool edge);
 	bool coveredAnyNewForPopulation(bool* uncovered, bool edge) ;
 	void tryLocalOptimization();
 	TestCase* callRandomLocalOpt();
-	TestCase* localOptFromZero(int thingToCover, bool edgeOrPredicate);
-	TestCase* localOptFromGivenParams (TestCase* orig, int thingToCover, bool edgeOrPredicate);
+	TestCase* localOptFromZero (bool edgeOrPredicate, TestCase* oldTC);
+	TestCase* localOptFromGivenParams (bool edgeOrPredicate, TestCase* oldTC);
 	TestCase* localOptFromMiddle (int thingToCover, bool edgeOrPredicate);
 
 
