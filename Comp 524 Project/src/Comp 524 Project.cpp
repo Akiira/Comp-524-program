@@ -254,7 +254,7 @@ void testSomeNewFunctions() {
 
 }
 
-int NUM_OF_RANGES = 5000;
+int NUM_OF_RANGES = 10000000;
 void hardTest(){
 	targetCFG = new HardCFG { };
 
