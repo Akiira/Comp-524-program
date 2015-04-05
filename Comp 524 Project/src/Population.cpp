@@ -293,12 +293,18 @@ void Population::crossover(Organism*& child) {
 		crossover(*tc1, *tc2, child1, child2, targetCFG->getNumberOfParameters() * 0.5);
 
 		if( child->chromosome->coversNewEdge(child1) ) {
+			cout << "\tTest Case Crossover Worked." << endl;
 			child->chromosome->replaceDuplicateTestCase(child1);
+			evaluateOrganismsFitness(child);
+			updatePopulationsFitness();
 			delete child2;
 			break;
 		}
 		else if( child->chromosome->coversNewEdge(child2) ) {
+			cout << "\tTest Case Crossover Worked." << endl;
 			child->chromosome->replaceDuplicateTestCase(child2);
+			evaluateOrganismsFitness(child);
+			updatePopulationsFitness();
 			delete child1;
 			break;
 		} else {
@@ -306,6 +312,7 @@ void Population::crossover(Organism*& child) {
 			delete child2;
 		}
 	}
+	cout << "\tTest Case Crossover Did Not Work." << endl;
 }
 
 void Population::crossover(const TestCase& parent1, const TestCase& parent2,
@@ -346,6 +353,9 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 			child2->setInputParameterAtIndex(j, parent1.getInputParameterAtIndex(j));
 		}
 	}
+
+	targetCFG->setCoverageOfTestCase(child1);
+	targetCFG->setCoverageOfTestCase(child2);
 }
 
 int* Population::selectCutPoints(int numCutPoints, int upperBound) {
@@ -470,7 +480,7 @@ void Population::printPopulationCoverage() {
 void Population::linearScaling() {
 	totalFitness = 0;
 
-	//TODO scaling factor needs to be updated dynamicly based on the current population
+	//TODO scaling factor needs to be updated dynamically based on the current population
 
 	//REFERENCE: http://www.cse.unr.edu/~sushil/class/gas/notes/scaling/index.html
 	//This scalingFactor "is a scaling constant that specifies the expected number
