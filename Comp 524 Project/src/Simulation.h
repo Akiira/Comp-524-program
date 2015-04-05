@@ -21,6 +21,7 @@ public:
 	Simulation(int populationSize);
 
 	void run(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
+	void runWithTournamentSelectAndCrossoverWithDominance(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
 
 	void tryLocalOptimization(Organism* child);
 	TestCase* callRandomLocalOpt(Organism* child);

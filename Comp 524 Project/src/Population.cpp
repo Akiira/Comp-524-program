@@ -222,6 +222,76 @@ int Population::fitnessProportionalSelect() {
 }
 
 
+int Population::randomSelect() {
+	return uniformInRange(0, populationSize-1);
+}
+
+int Population::tournamentSelect() {
+	int numSelected = .10 * populationSize;
+
+	int bestIndex = 0, bestFitness = -1;
+	for (int i = 0; i < numSelected; i++) {
+		int next = randomSelect();
+		if (population[next]->getScaledFitness() > bestFitness) {
+			bestIndex = next;
+			bestFitness = population[next]->getScaledFitness();
+		}
+	}
+
+	return bestIndex;
+}
+
+void Population::crossoverWithDominance(const Organism& parent1, const Organism& parent2, Organism*& child1) {
+	// This crossover assumes same sized parents
+	assert(parent1.getNumberOfTestCases() == parent2.getNumberOfTestCases());
+
+	TestCase** betterTestCases;
+	TestCase** worseTestCases;
+
+	int betterParent { ( parent1.getScaledFitness() >= parent2.getScaledFitness() ? 1 : 2 ) };
+	int tossBoundary = 0;
+	switch(betterParent) {
+		case 1:
+			if (parent1.getScaledFitness() == 0) {
+				tossBoundary = 0;
+			}
+			else {
+				tossBoundary = parent2.getScaledFitness() / parent1.getScaledFitness() * 50;
+			}
+			betterTestCases = parent1.chromosome->getAllTestCases();
+			worseTestCases = parent2.chromosome->getAllTestCases();
+			break;
+		case 2:
+			if (parent1.getScaledFitness() == 0) {
+				tossBoundary = 0;
+			}
+			else {
+				tossBoundary = parent2.getScaledFitness() / parent1.getScaledFitness() * 50;
+			}
+			tossBoundary = parent1.getScaledFitness() / parent2.getScaledFitness() * 50;
+			betterTestCases = parent2.chromosome->getAllTestCases();
+			worseTestCases = parent1.chromosome->getAllTestCases();
+			break;
+	}
+
+	int testSuiteSize = parent1.getNumberOfTestCases();
+
+
+	TestCase** child1TestCases = new TestCase*[testSuiteSize] { };
+
+	for (int i = 0; i < parent1.getNumberOfTestCases(); i++) {
+		int toss = uniformInRange(1, 100);
+		if (toss < tossBoundary) {
+			child1TestCases[i] = new TestCase { *worseTestCases[i] };
+		}
+		else {
+			child1TestCases[i] = new TestCase { *betterTestCases[i] };
+		}
+	}
+
+	child1 = new Organism { testSuiteSize, testSuiteSize, child1TestCases };
+}
+
 void Population::crossover(const Organism& parent1, const Organism& parent2,
 		Organism*& child1, Organism*& child2, int numberOfCutPoints) {
 

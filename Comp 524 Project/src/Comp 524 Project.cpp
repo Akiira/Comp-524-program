@@ -227,6 +227,12 @@ void testSomeNewFunctions() {
 
 }
 
+void hardTestWIthTournamentSelectAndCrossoverWithDominance(){
+	targetCFG = new HardCFG { };
+	Simulation* hardSim = new Simulation(100);
+	hardSim->runWithTournamentSelectAndCrossoverWithDominance(1000, 5, 0.02);
+}
+
 int main() {
 	//simpleIfElseControlFlowGraphTest_testCase_version();
 	//simpleIfElseControlFlowGraphTest_testSuite_version();
@@ -243,8 +249,9 @@ int main() {
     //hiLoRandomSearchPredicates();
     //triangleSimulationTest();
     //triangleRandomSearchEdges();
-    hardTest();
+    //hardTest();
     //testingHardCFGEdges();
+    hardTestWIthTournamentSelectAndCrossoverWithDominance();
 
     //testSomeNewFunctions();
 
