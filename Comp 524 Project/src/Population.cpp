@@ -266,11 +266,22 @@ void Population::crossoverWithDominance(const Organism& parent1, const Organism&
 	int tossBoundary = 0;
 	switch(betterParent) {
 		case 1:
-			tossBoundary = parent2.getScaledFitness() / parent1.getScaledFitness() * 50;
+			if (parent1.getScaledFitness() == 0) {
+				tossBoundary = 0;
+			}
+			else {
+				tossBoundary = parent2.getScaledFitness() / parent1.getScaledFitness() * 50;
+			}
 			betterTestCases = parent1.chromosome->getAllTestCases();
 			worseTestCases = parent2.chromosome->getAllTestCases();
 			break;
 		case 2:
+			if (parent1.getScaledFitness() == 0) {
+				tossBoundary = 0;
+			}
+			else {
+				tossBoundary = parent2.getScaledFitness() / parent1.getScaledFitness() * 50;
+			}
 			tossBoundary = parent1.getScaledFitness() / parent2.getScaledFitness() * 50;
 			betterTestCases = parent2.chromosome->getAllTestCases();
 			worseTestCases = parent1.chromosome->getAllTestCases();
