@@ -101,9 +101,11 @@ void TestCase::generateRandomParametersInRange(int rangeNum) {
 	for(int i = 0; i < numberOfParameters; i++)
 	{
 		long rangeSize = (targetCFG->getUpperBoundForParameter(i) - targetCFG->getLowerBoundForParameter(i)) / NUM_OF_RANGES;
+
 		long lower = targetCFG->getLowerBoundForParameter(i) + rangeNum * rangeSize;
-		long upper = targetCFG->getUpperBoundForParameter(i) + ((rangeNum+1) * rangeSize) - 1;
+		long upper = targetCFG->getLowerBoundForParameter(i) + ((rangeNum+1) * rangeSize) - 1;
 		inputParameters[i] = uniformInRange(lower, upper);
+		cout << "RangeSize: " << rangeSize << " RangeNum: " << rangeNum << " lower: "  << lower << " upper: " << upper << " Param Value: " << inputParameters[i] << endl;
 	}
 }
 
@@ -113,7 +115,7 @@ void TestCase::generateRandomParametersFromRandomRanges() {
 		int rangeNum = uniformInRange(0, NUM_OF_RANGES-1);
 		long rangeSize = (targetCFG->getUpperBoundForParameter(i) - targetCFG->getLowerBoundForParameter(i)) / NUM_OF_RANGES;
 		long lower = targetCFG->getLowerBoundForParameter(i) + rangeNum * rangeSize;
-		long upper = targetCFG->getUpperBoundForParameter(i) + ((rangeNum+1) * rangeSize) - 1;
+		long upper = targetCFG->getLowerBoundForParameter(i) + ((rangeNum+1) * rangeSize) - 1;
 		inputParameters[i] = uniformInRange(lower, upper);
 	}
 }
