@@ -8,21 +8,35 @@
 #ifndef RANGESET_H_
 #define RANGESET_H_
 class Range;
+class TestCase;
 class RangeSet {
 public:
 	RangeSet();
 	virtual ~RangeSet();
-	int numberOfRanges, maxNumberOfRanges;
-	Range** ranges;
+
 
 	RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges);
 
-	void addRange(Range* r);
-
 	// Return an array of targetCFG.numberOfParameters ranges to use during test case gen
-	Range** randomlySelectRangesForNewTestCase();
 
-	void learnFromRanges(); // May split, delete, or combine ranges maybe
+	// Depreciated should use getNewTestCase instead. TestCase constructor should be changed.
+	//	But will leave for now because I'm tired.
+	Range** randomlySelectRangesForNewTestCase();
+	Range** selectRangesForNewTestCaseProportionalToUsefulness();
+
+	TestCase* getNewTestCase();
+
+	void adaptRangesBasedOnUsefulness(); // May split, delete, or combine ranges maybe
+
+private:
+	int totalUsefulness;
+	int numberOfRanges, maxNumberOfRanges;
+	Range** ranges;
+	void addRange(Range* r);
+	void splitRange(int index);
+	void deleteRange(int index);
+	void sortRangesByUsefulness();
+	void moveRangeToSortedPosition(int indexToSort);
 };
 
 #endif /* RANGESET_H_ */

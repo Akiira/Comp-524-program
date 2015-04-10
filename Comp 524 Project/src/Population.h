@@ -38,6 +38,8 @@ public:
 	int tournamentSelect();
 	int fitnessProportionalSelect();
 
+	bool coversNewEdgesOrPredicates(bool* uncovered, bool edge) ;
+
 	void printPopulationFitness();
 	void printPopulationCoverage();
 
@@ -65,11 +67,18 @@ public:
 		return coverageRatio;
 	}
 
+	int getTestSuiteSize() const {
+		return testSuiteSize;
+	}
+
+
+
 
 
 private:
 	Organism** population;
 	int populationSize;
+	int testSuiteSize;
 	int totalFitness;
 	int* edgesCovered;
 	int* predicatesCovered;

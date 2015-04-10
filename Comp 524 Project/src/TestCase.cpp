@@ -57,6 +57,22 @@ TestCase::TestCase() {
 	generateParametersFromGlobalRangeSet();
 }
 
+TestCase::TestCase(bool empty) {
+
+	numberOfEdges      = targetCFG->getNumberOfEdges();
+	numberOfParameters = targetCFG->getNumberOfParameters();
+	numberOfPredicates = targetCFG->getNumberOfPredicates();
+
+	edgesCovered = new bool[numberOfEdges] { };
+	predicatesCovered = new bool[numberOfPredicates] { };
+	inputParameters = new int[numberOfParameters] { };
+	numCovered = 0;
+
+	if (!empty) {
+		generateParametersFromGlobalRangeSet();
+	}
+}
+
 TestCase::TestCase(Range* range) {
 	numberOfEdges      = targetCFG->getNumberOfEdges();
 	numberOfParameters = targetCFG->getNumberOfParameters();

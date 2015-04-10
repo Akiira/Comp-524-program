@@ -23,12 +23,12 @@ Population::~Population() {
  * Creates a new population of random test suites
  */
 Population::Population(int popSize) {
+	globalPopulation = this;
 	edgesCovered = new int[targetCFG->getNumberOfEdges()] { };
 	predicatesCovered = new int[targetCFG->getNumberOfPredicates()] { };
 	population = new Organism*[popSize] { };
 	populationSize = popSize;
-
-	int testSuiteSize = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+	testSuiteSize = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
 
 	for (int i = 0; i < popSize; i++) {
 		population[i] = new Organism { testSuiteSize, testSuiteSize };
@@ -44,6 +44,18 @@ Population::Population(int popSize) {
 
 	updatePopulationsFitness();
 	sortPopulationByFitness();
+}
+
+bool Population::coversNewEdgesOrPredicates(bool* covered, bool edgeOrPredicate) {
+	int num = ( edgeOrPredicate ? targetCFG->getNumberOfEdges() : targetCFG->getNumberOfPredicates() );
+	auto popsCover = ( edgeOrPredicate ? edgesCovered : predicatesCovered );
+	for (int i = 0; i < num; ++i) {
+		if( !popsCover[i] && covered[i] ){
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void Population::evaluateOrganismsFitness(Organism* org) {
@@ -368,7 +380,7 @@ void Population::crossover(Organism*& child) {
 
 		crossover(*tc1, *tc2, child1, child2, targetCFG->getNumberOfParameters() * 0.5);
 
-		if( child->chromosome->coversNewEdge(child1) ) {
+		if( child->chromosome->wouldAddNewCoverage(child1) ) {
 			cout << "\tTest Case Crossover Worked." << endl;
 			child->chromosome->replaceDuplicateTestCase(child1);
 			evaluateOrganismsFitness(child);
@@ -376,7 +388,7 @@ void Population::crossover(Organism*& child) {
 			delete child2;
 			break;
 		}
-		else if( child->chromosome->coversNewEdge(child2) ) {
+		else if( child->chromosome->wouldAddNewCoverage(child2) ) {
 			cout << "\tTest Case Crossover Worked." << endl;
 			child->chromosome->replaceDuplicateTestCase(child2);
 			evaluateOrganismsFitness(child);

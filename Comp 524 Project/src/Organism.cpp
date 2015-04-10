@@ -11,6 +11,7 @@
 #include <iostream>
 #include <cassert>
 #include "Random.h"
+#include "RangeSet.h"
 using std::cout;
 using std::endl;
 
@@ -41,7 +42,8 @@ void Organism::mutate(double mutationProb) {
 	for (int i = 0; i < numberOfTestCases; i++) {
 		double toss = uniform01();
 		if (toss < mutationProb) {
-			TestCase* newTestCase = new TestCase();
+			//TestCase* newTestCase = new TestCase();
+			TestCase* newTestCase = rangeSet->getNewTestCase();
 			targetCFG->setCoverageOfTestCase(newTestCase);
 			chromosome->setTestCase(i, newTestCase);
 		}

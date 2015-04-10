@@ -12,6 +12,7 @@
 #include <iostream>
 #include <cassert>
 #include <cstring>
+#include "RangeSet.h"
 
 using std::cout;
 using std::endl;
@@ -52,7 +53,9 @@ TestSuite::TestSuite(const TestSuite& testSuite) {
 TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases){
 	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
 	this->testCases = new TestCase*[maxNumberOfTestCases] { };
-	fillTestSuiteWithRandomTestCases();
+	//fillTestSuiteWithRandomTestCases();
+	fillTestSuiteWithTestCasesFromRangeSet();
+
 }
 
 /*	Depreciated
@@ -88,6 +91,15 @@ void TestSuite::fillTestSuiteWithRandomTestCases() {
 		targetCFG->setCoverageOfTestCase(testCases[i]);
 	}
 }
+
+void TestSuite::fillTestSuiteWithTestCasesFromRangeSet() {
+	assert(testCases != 0);
+	for(int i = 0; i < numberOfTestCases; i++){
+		testCases[i] = rangeSet->getNewTestCase();
+		targetCFG->setCoverageOfTestCase(testCases[i]);
+	}
+}
+
 
 /* Depreciated
 void TestSuite::fillTestSuiteWithRandomTestCasesInRanges() {
@@ -311,7 +323,20 @@ void TestSuite::calculateTestSuiteCoverage() {
 	coverageRatio = numCovered / (numberOfEdges + numberOfPredicates);
 }
 
-bool TestSuite::coversNewEdge(TestCase* tc) {
+
+bool TestSuite::coversNewEdgesOrPredicates(bool* covered, bool edgeOrPredicate) {
+	int num = ( edgeOrPredicate ? targetCFG->getNumberOfEdges() : targetCFG->getNumberOfPredicates() );
+	auto suiteCover = ( edgeOrPredicate ? edgeCoverageCounts : predicateCoverageCounts );
+	for (int i = 0; i < num; ++i) {
+		if( !suiteCover[i] && covered[i] ){
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool TestSuite::wouldAddNewCoverage(TestCase* tc) {
 	auto covEdges = tc->getEdgesCovered();
 
 	for (int i = 0; i < numberOfEdges; ++i) {

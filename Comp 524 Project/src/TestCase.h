@@ -23,6 +23,7 @@ public:
 
 	//TestCase(int rangeNum);
 
+	TestCase(bool empty); // If empty is true it doesn't create input parameters.
 	TestCase(Range* range);
 
 

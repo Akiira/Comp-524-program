@@ -29,8 +29,7 @@ public:
 	void tryLocalOptimization(Organism* child);
 	TestCase* callRandomLocalOpt(Organism* child);
 
-	bool coveredAnyNew(bool* uncovered, bool* covered, bool edge);
-	bool coveredAnyNewForPopulation(bool* uncovered, bool edge) ;
+
 	void tryLocalOptimization();
 	TestCase* callRandomLocalOpt();
 	TestCase* localOptFromZero (bool edgeOrPredicate, TestCase* oldTC);
@@ -39,7 +38,7 @@ public:
 
 
 private:
-	Population* population;
+	Population* population;	// This is now global
 
 	int populationSize;
 

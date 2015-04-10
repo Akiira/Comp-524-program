@@ -11,9 +11,11 @@
 //#include "ControlFlowGraph.h"
 class RangeSet;
 class ControlFlowGraph;
+class Population;
 
 extern ControlFlowGraph* targetCFG;
 extern RangeSet* rangeSet;
+extern Population* globalPopulation;
 
 typedef int typeOfScaling;
 enum {NONE, LINEAR, EXPONENTIAL, RANKED};

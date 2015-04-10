@@ -78,6 +78,10 @@ void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double muta
 			child2 = NULL;
 		}
 
+		if (i % 100) {
+			rangeSet->adaptRangesBasedOnUsefulness();
+		}
+
 		i++;
 
 	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
@@ -186,7 +190,8 @@ TestCase* Simulation::localOptFromZero (bool edgeOrPredicate, TestCase* oldTC) {
 
 			auto coverage = ( edgeOrPredicate ? tc->getEdgesCovered() : tc->getPredicatesCovered() );
 
-			if( coveredAnyNewForPopulation(coverage, edgeOrPredicate) ) {
+			// Note i moved the old coveredANyNewForPopulation to this function in Population
+			if( population->coversNewEdgesOrPredicates(coverage, edgeOrPredicate) ) {
 				cout << "Took about " << i * 100 << " tries. " << endl;
 				return tc;
 			}
@@ -226,7 +231,7 @@ TestCase* Simulation::localOptFromGivenParams (bool edgeOrPredicate, TestCase* o
 			targetCFG->setCoverageOfTestCase(tc);
 
 			auto coverage = ( edgeOrPredicate ? tc->getEdgesCovered() : tc->getPredicatesCovered() );
-			if( coveredAnyNewForPopulation(coverage, edgeOrPredicate) ) {
+			if( population->coversNewEdgesOrPredicates(coverage, edgeOrPredicate) ) {
 				cout << "\tTook about " << i * (10 + NeighborhoodSize/15) << " tries. " << endl;
 				return tc;
 			}
@@ -273,30 +278,6 @@ TestCase* Simulation::localOptFromMiddle (int thingToCover, bool edgeOrPredicate
 
 	cout << "Failed to cover edge " << endl;
 	return NULL;
-}
-
-bool Simulation::coveredAnyNew(bool* uncovered, bool* covered, bool edge) {
-	int num = ( edge ? targetCFG->getNumberOfEdges() : targetCFG->getNumberOfPredicates() );
-
-	for (int i = 0; i < num; ++i) {
-		if( uncovered[i] && covered[i] ){
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool Simulation::coveredAnyNewForPopulation(bool* covered, bool edge) {
-	int num = ( edge ? targetCFG->getNumberOfEdges() : targetCFG->getNumberOfPredicates() );
-	auto popsCover = ( edge ? population->getEdgesCovered() : population->getPredicatesCovered() );
-	for (int i = 0; i < num; ++i) {
-		if( !popsCover[i] && covered[i] ){
-			return true;
-		}
-	}
-
-	return false;
 }
 
 void Simulation::minimizeOrganism(Organism* orgToMinimize) {
@@ -466,7 +447,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 			Range* nextRangePos = new Range(nextStartPos, nextStartPos + size);
 			TestCase* tcPos = new TestCase(nextRangePos);
 			targetCFG->setCoverageOfTestCase(tcPos);
-			if (finalSuite->coversNewEdge(tcPos)) {
+			if (finalSuite->wouldAddNewCoverage(tcPos)) {
 				cout << "Adding # " << rangePoolSize << " range start: " << nextStartPos << endl;
 				finalSuite->addTestCase(tcPos);
 				finalSuite->calculateTestSuiteCoverage();
@@ -484,7 +465,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 			Range* nextRangeNeg = new Range(nextStartNeg, nextStartPos + size);
 			TestCase* tcNeg = new TestCase(nextRangeNeg);
 			targetCFG->setCoverageOfTestCase(tcNeg);
-			if (finalSuite->coversNewEdge(tcNeg)) {
+			if (finalSuite->wouldAddNewCoverage(tcNeg)) {
 				cout << "Adding # " << rangePoolSize << " range start: " << nextStartNeg << endl;
 				finalSuite->addTestCase(tcNeg);
 				finalSuite->calculateTestSuiteCoverage();

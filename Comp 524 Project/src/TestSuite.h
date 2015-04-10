@@ -32,7 +32,9 @@ private:
 	// SHared code between constructors
 	void initializeMembersAndAllocateMemory(int numberOfTestCases, int maxNumberOfTestCases);
 	void fillTestSuiteWithRandomTestCases();
-	void fillTestSuiteWithRandomTestCasesInRanges();
+	//void fillTestSuiteWithRandomTestCasesInRanges();
+
+	void fillTestSuiteWithTestCasesFromRangeSet();
 
 
 public:
@@ -52,7 +54,8 @@ public:
 
 	void resetCoverage();
 	void calculateTestSuiteCoverage();
-	bool coversNewEdge(TestCase* );
+	bool wouldAddNewCoverage(TestCase*);
+	bool coversNewEdgesOrPredicates(bool* covered, bool edgeOrPredicate);
 
 	void sortTestSuiteByCoverageCounts();
 

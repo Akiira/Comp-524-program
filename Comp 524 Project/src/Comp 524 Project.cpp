@@ -19,6 +19,7 @@ using namespace std;
 
 ControlFlowGraph*targetCFG { };
 RangeSet*rangeSet { };
+Population*globalPopulation { };
 
 void simpleIfElseControlFlowGraphTest_testSuite_version() {
 	cout << endl << "SimpleIfElse Test Suite Test: " << endl;
@@ -215,6 +216,9 @@ void testingHardCFGEdges(){
 	tc->printInputsAndCoverage();
 }
 
+/* THis doesn't work any more b/c I moved the coveredAnyNew to population, I think it makes more sense there
+ * And I wanted a parallel function in test suite with the same name.
+
 void testSomeNewFunctions() {
 	targetCFG = new HardCFG { };
 	Simulation* hardSim = new Simulation(100);
@@ -225,9 +229,10 @@ void testSomeNewFunctions() {
 	int params [] = {-200, -200, 650, 1100, 1100, -200, -200, 650, 1100, 1100};
 	tc->setInputParameters(params);
 	targetCFG->setCoverageOfTestCase(tc);
-	cout << "Covered something new: " << hardSim->coveredAnyNewForPopulation(tc->getEdgesCovered(), true) << endl;
+	cout << "Covered something new: " << population->coversNewEdgesOrPredicates(tc->getEdgesCovered(), true) << endl;
 
 }
+ */
 
 void hardTestWIthTournamentSelectAndCrossoverWithDominance(){
 	targetCFG = new HardCFG { };
