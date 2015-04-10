@@ -8,6 +8,8 @@
 #include "Random.h"
 #include <cstring>
 #include <cassert>
+#include <iostream>
+#include "TestCase.h"
 using std::endl;
 using std::cout;
 

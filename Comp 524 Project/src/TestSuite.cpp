@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////
 
 #include "TestSuite.h"
+#include "ControlFlowGraph.h"
 #include "GlobalVariables.h"
 #include "Random.h"
 #include <iostream>
@@ -47,19 +48,21 @@ TestSuite::TestSuite(const TestSuite& testSuite) {
 
 // Fill the new suite with random test cases and evaluate the coverage of all the test cases
 // Note still need to call calculateTestSuiteCoverage which will be done by Organism.setFitness
-
-/*TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases){
+// NOTE: No arg test case constructor now uses global range set instead of ranges in controlflowgraph.
+TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases){
 	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
 	this->testCases = new TestCase*[maxNumberOfTestCases] { };
 	fillTestSuiteWithRandomTestCases();
-}*/
+}
 
+/*	Depreciated
 // Replaces the other constructor, will fill testCase 0 - edges+preds with values in that range, the rest with random ranges
 TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases){
 	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
 	this->testCases = new TestCase*[maxNumberOfTestCases] { };
 	fillTestSuiteWithRandomTestCasesInRanges();
 }
+*/
 
 TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCases) {
 	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
@@ -86,7 +89,7 @@ void TestSuite::fillTestSuiteWithRandomTestCases() {
 	}
 }
 
-// W
+/* Depreciated
 void TestSuite::fillTestSuiteWithRandomTestCasesInRanges() {
 	assert(testCases != 0);
 	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
@@ -102,6 +105,7 @@ void TestSuite::fillTestSuiteWithRandomTestCasesInRanges() {
 		targetCFG->setCoverageOfTestCase(testCases[i]);
 	}
 }
+*/
 
 void TestSuite::sortTestSuiteByCoverageCounts() {
 	int i, j;
@@ -242,7 +246,9 @@ void TestSuite::printAll() {
 	printTestSuiteCoverage();
 	printTestCaseInputsAndCoverage();
 }
-
+void TestSuite::printTestSuiteCoverageRatio() {
+	cout << "Test Suite Coverage Ratio: " << coverageRatio << endl;
+}
 void TestSuite::printTestSuiteCoverage() {
 	cout << "Test Suite Coverage:" << endl;
 	targetCFG->printTestSuiteCoverage(this);
@@ -302,26 +308,23 @@ void TestSuite::calculateTestSuiteCoverage() {
 			numCovered++;
 		}
 	}
-	coverageRatio = numCovered / (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
+	coverageRatio = numCovered / (numberOfEdges + numberOfPredicates);
 }
 
 bool TestSuite::coversNewEdge(TestCase* tc) {
-	auto edges = getAllUncoveredEdges();
 	auto covEdges = tc->getEdgesCovered();
 
 	for (int i = 0; i < numberOfEdges; ++i) {
-		if(edges[i] == false && covEdges[i] == true){
-			delete[] edges;
+		if(edgeCoverageCounts[i] == 0 && covEdges[i] == true){
+			//delete[] uncoveredEdges;
 			return true;
 		}
 	}
 
-	auto preds = getAllUncoveredPredicates();
 	auto covPreds = tc->getPredicatesCovered();
 
 	for (int i = 0; i < numberOfPredicates; ++i) {
-		if(preds[i] == false && covPreds[i] == true){
-			delete[] preds;
+		if(predicateCoverageCounts[i] == 0 && covPreds[i] == true){
 			return true;
 		}
 	}

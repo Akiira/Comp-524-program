@@ -10,6 +10,7 @@
 
 #include "TestCase.h"
 
+
 class TestSuite
 {
 private:
@@ -61,6 +62,7 @@ public:
 	void printTestCaseInputsOnly();
 	void printTestSuiteCoverage();
 	void printAll();
+	void printTestSuiteCoverageRatio();
 
 	//============================GETTER FUNCTIONS=======================//
 
@@ -70,24 +72,6 @@ public:
 	TestCase* getRandomTestCase();
 	TestCase* getTestCaseThatCoversPredicate(int predicateNumber);
 	TestCase* getTestCaseThatCoversEdge(int edgeNumber);
-
-	bool* getAllUncoveredEdges() const {
-		auto unCovered = new bool[numberOfEdges];
-		for (int i = 0; i < numberOfEdges; ++i) {
-			unCovered[i] = ( edgeCoverageCounts[i] == 0 ? true : false );
-		}
-
-		return unCovered;
-	}
-
-	bool* getAllUncoveredPredicates() const {
-		auto unCovered = new bool[numberOfPredicates];
-		for (int i = 0; i < numberOfPredicates; ++i) {
-			unCovered[i] = ( edgeCoverageCounts[i] == 0 ? true : false );
-		}
-
-		return unCovered;
-	}
 
 	bool* getDuplicateEdges() const {
 		auto dupes = new bool[numberOfEdges];

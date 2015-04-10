@@ -8,9 +8,12 @@
 #ifndef GLOBALVARIABLES_H_
 #define GLOBALVARIABLES_H_
 
-#include "ControlFlowGraph.h"
+//#include "ControlFlowGraph.h"
+class RangeSet;
+class ControlFlowGraph;
 
 extern ControlFlowGraph* targetCFG;
+extern RangeSet* rangeSet;
 
 typedef int typeOfScaling;
 enum {NONE, LINEAR, EXPONENTIAL, RANKED};

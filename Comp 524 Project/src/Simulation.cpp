@@ -6,7 +6,13 @@
 ///////////////////////////////////////////////////////////
 
 #include "Simulation.h"
+#include "ControlFlowGraph.h"
+#include "TestSuite.h"
+#include "GlobalVariables.h"
+#include "Population.h"
 #include "Random.h"
+#include "Range.h"
+#include "RangeSet.h"
 #include <iostream>
 #include <cassert>
 using std::cout;
@@ -17,6 +23,7 @@ Simulation::~Simulation(){
 }
 
 Simulation::Simulation(int populationSize) {
+	findPromisingRangesAndCreateTheGlobalRangeSet();
 	this->populationSize = populationSize;
 	population = new Population { populationSize };
 }
@@ -51,17 +58,21 @@ void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double muta
 		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
 
 		if(child1 <= child2){
+			/*
 			if( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) {
 				tryLocalOptimization(child2);
 			}
+			*/
 			population->replaceParentThenReplaceWorst(parentToReplace, child2);
 			delete child1;
 			child1 = NULL;
 		}
 		else {
+			/*
 			if( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) {
 				tryLocalOptimization(child1);
 			}
+			*/
 			population->replaceParentThenReplaceWorst(parentToReplace, child1);
 			delete child2;
 			child2 = NULL;
@@ -323,8 +334,8 @@ Organism* Simulation::constructFinalOrganism() {
 		int* populationPredicates = population->getPredicatesCovered();
 
 		for (int predicateNum = 0; predicateNum < targetCFG->getNumberOfPredicates(); predicateNum++) {
-			bool* uncoveredPreds = finalOrg->getChromosome()->getAllUncoveredPredicates();
-			if (populationPredicates[predicateNum] > 0 && uncoveredPreds[predicateNum]) {
+			int* testSuitePreds = finalOrg->getChromosome()->getPredicateCoverageCounts();
+			if (populationPredicates[predicateNum] > 0 && testSuitePreds[predicateNum] == 0) {
 				for (int j = 0; j < populationSize; j++) {
 					TestCase* missingTestCase = population->getOrganismByIndex(j)->getChromosome()->getTestCaseThatCoversPredicate(predicateNum);
 					if (missingTestCase != NULL) {
@@ -339,8 +350,8 @@ Organism* Simulation::constructFinalOrganism() {
 		// I don't believe this is actually necessary since hitting all the predicates should always imply hitting all the edges,
 		//	but I included it anyway just in case.
 		for (int edgeNum = 0; edgeNum < targetCFG->getNumberOfEdges(); edgeNum++) {
-			bool* uncoveredEdges = finalOrg->getChromosome()->getAllUncoveredEdges();
-			if (populationEdges[edgeNum] > 0 && uncoveredEdges[edgeNum]) {
+			int* testSuiteEdges = finalOrg->getChromosome()->getEdgeCoverageCounts();
+			if (populationEdges[edgeNum] > 0 && testSuiteEdges[edgeNum] == 0) {
 				for (int j = 0; j < populationSize; j++) {
 					TestCase* missingTestCase = population->getOrganismByIndex(j)->getChromosome()->getTestCaseThatCoversEdge(edgeNum);
 					if (missingTestCase != NULL) {
@@ -427,3 +438,75 @@ double Simulation::adaptMutationBasedOnCoverageRatio(double pM) {
 	}
 }
 
+void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
+	int startSize = 1000, currStart = -500;
+	Range* currRange = new Range(currStart, currStart + startSize);
+	TestCase* tc1 = new TestCase(currRange);
+	targetCFG->setCoverageOfTestCase(tc1);
+	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+	Organism* finalOrg = new Organism(0, edgesPlusPreds, new TestCase*[edgesPlusPreds] { });
+
+	TestSuite* finalSuite = finalOrg->getChromosome();
+	finalSuite->addTestCase(tc1);
+	finalSuite->calculateTestSuiteCoverage();
+
+	Range** rangePool = new Range*[edgesPlusPreds];
+	rangePool[0] = currRange;
+	int rangePoolSize = 1;
+	for (int tryNum = 1; tryNum <= 3; tryNum++) {
+		int size = startSize * tryNum;
+		int nextStartPos = currStart;
+		int nextStartNeg = currStart;
+		int totalIterations = 0;
+
+		cout << "Starting tryNum # " << tryNum << " : Range Size: " << size << endl;
+		while(nextStartPos < numeric_limits<int>::max() - size && nextStartNeg > numeric_limits<int>::min() + size) {
+
+			nextStartPos = nextStartPos + size + 1;
+			Range* nextRangePos = new Range(nextStartPos, nextStartPos + size);
+			TestCase* tcPos = new TestCase(nextRangePos);
+			targetCFG->setCoverageOfTestCase(tcPos);
+			if (finalSuite->coversNewEdge(tcPos)) {
+				cout << "Adding # " << rangePoolSize << " range start: " << nextStartPos << endl;
+				finalSuite->addTestCase(tcPos);
+				finalSuite->calculateTestSuiteCoverage();
+				finalSuite->printTestSuiteCoverageRatio();
+
+				rangePool[rangePoolSize] = nextRangePos;
+				rangePoolSize++;
+			}
+			else {
+				delete tcPos;
+				delete nextRangePos;
+			}
+
+			nextStartNeg = nextStartNeg - size - 1;
+			Range* nextRangeNeg = new Range(nextStartNeg, nextStartPos + size);
+			TestCase* tcNeg = new TestCase(nextRangeNeg);
+			targetCFG->setCoverageOfTestCase(tcNeg);
+			if (finalSuite->coversNewEdge(tcNeg)) {
+				cout << "Adding # " << rangePoolSize << " range start: " << nextStartNeg << endl;
+				finalSuite->addTestCase(tcNeg);
+				finalSuite->calculateTestSuiteCoverage();
+				finalSuite->printTestSuiteCoverageRatio();
+
+				rangePool[rangePoolSize] = nextRangeNeg;
+				rangePoolSize++;
+			}
+			else {
+				delete tcNeg;
+				delete nextRangeNeg;
+			}
+			totalIterations++;
+		}
+
+		cout << "End of try # " << tryNum << endl;
+		finalSuite->printTestSuiteCoverageRatio();
+	}
+	finalOrg->evaluateBaseFitness();
+	finalOrg->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
+	delete finalOrg;
+
+	rangeSet = new RangeSet(rangePoolSize, edgesPlusPreds, rangePool);
+	cout << "made it" << endl;
+}

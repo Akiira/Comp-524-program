@@ -8,9 +8,12 @@
 #if !defined(EA_63CB5297_1E19_44f6_AF1B_16CF01DC9D73__INCLUDED_)
 #define EA_63CB5297_1E19_44f6_AF1B_16CF01DC9D73__INCLUDED_
 
-#include "TestSuite.h"
+//#include "TestSuite.h"
 #include "GlobalVariables.h"
-#include "Population.h"
+//#include "Population.h"
+class TestSuite;
+class Population;
+#include "Organism.h"
 
 class Simulation
 {
@@ -46,6 +49,7 @@ private:
 	Organism* constructFinalOrganism();
 	bool hasEquivalentCoverageToPopulation(Organism* organism);
 	void minimizeOrganism(Organism* orgToMinimize);
+	void findPromisingRangesAndCreateTheGlobalRangeSet();
 
 };
 #endif // !defined(EA_63CB5297_1E19_44f6_AF1B_16CF01DC9D73__INCLUDED_)

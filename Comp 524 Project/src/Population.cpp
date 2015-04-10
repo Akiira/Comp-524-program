@@ -5,10 +5,12 @@
 //  Original author: Randall and Austin
 ///////////////////////////////////////////////////////////
 
+#include "ControlFlowGraph.h"
 #include "Population.h"
 #include "Random.h"
-
+#include "Organism.h"
 #include <cassert>
+#include <iostream>
 
 Population::~Population() {
 	for (int i = 0; i < populationSize; i++) {
@@ -25,8 +27,8 @@ Population::Population(int popSize) {
 	predicatesCovered = new int[targetCFG->getNumberOfPredicates()] { };
 	population = new Organism*[popSize] { };
 	populationSize = popSize;
-	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	int testSuiteSize = edgesPlusPreds * 1.25;
+
+	int testSuiteSize = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
 
 	for (int i = 0; i < popSize; i++) {
 		population[i] = new Organism { testSuiteSize, testSuiteSize };

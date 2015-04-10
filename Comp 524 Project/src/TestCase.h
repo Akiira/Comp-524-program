@@ -10,7 +10,7 @@
 
 //Forward declaration
 class ControlFlowGraph;
-
+class Range;
 class TestCase
 {
 
@@ -20,7 +20,11 @@ public:
 	TestCase();
 	// Copy constructor
 	TestCase(const TestCase& that);
-	TestCase(int rangeNum);
+
+	//TestCase(int rangeNum);
+
+	TestCase(Range* range);
+
 
 	void mutate();
 
@@ -38,6 +42,8 @@ public:
 	void clearCoverage();
 	void printInputsAndCoverage();
 	void printInputsOnly();
+
+	bool hasSameCoverage(TestCase* that);
 
 	TestCase& operator=(const TestCase& org);
 
@@ -62,8 +68,13 @@ private:
 	int numCovered;
 
 	void generateRandomParameters();
-	void generateRandomParametersInRange(int rangeNum);
-	void generateRandomParametersFromRandomRanges();
+
+	void generateParametersFromSingleRange(Range* range);
+	void generateParametersFromGlobalRangeSet();
+	//void generateRandomParametersInRange(int rangeNum);
+	//void generateRandomParametersFromRandomRanges();
+
+
 
 };
 #endif // !defined(EA_B2C38A95_D3AD_472b_BE3C_F83540FB1055__INCLUDED_)

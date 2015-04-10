@@ -8,7 +8,8 @@
 #include "RandomSearcher.h"
 #include "Random.h"
 #include "GlobalVariables.h"
-
+#include "ControlFlowGraph.h"
+#include "TestCase.h"
 #include <iostream>
 using std::cout;
 using std::endl;

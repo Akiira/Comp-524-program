@@ -8,7 +8,8 @@
 #if !defined(EA_BE7C8399_4BC5_48f6_93FA_2B1C440AB247__INCLUDED_)
 #define EA_BE7C8399_4BC5_48f6_93FA_2B1C440AB247__INCLUDED_
 
-#include "Organism.h"
+class Organism;
+class TestCase;
 #include "GlobalVariables.h"
 
 class Population

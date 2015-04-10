@@ -7,6 +7,8 @@
 
 #include "ControlFlowGraph.h"
 #include <iostream>
+#include "TestCase.h"
+#include "TestSuite.h"
 
 ControlFlowGraph::~ControlFlowGraph(){
 	delete testCase;

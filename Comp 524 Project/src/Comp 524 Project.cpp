@@ -9,7 +9,8 @@
 #include "GlobalVariables.h"
 #include "RandomSearcher.h"
 #include "HardCFG.h"
-
+#include "Range.h"
+#include "RangeSet.h"
 #include <chrono>
 #include <ctime>
 
@@ -17,6 +18,7 @@
 using namespace std;
 
 ControlFlowGraph*targetCFG { };
+RangeSet*rangeSet { };
 
 void simpleIfElseControlFlowGraphTest_testSuite_version() {
 	cout << endl << "SimpleIfElse Test Suite Test: " << endl;
@@ -141,7 +143,7 @@ void triangleSimulationTest() {
 void hardTest(){
 	targetCFG = new HardCFG { };
 	Simulation* hardSim = new Simulation(100);
-	 hardSim->run(1000, 5, 0.02);
+	 hardSim->run(100000, 5, 0.02);
 }
 
 //-B10toB21
@@ -249,9 +251,9 @@ int main() {
     //hiLoRandomSearchPredicates();
     //triangleSimulationTest();
     //triangleRandomSearchEdges();
-    //hardTest();
+    hardTest();
     //testingHardCFGEdges();
-    hardTestWIthTournamentSelectAndCrossoverWithDominance();
+    //hardTestWIthTournamentSelectAndCrossoverWithDominance();
 
     //testSomeNewFunctions();
 

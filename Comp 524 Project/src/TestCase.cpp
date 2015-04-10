@@ -9,10 +9,13 @@
 #include "ControlFlowGraph.h"
 #include "Random.h"
 #include "GlobalVariables.h"
+#include "Range.h"
+#include "RangeSet.h"
 
 #include <string>
 #include <cassert>
 #include <cstring>
+#include <iostream>
 
 TestCase::~TestCase(){
 	delete[] edgesCovered;
@@ -51,9 +54,23 @@ TestCase::TestCase() {
 	inputParameters = new int[numberOfParameters] { };
 	numCovered = 0;
 
-	generateRandomParametersFromRandomRanges();
+	generateParametersFromGlobalRangeSet();
 }
 
+TestCase::TestCase(Range* range) {
+	numberOfEdges      = targetCFG->getNumberOfEdges();
+	numberOfParameters = targetCFG->getNumberOfParameters();
+	numberOfPredicates = targetCFG->getNumberOfPredicates();
+
+	edgesCovered = new bool[numberOfEdges] { };
+	predicatesCovered = new bool[numberOfPredicates] { };
+	inputParameters = new int[numberOfParameters] { };
+	numCovered = 0;
+
+	generateParametersFromSingleRange(range);
+}
+
+/*	Depreciated
 TestCase::TestCase(int rangeNum) {
 	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
 	assert(rangeNum >= 0 && rangeNum < edgesPlusPreds);
@@ -68,6 +85,8 @@ TestCase::TestCase(int rangeNum) {
 
 	generateRandomParametersInRange(rangeNum);
 }
+*/
+
 
 TestCase::TestCase(const TestCase& that) {
 
@@ -86,7 +105,22 @@ TestCase::TestCase(const TestCase& that) {
 	memcpy(inputParameters, that.inputParameters, sizeof(int) * numberOfParameters);
 }
 
-// Not used anymore
+void TestCase::generateParametersFromSingleRange(Range* range) {
+	for(int i = 0; i < numberOfParameters; i++)
+	{
+		inputParameters[i] = uniformInRange(range->start, range->end);
+	}
+}
+
+void TestCase::generateParametersFromGlobalRangeSet() {
+	Range** ranges = rangeSet->randomlySelectRangesForNewTestCase();
+	for(int i = 0; i < numberOfParameters; i++)
+	{
+		inputParameters[i] = uniformInRange(ranges[i]->start, ranges[i]->end);
+	}
+}
+
+/*	Depreciated
 void TestCase::generateRandomParameters() {
 	//for each parameter generate a random value
 	for(int i = 0; i < numberOfParameters; i++)
@@ -95,7 +129,9 @@ void TestCase::generateRandomParameters() {
 											targetCFG->getUpperBoundForParameter(i));
 	}
 }
+*/
 
+/*	Depreciated
 void TestCase::generateRandomParametersInRange(int rangeNum) {
 	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
 	assert(rangeNum >= 0 && rangeNum < edgesPlusPreds);
@@ -108,7 +144,9 @@ void TestCase::generateRandomParametersInRange(int rangeNum) {
 		inputParameters[i] = uniformInRange(lower, upper);
 	}
 }
+*/
 
+/*	Depreciated
 void TestCase::generateRandomParametersFromRandomRanges() {
 	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
 	for(int i = 0; i < numberOfParameters; i++)
@@ -120,7 +158,20 @@ void TestCase::generateRandomParametersFromRandomRanges() {
 		inputParameters[i] = uniformInRange(lower, upper);
 	}
 }
+*/
 
+bool TestCase::hasSameCoverage(TestCase* that) {
+	int edges = targetCFG->getNumberOfEdges();
+	int preds = targetCFG->getNumberOfPredicates();
+	bool same = true;
+	for (int i = 0; i < edges && same; i++) {
+		same &= this->edgesCovered[i] == that->edgesCovered[i];
+	}
+	for (int i = 0; i < preds && same; i++) {
+		same &= this->predicatesCovered[i] == that->predicatesCovered[i];
+	}
+	return same;
+}
 
 //This is another type of mutation we could use, perhaps in addition to other operators.
 //The only thing that would need changing if we use this, is to change it from uniformInRange

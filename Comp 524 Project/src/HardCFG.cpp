@@ -10,7 +10,8 @@
 #include <cassert>
 #include <cmath>
 #include <iomanip>
-
+#include <iostream>
+#include "TestCase.h"
 using std::endl;
 using std::cout;
 using std::numeric_limits;
@@ -61,6 +62,7 @@ inline void HardCFG::runTestCase() {
 		testCase->addPredicateCoverage(predicates::B0_T);
 		block1();
 	} else {
+
 		testCase->addEdgeCoverage(edges::B0toB2);
 		testCase->addPredicateCoverage(predicates::B0_F);
 		block2();

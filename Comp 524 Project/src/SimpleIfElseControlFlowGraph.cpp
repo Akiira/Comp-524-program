@@ -8,6 +8,7 @@
 #include "SimpleIfElseControlFlowGraph.h"
 #include <iostream>
 #include <cassert>
+#include "TestCase.h"
 using std::endl;
 
 SimpleIfElseControlFlowGraph::SimpleIfElseControlFlowGraph() {

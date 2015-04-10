@@ -7,6 +7,8 @@
 
 #include "TriangleProblemGraph.h"
 #include <cassert>
+#include <iostream>
+#include "TestCase.h"
 using std::endl;
 using std::cout;
 
