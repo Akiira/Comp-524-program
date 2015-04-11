@@ -28,7 +28,8 @@ RangeSet::~RangeSet() {
 }
 
 TestCase* RangeSet::getNewTestCase() {
-	Range** tmp = selectRangesForNewTestCaseProportionalToUsefulness();
+	//Range** tmp = selectRangesForNewTestCaseProportionalToUsefulness();
+	Range** tmp = randomlySelectRangesForNewTestCase();
 	int numberOfParameters = targetCFG->getNumberOfParameters();
 	TestCase* retval = new TestCase(true); // empty test case
 	int* inputParameters = new int[numberOfParameters];
@@ -42,6 +43,7 @@ TestCase* RangeSet::getNewTestCase() {
 			globalPopulation->coversNewEdgesOrPredicates(retval->getPredicatesCovered(), false) ) {
 		for (int i = 0; i < numberOfParameters; i++) {
 			tmp[i]->numOfUses++;
+			totalUsefulness++;
 		}
 		sortRangesByUsefulness();
 	}
@@ -70,8 +72,7 @@ Range** RangeSet::selectRangesForNewTestCaseProportionalToUsefulness() {
 			i = uniformInRange(0, numberOfRanges - 1);
 		} else {
 			sum = ranges[0]->numOfUses;
-			toss = uniformInRange(0, totalUsefulness);
-
+			toss = uniformInRange(0, totalUsefulness-1);
 			while (sum < toss) {
 				i++;
 				sum += ranges[i]->numOfUses;
@@ -84,6 +85,7 @@ Range** RangeSet::selectRangesForNewTestCaseProportionalToUsefulness() {
 }
 
 void RangeSet::adaptRangesBasedOnUsefulness() {
+
 	int index = 0;
 	while (ranges[index]->numOfUses > 0.10 * globalPopulation->getTestSuiteSize())
 	{
@@ -96,8 +98,10 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 	{
 		cout << "Deleting a bad range" << endl;
 		deleteRange(index);
+		index--;
 	}
 	sortRangesByUsefulness();
+
 } // May split, delete, or combine ranges maybe
 
 void RangeSet::splitRange(int index) {
@@ -117,6 +121,7 @@ void RangeSet::deleteRange(int index) {
 	for (int i = index; i < numberOfRanges-1; i++) {
 		ranges[i] = ranges[i+1];
 	}
+	cout << "after delete" << endl;
 	numberOfRanges--;
 }
 
@@ -124,7 +129,6 @@ void RangeSet::deleteRange(int index) {
 void RangeSet::addRange(Range* r) {
 	if (numberOfRanges < maxNumberOfRanges) {
 		this->ranges[numberOfRanges] = r;
-		numberOfRanges++;
 	}
 	else {
 		maxNumberOfRanges *= 2;
@@ -135,10 +139,10 @@ void RangeSet::addRange(Range* r) {
 		delete[] ranges;
 		ranges = tmp;
 		ranges[numberOfRanges] = r;
-		numberOfRanges++;
 	}
 	totalUsefulness += ranges[numberOfRanges]->numOfUses;
-	moveRangeToSortedPosition(numberOfRanges-1);
+	moveRangeToSortedPosition(numberOfRanges);
+	numberOfRanges++;
 }
 
 void RangeSet::sortRangesByUsefulness() {
