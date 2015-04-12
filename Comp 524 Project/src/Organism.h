@@ -45,6 +45,7 @@ public:
 
 	void setFitness(int fitness) {
 		this->fitness = fitness;
+		this->scaledFitness = fitness;
 	}
 
 	int getScaledFitness() const {

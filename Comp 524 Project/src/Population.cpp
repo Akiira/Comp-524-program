@@ -44,6 +44,31 @@ Population::Population(int popSize) {
 	sortPopulationByFitness();
 }
 
+void Population::evaluateSharedFitness(Organism* org) {
+
+	int sharedFitness = 0;
+	auto edges = org->getChromosome()->getEdgeCoverageCounts();
+	org->evaluateBaseFitness();
+
+	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
+		if ( edges[i] ) {
+			int timesCoveredByPopulation = edgesCovered[i];
+			sharedFitness += edges[i] * (100 / timesCoveredByPopulation); //TODO remove hard coded value
+		}
+	}
+
+	auto preds = org->getChromosome()->getPredicateCoverageCounts();
+
+	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
+		if (preds[i]) {
+			int timesCoveredByPopulation = preds[i];
+			sharedFitness += preds[i] * (100 / timesCoveredByPopulation); //TODO remove hard coded value
+		}
+	}
+
+	org->setScaledFitness(sharedFitness);
+}
+
 void Population::evaluateOrganismsFitness(Organism* org) {
 	double base = 1.0;
 	auto edges = org->getChromosome()->getEdgeCoverageCounts();
@@ -129,6 +154,14 @@ void Population::updatePopulationsFitness() {
 			totalFitness += rank;
 			rank++;
 		}
+	} else if ( SCALING == SHARING ) {
+		totalFitness = 0;
+
+		for(int i = 0; i < populationSize; i++) {
+			evaluateSharedFitness(population[i]);
+			totalFitness += population[i]->getScaledFitness();
+		}
+
 	} else if ( totalFitness == 0 ) { // No scaling, initializing fitness for the first time
 		int fitness;
 		for (int i = 0; i < populationSize; i++) {

@@ -30,6 +30,7 @@ public:
 	void replaceWorst(Organism* offspring);
 	void replaceOrganismAtIndexWithChild(int organismToReplace, Organism* child);
 
+	void evaluateSharedFitness(Organism* org);
 	void evaluateOrganismsFitness(Organism* org);
 	void updatePopulationsFitness();
 
@@ -76,7 +77,7 @@ private:
 	int lastReplacedFitness;
 
 	//TODO remove hard coding of value
-	const static typeOfScaling SCALING = LINEAR;
+	const static typeOfScaling SCALING = SHARING;
 
 	int* selectCutPoints(int numberOfCutPoints, int upperBound);
 	void computePopulationLevelCoverage();
