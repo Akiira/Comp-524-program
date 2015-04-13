@@ -9,6 +9,7 @@
 #include "GlobalVariables.h"
 #include "RandomSearcher.h"
 #include "MediumCFG.h"
+#include "MedHardCFG.h"
 #include "HardCFG.h"
 
 #include <chrono>
@@ -126,6 +127,12 @@ void medOneTest() {
 	medSim->runWithFlags(100000, 5, 0.02);
 }
 
+void medHardTest() {
+	targetCFG = new MedHardCFG { };
+	Simulation* medSim = new Simulation(100);
+	medSim->runWithFlags(100000, 5, 0.02);
+}
+
 int main() {
 	//simpleIfElseControlFlowGraphTest_testCase_version();
 	//simpleIfElseControlFlowGraphTest_testSuite_version();
@@ -143,7 +150,8 @@ int main() {
     //triangleSimulationTest();
     //triangleRandomSearchEdges();
     //hardTest();
-    medOneTest();
+    //medOneTest();
+    medHardTest();
     //testingHardCFGEdges();
     hardTestWIthTournamentSelectAndCrossoverWithDominance();
 
