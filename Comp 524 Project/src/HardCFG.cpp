@@ -457,14 +457,15 @@ inline void HardCFG::block21() {
 		a3 = testCase->getInputParameterAtIndex(0);
 
 	if( (a1 == a2) && (a2 == a3) ) {
+		testCase->addPredicateCoverage(predicates::B21_TT);
 		testCase->addEdgeCoverage(edges::B21toB49);
 	} else {
 		if( (a1 == a2) ) {
-
+			testCase->addPredicateCoverage(predicates::B21_TF);
 		} else if( (a2 == a3) ) {
-
+			testCase->addPredicateCoverage(predicates::B21_FT);
 		} else {
-
+			testCase->addPredicateCoverage(predicates::B21_FF);
 		}
 		testCase->addEdgeCoverage(edges::B21toB50);
 	}
@@ -520,14 +521,15 @@ inline void HardCFG::block23() {
 		a3 = testCase->getInputParameterAtIndex(0);
 
 	if( (a1 == a2) && (a2 == a3) ) {
+		testCase->addPredicateCoverage(predicates::B23_TT);
 		testCase->addEdgeCoverage(edges::B23toB55);
 	} else {
 		if( (a1 == a2) ) {
-
+			testCase->addPredicateCoverage(predicates::B23_TF);
 		} else if( (a2 == a3) ) {
-
+			testCase->addPredicateCoverage(predicates::B23_TF);
 		} else {
-
+			testCase->addPredicateCoverage(predicates::B23_FF);
 		}
 		testCase->addEdgeCoverage(edges::B23toB56);
 	}
@@ -577,14 +579,15 @@ inline void HardCFG::block25() {
 		a3 = testCase->getInputParameterAtIndex(0);
 
 	if( (a1 == a2) && (a2 == a3) ) {
+		testCase->addPredicateCoverage(predicates::B25_TT);
 		testCase->addEdgeCoverage(edges::B25toB61);
 	} else {
 		if( (a1 == a2) ) {
-
+			testCase->addPredicateCoverage(predicates::B25_TF);
 		} else if( (a2 == a3) ) {
-
+			testCase->addPredicateCoverage(predicates::B25_FT);
 		} else {
-
+			testCase->addPredicateCoverage(predicates::B25_FF);
 		}
 		testCase->addEdgeCoverage(edges::B25toB62);
 	}
@@ -634,14 +637,15 @@ inline void HardCFG::block27() {
 		a3 = testCase->getInputParameterAtIndex(0);
 
 	if( (a1 == a2) && (a2 == a3) ) {
+		testCase->addPredicateCoverage(predicates::B27_TT);
 		testCase->addEdgeCoverage(edges::B27toB67);
 	} else {
 		if( (a1 == a2) ) {
-
+			testCase->addPredicateCoverage(predicates::B27_TF);
 		} else if( (a2 == a3) ) {
-
+			testCase->addPredicateCoverage(predicates::B27_FT);
 		} else {
-
+			testCase->addPredicateCoverage(predicates::B27_FF);
 		}
 		testCase->addEdgeCoverage(edges::B27toB68);
 	}
@@ -691,14 +695,15 @@ inline void HardCFG::block29() {
 		a3 = testCase->getInputParameterAtIndex(0);
 
 	if( (a1 == a2) && (a2 == a3) ) {
+		testCase->addPredicateCoverage(predicates::B29_TT);
 		testCase->addEdgeCoverage(edges::B29toB73);
 	} else {
 		if( (a1 == a2) ) {
-
+			testCase->addPredicateCoverage(predicates::B29_TF);
 		} else if( (a2 == a3) ) {
-
+			testCase->addPredicateCoverage(predicates::B29_FT);
 		} else {
-
+			testCase->addPredicateCoverage(predicates::B29_FF);
 		}
 		testCase->addEdgeCoverage(edges::B29toB74);
 	}
