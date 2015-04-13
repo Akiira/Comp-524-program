@@ -83,9 +83,42 @@ void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double muta
 }
 
 void getUserInput() {
+	const int GEN_AND_RATIO = 0, PRINT_FITNESS = 1, PRINT_FITNESS_ONCE = 2,
+			COV_RATIO_TS_CROSSOVER = 3, COV_RATIO_TS_CROSSOVER_ONCE = 4,
+			REPLACEMENT = 5, PAUSE = -1, EXIT = -5;
 	do {
-		std::string s;
-		std::cin >> s;
+		int choice;
+		std::cin >> choice;
+		cout << "\t\tYour choice: " << choice << endl;
+		if(choice == EXIT){
+			break;
+		}
+
+		switch (choice) {
+			case GEN_AND_RATIO:
+				printGenerationAndRatio = !printGenerationAndRatio;
+				break;
+			case PRINT_FITNESS:
+				printPopFitness = !printPopFitness;
+				break;
+			case PRINT_FITNESS_ONCE:
+				printPopFitnessOnce = !printPopFitnessOnce;
+				break;
+			case COV_RATIO_TS_CROSSOVER:
+				printCoverageRatioForTScrossover = !printCoverageRatioForTScrossover;
+				break;
+			case COV_RATIO_TS_CROSSOVER_ONCE:
+				printCoverageRatioForTScrossoverOnce = !printCoverageRatioForTScrossoverOnce;
+				break;
+			case REPLACEMENT:
+				printReplacement = !printReplacement;
+				break;
+			case PAUSE:
+				pause = !pause;
+				break;
+			default:
+				break;
+		}
 	} while(true);
 }
 
@@ -95,7 +128,12 @@ void Simulation::runWithPrintFlags(int numberOfGenerations, int numberOfCutPoint
 
 	std::thread t(getUserInput);
 
+
 	do{
+		while(pause){
+
+		}
+
 		//population->printPopulationFitness();
 		//population->printPopulationCoverage();
 		auto parent1Index = population->fitnessProportionalSelect();
@@ -145,7 +183,7 @@ void Simulation::runWithPrintFlags(int numberOfGenerations, int numberOfCutPoint
 		i++;
 
 	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
-
+	t.join();
 	population->getBestOrganism()->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
 	population->printPopulationFitness();
 	population->printPopulationCoverage();

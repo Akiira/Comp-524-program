@@ -19,10 +19,19 @@ using namespace std;
 ControlFlowGraph*targetCFG { };
 
 //Flags to interactivly set printing during simulation
+
 bool printPopFitnessOnce;
 bool printPopFitness;
 bool printGenerationAndRatio;
 bool printCoverageRatioForTScrossover;
+bool printCoverageRatioForTScrossoverOnce;
+bool printReplacement;
+
+bool pauseOnTSCrossover;
+bool pauseOnTCcrossover;
+bool pauseONlocalOpt;
+bool pause;
+
 
 void simpleIfElseControlFlowGraphTest_testSuite_version() {
 	cout << endl << "SimpleIfElse Test Suite Test: " << endl;

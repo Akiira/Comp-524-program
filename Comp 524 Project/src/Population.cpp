@@ -487,6 +487,10 @@ int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 
 void Population::replaceParentThenReplaceWorst(int parentIndex, Organism* child) {
 	if (child->getFitness() >= population[parentIndex]->getFitness()) {
+		if( printReplacement ) {
+			cout << "-------------REPLACEMENT-----------------\n";
+			cout << "Child replaced parent.\n-------------END REPLACEMENT-----------------\n\n";
+		}
 		replaceOrganismAtIndexWithChild(parentIndex, child);
 	}
 	else {
@@ -498,8 +502,16 @@ void Population::replaceWorst(Organism* child) {
 	int worst { populationSize - 1 };
 
 	if (child->getFitness() >= population[worst]->getFitness()) {
+		if( printReplacement ) {
+			cout << "-------------REPLACEMENT-----------------\n";
+			cout << "Child replaced worst.\n-------------END REPLACEMENT-----------------\n\n";
+		}
 		replaceOrganismAtIndexWithChild(worst, child);
 	} else {
+		if( printReplacement ) {
+			cout << "-------------REPLACEMENT-----------------\n";
+			cout << "Child was not used.\n-------------END REPLACEMENT-----------------\n\n";
+		}
 		delete child;
 		child = NULL;
 	}
