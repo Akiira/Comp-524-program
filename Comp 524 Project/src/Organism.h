@@ -40,8 +40,8 @@ public:
 	Organism& operator=(const Organism& org);
 
 	void printAll();
-	void printFitnessAndTestSuiteCoverage();
-	void printFitnessAndTestSuiteCoverageAndTestCaseInputs();
+	void printFitnessAndTestSuiteCoverage() const;
+	void printFitnessAndTestSuiteCoverageAndTestCaseInputs() const;
 
 	void setFitness(int fitness) {
 		this->fitness = fitness;

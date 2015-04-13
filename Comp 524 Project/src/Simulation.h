@@ -22,6 +22,7 @@ public:
 
 	void run(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
 	void runWithTournamentSelectAndCrossoverWithDominance(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
+	void runWithPrintFlags(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
 
 	void tryLocalOptimization(Organism* child);
 	TestCase* callRandomLocalOpt(Organism* child);

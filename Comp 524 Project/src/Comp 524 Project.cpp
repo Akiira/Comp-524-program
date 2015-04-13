@@ -18,6 +18,12 @@ using namespace std;
 
 ControlFlowGraph*targetCFG { };
 
+//Flags to interactivly set printing during simulation
+bool printPopFitnessOnce;
+bool printPopFitness;
+bool printGenerationAndRatio;
+bool printCoverageRatioForTScrossover;
+
 void simpleIfElseControlFlowGraphTest_testSuite_version() {
 	cout << endl << "SimpleIfElse Test Suite Test: " << endl;
 	ControlFlowGraph* testCFG = new SimpleIfElseControlFlowGraph { };
@@ -141,7 +147,7 @@ void triangleSimulationTest() {
 void hardTest(){
 	targetCFG = new HardCFG { };
 	Simulation* hardSim = new Simulation(100);
-	 hardSim->run(1000, 5, 0.02);
+	 hardSim->runWithPrintFlags(100000, 5, 0.02);
 }
 
 //-B10toB21
@@ -240,7 +246,7 @@ int main() {
 
 	chrono::time_point<chrono::system_clock> start { }, end { };
     start = chrono::system_clock::now();
-
+    printGenerationAndRatio = true;
     //localOptTest();
     //localOptTest2();
     //localOptTest3();

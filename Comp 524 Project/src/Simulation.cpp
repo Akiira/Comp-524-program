@@ -9,6 +9,7 @@
 #include "Random.h"
 #include <iostream>
 #include <cassert>
+#include <thread>
 using std::cout;
 using std::endl;
 
@@ -62,6 +63,80 @@ void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double muta
 			if( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) {
 				tryLocalOptimization(child1);
 			}
+			population->replaceParentThenReplaceWorst(parentToReplace, child1);
+			delete child2;
+			child2 = NULL;
+		}
+		if (i % 100) {
+			//rangeSet->adaptRangesBasedOnUsefulness();
+		}
+
+		i++;
+
+	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
+
+	population->getBestOrganism()->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
+	population->printPopulationFitness();
+	population->printPopulationCoverage();
+
+	//Organism* final = constructFinalOrganism();
+}
+
+void getUserInput() {
+	do {
+		std::string s;
+		std::cin >> s;
+	} while(true);
+}
+
+void Simulation::runWithPrintFlags(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
+	int i { 0 };
+	Organism *child1 { }, *child2 { };
+
+	std::thread t(getUserInput);
+
+	do{
+		//population->printPopulationFitness();
+		//population->printPopulationCoverage();
+		auto parent1Index = population->fitnessProportionalSelect();
+		auto parent2Index = population->fitnessProportionalSelect();
+		auto parent1 = population->getOrganismByIndex(parent1Index);
+		auto parent2 = population->getOrganismByIndex(parent2Index);
+
+		if( printGenerationAndRatio )
+			cout << "Generation # " << i << " CoverageRatio: " << population->getCoverageRatio() << endl;
+
+		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
+
+		if(i % 5 == 4 ) {
+			population->crossover(child1);
+			population->crossover(child2);
+		}
+
+		double newProb;
+		newProb = adaptMutationBasedOnCoverageRatio(mutationProb);
+		child1->mutate(newProb);
+		child2->mutate(newProb);
+
+		// Attempt to replace the worst of the two parents
+		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
+
+		if(child1 <= child2){
+			/*
+			if( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) {
+				tryLocalOptimization(child2);
+			}
+			*/
+			population->replaceParentThenReplaceWorst(parentToReplace, child2);
+			delete child1;
+			child1 = NULL;
+		}
+		else {
+			/*
+			if( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) {
+				tryLocalOptimization(child1);
+			}
+			*/
 			population->replaceParentThenReplaceWorst(parentToReplace, child1);
 			delete child2;
 			child2 = NULL;

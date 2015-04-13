@@ -42,6 +42,7 @@ void Organism::mutate(double mutationProb) {
 		double toss = uniform01();
 		if (toss < mutationProb) {
 			TestCase* newTestCase = new TestCase();
+
 			targetCFG->setCoverageOfTestCase(newTestCase);
 			chromosome->setTestCase(i, newTestCase);
 		}
@@ -121,15 +122,15 @@ void Organism::evaluateBaseFitness(){
 //============================PRINT FUNCTIONS=======================//
 
 void Organism::printAll() {
-	cout << "Fitness: " << fitness << endl;
+	cout << "Fitness: " << fitness << ", Scaled Fitness: " << scaledFitness << endl;
 	chromosome->printAll();
 }
-void Organism::printFitnessAndTestSuiteCoverage() {
-	cout << "Fitness: " << fitness << endl;
+void Organism::printFitnessAndTestSuiteCoverage() const {
+	cout << "Fitness: " << fitness << ", Scaled Fitness: " << scaledFitness << endl;
 	chromosome->printTestSuiteCoverage();
 }
-void Organism::printFitnessAndTestSuiteCoverageAndTestCaseInputs() {
-	cout << "Fitness: " << fitness << endl;
+void Organism::printFitnessAndTestSuiteCoverageAndTestCaseInputs() const {
+	cout << "Fitness: " << fitness << ", Scaled Fitness: " << scaledFitness << endl;
 	chromosome->printTestSuiteCoverage();
 	chromosome->printTestCaseInputsOnly();
 }
