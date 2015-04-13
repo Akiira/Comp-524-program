@@ -12,6 +12,15 @@
 
 extern ControlFlowGraph* targetCFG;
 
+extern bool printPopFitnessOnce;
+extern bool printPopFitness;
+extern bool printGenerationAndRatio;
+extern bool printCoverageRatioForTScrossover;
+
+extern bool pauseOnTSCrossover;
+extern bool pauseOnTCcrossover;
+extern bool pauseONlocalOpt;
+
 typedef int typeOfScaling;
 enum {NONE, LINEAR, EXPONENTIAL, RANKED, SHARING};
 
