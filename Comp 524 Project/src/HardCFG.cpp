@@ -787,7 +787,7 @@ void HardCFG::calculateSums(const int* values) {
 		if( i < 5 ) {
 			sumOfFirstHalf += values[i];
 		} else {
-			sumOfSecondHalf += values[i];
+			sumOfSecondHalf += values[numberOfParameters - i - 1];
 		}
 	}
 	sumOfAll = sumOfFirstHalf + sumOfSecondHalf;
