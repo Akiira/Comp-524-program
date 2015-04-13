@@ -8,6 +8,7 @@
 #include "Simulation.h"
 #include "GlobalVariables.h"
 #include "RandomSearcher.h"
+#include "MediumCFG.h"
 #include "HardCFG.h"
 
 #include <chrono>
@@ -120,9 +121,9 @@ void hardTestWIthTournamentSelectAndCrossoverWithDominance(){
 }
 
 void medOneTest() {
-	targetCFG = new HardCFG { };
-	Simulation* hardSim = new Simulation(100);
-	 hardSim->runWithFlags(100000, 5, 0.02);
+	targetCFG = new MediumCFG { };
+	Simulation* medSim = new Simulation(100);
+	medSim->runWithFlags(100000, 5, 0.02);
 }
 
 int main() {
@@ -142,6 +143,7 @@ int main() {
     //triangleSimulationTest();
     //triangleRandomSearchEdges();
     //hardTest();
+    medOneTest();
     //testingHardCFGEdges();
     hardTestWIthTournamentSelectAndCrossoverWithDominance();
 

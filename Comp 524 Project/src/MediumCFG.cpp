@@ -17,14 +17,15 @@ using std::cout;
 using std::numeric_limits;
 
 /*
- * Tweaks from hard graph: smaller ranges, from 10 parameters to 5, graph cut in half.
+ * Tweaks from hard graph: smaller ranges, from 10 parameters to 5, graph cut in half
+ *  edges from 78 to 39 and predicates from 180 to 90
  */
 
 MediumCFG::MediumCFG() {
-	numberOfEdges = 78;
-	numberOfPredicates = 180;
+	numberOfEdges = 39;
+	numberOfPredicates = 90;
 
-	numberOfParameters = 10;
+	numberOfParameters = 4;
 
 	testCase = NULL;
 
@@ -60,31 +61,10 @@ inline void MediumCFG::runTestCase() {
 	calculateSums(testCase->getInputParameters());
 
 	//TODO test all edges and predicates are actually reachable
+	testCase->addEdgeCoverage(edges::B0toB2);
+	testCase->addPredicateCoverage(predicates::B0_F);
+	block2();
 
-	if( Mu <= 500 ) {
-		testCase->addEdgeCoverage(edges::B0toB1);
-		testCase->addPredicateCoverage(predicates::B0_T);
-		block1();
-	} else {
-
-		testCase->addEdgeCoverage(edges::B0toB2);
-		testCase->addPredicateCoverage(predicates::B0_F);
-		block2();
-	}
-}
-
-inline void MediumCFG::block1() {
-	//mu <= 500
-
-	if( sigma < 100 ) {
-		testCase->addEdgeCoverage(edges::B1toB3);
-		testCase->addPredicateCoverage(predicates::B1_T);
-		block3();
-	} else {
-		testCase->addEdgeCoverage(edges::B1toB4);
-		testCase->addPredicateCoverage(predicates::B1_F);
-		block4();
-	}
 }
 
 inline void MediumCFG::block2() {
@@ -98,34 +78,6 @@ inline void MediumCFG::block2() {
 		testCase->addEdgeCoverage(edges::B2toB6);
 		testCase->addPredicateCoverage(predicates::B2_F);
 		block6();
-	}
-}
-
-inline void MediumCFG::block3() {
-	//mu <= 500 sigma < 100
-
-	if( sigma < 50 ) {
-		testCase->addEdgeCoverage(edges::B3toB7);
-		testCase->addPredicateCoverage(predicates::B3_T);
-		block7();
-	} else {
-		testCase->addEdgeCoverage(edges::B3toB8);
-		testCase->addPredicateCoverage(predicates::B3_F);
-		block8();
-	}
-}
-
-inline void MediumCFG::block4() {
-	//mu <= 500 sigma >= 100
-
-	if( sigma > 500 ) {
-		testCase->addEdgeCoverage(edges::B4toB9);
-		testCase->addPredicateCoverage(predicates::B4_T);
-		block9();
-	} else {
-		testCase->addEdgeCoverage(edges::B4toB10);
-		testCase->addPredicateCoverage(predicates::B4_F);
-		block10();
 	}
 }
 
@@ -156,60 +108,7 @@ inline void MediumCFG::block6() {
 	}
 }
 
-inline void MediumCFG::block7() {
-	//mu <= 500 sigma < 50
 
-	if( sigma < 25 ) {
-		testCase->addEdgeCoverage(edges::B7toB15);
-		testCase->addPredicateCoverage(predicates::B7_T);
-		block15();
-	} else {
-		testCase->addEdgeCoverage(edges::B7toB16);
-		testCase->addPredicateCoverage(predicates::B7_F);
-		block16();
-	}
-}
-
-inline void MediumCFG::block8() {
-	//mu <= 500 sigma >= 50 sigma < 100
-
-	if( sigma > 75 ) {
-		testCase->addEdgeCoverage(edges::B8toB17);
-		testCase->addPredicateCoverage(predicates::B8_T);
-		block17();
-	} else {
-		testCase->addEdgeCoverage(edges::B8toB18);
-		testCase->addPredicateCoverage(predicates::B8_F);
-		block18();
-	}
-}
-
-inline void MediumCFG::block9() {
-	//mu <= 500 sigma > 500
-
-	if( sigma > 1000 ) {
-		testCase->addEdgeCoverage(edges::B9toB19);
-		testCase->addPredicateCoverage(predicates::B9_T);
-		block19();
-	} else {
-		testCase->addEdgeCoverage(edges::B9toB20);
-		testCase->addPredicateCoverage(predicates::B9_F);
-		block20();
-	}
-}
-
-inline void MediumCFG::block10() {
-	//mu <= 500 sigma >= 100 sigma < 500
-	if( sigma > 250 ) {
-		testCase->addEdgeCoverage(edges::B10toB21);
-		testCase->addPredicateCoverage(predicates::B10_T);
-		block21();
-	} else {
-		testCase->addEdgeCoverage(edges::B10toB22);
-		testCase->addPredicateCoverage(predicates::B10_F);
-		block22();
-	}
-}
 
 inline void MediumCFG::block11() {
 	//mu > 500 sigma > 5000
@@ -262,260 +161,6 @@ inline void MediumCFG::block14() {
 		testCase->addEdgeCoverage(edges::B14toB29);
 		testCase->addPredicateCoverage(predicates::B14_F);
 		block30();
-	}
-}
-
-inline void MediumCFG::block15() {
-	//mu <= 500 sigma < 25
-	int a1 = testCase->getInputParameterAtIndex(0),
-		a2 = testCase->getInputParameterAtIndex(0),
-		a3 = testCase->getInputParameterAtIndex(0);
-
-	if( (a1 == a2) && (a2 == a3) ) {
-		testCase->addEdgeCoverage(edges::B15toB31);
-		testCase->addPredicateCoverage(predicates::B15_TT);
-	} else {
-		if( (a1 == a2) ) {
-			testCase->addPredicateCoverage(predicates::B15_TF);
-		} else if( (a2 == a3) ) {
-			testCase->addPredicateCoverage(predicates::B15_FT);
-		} else {
-			testCase->addPredicateCoverage(predicates::B15_FF);
-		}
-		testCase->addEdgeCoverage(edges::B15toB32);
-	}
-}
-
-inline void MediumCFG::block16() {
-	//mu <= 500 sigma < 50 sigma > 25
-	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0 ) {
-		testCase->addEdgeCoverage(edges::B16toB33);
-		testCase->addPredicateCoverage(predicates::B16A_TT);
-	} else {
-
-		if( sumOfFirstHalf == sumOfSecondHalf ) {
-			testCase->addPredicateCoverage(predicates::B16A_TF);
-		} else if ( sumOfAll < 0 ) {
-			testCase->addPredicateCoverage(predicates::B16A_FT);
-		} else {
-			testCase->addPredicateCoverage(predicates::B16A_FF);
-		}
-
-	   if ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll > 0 ) {
-			testCase->addEdgeCoverage(edges::B16toB34);
-			testCase->addPredicateCoverage(predicates::B16B_TT);
-		} else {
-			if( sumOfFirstHalf == sumOfSecondHalf ) {
-				testCase->addPredicateCoverage(predicates::B16B_TF);
-			} else if ( sumOfAll > 0 ) {
-				testCase->addPredicateCoverage(predicates::B16B_FT);
-			} else {
-				testCase->addPredicateCoverage(predicates::B16B_FF);
-			}
-			if ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll == 0 ) {
-				testCase->addEdgeCoverage(edges::B16toB35);
-				testCase->addPredicateCoverage(predicates::B16C_TT);
-			} else {
-				if( sumOfFirstHalf == sumOfSecondHalf ) {
-					testCase->addPredicateCoverage(predicates::B16C_TF);
-				} else if ( sumOfAll > 0 ) {
-					testCase->addPredicateCoverage(predicates::B16C_FT);
-				} else {
-					testCase->addPredicateCoverage(predicates::B16C_FF);
-				}
-				testCase->addEdgeCoverage(edges::B16toB36);
-			}
-		}
-	}
-}
-
-inline void MediumCFG::block17() {
-	//mu <= 500 sigma >= 75 sigma < 100
-	int a1 = testCase->getInputParameterAtIndex(0),
-		a2 = testCase->getInputParameterAtIndex(0),
-		a3 = testCase->getInputParameterAtIndex(0);
-
-	if( (a1 == a2) && (a2 == a3) ) {
-		testCase->addEdgeCoverage(edges::B17toB37);
-		testCase->addPredicateCoverage(predicates::B17_TT);
-	} else {
-		if( (a1 == a2) ) {
-			testCase->addPredicateCoverage(predicates::B17_TF);
-		} else if( (a2 == a3) ) {
-			testCase->addPredicateCoverage(predicates::B17_FT);
-		} else {
-			testCase->addPredicateCoverage(predicates::B17_FF);
-		}
-		testCase->addEdgeCoverage(edges::B17toB37);
-	}
-}
-
-inline void MediumCFG::block18() {
-	//mu <= 500 sigma >= 50 sigma <= 75
-	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0 ) {
-		testCase->addEdgeCoverage(edges::B18toB39);
-		testCase->addPredicateCoverage(predicates::B18A_TT);
-	} else {
-		if( sumOfFirstHalf == sumOfSecondHalf ) {
-			testCase->addPredicateCoverage(predicates::B18A_TF);
-		} else if ( sumOfAll < 0 ) {
-			testCase->addPredicateCoverage(predicates::B18A_FT);
-		} else {
-			testCase->addPredicateCoverage(predicates::B18A_FF);
-		}
-
-		   if ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll > 0 ) {
-				testCase->addEdgeCoverage(edges::B18toB40);
-				testCase->addPredicateCoverage(predicates::B18B_TT);
-			} else {
-				if( sumOfFirstHalf == sumOfSecondHalf ) {
-					testCase->addPredicateCoverage(predicates::B18B_TF);
-				} else if ( sumOfAll > 0 ) {
-					testCase->addPredicateCoverage(predicates::B18B_FT);
-				} else {
-					testCase->addPredicateCoverage(predicates::B18B_FF);
-				}
-				if ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll == 0 ) {
-					testCase->addEdgeCoverage(edges::B18toB41);
-					testCase->addPredicateCoverage(predicates::B18C_TT);
-				} else {
-					if( sumOfFirstHalf == sumOfSecondHalf ) {
-						testCase->addPredicateCoverage(predicates::B18C_TF);
-					} else if ( sumOfAll > 0 ) {
-						testCase->addPredicateCoverage(predicates::B18C_FT);
-					} else {
-						testCase->addPredicateCoverage(predicates::B18C_FF);
-					}
-					testCase->addEdgeCoverage(edges::B18toB42);
-				}
-			}
-		}
-}
-
-inline void MediumCFG::block19() {
-	//mu <= 500 sigma > 1000
-	int a1 = testCase->getInputParameterAtIndex(0),
-		a2 = testCase->getInputParameterAtIndex(0),
-		a3 = testCase->getInputParameterAtIndex(0);
-
-	if( (a1 == a2) && (a2 == a3) ) {
-		testCase->addEdgeCoverage(edges::B19toB43);
-		testCase->addPredicateCoverage(predicates::B19_TT);
-	} else {
-		if( (a1 == a2) ) {
-			testCase->addPredicateCoverage(predicates::B19_TF);
-		} else if( (a2 == a3) ) {
-			testCase->addPredicateCoverage(predicates::B19_FT);
-		} else {
-			testCase->addPredicateCoverage(predicates::B19_FF);
-		}
-		testCase->addEdgeCoverage(edges::B19toB44);
-	}
-}
-
-inline void MediumCFG::block20() {
-	//mu <= 500 sigma > 500 sigma < 1000
-
-	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0 ) {
-		testCase->addEdgeCoverage(edges::B20toB45);
-		testCase->addPredicateCoverage(predicates::B20A_TT);
-	} else {
-		if( sumOfFirstHalf == sumOfSecondHalf ) {
-			testCase->addPredicateCoverage(predicates::B20A_TF);
-		} else if ( sumOfAll < 0 ) {
-			testCase->addPredicateCoverage(predicates::B20A_FT);
-		} else {
-			testCase->addPredicateCoverage(predicates::B20A_FF);
-		}
-
-		   if ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll > 0 ) {
-				testCase->addEdgeCoverage(edges::B20toB46);
-				testCase->addPredicateCoverage(predicates::B20B_TT);
-			} else {
-				if( sumOfFirstHalf == sumOfSecondHalf ) {
-					testCase->addPredicateCoverage(predicates::B20B_TF);
-				} else if ( sumOfAll > 0 ) {
-					testCase->addPredicateCoverage(predicates::B20B_FT);
-				} else {
-					testCase->addPredicateCoverage(predicates::B20B_FF);
-				}
-				if ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll == 0 ) {
-					testCase->addEdgeCoverage(edges::B20toB47);
-					testCase->addPredicateCoverage(predicates::B20C_TT);
-				} else {
-					if( sumOfFirstHalf == sumOfSecondHalf ) {
-						testCase->addPredicateCoverage(predicates::B20C_TF);
-					} else if ( sumOfAll > 0 ) {
-						testCase->addPredicateCoverage(predicates::B20C_FT);
-					} else {
-						testCase->addPredicateCoverage(predicates::B20C_FF);
-					}
-					testCase->addEdgeCoverage(edges::B20toB48);
-				}
-			}
-		}
-}
-
-inline void MediumCFG::block21() {
-	//mu <= 500 sigma > 250 sigma < 500
-	int a1 = testCase->getInputParameterAtIndex(0),
-		a2 = testCase->getInputParameterAtIndex(0),
-		a3 = testCase->getInputParameterAtIndex(0);
-
-	if( (a1 == a2) && (a2 == a3) ) {
-		testCase->addEdgeCoverage(edges::B21toB49);
-	} else {
-		if( (a1 == a2) ) {
-
-		} else if( (a2 == a3) ) {
-
-		} else {
-
-		}
-		testCase->addEdgeCoverage(edges::B21toB50);
-	}
-}
-
-inline void MediumCFG::block22() {
-	//mu <= 500 sigma >= 100 sigma <= 250
-
-	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0) {
-		testCase->addEdgeCoverage(edges::B22toB51);
-		testCase->addPredicateCoverage(predicates::B22A_TT);
-	} else {
-		if (sumOfFirstHalf == sumOfSecondHalf) {
-			testCase->addPredicateCoverage(predicates::B22A_TF);
-		} else if (sumOfAll < 0) {
-			testCase->addPredicateCoverage(predicates::B22A_FT);
-		} else {
-			testCase->addPredicateCoverage(predicates::B22A_FF);
-		}
-
-		if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll > 0) {
-			testCase->addEdgeCoverage(edges::B22toB52);
-			testCase->addPredicateCoverage(predicates::B22B_TT);
-		} else {
-			if (sumOfFirstHalf == sumOfSecondHalf) {
-				testCase->addPredicateCoverage(predicates::B22B_TF);
-			} else if (sumOfAll > 0) {
-				testCase->addPredicateCoverage(predicates::B22B_FT);
-			} else {
-				testCase->addPredicateCoverage(predicates::B22B_FF);
-			}
-			if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll == 0) {
-				testCase->addEdgeCoverage(edges::B22toB53);
-				testCase->addPredicateCoverage(predicates::B22C_TT);
-			} else {
-				if (sumOfFirstHalf == sumOfSecondHalf) {
-					testCase->addPredicateCoverage(predicates::B22C_TF);
-				} else if (sumOfAll > 0) {
-					testCase->addPredicateCoverage(predicates::B22C_FT);
-				} else {
-					testCase->addPredicateCoverage(predicates::B22C_FF);
-				}
-				testCase->addEdgeCoverage(edges::B22toB54);
-			}
-		}
 	}
 }
 
@@ -700,11 +345,11 @@ inline void MediumCFG::block29() {
 		testCase->addEdgeCoverage(edges::B29toB73);
 	} else {
 		if( (a1 == a2) ) {
-
+			testCase->addPredicateCoverage(predicates::B29_TF);
 		} else if( (a2 == a3) ) {
-
+			testCase->addPredicateCoverage(predicates::B29_FT);
 		} else {
-
+			testCase->addPredicateCoverage(predicates::B29_FF);
 		}
 		testCase->addEdgeCoverage(edges::B29toB74);
 	}
@@ -793,7 +438,7 @@ void MediumCFG::calculateSums(const int* values) {
 		if( i < 5 ) {
 			sumOfFirstHalf += values[i];
 		} else {
-			sumOfSecondHalf += values[i];
+			sumOfSecondHalf += values[numberOfParameters - i - 1];
 		}
 	}
 	sumOfAll = sumOfFirstHalf + sumOfSecondHalf;
@@ -811,59 +456,19 @@ void MediumCFG::printInputParameters(int* inputParameters) const{
 
 void MediumCFG::printEdgesCovered(bool* edgesCovered) const{
 	cout << endl << "Edge Coverage" << endl;
-	cout << " B0toB1 - B1toB3-B1toB4-B3toB7-B3toB8-B4toB9-B4toB10-B7toB15," << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for (int j = 0; j < 8; j++) {
-		cout << "   " << std::setw(8) << edgesCovered[j] << "   |";
-	}
-	cout << endl;
-	cout << "B7toB16-B8toB17-B8toB18-B9toB19-B9toB20-B10toB21-B10toB22" << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 7; j++)
-	{
-		cout << "   " << edgesCovered[8 + j] << "   |";
-	}
-	cout << endl;
-	cout << "B15toB31, B15toB32, B16toB33, B16toB34, B16toB35, B16toB36 " << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 6; j++)
-	{
-		cout << "   " << edgesCovered[15 + j] << "   |";
-	}
-	cout << endl;
-	cout << "B17toB37, B17toB38, B18toB39, B18toB40, B18toB41, B18toB42 " << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 6; j++)
-	{
-		cout << "   " << edgesCovered[21 + j] << "   |";
-	}
-	cout << endl;
-	cout << "B19toB43, B19toB44, B20toB45, B20toB46, B20toB47, B20toB48 " << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 6; j++)
-	{
-		cout << "   " << edgesCovered[27 + j] << "   |";
-	}
-	cout << endl;
-	cout << "B21toB49, B21toB50, B22toB51, B22toB52, B22toB53, B22toB54 " << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 6; j++)
-	{
-		cout << "   " << edgesCovered[33 + j] << "   |";
-	}
-	cout << endl;
+
 	cout << "B0toB2-B2toB5-B2toB6-B5toB11-B5toB12-B6toB13-B6toB14-B11toB23," << endl;
 	cout << "---------------------------------------------------------------------------" << endl;
 	for(int j = 0; j < 8; j++)
 	{
-		cout << "   " << edgesCovered[39 + j] << "   |";
+		cout << "   " << edgesCovered[0 + j] << "   |";
 	}
 	cout << endl;
 	cout << "B11toB24-B12toB25-B12toB26-B13toB27-B13toB28-B14toB29-B14toB30 " << endl;
 	cout << "---------------------------------------------------------------------------" << endl;
 	for(int j = 0; j < 7; j++)
 	{
-		cout << "   " << edgesCovered[47 + j] << "   |";
+		cout << "   " << edgesCovered[8 + j] << "   |";
 	}
 	cout << endl;
 
@@ -871,28 +476,28 @@ void MediumCFG::printEdgesCovered(bool* edgesCovered) const{
 	cout << "---------------------------------------------------------------------------" << endl;
 	for(int j = 0; j < 6; j++)
 	{
-		cout << "   " << edgesCovered[54 + j] << "   |";
+		cout << "   " << edgesCovered[15 + j] << "   |";
 	}
 	cout << endl;
 	cout << "B25toB61, B25toB62, B26toB63, B26toB64, B26toB65, B26toB66," << endl;
 	cout << "---------------------------------------------------------------------------" << endl;
 	for(int j = 0; j < 6; j++)
 	{
-		cout << "   " << edgesCovered[60 + j] << "   |";
+		cout << "   " << edgesCovered[21 + j] << "   |";
 	}
 	cout << endl;
 	cout << "B27toB67, B27toB68, B28toB69, B28toB70, B28toB71, B28toB72," << endl;
 	cout << "---------------------------------------------------------------------------" << endl;
 	for(int j = 0; j < 6; j++)
 	{
-		cout << "   " << edgesCovered[66 + j] << "   |";
+		cout << "   " << edgesCovered[27 + j] << "   |";
 	}
 	cout << endl;
 	cout << "B29toB73, B29toB74, B30toB75, B30toB76, B30toB77, B30toB78" << endl;
 	cout << "---------------------------------------------------------------------------" << endl;
 	for(int j = 0; j < 6; j++)
 	{
-		cout << "   " << edgesCovered[72 + j] << "   |";
+		cout << "   " << edgesCovered[32 + j] << "   |";
 	}
 	cout << endl;
 }
@@ -902,60 +507,19 @@ void MediumCFG::printPredicatesCovered(bool* predicatesCovered) const{
 }
 
 void MediumCFG::printEdgesCovered(int* edgesCovered) const{
-	cout << endl << "Edge Coverage" << endl;
-	cout << " B0toB1-B1toB3-B1toB4-B3toB7-B3toB8-B4toB9-B4toB10-B7toB15," << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for (int j = 0; j < 8; j++) {
-		cout << "   " << edgesCovered[j] << "   |";
-	}
-	cout << endl;
-	cout << "B7toB16-B8toB17-B8toB18-B9toB19-B9toB20-B10toB21-B10toB22" << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 7; j++)
-	{
-		cout << "   " << edgesCovered[8 + j] << "   |";
-	}
-	cout << endl;
-	cout << "B15toB31, B15toB32, B16toB33, B16toB34, B16toB35, B16toB36 " << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 6; j++)
-	{
-		cout << "   " << edgesCovered[15 + j] << "   |";
-	}
-	cout << endl;
-	cout << "B17toB37, B17toB38, B18toB39, B18toB40, B18toB41, B18toB42 " << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 6; j++)
-	{
-		cout << "   " << edgesCovered[21 + j] << "   |";
-	}
-	cout << endl;
-	cout << "B19toB43, B19toB44, B20toB45, B20toB46, B20toB47, B20toB48 " << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 6; j++)
-	{
-		cout << "   " << edgesCovered[27 + j] << "   |";
-	}
-	cout << endl;
-	cout << "B21toB49, B21toB50, B22toB51, B22toB52, B22toB53, B22toB54 " << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 6; j++)
-	{
-		cout << "   " << edgesCovered[33 + j] << "   |";
-	}
-	cout << endl;
+
 	cout << "B0toB2-B2toB5-B2toB6-B5toB11-B5toB12-B6toB13-B6toB14-B11toB23," << endl;
 	cout << "---------------------------------------------------------------------------" << endl;
 	for(int j = 0; j < 8; j++)
 	{
-		cout << "   " << edgesCovered[39 + j] << "   |";
+		cout << "   " << edgesCovered[0 + j] << "   |";
 	}
 	cout << endl;
 	cout << "B11toB24-B12toB25-B12toB26-B13toB27-B13toB28-B14toB29-B14toB30 " << endl;
 	cout << "---------------------------------------------------------------------------" << endl;
 	for(int j = 0; j < 7; j++)
 	{
-		cout << "   " << edgesCovered[47 + j] << "   |";
+		cout << "   " << edgesCovered[8 + j] << "   |";
 	}
 	cout << endl;
 
@@ -963,28 +527,28 @@ void MediumCFG::printEdgesCovered(int* edgesCovered) const{
 	cout << "---------------------------------------------------------------------------" << endl;
 	for(int j = 0; j < 6; j++)
 	{
-		cout << "   " << edgesCovered[54 + j] << "   |";
+		cout << "   " << edgesCovered[15 + j] << "   |";
 	}
 	cout << endl;
 	cout << "B25toB61, B25toB62, B26toB63, B26toB64, B26toB65, B26toB66," << endl;
 	cout << "---------------------------------------------------------------------------" << endl;
 	for(int j = 0; j < 6; j++)
 	{
-		cout << "   " << edgesCovered[60 + j] << "   |";
+		cout << "   " << edgesCovered[21 + j] << "   |";
 	}
 	cout << endl;
 	cout << "B27toB67, B27toB68, B28toB69, B28toB70, B28toB71, B28toB72," << endl;
 	cout << "---------------------------------------------------------------------------" << endl;
 	for(int j = 0; j < 6; j++)
 	{
-		cout << "   " << edgesCovered[66 + j] << "   |";
+		cout << "   " << edgesCovered[27 + j] << "   |";
 	}
 	cout << endl;
 	cout << "B29toB73, B29toB74, B30toB75, B30toB76, B30toB77, B30toB78" << endl;
 	cout << "---------------------------------------------------------------------------" << endl;
 	for(int j = 0; j < 6; j++)
 	{
-		cout << "   " << edgesCovered[72 + j] << "   |";
+		cout << "   " << edgesCovered[32 + j] << "   |";
 	}
 	cout << endl;
 }
