@@ -53,7 +53,7 @@ void Population::evaluateSharedFitness(Organism* org) {
 	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
 		if ( edges[i] ) {
 			int timesCoveredByPopulation = edgesCovered[i];
-			sharedFitness += edges[i] * (100 / timesCoveredByPopulation); //TODO remove hard coded value
+			sharedFitness += edges[i] * (1000 / timesCoveredByPopulation); //TODO remove hard coded value
 		}
 	}
 
@@ -62,7 +62,7 @@ void Population::evaluateSharedFitness(Organism* org) {
 	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
 		if (preds[i]) {
 			int timesCoveredByPopulation = preds[i];
-			sharedFitness += preds[i] * (100 / timesCoveredByPopulation); //TODO remove hard coded value
+			sharedFitness += preds[i] * (1000 / timesCoveredByPopulation); //TODO remove hard coded value
 		}
 	}
 

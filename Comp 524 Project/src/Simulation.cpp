@@ -85,7 +85,7 @@ void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double muta
 void getUserInput() {
 	const int GEN_AND_RATIO = 0, PRINT_FITNESS = 1, PRINT_FITNESS_ONCE = 2,
 			COV_RATIO_TS_CROSSOVER = 3, COV_RATIO_TS_CROSSOVER_ONCE = 4,
-			REPLACEMENT = 5, PAUSE = -1, EXIT = -5;
+			REPLACEMENT = 5, CHANGE_LOCAL_OPT = 6, PAUSE = -1, EXIT = -5;
 	do {
 		int choice;
 		std::cin >> choice;
@@ -113,6 +113,9 @@ void getUserInput() {
 			case REPLACEMENT:
 				printReplacement = !printReplacement;
 				break;
+			case CHANGE_LOCAL_OPT:
+				changeLocalOpt = !changeLocalOpt;
+				break;
 			case PAUSE:
 				pause = !pause;
 				break;
@@ -122,7 +125,7 @@ void getUserInput() {
 	} while(true);
 }
 
-void Simulation::runWithPrintFlags(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
+void Simulation::runWithFlags(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
 	int i { 0 };
 	Organism *child1 { }, *child2 { };
 
@@ -160,21 +163,21 @@ void Simulation::runWithPrintFlags(int numberOfGenerations, int numberOfCutPoint
 		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
 
 		if(child1 <= child2){
-			/*
-			if( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) {
+
+			if( changeLocalOpt && ( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) ) {
 				tryLocalOptimization(child2);
 			}
-			*/
+
 			population->replaceParentThenReplaceWorst(parentToReplace, child2);
 			delete child1;
 			child1 = NULL;
 		}
 		else {
-			/*
-			if( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) {
+
+			if(  changeLocalOpt && ( i % 5 == 0 || population->getCoverageRatio() > 0.95) ) {
 				tryLocalOptimization(child1);
 			}
-			*/
+
 			population->replaceParentThenReplaceWorst(parentToReplace, child1);
 			delete child2;
 			child2 = NULL;

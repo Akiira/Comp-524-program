@@ -26,6 +26,9 @@ bool printGenerationAndRatio;
 bool printCoverageRatioForTScrossover;
 bool printCoverageRatioForTScrossoverOnce;
 bool printReplacement;
+bool printCoverageRatioForTCcrossover;
+
+bool changeLocalOpt;
 
 bool pauseOnTSCrossover;
 bool pauseOnTCcrossover;
@@ -155,6 +158,7 @@ void triangleSimulationTest() {
 
 void hardTest(){
 	targetCFG = new HardCFG { };
+
 	Simulation* hardSim = new Simulation(100);
 	 hardSim->runWithPrintFlags(100000, 5, 0.02);
 }

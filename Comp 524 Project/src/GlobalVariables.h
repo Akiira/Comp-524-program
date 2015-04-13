@@ -17,7 +17,11 @@ extern bool printPopFitness;
 extern bool printGenerationAndRatio;
 extern bool printCoverageRatioForTScrossover;
 extern bool printCoverageRatioForTScrossoverOnce;
+extern bool printCoverageRatioForTCcrossover;
+extern bool printCoverageRatioForTCcrossoverOnce;
 extern bool printReplacement;
+
+extern bool changeLocalOpt;
 
 extern bool pauseOnTSCrossover;
 extern bool pauseOnTCcrossover;
