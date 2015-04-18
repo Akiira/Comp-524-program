@@ -79,7 +79,7 @@ void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double muta
 		}
 
 		if (i % 100) {
-			//rangeSet->adaptRangesBasedOnUsefulness();
+			rangeSet->adaptRangesBasedOnUsefulness();
 		}
 
 		i++;

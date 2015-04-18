@@ -42,6 +42,7 @@ public:
 private:
 	int totalUsefulness;
 	int numberOfRanges, maxNumberOfRanges;
+	int minNumberOfRanges;
 	Range** ranges;
 	void addRange(Range* r);
 	void splitRange(int index);

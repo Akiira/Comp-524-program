@@ -16,6 +16,7 @@
 RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges) {
 	this->numberOfRanges = numberOfRanges;
 	this->maxNumberOfRanges = maxNumberOfRanges;
+	this->minNumberOfRanges = 10;
 	this->ranges = ranges;
 	this->totalUsefulness = 0;
 	for (int i = 0; i < numberOfRanges; i++) {
@@ -54,7 +55,8 @@ Range** RangeSet::randomlySelectRangesForNewTestCase() {
 	int numberOfParameters = targetCFG->getNumberOfParameters();
 	Range** retval = new Range*[numberOfParameters];
 	for (int i = 0; i < numberOfParameters; i++) {
-		retval[i] = ranges[uniformInRange(0, numberOfRanges-1)];
+		int x = uniformInRange(0, numberOfRanges-1);
+		retval[i] = ranges[x];
 	}
 	return retval;
 }
@@ -94,7 +96,7 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 		index++;
 	}
 	index = numberOfRanges-1;
-	while (ranges[index]->numOfUses < 0.01 * globalPopulation->getPopulationSize() *  globalPopulation->getTestSuiteSize())
+	while (index >= 0 && numberOfRanges > minNumberOfRanges && ranges[index]->numOfUses < 0.001 * globalPopulation->getPopulationSize() *  globalPopulation->getTestSuiteSize())
 	{
 		cout << "Deleting a bad range" << endl;
 		deleteRange(index);
@@ -116,6 +118,7 @@ void RangeSet::splitRange(int index) {
 }
 
 void RangeSet::deleteRange(int index) {
+	assert(numberOfRanges > minNumberOfRanges);
 	totalUsefulness -= ranges[index]->numOfUses;
 	delete ranges[index];
 	for (int i = index; i < numberOfRanges-1; i++) {
