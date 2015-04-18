@@ -87,14 +87,14 @@ Range** RangeSet::selectRangesForNewTestCaseProportionalToUsefulness() {
 void RangeSet::adaptRangesBasedOnUsefulness() {
 
 	int index = 0;
-	while (ranges[index]->numOfUses > 0.10 * globalPopulation->getTestSuiteSize())
+	while (ranges[index]->numOfUses > 0.10 * globalPopulation->getPopulationSize() * globalPopulation->getTestSuiteSize())
 	{
 		cout << "Splitting a really good range" << endl;
 		splitRange(index);
 		index++;
 	}
 	index = numberOfRanges-1;
-	while (ranges[index]->numOfUses < 0.01 * globalPopulation->getTestSuiteSize())
+	while (ranges[index]->numOfUses < 0.01 * globalPopulation->getPopulationSize() *  globalPopulation->getTestSuiteSize())
 	{
 		cout << "Deleting a bad range" << endl;
 		deleteRange(index);

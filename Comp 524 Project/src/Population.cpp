@@ -11,7 +11,7 @@
 #include "Organism.h"
 #include <cassert>
 #include <iostream>
-
+#include "RangeSet.h"
 Population::~Population() {
 	for (int i = 0; i < populationSize; i++) {
 		delete population[i];
@@ -22,6 +22,7 @@ Population::~Population() {
 /**
  * Creates a new population of random test suites
  */
+/*
 Population::Population(int popSize) {
 	globalPopulation = this;
 	edgesCovered = new int[targetCFG->getNumberOfEdges()] { };
@@ -32,6 +33,41 @@ Population::Population(int popSize) {
 
 	for (int i = 0; i < popSize; i++) {
 		population[i] = new Organism { testSuiteSize, testSuiteSize };
+	}
+
+	totalFitness = 0;
+
+	computePopulationLevelCoverage();
+
+	for (int i = 0; i < popSize; i++) {
+		evaluateOrganismsFitness(population[i]);
+	}
+
+	updatePopulationsFitness();
+	sortPopulationByFitness();
+}
+*/
+
+Population::Population(int popSize) {
+	globalPopulation = this;
+	edgesCovered = new int[targetCFG->getNumberOfEdges()] { };
+	predicatesCovered = new int[targetCFG->getNumberOfPredicates()] { };
+	population = new Organism*[popSize] { };
+	populationSize = popSize;
+	testSuiteSize = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+
+	int numberOfRanges = rangeSet->getNumberOfRanges();
+	int suitesPerRange = popSize / numberOfRanges;
+	int i = 0;
+	for (int rangeNum = 0; rangeNum < numberOfRanges; rangeNum++) {
+		Range* range = rangeSet->getRange(rangeNum);
+		for (; i < (rangeNum+1) * suitesPerRange; i++) {
+			population[i] = new Organism { testSuiteSize, testSuiteSize, range };
+		}
+	}
+
+	for (; i < populationSize; i++) {
+		population[i] = new Organism { testSuiteSize, testSuiteSize, rangeSet->getRange(0) };
 	}
 
 	totalFitness = 0;

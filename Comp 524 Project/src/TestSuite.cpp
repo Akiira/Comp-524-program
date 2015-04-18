@@ -13,6 +13,7 @@
 #include <cassert>
 #include <cstring>
 #include "RangeSet.h"
+#include "Range.h"
 
 using std::cout;
 using std::endl;
@@ -58,6 +59,14 @@ TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases){
 
 }
 
+TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, Range* range){
+	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
+	this->testCases = new TestCase*[maxNumberOfTestCases] { };
+
+	fillTestSuiteWithTestCasesFromSingleRange(range);
+
+}
+
 /*	Depreciated
 // Replaces the other constructor, will fill testCase 0 - edges+preds with values in that range, the rest with random ranges
 TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases){
@@ -96,6 +105,13 @@ void TestSuite::fillTestSuiteWithTestCasesFromRangeSet() {
 	assert(testCases != 0);
 	for(int i = 0; i < numberOfTestCases; i++){
 		testCases[i] = rangeSet->getNewTestCase();
+		targetCFG->setCoverageOfTestCase(testCases[i]);
+	}
+}
+
+void TestSuite::fillTestSuiteWithTestCasesFromSingleRange(Range* range) {
+	for(int i = 0; i < numberOfTestCases; i++){
+		testCases[i] = new TestCase(range);
 		targetCFG->setCoverageOfTestCase(testCases[i]);
 	}
 }

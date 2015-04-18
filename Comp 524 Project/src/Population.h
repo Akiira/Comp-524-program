@@ -71,6 +71,10 @@ public:
 		return testSuiteSize;
 	}
 
+	int getPopulationSize() const {
+		return populationSize;
+	}
+
 
 
 

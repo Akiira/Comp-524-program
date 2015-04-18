@@ -36,6 +36,11 @@ Organism::Organism(int numOfTestCases, int maxNumberOfTestCases ) {
 	evaluateBaseFitness();
 }
 
+Organism::Organism(int numberOfTestCases, int maxNumberOfTestCases, Range *range) {
+	chromosome = new TestSuite { numberOfTestCases, maxNumberOfTestCases, range};
+	evaluateBaseFitness();
+}
+
 void Organism::mutate(double mutationProb) {
 	int numberOfTestCases = chromosome->getNumberOfTestCases();
 

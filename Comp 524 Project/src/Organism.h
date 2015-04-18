@@ -22,6 +22,7 @@ public:
 	Organism(int numOfTestCases, int maxNumberOfTestCases);
 	Organism(int numOfTestCases, int maxNumberOfTestCases, TestCase** testCases);
 	Organism(int numOfTestCases, int maxNumberOfTestCases, int rangeNum);
+	Organism(int numberOfTestCases, int maxNumberOfTestCases, Range *range);
 
 	TestSuite* getChromosome() const;
 	void mutate(double mutationProb);

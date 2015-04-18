@@ -9,6 +9,8 @@
 #define RANGESET_H_
 class Range;
 class TestCase;
+
+#include <cassert>
 class RangeSet {
 public:
 	RangeSet();
@@ -27,6 +29,15 @@ public:
 	TestCase* getNewTestCase();
 
 	void adaptRangesBasedOnUsefulness(); // May split, delete, or combine ranges maybe
+
+	int getNumberOfRanges() const {
+		return numberOfRanges;
+	}
+
+	Range* getRange(int index) {
+		assert(index >= 0 && index < numberOfRanges);
+		return ranges[index];
+	}
 
 private:
 	int totalUsefulness;

@@ -35,6 +35,7 @@ private:
 	//void fillTestSuiteWithRandomTestCasesInRanges();
 
 	void fillTestSuiteWithTestCasesFromRangeSet();
+	void fillTestSuiteWithTestCasesFromSingleRange(Range* range);
 
 
 public:
@@ -43,6 +44,7 @@ public:
 	TestSuite(const TestSuite&);
 	TestSuite(int numberOfTestCases, int maxNumberOfTestCases);
 	TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCasesToCopy);
+	TestSuite(int numberOfTestCases, int maxNumberOfTestCases, Range *range);
 
 	void setTestCase(int index, TestCase* testCase);
 	void replaceRandomTestCase(TestCase* testCase);
