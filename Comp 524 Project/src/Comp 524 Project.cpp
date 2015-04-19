@@ -44,7 +44,7 @@ int main() {
 
     targetCFG = new MedHardCFG { };
     Simulation* medSim = new Simulation(100);
-    medSim->runWithFlags(100000, 5, 0.02);
+    medSim->run(100000, 5, 0.02);
 
     end = chrono::system_clock::now();
 
@@ -54,9 +54,10 @@ int main() {
     cout << "elapsed time: " << elapsed_seconds.count() << endl;
     cout << "finished computation at " << std::ctime(&end_time);
 
-
 	return 0;
 }
+
+
 
 
 

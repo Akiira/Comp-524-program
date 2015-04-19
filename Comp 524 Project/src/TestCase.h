@@ -23,7 +23,7 @@ public:
 	void addEdgeCoverage(int edge);
 	void addPredicateCoverage(int predicate);
 	void setInputParameters(int[]);
-	void setInputParameterAtIndex(int index, int newValue);
+	void setInputParameter(int index, int newValue);
 	void clearCoverage();
 
 	//============================PRINT FUNCTIONS=======================//

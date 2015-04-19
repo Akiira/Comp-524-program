@@ -22,6 +22,7 @@ public:
 	Simulation(int populationSize, double mutationProb): Simulation(populationSize, 2, mutationProb){};
 	Simulation(int populationSize): Simulation(populationSize, 2, 0.02){};
 
+	void TestCaseCrossover();
 	void TestSuiteCrossover(int currentGen);
 	void run(int numberOfGenerations);
 	void run(int numberOfGenerations, int numberOfCutPoints);
@@ -33,14 +34,11 @@ public:
 	void tryLocalOptimization(Organism* child);
 	TestCase* callRandomLocalOpt(Organism* child);
 
-	bool coveredAnyNew(bool* uncovered, bool* covered, bool edge);
-	bool coveredAnyNewForPopulation(bool* , bool ) ;
-
 	void tryLocalOptimization();
 	TestCase* callRandomLocalOpt();
-	TestCase* localOptFromZero (bool edgeOrPredicate, TestCase* oldTC);
-	TestCase* localOptFromGivenParams (bool edgeOrPredicate, TestCase* oldTC);
-	TestCase* localOptFromMiddle (int thingToCover, bool edgeOrPredicate);
+	TestCase* localOptFromZero (TestCase* oldTC);
+	TestCase* localOptFromGivenParams (TestCase* oldTC);
+	TestCase* localOptFromMiddle (TestCase* oldTC);
 
 
 private:

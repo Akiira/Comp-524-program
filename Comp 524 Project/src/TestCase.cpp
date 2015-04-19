@@ -141,7 +141,7 @@ void TestCase::setInputParameters(int newValues[]) {
 	}
 }
 
-void TestCase::setInputParameterAtIndex(int index, int newValue) {
+void TestCase::setInputParameter(int index, int newValue) {
 	assert(index >= 0 && index < numberOfParameters);
 	inputParameters[index] = newValue;
 }

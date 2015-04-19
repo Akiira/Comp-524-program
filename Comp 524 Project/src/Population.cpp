@@ -335,14 +335,14 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 	for (int i = 0; i < numberOfCutPoints; i++) {
 		if (alternate) {
 			for (int j = current; j <= cutPoints[i]; j++) {
-				child1->setInputParameterAtIndex(j, parent1.getInputParameterAtIndex(j));
-				child2->setInputParameterAtIndex(j, parent2.getInputParameterAtIndex(j));
+				child1->setInputParameter(j, parent1.getInputParameterAtIndex(j));
+				child2->setInputParameter(j, parent2.getInputParameterAtIndex(j));
 			}
 		}
 		else {
 			for (int j = current; j <= cutPoints[i]; j++) {
-				child1->setInputParameterAtIndex(j, parent2.getInputParameterAtIndex(j));
-				child2->setInputParameterAtIndex(j, parent1.getInputParameterAtIndex(j));
+				child1->setInputParameter(j, parent2.getInputParameterAtIndex(j));
+				child2->setInputParameter(j, parent1.getInputParameterAtIndex(j));
 			}
 		}
 		current = cutPoints[i] + 1;
@@ -353,13 +353,13 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 
 	if (alternate) {
 		for (int j = current; j < parent1.getNumberOfParameters(); j++) {
-			child1->setInputParameterAtIndex(j, parent1.getInputParameterAtIndex(j));
-			child2->setInputParameterAtIndex(j, parent2.getInputParameterAtIndex(j));
+			child1->setInputParameter(j, parent1.getInputParameterAtIndex(j));
+			child2->setInputParameter(j, parent2.getInputParameterAtIndex(j));
 		}
 	} else {
 		for (int j = current; j < parent1.getNumberOfParameters(); j++) {
-			child1->setInputParameterAtIndex(j, parent2.getInputParameterAtIndex(j));
-			child2->setInputParameterAtIndex(j, parent1.getInputParameterAtIndex(j));
+			child1->setInputParameter(j, parent2.getInputParameterAtIndex(j));
+			child2->setInputParameter(j, parent1.getInputParameterAtIndex(j));
 		}
 	}
 }
