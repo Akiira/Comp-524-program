@@ -22,12 +22,11 @@ public:
 	Simulation(int populationSize, double mutationProb): Simulation(populationSize, 2, mutationProb){};
 	Simulation(int populationSize): Simulation(populationSize, 2, 0.02){};
 
+
+	void run(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
 	void TestCaseCrossover();
 	void TestSuiteCrossover(int currentGen);
-	void run(int numberOfGenerations);
-	void run(int numberOfGenerations, int numberOfCutPoints);
-	void run(int numberOfGenerations, double mutationProb);
-	void run(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
+
 	void runWithTournamentSelectAndCrossoverWithDominance(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
 	void runWithFlags(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
 
@@ -39,6 +38,18 @@ public:
 	TestCase* localOptFromZero (TestCase* oldTC);
 	TestCase* localOptFromGivenParams (TestCase* oldTC);
 	TestCase* localOptFromMiddle (TestCase* oldTC);
+
+	void run(int numberOfGenerations) {
+		this->run(numberOfGenerations, this->numberOfCutPoints, this->mutationProb);
+	}
+
+	void run(int numberOfGenerations, int numberOfCutPoints) {
+		this->run(numberOfGenerations, numberOfCutPoints, this->mutationProb);
+	}
+
+	void run(int numberOfGenerations, double mutationProb) {
+		this->run(numberOfGenerations, this->numberOfCutPoints, mutationProb);
+	}
 
 
 private:

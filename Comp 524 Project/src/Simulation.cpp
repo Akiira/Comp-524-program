@@ -24,19 +24,6 @@ Simulation::Simulation(int populationSize, int numberOfCutPoints, double mutatio
 	this->mutationProb = mutationProb;
 }
 
-//TODO move these to header file
-void Simulation::run(int numberOfGenerations) {
-	this->run(numberOfGenerations, this->numberOfCutPoints, this->mutationProb);
-}
-
-void Simulation::run(int numberOfGenerations, int numberOfCutPoints) {
-	this->run(numberOfGenerations, numberOfCutPoints, this->mutationProb);
-}
-
-void Simulation::run(int numberOfGenerations, double mutationProb) {
-	this->run(numberOfGenerations, this->numberOfCutPoints, mutationProb);
-}
-
 void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
 	this->numberOfCutPoints = numberOfCutPoints;
 	this->mutationProb = mutationProb;
@@ -235,130 +222,22 @@ void getUserInput() {
 		}
 	} while(true);
 }
-//
-//void Simulation::runWithFlags(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
-//	int i { 0 };
-//	Organism *child1 { }, *child2 { };
-//
-//	//std::thread t(getUserInput);
-//
-//
-//	do{
-//		while(pause){
-//
-//		}
-//
-//		//population->printPopulationFitness();
-//		//population->printPopulationCoverage();
-//		auto parent1Index = population->fitnessProportionalSelect();
-//		auto parent2Index = population->fitnessProportionalSelect();
-//		auto parent1 = population->getOrganism(parent1Index);
-//		auto parent2 = population->getOrganism(parent2Index);
-//
-//		if( printGenerationAndRatio )
-//			cout << "Generation # " << i << " CoverageRatio: " << population->getCoverageRatio() << endl;
-//
-//		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
-//
-//		if(i % 5 == 4 ) {
-//			population->crossover(child1);
-//			population->crossover(child2);
-//		}
-//
-//		double newProb;
-//		newProb = adaptMutationBasedOnCoverageRatio(mutationProb);
-//		child1->mutate(newProb);
-//		child2->mutate(newProb);
-//
-//		// Attempt to replace the worst of the two parents
-//		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
-//
-//		if(child1 <= child2){
-//
-//			if( changeLocalOpt && ( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) ) {
-//				tryLocalOptimization(child2);
-//			}
-//
-//			population->replaceParentThenReplaceWorst(parentToReplace, child2);
-//			delete child1;
-//			child1 = NULL;
-//		}
-//		else {
-//
-//			if(  changeLocalOpt && ( i % 5 == 0 || population->getCoverageRatio() > 0.95) ) {
-//				tryLocalOptimization(child1);
-//			}
-//
-//			population->replaceParentThenReplaceWorst(parentToReplace, child1);
-//			delete child2;
-//			child2 = NULL;
-//		}
-//
-//		i++;
-//
-//	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
-//	//t.join();
-//	population->getBestOrganism()->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
-//	population->printPopulationFitness();
-//	population->printPopulationCoverage();
-//
-//	//Organism* final = constructFinalOrganism();
-//}
-//
-//void Simulation::runWithTournamentSelectAndCrossoverWithDominance(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
-//	int i { 0 };
-//	Organism *child1 { };
-//
-//	do{
-//		auto parent1Index = population->tournamentSelect();
-//		auto parent2Index = population->tournamentSelect();
-//		auto parent1 = population->getOrganism(parent1Index);
-//		auto parent2 = population->getOrganism(parent2Index);
-//
-//		cout << "Generation # " << i << " CoverageRatio: " << population->getCoverageRatio() << endl;
-//
-//		population->crossoverWithDominance(*parent1, *parent2, child1);
-//
-//		double newProb;
-//		newProb = adaptMutationBasedOnCoverageRatio(mutationProb);
-//		child1->mutate(newProb);
-//
-//		// Attempt to replace the worst of the two parents
-//		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
-//
-//		if( i % 25 == 0 || population->getCoverageRatio() > 0.95 ) {
-//			tryLocalOptimization(child1);
-//		}
-//		population->replaceParentThenReplaceWorst(parentToReplace, child1);
-//
-//		i++;
-//
-//	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
-//
-//	population->getBestOrganism()->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
-//	population->printPopulationFitness();
-//	population->printPopulationCoverage();
-//
-//	Organism* final = constructFinalOrganism();
-//}
+
+
 
 void Simulation::tryLocalOptimization(Organism* child) {
-	cerr << "\tLocal opt. Fitness of org before: " << child->getFitness() << ", CR: " << child->getChromosome()->getCoverageRatio();
 	auto tc = callRandomLocalOpt(child);
 
 	if( tc ) {
 		child->getChromosome()->replaceDuplicateTestCase(tc);
 		child->evaluateBaseFitness();
-		cerr << ", fitness after: " << child->getFitness() << ", CR: " << child->getChromosome()->getCoverageRatio() << "\n";
 		population->updatePopulationsFitness();
-		cerr << ", fitness after updating: " << child->getFitness() << ", CR: " << child->getChromosome()->getCoverageRatio() << "\n";
 	}
 }
 
 TestCase* Simulation::callRandomLocalOpt(Organism* child){
 	TestCase* oldTC = child->getChromosome()->getDuplicateTestCase();
 
-	//TODO change probability based on how succesful they are, or try all each time
 	switch (uniformInRange(0, 2)) {
 		case 0:
 			return localOptFromGivenParams(oldTC);
@@ -439,40 +318,6 @@ TestCase* Simulation::localOptFromGivenParams (TestCase* oldTC)  {
 
 	return NULL;
 }
-
-//TestCase* Simulation::localOptFromMiddle (TestCase* oldTC)  {
-//	TestCase* tc = new TestCase { };
-//	int* parameters = new int[targetCFG->getNumberOfParameters()] { };
-//	int* middles = new int[targetCFG->getNumberOfParameters()] { };
-//	int NeighborhoodSize { 1 };
-//
-//	tc->setInputParameters(parameters);
-//
-//	for (int var = 0; var < targetCFG->getNumberOfParameters(); ++var) {
-//		int middle { (targetCFG->getLowerBoundForParameter(var)
-//				+ targetCFG->getUpperBoundForParameter(var)) / 2 };
-//		middles[var] = middle;
-//	}
-//
-//	for(int i = 0; i < 100; ++i) {
-//		for (int j = 0; j < (10 + NeighborhoodSize); ++j) {
-//			for (int var = 0; var < targetCFG->getNumberOfParameters(); ++var) {
-//				parameters[var] = middles[var] + uniformInRange(-NeighborhoodSize, NeighborhoodSize);
-//			}
-//			targetCFG->setCoverageOfTestCase(tc);
-//
-//			if( population->isCoveringNew(tc) ) {
-//				cout << "Took about " << i * 10 << " tries. " << endl;
-//				return tc;
-//			}
-//		}
-//
-//		NeighborhoodSize += 5;
-//	}
-//
-//	cout << "Failed to cover edge " << endl;
-//	return NULL;
-//}
 
 void Simulation::minimizeOrganism(Organism* orgToMinimize) {
 	TestSuite* suite = orgToMinimize->getChromosome();
@@ -613,3 +458,145 @@ double Simulation::adaptMutationBasedOnCoverageRatio(double pM) {
 	}
 }
 
+
+//============================ OLD FUNCTIONS =======================//
+
+//void Simulation::runWithFlags(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
+//	int i { 0 };
+//	Organism *child1 { }, *child2 { };
+//
+//	//std::thread t(getUserInput);
+//
+//
+//	do{
+//		while(pause){
+//
+//		}
+//
+//		//population->printPopulationFitness();
+//		//population->printPopulationCoverage();
+//		auto parent1Index = population->fitnessProportionalSelect();
+//		auto parent2Index = population->fitnessProportionalSelect();
+//		auto parent1 = population->getOrganism(parent1Index);
+//		auto parent2 = population->getOrganism(parent2Index);
+//
+//		if( printGenerationAndRatio )
+//			cout << "Generation # " << i << " CoverageRatio: " << population->getCoverageRatio() << endl;
+//
+//		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
+//
+//		if(i % 5 == 4 ) {
+//			population->crossover(child1);
+//			population->crossover(child2);
+//		}
+//
+//		double newProb;
+//		newProb = adaptMutationBasedOnCoverageRatio(mutationProb);
+//		child1->mutate(newProb);
+//		child2->mutate(newProb);
+//
+//		// Attempt to replace the worst of the two parents
+//		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
+//
+//		if(child1 <= child2){
+//
+//			if( changeLocalOpt && ( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) ) {
+//				tryLocalOptimization(child2);
+//			}
+//
+//			population->replaceParentThenReplaceWorst(parentToReplace, child2);
+//			delete child1;
+//			child1 = NULL;
+//		}
+//		else {
+//
+//			if(  changeLocalOpt && ( i % 5 == 0 || population->getCoverageRatio() > 0.95) ) {
+//				tryLocalOptimization(child1);
+//			}
+//
+//			population->replaceParentThenReplaceWorst(parentToReplace, child1);
+//			delete child2;
+//			child2 = NULL;
+//		}
+//
+//		i++;
+//
+//	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
+//	//t.join();
+//	population->getBestOrganism()->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
+//	population->printPopulationFitness();
+//	population->printPopulationCoverage();
+//
+//	//Organism* final = constructFinalOrganism();
+//}
+
+//void Simulation::runWithTournamentSelectAndCrossoverWithDominance(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
+//	int i { 0 };
+//	Organism *child1 { };
+//
+//	do{
+//		auto parent1Index = population->tournamentSelect();
+//		auto parent2Index = population->tournamentSelect();
+//		auto parent1 = population->getOrganism(parent1Index);
+//		auto parent2 = population->getOrganism(parent2Index);
+//
+//		cout << "Generation # " << i << " CoverageRatio: " << population->getCoverageRatio() << endl;
+//
+//		population->crossoverWithDominance(*parent1, *parent2, child1);
+//
+//		double newProb;
+//		newProb = adaptMutationBasedOnCoverageRatio(mutationProb);
+//		child1->mutate(newProb);
+//
+//		// Attempt to replace the worst of the two parents
+//		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
+//
+//		if( i % 25 == 0 || population->getCoverageRatio() > 0.95 ) {
+//			tryLocalOptimization(child1);
+//		}
+//		population->replaceParentThenReplaceWorst(parentToReplace, child1);
+//
+//		i++;
+//
+//	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
+//
+//	population->getBestOrganism()->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
+//	population->printPopulationFitness();
+//	population->printPopulationCoverage();
+//
+//	Organism* final = constructFinalOrganism();
+//}
+
+//TestCase* Simulation::localOptFromMiddle (TestCase* oldTC)  {
+//	TestCase* tc = new TestCase { };
+//	int* parameters = new int[targetCFG->getNumberOfParameters()] { };
+//	int* middles = new int[targetCFG->getNumberOfParameters()] { };
+//	int NeighborhoodSize { 1 };
+//
+//	tc->setInputParameters(parameters);
+//
+//	for (int var = 0; var < targetCFG->getNumberOfParameters(); ++var) {
+//		int middle { (targetCFG->getLowerBoundForParameter(var)
+//				+ targetCFG->getUpperBoundForParameter(var)) / 2 };
+//		middles[var] = middle;
+//	}
+//
+//	for(int i = 0; i < 100; ++i) {
+//		for (int j = 0; j < (10 + NeighborhoodSize); ++j) {
+//			for (int var = 0; var < targetCFG->getNumberOfParameters(); ++var) {
+//				parameters[var] = middles[var] + uniformInRange(-NeighborhoodSize, NeighborhoodSize);
+//			}
+//			targetCFG->setCoverageOfTestCase(tc);
+//
+//			if( population->isCoveringNew(tc) ) {
+//				cout << "Took about " << i * 10 << " tries. " << endl;
+//				return tc;
+//			}
+//		}
+//
+//		NeighborhoodSize += 5;
+//	}
+//
+//	cout << "Failed to cover edge " << endl;
+//	return NULL;
+//}
