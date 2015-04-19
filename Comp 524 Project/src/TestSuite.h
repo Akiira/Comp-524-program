@@ -30,6 +30,8 @@ private:
 
 
 public:
+
+	//========================== CONSTRUCTORS AND DESTRUCTORS ======================//
 	virtual ~TestSuite();
 
 	TestSuite(const TestSuite&);
@@ -37,7 +39,7 @@ public:
 	TestSuite(int numberOfTestCases, int maxNumberOfTestCases): TestSuite(numberOfTestCases, numberOfTestCases, 0) {}
 	TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCases);
 
-	//============================MUTATOR FUNCTIONS=======================//
+	//========================== MUTATOR FUNCTIONS =================================//
 
 	void setTestCase(int index, TestCase* testCase);
 	void replaceRandomTestCase(TestCase* testCase);

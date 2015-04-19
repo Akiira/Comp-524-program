@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////
 
 #include "Simulation.h"
+#include "Population.h"
 #include "Random.h"
 #include <iostream>
 #include <cassert>
@@ -67,21 +68,19 @@ void Simulation::TestCaseCrossover() {
 			parent->getChromosome()->replaceDuplicateTestCase(child1);
 			parent->evaluateBaseFitness();
 			population->updatePopulationsFitness();
-			return;
+			break;
 		}
 		else if( parent->getChromosome()->coversNew(child2) ) {
 			delete child1;
 			parent->getChromosome()->replaceDuplicateTestCase(child2);
 			parent->evaluateBaseFitness();
 			population->updatePopulationsFitness();
-			return;
+			break;
 		} else {
 			delete child1;
 			delete child2;
 		}
 	}
-
-	cerr << "\tTestCase crossover failed.\n";
 }
 
 void Simulation::TestSuiteCrossover(int currentGen) {
@@ -225,18 +224,18 @@ void getUserInput() {
 
 
 
-void Simulation::tryLocalOptimization(Organism* child) {
-	auto tc = callRandomLocalOpt(child);
+void Simulation::tryLocalOptimization(Organism* org) {
+	auto tc = callRandomLocalOpt(org);
 
 	if( tc ) {
-		child->getChromosome()->replaceDuplicateTestCase(tc);
-		child->evaluateBaseFitness();
+		org->getChromosome()->replaceDuplicateTestCase(tc);
+		org->evaluateBaseFitness();
 		population->updatePopulationsFitness();
 	}
 }
 
-TestCase* Simulation::callRandomLocalOpt(Organism* child){
-	TestCase* oldTC = child->getChromosome()->getDuplicateTestCase();
+TestCase* Simulation::callRandomLocalOpt(Organism* org){
+	TestCase* oldTC = org->getChromosome()->getDuplicateTestCase();
 
 	switch (uniformInRange(0, 2)) {
 		case 0:
@@ -300,7 +299,6 @@ TestCase* Simulation::localOptFromGivenParams (TestCase* oldTC)  {
 				if( newValue > targetCFG->getUpperBoundForParameter(var) ) {
 					newValue = targetCFG->getUpperBoundForParameter(var);
 				}
-
 				if( newValue < targetCFG->getLowerBoundForParameter(var) ) {
 					newValue = targetCFG->getLowerBoundForParameter(var);
 				}

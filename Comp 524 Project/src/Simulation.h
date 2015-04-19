@@ -8,13 +8,16 @@
 #if !defined(EA_63CB5297_1E19_44f6_AF1B_16CF01DC9D73__INCLUDED_)
 #define EA_63CB5297_1E19_44f6_AF1B_16CF01DC9D73__INCLUDED_
 
-#include "TestSuite.h"
-#include "GlobalVariables.h"
-#include "Population.h"
+class Population;
+class Organism;
+class TestCase;
 
 class Simulation
 {
 public:
+
+	//========================== CONSTRUCTORS AND DESTRUCTORS ======================//
+
 	virtual ~Simulation();
 
 	Simulation(int populationSize, int numberOfCutPoints, double mutationProb);
@@ -27,17 +30,11 @@ public:
 	void TestCaseCrossover();
 	void TestSuiteCrossover(int currentGen);
 
-	void runWithTournamentSelectAndCrossoverWithDominance(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
-	void runWithFlags(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
-
-	void tryLocalOptimization(Organism* child);
-	TestCase* callRandomLocalOpt(Organism* child);
-
-	void tryLocalOptimization();
-	TestCase* callRandomLocalOpt();
+	void tryLocalOptimization(Organism* org);
+	TestCase* callRandomLocalOpt(Organism* org);
 	TestCase* localOptFromZero (TestCase* oldTC);
 	TestCase* localOptFromGivenParams (TestCase* oldTC);
-	TestCase* localOptFromMiddle (TestCase* oldTC);
+
 
 	void run(int numberOfGenerations) {
 		this->run(numberOfGenerations, this->numberOfCutPoints, this->mutationProb);
@@ -51,6 +48,11 @@ public:
 		this->run(numberOfGenerations, this->numberOfCutPoints, mutationProb);
 	}
 
+	//============================ OLD FUNCTIONS =======================//
+
+	TestCase* localOptFromMiddle (TestCase* oldTC);
+	void runWithTournamentSelectAndCrossoverWithDominance(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
+	void runWithFlags(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
 
 private:
 	Population* population;
