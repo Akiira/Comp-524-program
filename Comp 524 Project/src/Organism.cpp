@@ -110,9 +110,18 @@ int Organism::fitnessFunction03() {
 	return 0;
 }
 void Organism::evaluateBaseFitness(){
+	fitness = 0;
 	chromosome->calculateTestSuiteCoverage();
+	auto counts = chromosome->getEdgeCoverageCounts();
 
-	fitness = fitnessFunction01();
+	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
+		fitness += (counts[i] ? 1 : 0);
+	}
+
+	counts = chromosome->getPredicateCoverageCounts();
+	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
+		fitness += (counts[i] ? 1 : 0);
+	}
 
 	// Simply set scaledFitness to fitness here in case were not using scaling
 	//	if scaling is used this will be overwritten by a call to Population::scalePopulationFitness
