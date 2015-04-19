@@ -195,17 +195,7 @@ bool TestSuite::canRemoveTestCaseWithoutChangingCoverage(int index) const {
 	return true;
 }
 
-void TestSuite::printAll() {
-	printTestSuiteCoverage();
-	printTestCaseInputsAndCoverage();
-}
-
-void TestSuite::printTestSuiteCoverage() {
-	cout << "Test Suite Coverage:" << endl;
-	targetCFG->printTestSuiteCoverage(this);
-}
-
-void TestSuite::printTestCaseInputsAndCoverage() {
+void TestSuite::printTestCaseInputsAndCoverage() const {
 	cout << endl << "Test Cases:" << endl;
 	for (int i = 0; i < numberOfTestCases; i++) {
 		std::cout << endl << "Test Case #" << i << endl;
@@ -213,12 +203,22 @@ void TestSuite::printTestCaseInputsAndCoverage() {
 	}
 }
 
-void TestSuite::printTestCaseInputsOnly() {
+void TestSuite::printTestCaseInputsOnly() const {
 	cout << endl << "Test Cases:" << endl;
 	for (int i = 0; i < numberOfTestCases; i++) {
 		std::cout << "#" << i;
 		testCases[i]->printInputsOnly();
 	}
+}
+
+void TestSuite::printTestSuiteCoverage() const {
+	cout << "Test Suite Coverage:" << endl;
+	targetCFG->printTestSuiteCoverage(this);
+}
+
+void TestSuite::printAll() const {
+	printTestSuiteCoverage();
+	printTestCaseInputsAndCoverage();
 }
 
 void TestSuite::resetCoverage() {
@@ -262,7 +262,7 @@ void TestSuite::calculateTestSuiteCoverage() {
 	coverageRatio = numCovered / (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
 }
 
-bool TestSuite::coversNew(TestCase* tc) const {
+bool TestSuite::isCoveringNew(TestCase* tc) const {
 	auto covEdges = tc->getEdgesCovered();
 	auto covPreds = tc->getPredicatesCovered();
 

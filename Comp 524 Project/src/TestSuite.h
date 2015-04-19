@@ -51,19 +51,7 @@ public:
 	void calculateTestSuiteCoverage();
 	void sortTestSuiteByCoverageCounts();
 
-	//============================PREDICATE FUNCTIONS=======================//
-
-	bool canRemoveTestCaseWithoutChangingCoverage(int index) const;
-	bool coversNew(TestCase* ) const;
-
-	//============================PRINT FUNCTIONS=======================//
-
-	void printTestCaseInputsAndCoverage();
-	void printTestCaseInputsOnly();
-	void printTestSuiteCoverage();
-	void printAll();
-
-	//============================GETTER FUNCTIONS=======================//
+	//========================== GETTER FUNCTIONS===================================//
 
 	TestCase* getDuplicateTestCase() const;
 	TestCase* getRandomTestCase() const;
@@ -134,7 +122,19 @@ public:
 		return coverageRatio;
 	}
 
-	//===========================OVERLOADED OPERATORS==========================//
+	//========================== PREDICATE FUNCTIONS================================//
+
+	bool canRemoveTestCaseWithoutChangingCoverage(int index) const;
+	bool isCoveringNew(TestCase* ) const;
+
+	//========================== PRINT FUNCTIONS====================================//
+
+	void printTestCaseInputsAndCoverage() const;
+	void printTestCaseInputsOnly() const;
+	void printTestSuiteCoverage() const;
+	void printAll() const;
+
+	//========================== OVERLOADED OPERATORS ==============================//
 
 	TestSuite& operator=(const TestSuite& org);
 	bool operator==(const TestSuite& right);
