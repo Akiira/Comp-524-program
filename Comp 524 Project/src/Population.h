@@ -20,7 +20,7 @@ public:
 	Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSize);
 	Population(int popSize);
 	void crossover(const Organism& parent1, const Organism& parent2, Organism*& offspring1, Organism*& offspring2, int numberOfCutPoints);
-	void crossover(Organism*& child);
+	void crossover(Organism* child);
 	void crossover(const TestCase& parent1, const TestCase& parent2,
 			TestCase*& child1, TestCase*& child2, int numberOfCutPoints);
 
@@ -53,7 +53,7 @@ public:
 		return population[0];
 	}
 
-	Organism* getOrganismByIndex(int index) const {
+	Organism* getOrganism(int index) const {
 		return population[index];
 	}
 
@@ -66,6 +66,9 @@ public:
 	}
 
 
+	bool isCoveringNew(const TestCase * tc) const;
+	bool isCoveringNewEdge(const bool * coverage) const;
+	bool isCoveringNewPred(const bool * coverage) const;
 
 private:
 	Organism** population;

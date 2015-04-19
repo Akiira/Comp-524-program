@@ -216,6 +216,7 @@ void Population::computePopulationLevelCoverage() {
 			predicatesCovered[j] += predCov[j];
 		}
 	}
+
 	// Calculate the coverage ratio
 	double numCovered = 0;
 	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
@@ -223,11 +224,13 @@ void Population::computePopulationLevelCoverage() {
 			numCovered++;
 		}
 	}
+
 	for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
 		if (predicatesCovered[j] > 0) {
 			numCovered++;
 		}
 	}
+
 	coverageRatio = numCovered / (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
 }
 
@@ -382,7 +385,7 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 	child2 = new Organism { parent2NumberOfTestCases, parent2.getMaxNumberOfTestCases(), child2TestCases };
 }
 
-void Population::crossover(Organism*& child) {
+void Population::crossover(Organism* child) {
 	TestCase *child1 { }, *child2 { };
 	auto tc1 = child->chromosome->getRandomTestCase();
 	auto tc2 = child->chromosome->getRandomTestCase();
@@ -397,9 +400,9 @@ void Population::crossover(Organism*& child) {
 			tc2 = child->chromosome->getRandomTestCase();
 		} while (true);
 
-		crossover(*tc1, *tc2, child1, child2, targetCFG->getNumberOfParameters() * 0.5);
+		crossover(*tc1, *tc2, child1, child2, 2);
 
-		if( child->chromosome->coversNewEdge(child1) ) {
+		if( child->chromosome->coversNew(child1) ) {
 			cout << "\tTest Case Crossover Worked." << endl;
 			child->chromosome->replaceDuplicateTestCase(child1);
 			evaluateOrganismsFitness(child);
@@ -407,7 +410,7 @@ void Population::crossover(Organism*& child) {
 			delete child2;
 			break;
 		}
-		else if( child->chromosome->coversNewEdge(child2) ) {
+		else if( child->chromosome->coversNew(child2) ) {
 			cout << "\tTest Case Crossover Worked." << endl;
 			child->chromosome->replaceDuplicateTestCase(child2);
 			evaluateOrganismsFitness(child);
@@ -460,9 +463,6 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 			child2->setInputParameterAtIndex(j, parent1.getInputParameterAtIndex(j));
 		}
 	}
-
-	targetCFG->setCoverageOfTestCase(child1);
-	targetCFG->setCoverageOfTestCase(child2);
 }
 
 int* Population::selectCutPoints(int numCutPoints, int upperBound) {
@@ -486,7 +486,7 @@ int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 }
 
 void Population::replaceParentThenReplaceWorst(int parentIndex, Organism* child) {
-	if (child->getFitness() >= population[parentIndex]->getFitness()) {
+	if (child->getScaledFitness() >= population[parentIndex]->getScaledFitness()) {
 		if( printReplacement ) {
 			cout << "-------------REPLACEMENT-----------------\n";
 			cout << "Child replaced parent.\n-------------END REPLACEMENT-----------------\n\n";
@@ -501,7 +501,7 @@ void Population::replaceParentThenReplaceWorst(int parentIndex, Organism* child)
 void Population::replaceWorst(Organism* child) {
 	int worst { populationSize - 1 };
 
-	if (child->getFitness() >= population[worst]->getFitness()) {
+	if (child->getScaledFitness() >= population[worst]->getScaledFitness()) {
 		if( printReplacement ) {
 			cout << "-------------REPLACEMENT-----------------\n";
 			cout << "Child replaced worst.\n-------------END REPLACEMENT-----------------\n\n";
@@ -528,7 +528,7 @@ void Population::replaceOrganismAtIndexWithChild(int organismToReplace, Organism
 	delete population[organismToReplace];
 	population[organismToReplace] = child;
 
-	lastReplacedFitness = child->getFitness();
+	lastReplacedFitness = child->getScaledFitness();
 	updatePopulationsFitness();
 
 	moveOrganismToSortedPosition(organismToReplace);
@@ -574,6 +574,37 @@ void Population::moveOrganismToSortedPosition(int indexToSort) {
 	}
 }
 
+bool Population::isCoveringNew(const TestCase * tc) const {
+
+	auto newEdge = isCoveringNewEdge(tc->getEdgesCovered());
+	auto newPred = isCoveringNewPred(tc->getPredicatesCovered());
+
+	return newEdge || newPred;
+}
+
+bool Population::isCoveringNewEdge(const bool * coverage) const {
+
+	auto popsCover = getEdgesCovered();
+	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
+		if( !popsCover[i] && coverage[i] ){
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool Population::isCoveringNewPred(const bool * coverage) const {
+
+	auto popsCover = getPredicatesCovered();
+	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
+		if( !popsCover[i] && coverage[i] ){
+			return true;
+		}
+	}
+
+	return false;
+}
 
 void Population::printPopulationFitness() {
 	int bestFitness = population[0]->getFitness();
