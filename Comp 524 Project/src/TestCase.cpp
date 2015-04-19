@@ -31,9 +31,10 @@ TestCase::TestCase() {
 	numberOfParameters = targetCFG->getNumberOfParameters();
 	numberOfPredicates = targetCFG->getNumberOfPredicates();
 
-	edgesCovered = new bool[numberOfEdges] { };
+	edgesCovered      = new bool[numberOfEdges] { };
 	predicatesCovered = new bool[numberOfPredicates] { };
-	inputParameters = new int[numberOfParameters] { };
+	inputParameters   = new int[numberOfParameters] { };
+
 	numCovered = 0;
 
 	generateRandomParameters();
@@ -59,9 +60,8 @@ TestCase::TestCase(const TestCase& that) {
 }
 
 void TestCase::generateRandomParameters() {
-	//for each parameter generate a random value
-	for(int i = 0; i < numberOfParameters; i++)
-	{
+
+	for(int i = 0; i < numberOfParameters; i++)	{
 		inputParameters[i] = uniformInRange(targetCFG->getLowerBoundForParameter(i),
 											targetCFG->getUpperBoundForParameter(i));
 	}
@@ -90,13 +90,13 @@ void TestCase::mutate() {
 }
 
 void TestCase::clearCoverage() {
-	for(int i = 0; i < numberOfEdges; i++)
-	{
+	numCovered = 0;
+
+	for(int i = 0; i < numberOfEdges; i++) {
 		edgesCovered[i] = false;
 	}
 
-	for(int i = 0; i < numberOfPredicates; i++)
-	{
+	for(int i = 0; i < numberOfPredicates; i++)	{
 		predicatesCovered[i] = false;
 	}
 }

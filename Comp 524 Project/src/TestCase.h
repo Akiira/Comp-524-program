@@ -17,24 +17,27 @@ public:
 	TestCase();
 	TestCase(const TestCase& that);
 
+	//============================MUTATOR FUNCTIONS=======================//
+
 	void mutate();
-
-	bool* getEdgesCovered() const;
-	bool* getPredicatesCovered() const;
-	int* getInputParameters() const;
-	int getInputParameterAtIndex(int index) const;
-
 	void addEdgeCoverage(int edge);
 	void addPredicateCoverage(int predicate);
 	void setInputParameters(int[]);
 	void setInputParametersWithReference(int* []);
 	void setInputParameterAtIndex(int index, int newValue);
-
 	void clearCoverage();
+
+	//============================PRINT FUNCTIONS=======================//
+
 	void printInputsAndCoverage();
 	void printInputsOnly();
 
-	TestCase& operator=(const TestCase& org);
+	//============================GETTER FUNCTIONS=======================//
+
+	bool* getEdgesCovered() const;
+	bool* getPredicatesCovered() const;
+	int* getInputParameters() const;
+	int getInputParameterAtIndex(int index) const;
 
 	int getNumberOfParameters() const {
 		return numberOfParameters;
@@ -43,6 +46,10 @@ public:
 	int getNumberCovered() const {
 		return numCovered;
 	}
+
+	//===========================OVERLOADED OPERATORS==========================//
+
+	TestCase& operator=(const TestCase& org);
 
 private:
 	int numberOfParameters;
