@@ -265,23 +265,18 @@ void TestSuite::calculateTestSuiteCoverage() {
 	coverageRatio = numCovered / (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
 }
 
-bool TestSuite::coversNewEdge(TestCase* tc) const {
-	auto edges = getAllUncoveredEdges();
+bool TestSuite::coversNew(TestCase* tc) const {
 	auto covEdges = tc->getEdgesCovered();
+	auto covPreds = tc->getPredicatesCovered();
 
 	for (int i = 0; i < numberOfEdges; ++i) {
-		if(edges[i] == false && covEdges[i] == true){
-			delete[] edges;
+		if(edgeCoverageCounts[i] == false && covEdges[i] == true){
 			return true;
 		}
 	}
 
-	auto preds = getAllUncoveredPredicates();
-	auto covPreds = tc->getPredicatesCovered();
-
 	for (int i = 0; i < numberOfPredicates; ++i) {
-		if(preds[i] == false && covPreds[i] == true){
-			delete[] preds;
+		if(predicateCoverageCounts[i] == false && covPreds[i] == true){
 			return true;
 		}
 	}

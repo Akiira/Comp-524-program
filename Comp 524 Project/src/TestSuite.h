@@ -52,7 +52,7 @@ public:
 	//============================PREDICATE FUNCTIONS=======================//
 
 	bool canRemoveTestCaseWithoutChangingCoverage(int index) const;
-	bool coversNewEdge(TestCase* ) const;
+	bool coversNew(TestCase* ) const;
 
 	//============================PRINT FUNCTIONS=======================//
 
@@ -68,7 +68,7 @@ public:
 	TestCase* getTestCaseThatCoversPredicate(int predicateNumber) const;
 	TestCase* getTestCaseThatCoversEdge(int edgeNumber) const;
 
-	bool* getAllUncoveredEdges() const {
+	bool* getUncoveredEdges() const {
 		auto unCovered = new bool[numberOfEdges];
 		for (int i = 0; i < numberOfEdges; ++i) {
 			unCovered[i] = ( edgeCoverageCounts[i] == 0 ? true : false );
@@ -77,7 +77,7 @@ public:
 		return unCovered;
 	}
 
-	bool* getAllUncoveredPredicates() const {
+	bool* getUncoveredPredicates() const {
 		auto unCovered = new bool[numberOfPredicates];
 		for (int i = 0; i < numberOfPredicates; ++i) {
 			unCovered[i] = ( edgeCoverageCounts[i] == 0 ? true : false );
@@ -132,7 +132,7 @@ public:
 		return coverageRatio;
 	}
 
-	//===========================OVERLOADED OPERATORS===========================
+	//===========================OVERLOADED OPERATORS==========================//
 
 	TestSuite& operator=(const TestSuite& org);
 	bool operator==(const TestSuite& right);
