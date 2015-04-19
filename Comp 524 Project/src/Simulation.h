@@ -28,8 +28,8 @@ public:
 	//========================== CORE FUNCTIONS ====================================//
 
 	void run(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
-	void TestCaseCrossover();
-	void TestSuiteCrossover(int currentGen);
+	void testCaseCrossover();
+	void testSuiteCrossover(int currentGen);
 
 	void tryLocalOptimization(Organism* org);
 	TestCase* callRandomLocalOpt(Organism* org);

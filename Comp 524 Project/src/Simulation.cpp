@@ -31,24 +31,36 @@ void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double muta
 	this->mutationProb      = mutationProb;
 	int currentGen { 0 };
 
+	double lastGensCoverage = population->getCoverageRatio();
+	int gensOfNoImprov = 0;
+
 	do {
 		cout << "Generation # " << currentGen << " CoverageRatio: " << population->getCoverageRatio() << endl;
 
-		TestSuiteCrossover(currentGen);
-		TestCaseCrossover();
+		if( gensOfNoImprov == 20 || currentGen % 30 == 0 ){
+			testSuiteCrossover(currentGen);
+		}
+
+		testCaseCrossover();
+
+		if( lastGensCoverage <= population->getCoverageRatio() ) {
+			lastGensCoverage = population->getCoverageRatio();
+			gensOfNoImprov = 0;
+		}
 
 		//TODO Needs range set stuff
 
+		gensOfNoImprov++;
 		currentGen++;
 	} while (currentGen < numberOfGenerations && population->getCoverageRatio() < 1);
 }
 
-void Simulation::TestCaseCrossover() {
+void Simulation::testCaseCrossover() {
 	TestCase *child1 { }, *child2 { };
 
 	auto parent = population->getOrganism(population->fitnessProportionalSelect());
-	auto tc1 = parent->getChromosome()->getRandomTestCase();
-	auto tc2 = parent->getChromosome()->getRandomTestCase();
+	auto tc1    = parent->getChromosome()->getRandomTestCase();
+	auto tc2    = parent->getChromosome()->getRandomTestCase();
 
 	for (int i = 0; i < 100; ++i) {
 		do {
@@ -84,7 +96,7 @@ void Simulation::TestCaseCrossover() {
 	}
 }
 
-void Simulation::TestSuiteCrossover(int currentGen) {
+void Simulation::testSuiteCrossover(int currentGen) {
 	Organism *child1 { }, *child2 { };
 
 	auto parent1Index = population->fitnessProportionalSelect();
@@ -103,7 +115,7 @@ void Simulation::TestSuiteCrossover(int currentGen) {
 	// Attempt to replace the worst of the two parents
 	auto parentToReplace = (parent1 <= parent2 ? parent1Index : parent2Index);
 
-	//TODO when should local opt be done?
+	//TODO when should local opt be done? does it make sense to leave it here?
 	if (child1 <= child2) {
 		if (currentGen % 10 == 0 || population->getCoverageRatio() > 0.95) {
 			tryLocalOptimization (child2);
@@ -120,110 +132,6 @@ void Simulation::TestSuiteCrossover(int currentGen) {
 		child2 = NULL;
 	}
 }
-//void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
-//	int i { 0 };
-//	Organism *child1 { }, *child2 { };
-//
-//	do{
-//		//population->printPopulationFitness();
-//		//population->printPopulationCoverage();
-//		auto parent1Index = population->fitnessProportionalSelect();
-//		auto parent2Index = population->fitnessProportionalSelect();
-//		auto parent1 = population->getOrganismByIndex(parent1Index);
-//		auto parent2 = population->getOrganismByIndex(parent2Index);
-//
-//		cout << "Generation # " << i << " CoverageRatio: " << population->getCoverageRatio() << endl;
-//
-//		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
-//
-//		if(i % 5 == 4 ) {
-//			population->crossover(child1);
-//			population->crossover(child2);
-//		}
-//
-//		double newProb;
-//		newProb = adaptMutationBasedOnCoverageRatio(mutationProb);
-//		child1->mutate(newProb);
-//		child2->mutate(newProb);
-//
-//		// Attempt to replace the worst of the two parents
-//		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
-//
-//		if(child1 <= child2){
-//			if( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) {
-//				tryLocalOptimization(child2);
-//			}
-//			population->replaceParentThenReplaceWorst(parentToReplace, child2);
-//			delete child1;
-//			child1 = NULL;
-//		}
-//		else {
-//			if( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) {
-//				tryLocalOptimization(child1);
-//			}
-//			population->replaceParentThenReplaceWorst(parentToReplace, child1);
-//			delete child2;
-//			child2 = NULL;
-//		}
-//		if (i % 100) {
-//			//rangeSet->adaptRangesBasedOnUsefulness();
-//		}
-//
-//		i++;
-//
-//	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
-//
-//	population->getBestOrganism()->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
-//	population->printPopulationFitness();
-//	population->printPopulationCoverage();
-//
-//	//Organism* final = constructFinalOrganism();
-//}
-
-void getUserInput() {
-	const int GEN_AND_RATIO = 0, PRINT_FITNESS = 1, PRINT_FITNESS_ONCE = 2,
-			COV_RATIO_TS_CROSSOVER = 3, COV_RATIO_TS_CROSSOVER_ONCE = 4,
-			REPLACEMENT = 5, CHANGE_LOCAL_OPT = 6, PAUSE = -1, EXIT = -5;
-	do {
-		int choice;
-		std::cin >> choice;
-		cout << "\t\tYour choice: " << choice << endl;
-		if(choice == EXIT){
-			break;
-		}
-
-		switch (choice) {
-			case GEN_AND_RATIO:
-				printGenerationAndRatio = !printGenerationAndRatio;
-				break;
-			case PRINT_FITNESS:
-				printPopFitness = !printPopFitness;
-				break;
-			case PRINT_FITNESS_ONCE:
-				printPopFitnessOnce = !printPopFitnessOnce;
-				break;
-			case COV_RATIO_TS_CROSSOVER:
-				printCoverageRatioForTScrossover = !printCoverageRatioForTScrossover;
-				break;
-			case COV_RATIO_TS_CROSSOVER_ONCE:
-				printCoverageRatioForTScrossoverOnce = !printCoverageRatioForTScrossoverOnce;
-				break;
-			case REPLACEMENT:
-				printReplacement = !printReplacement;
-				break;
-			case CHANGE_LOCAL_OPT:
-				changeLocalOpt = !changeLocalOpt;
-				break;
-			case PAUSE:
-				pause = !pause;
-				break;
-			default:
-				break;
-		}
-	} while(true);
-}
-
-
 
 void Simulation::tryLocalOptimization(Organism* org) {
 	auto tc = callRandomLocalOpt(org);
@@ -459,6 +367,50 @@ double Simulation::adaptMutationBasedOnCoverageRatio(double pM) {
 
 
 //============================ OLD FUNCTIONS =======================//
+
+//TODO while this was cool and would have been helpful, with us running out of time I may just remove this.
+//void getUserInput() {
+//	const int GEN_AND_RATIO = 0, PRINT_FITNESS = 1, PRINT_FITNESS_ONCE = 2,
+//			COV_RATIO_TS_CROSSOVER = 3, COV_RATIO_TS_CROSSOVER_ONCE = 4,
+//			REPLACEMENT = 5, CHANGE_LOCAL_OPT = 6, PAUSE = -1, EXIT = -5;
+//	do {
+//		int choice;
+//		std::cin >> choice;
+//		cout << "\t\tYour choice: " << choice << endl;
+//		if(choice == EXIT){
+//			break;
+//		}
+//
+//		switch (choice) {
+//			case GEN_AND_RATIO:
+//				printGenerationAndRatio = !printGenerationAndRatio;
+//				break;
+//			case PRINT_FITNESS:
+//				printPopFitness = !printPopFitness;
+//				break;
+//			case PRINT_FITNESS_ONCE:
+//				printPopFitnessOnce = !printPopFitnessOnce;
+//				break;
+//			case COV_RATIO_TS_CROSSOVER:
+//				printCoverageRatioForTScrossover = !printCoverageRatioForTScrossover;
+//				break;
+//			case COV_RATIO_TS_CROSSOVER_ONCE:
+//				printCoverageRatioForTScrossoverOnce = !printCoverageRatioForTScrossoverOnce;
+//				break;
+//			case REPLACEMENT:
+//				printReplacement = !printReplacement;
+//				break;
+//			case CHANGE_LOCAL_OPT:
+//				changeLocalOpt = !changeLocalOpt;
+//				break;
+//			case PAUSE:
+//				pause = !pause;
+//				break;
+//			default:
+//				break;
+//		}
+//	} while(true);
+//}
 
 //void Simulation::runWithFlags(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
 //	int i { 0 };

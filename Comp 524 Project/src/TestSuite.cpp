@@ -47,6 +47,8 @@ TestSuite::TestSuite(const TestSuite& testSuite) {
 
 	std::cerr << "\tInside TestSuite Copy constructor.\n" << endl;
 	system("pause");
+
+	//TODO it seems this is never used, so we can probally get rid of it
 }
 
 TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCases) {
