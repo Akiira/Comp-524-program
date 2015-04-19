@@ -39,6 +39,8 @@ public:
 		return ranges[index];
 	}
 
+	void printRanges();
+
 private:
 	int totalUsefulness;
 	int numberOfRanges, maxNumberOfRanges;
@@ -46,6 +48,7 @@ private:
 	Range** ranges;
 	void addRange(Range* r);
 	void splitRange(int index);
+	void addRangesAdjacentToExistingRange(int index);
 	void deleteRange(int index);
 	void sortRangesByUsefulness();
 	void moveRangeToSortedPosition(int indexToSort);

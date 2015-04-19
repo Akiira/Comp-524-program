@@ -16,7 +16,7 @@
 RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges) {
 	this->numberOfRanges = numberOfRanges;
 	this->maxNumberOfRanges = maxNumberOfRanges;
-	this->minNumberOfRanges = 10;
+	this->minNumberOfRanges = 5;
 	this->ranges = ranges;
 	this->totalUsefulness = 0;
 	for (int i = 0; i < numberOfRanges; i++) {
@@ -91,7 +91,8 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 	int index = 0;
 	while (ranges[index]->numOfUses > 0.10 * totalUsefulness)
 	{
-		cout << "Splitting a really good range" << endl;
+		cout << "Splitting a really good range and exploring adjacents" << endl;
+		addRangesAdjacentToExistingRange(index);
 		splitRange(index);
 		index++;
 	}
@@ -103,6 +104,7 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 		index--;
 	}
 	sortRangesByUsefulness();
+	printRanges();
 
 } // May split, delete, or combine ranges maybe
 
@@ -127,6 +129,12 @@ void RangeSet::deleteRange(int index) {
 	numberOfRanges--;
 }
 
+void RangeSet::addRangesAdjacentToExistingRange(int index) {
+	Range* existing = ranges[index];
+	int size = existing->end - existing->start;
+	addRange(new Range(existing->start - size, existing->start));
+	addRange(new Range(existing->end, existing->end + size));
+}
 
 void RangeSet::addRange(Range* r) {
 	if (numberOfRanges < maxNumberOfRanges) {
@@ -173,4 +181,8 @@ void RangeSet::moveRangeToSortedPosition(int indexToSort) {
 	}
 }
 
-
+void RangeSet::printRanges() {
+	for (int i = 0; i < numberOfRanges; i++) {
+		ranges[i]->printRange();
+	}
+}

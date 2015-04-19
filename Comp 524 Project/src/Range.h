@@ -23,9 +23,10 @@ public:
 	usesArraySize = (end - start / 25) + 1
 	*/
 	int usesArraySize;
-	int** usesArray;
+	int* usesArray;
 
 
+	void printRange();
 
 	void incrementUses(int valueUsed);
 
