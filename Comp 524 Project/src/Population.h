@@ -13,7 +13,6 @@
 
 class Population
 {
-
 public:
 
 	//========================== CONSTRUCTORS AND DESTRUCTORS ======================//

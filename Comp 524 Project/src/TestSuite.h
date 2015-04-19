@@ -12,23 +12,6 @@
 
 class TestSuite
 {
-private:
-	int numberOfTestCases;
-	int maxNumberOfTestCases;
-
-
-	int numberOfParameters;
-	int numberOfEdges;
-	int numberOfPredicates;
-
-	int* edgeCoverageCounts;
-	int* predicateCoverageCounts;
-
-	TestCase** testCases;
-
-	double coverageRatio;
-
-
 public:
 
 	//========================== CONSTRUCTORS AND DESTRUCTORS ======================//
@@ -138,5 +121,21 @@ public:
 
 	TestSuite& operator=(const TestSuite& org);
 	bool operator==(const TestSuite& right);
+
+private:
+	int numberOfTestCases;
+	int maxNumberOfTestCases;
+
+
+	int numberOfParameters;
+	int numberOfEdges;
+	int numberOfPredicates;
+
+	int* edgeCoverageCounts;
+	int* predicateCoverageCounts;
+
+	TestCase** testCases;
+
+	double coverageRatio;
 };
 #endif // !defined(EA_04823F4F_8B3F_4bb8_9DBC_42A1717DC256__INCLUDED_)
