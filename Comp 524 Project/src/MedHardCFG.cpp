@@ -464,7 +464,7 @@ void MedHardCFG::printInputParameters(int* inputParameters) const{
 
 void MedHardCFG::printEdgesCovered(bool* edgesCovered) const{
 	cout << endl << "Edge Coverage" << endl;
-	cout << " B0toB1 - B1toB3-B1toB4-B3toB7-B3toB8-B4toB9-B4toB10-B7toB15," << endl;
+	cout << "-B0toB1 - B1toB3-B1toB4-B3toB7-B3toB8-B4toB9-B4toB10-B7toB15," << endl;
 	cout << "---------------------------------------------------------------------------" << endl;
 	for (int j = 0; j < 8; j++) {
 		cout << "   " << std::setw(8) << edgesCovered[j] << "   |";
@@ -595,49 +595,6 @@ void MedHardCFG::printEdgesCovered(int* edgesCovered) const{
 	for(int j = 0; j < 6; j++)
 	{
 		cout << "   " << edgesCovered[33 + j] << "   |";
-	}
-	cout << endl;
-	cout << "B0toB2-B2toB5-B2toB6-B5toB11-B5toB12-B6toB13-B6toB14-B11toB23," << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 8; j++)
-	{
-		cout << "   " << edgesCovered[39 + j] << "   |";
-	}
-	cout << endl;
-	cout << "B11toB24-B12toB25-B12toB26-B13toB27-B13toB28-B14toB29-B14toB30 " << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 7; j++)
-	{
-		cout << "   " << edgesCovered[47 + j] << "   |";
-	}
-	cout << endl;
-
-	cout << "B23toB55, B23toB56, B24toB57, B24toB58, B24toB59, B24toB60," << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 6; j++)
-	{
-		cout << "   " << edgesCovered[54 + j] << "   |";
-	}
-	cout << endl;
-	cout << "B25toB61, B25toB62, B26toB63, B26toB64, B26toB65, B26toB66," << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 6; j++)
-	{
-		cout << "   " << edgesCovered[60 + j] << "   |";
-	}
-	cout << endl;
-	cout << "B27toB67, B27toB68, B28toB69, B28toB70, B28toB71, B28toB72," << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 6; j++)
-	{
-		cout << "   " << edgesCovered[66 + j] << "   |";
-	}
-	cout << endl;
-	cout << "B29toB73, B29toB74, B30toB75, B30toB76, B30toB77, B30toB78" << endl;
-	cout << "---------------------------------------------------------------------------" << endl;
-	for(int j = 0; j < 6; j++)
-	{
-		cout << "   " << edgesCovered[72 + j] << "   |";
 	}
 	cout << endl;
 }

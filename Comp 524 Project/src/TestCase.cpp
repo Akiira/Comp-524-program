@@ -87,6 +87,8 @@ void TestCase::mutate() {
 			}
 		}
 	}
+
+	targetCFG->setCoverageOfTestCase(this);
 }
 
 void TestCase::clearCoverage() {
@@ -137,13 +139,6 @@ void TestCase::setInputParameters(int newValues[]) {
 	{
 		inputParameters[i] = newValues[i];
 	}
-}
-
-void TestCase::setInputParametersWithReference(int* newValues[]) {
-
-	delete inputParameters;
-	inputParameters = *newValues;
-
 }
 
 void TestCase::setInputParameterAtIndex(int index, int newValue) {

@@ -168,7 +168,7 @@ TestCase* TestSuite::getDuplicateTestCase() const {
 			return getTestCase(i);
 		}
 	}
-
+	assert(false);
 	return NULL;
 }
 
@@ -237,9 +237,6 @@ void TestSuite::calculateTestSuiteCoverage() {
 	resetCoverage();
 	for (int i = 0; i < numberOfTestCases; i++) {
 		for (int j = 0; j < numberOfEdges; j++) {
-			auto tc = testCases[i];
-			auto edges = tc->getEdgesCovered()[j];
-			edgeCoverageCounts[j] += edges;
 			edgeCoverageCounts[j] += testCases[i]->getEdgesCovered()[j];
 		}
 	}

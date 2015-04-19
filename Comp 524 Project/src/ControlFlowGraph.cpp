@@ -13,7 +13,7 @@ ControlFlowGraph::~ControlFlowGraph(){
 }
 
 void ControlFlowGraph::setCoverageOfTestCase(TestCase* testCase) {
-	// Reset coverage and assign testCase ptr to the passed testCase
+	testCase->clearCoverage();
 	this->testCase = testCase;
 
 	// Run through the CFG calculating coverage as it goes.

@@ -99,7 +99,7 @@ int Organism::fitnessFunction02() {
 	return retval * 10000 / chromosome->getNumberOfTestCases() ;
 }
 
-// This should be one using th epopulation coverage stuff
+// This should be one using the population coverage stuff
 int Organism::fitnessFunction03() {
 	//TODO: Wanted to just make population a global variable, problem was witht he typeOfScaling type and enum, they
 	//	would have had to be put in population instead because of the forward references. Wanted to talk to you about it

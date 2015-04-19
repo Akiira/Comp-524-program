@@ -25,8 +25,7 @@ Population::Population(int popSize) {
 	predicatesCovered = new int[targetCFG->getNumberOfPredicates()] { };
 	population = new Organism*[popSize] { };
 	populationSize = popSize;
-	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	int testSuiteSize = edgesPlusPreds * 1.25;
+	int testSuiteSize = 1.25 * (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
 
 	for (int i = 0; i < popSize; i++) {
 		population[i] = new Organism { testSuiteSize, testSuiteSize };
@@ -34,98 +33,36 @@ Population::Population(int popSize) {
 
 	totalFitness = 0;
 
-	computePopulationLevelCoverage();
-
-	for (int i = 0; i < popSize; i++) {
-		evaluateOrganismsFitness(population[i]);
-	}
-
 	updatePopulationsFitness();
 	sortPopulationByFitness();
 }
 
 void Population::evaluateSharedFitness(Organism* org) {
-
-	int sharedFitness = 0;
-	auto edges = org->getChromosome()->getEdgeCoverageCounts();
+	double sharedFitness = 0;
 	org->evaluateBaseFitness();
 
+	auto edges = org->getChromosome()->getEdgeCoverageCounts();
 	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
 		if ( edges[i] ) {
-			int timesCoveredByPopulation = edgesCovered[i];
-			sharedFitness += edges[i] * (1000 / timesCoveredByPopulation); //TODO remove hard coded value
+			sharedFitness += (double)edges[i] * (100.0 / (double)edgesCovered[i]);
 		}
 	}
 
 	auto preds = org->getChromosome()->getPredicateCoverageCounts();
-
 	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
 		if (preds[i]) {
-			int timesCoveredByPopulation = preds[i];
-			sharedFitness += preds[i] * (1000 / timesCoveredByPopulation); //TODO remove hard coded value
+			sharedFitness += (double)preds[i] * (100.0 / (double)predicatesCovered[i]);
 		}
 	}
 
 	org->setScaledFitness(sharedFitness);
 }
 
-void Population::evaluateOrganismsFitness(Organism* org) {
-	double base = 1.0;
-	auto edges = org->getChromosome()->getEdgeCoverageCounts();
-	org->evaluateBaseFitness();
 
-	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
-		if ( edges[i] ) {
-			int timesCoveredByPopulation = edgesCovered[i];
-			if ( timesCoveredByPopulation < 5 && base < 5.0 ) {
-				base *= 4.0;
-			} else if ( timesCoveredByPopulation < 5 && base < 5.0 ) {
-				base *= 3.0;
-			} else if ( timesCoveredByPopulation < 10 && base < 5.0 ) {
-				base *= 2.0;
-			} else if ( timesCoveredByPopulation < 20 && base < 5.0 ) {
-				base *= 1.5;
-			} else if ( timesCoveredByPopulation < 50 && base < 5.0 ) {
-				base *= 1.0;
-			} else if ( timesCoveredByPopulation < 100 && base > 0.5  ) {
-				base *= 0.95;
-			} else if ( timesCoveredByPopulation < 200 && base > 0.5  ) {
-				base *= 0.90;
-			} else if ( base > 0.5 ) {
-				base *= 0.85;
-			}
-		}
-	}
-
-	auto preds = org->getChromosome()->getPredicateCoverageCounts();
-
-	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
-		if (preds[i]) {
-			int timesCoveredByPopulation = preds[i];
-			if (timesCoveredByPopulation < 2 && base < 5.0) {
-				base *= 4.0;
-			} else if (timesCoveredByPopulation < 5 && base < 5.0) {
-				base *= 3.0;
-			} else if (timesCoveredByPopulation < 10 && base < 5.0) {
-				base *= 2.0;
-			} else if (timesCoveredByPopulation < 20 && base < 5.0) {
-				base *= 1.5;
-			} else if (timesCoveredByPopulation < 50 && base < 5.0) {
-				base *= 1.0;
-			} else if (timesCoveredByPopulation < 100 && base > 0.5 ) {
-				base *= 0.95;
-			} else if (timesCoveredByPopulation < 200 && base > 0.5 ) {
-				base *= 0.90;
-			} else if ( base > 0.5 ) {
-				base *= 0.85;
-			}
-		}
-	}
-
-	org->setFitness(org->getFitness() * base);
-}
 
 void Population::updatePopulationsFitness() {
+	computeCoverageRatio();
+
 	if( SCALING == LINEAR ) {
 		linearScaling();
 	}
@@ -193,7 +130,7 @@ void Population::sortPopulationByFitness() {
 	}
 }
 
-void Population::computePopulationLevelCoverage() {
+void Population::computeCoverageRatio() {
 	// Clear any previous coverage
 	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
 		edgesCovered[j] = 0;
@@ -385,45 +322,7 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 	child2 = new Organism { parent2NumberOfTestCases, parent2.getMaxNumberOfTestCases(), child2TestCases };
 }
 
-void Population::crossover(Organism* child) {
-	TestCase *child1 { }, *child2 { };
-	auto tc1 = child->chromosome->getRandomTestCase();
-	auto tc2 = child->chromosome->getRandomTestCase();
 
-	for (int i = 0; i < 100; ++i) {
-		do {
-			if(tc1 != tc2 ){
-				break;
-			}
-
-			tc1 = child->chromosome->getRandomTestCase();
-			tc2 = child->chromosome->getRandomTestCase();
-		} while (true);
-
-		crossover(*tc1, *tc2, child1, child2, 2);
-
-		if( child->chromosome->coversNew(child1) ) {
-			cout << "\tTest Case Crossover Worked." << endl;
-			child->chromosome->replaceDuplicateTestCase(child1);
-			evaluateOrganismsFitness(child);
-			updatePopulationsFitness();
-			delete child2;
-			break;
-		}
-		else if( child->chromosome->coversNew(child2) ) {
-			cout << "\tTest Case Crossover Worked." << endl;
-			child->chromosome->replaceDuplicateTestCase(child2);
-			evaluateOrganismsFitness(child);
-			updatePopulationsFitness();
-			delete child1;
-			break;
-		} else {
-			delete child1;
-			delete child2;
-		}
-	}
-	cout << "\tTest Case Crossover Did Not Work." << endl;
-}
 
 void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 		TestCase*& child1, TestCase*& child2, int numberOfCutPoints) {
@@ -510,7 +409,7 @@ void Population::replaceWorst(Organism* child) {
 	} else {
 		if( printReplacement ) {
 			cout << "-------------REPLACEMENT-----------------\n";
-			cout << "Child was not used.\n-------------END REPLACEMENT-----------------\n\n";
+			cout << "Child was not used, SF: " << child->getScaledFitness() << "\n-------------END REPLACEMENT-----------------\n\n";
 		}
 		delete child;
 		child = NULL;
@@ -566,7 +465,7 @@ void Population::moveOrganismToSortedPosition(int indexToSort) {
 	Organism* tmp;
 	int i = indexToSort;
 	// Move the child left while its fitness is greater than it's left neighbor
-	while ((i > 0) && (population[i]->getFitness() > population[i - 1]->getFitness())) {
+	while ((i > 0) && (population[i]->getScaledFitness() > population[i - 1]->getScaledFitness())) {
 		tmp = population[i];
 		population[i] = population[i - 1];
 		population[i - 1] = tmp;
@@ -675,3 +574,99 @@ void Population::linearScaling() {
 		}
 	}
 }
+
+//void Population::evaluateOrganismsFitness(Organism* org) {
+//	double base = 1.0;
+//	auto edges = org->getChromosome()->getEdgeCoverageCounts();
+//	org->evaluateBaseFitness();
+//
+//	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
+//		if ( edges[i] ) {
+//			int timesCoveredByPopulation = edgesCovered[i];
+//			if ( timesCoveredByPopulation < 5 && base < 5.0 ) {
+//				base *= 4.0;
+//			} else if ( timesCoveredByPopulation < 5 && base < 5.0 ) {
+//				base *= 3.0;
+//			} else if ( timesCoveredByPopulation < 10 && base < 5.0 ) {
+//				base *= 2.0;
+//			} else if ( timesCoveredByPopulation < 20 && base < 5.0 ) {
+//				base *= 1.5;
+//			} else if ( timesCoveredByPopulation < 50 && base < 5.0 ) {
+//				base *= 1.0;
+//			} else if ( timesCoveredByPopulation < 100 && base > 0.5  ) {
+//				base *= 0.95;
+//			} else if ( timesCoveredByPopulation < 200 && base > 0.5  ) {
+//				base *= 0.90;
+//			} else if ( base > 0.5 ) {
+//				base *= 0.85;
+//			}
+//		}
+//	}
+//
+//	auto preds = org->getChromosome()->getPredicateCoverageCounts();
+//
+//	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
+//		if (preds[i]) {
+//			int timesCoveredByPopulation = preds[i];
+//			if (timesCoveredByPopulation < 2 && base < 5.0) {
+//				base *= 4.0;
+//			} else if (timesCoveredByPopulation < 5 && base < 5.0) {
+//				base *= 3.0;
+//			} else if (timesCoveredByPopulation < 10 && base < 5.0) {
+//				base *= 2.0;
+//			} else if (timesCoveredByPopulation < 20 && base < 5.0) {
+//				base *= 1.5;
+//			} else if (timesCoveredByPopulation < 50 && base < 5.0) {
+//				base *= 1.0;
+//			} else if (timesCoveredByPopulation < 100 && base > 0.5 ) {
+//				base *= 0.95;
+//			} else if (timesCoveredByPopulation < 200 && base > 0.5 ) {
+//				base *= 0.90;
+//			} else if ( base > 0.5 ) {
+//				base *= 0.85;
+//			}
+//		}
+//	}
+//
+//	org->setFitness(org->getFitness() * base);
+//}
+
+//void Population::crossover(Organism* child) {
+//	TestCase *child1 { }, *child2 { };
+//	auto tc1 = child->chromosome->getRandomTestCase();
+//	auto tc2 = child->chromosome->getRandomTestCase();
+//
+//	for (int i = 0; i < 100; ++i) {
+//		do {
+//			if(tc1 != tc2 ){
+//				break;
+//			}
+//
+//			tc1 = child->chromosome->getRandomTestCase();
+//			tc2 = child->chromosome->getRandomTestCase();
+//		} while (true);
+//
+//		crossover(*tc1, *tc2, child1, child2, 2);
+//
+//		if( child->chromosome->coversNew(child1) ) {
+//			cout << "\tTest Case Crossover Worked." << endl;
+//			child->chromosome->replaceDuplicateTestCase(child1);
+//			evaluateOrganismsFitness(child);
+//			updatePopulationsFitness();
+//			delete child2;
+//			break;
+//		}
+//		else if( child->chromosome->coversNew(child2) ) {
+//			cout << "\tTest Case Crossover Worked." << endl;
+//			child->chromosome->replaceDuplicateTestCase(child2);
+//			evaluateOrganismsFitness(child);
+//			updatePopulationsFitness();
+//			delete child1;
+//			break;
+//		} else {
+//			delete child1;
+//			delete child2;
+//		}
+//	}
+//	cout << "\tTest Case Crossover Did Not Work." << endl;
+//}

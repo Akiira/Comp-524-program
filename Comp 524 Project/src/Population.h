@@ -83,7 +83,7 @@ private:
 	const static typeOfScaling SCALING = SHARING;
 
 	int* selectCutPoints(int numberOfCutPoints, int upperBound);
-	void computePopulationLevelCoverage();
+	void computeCoverageRatio();
 
 
 	void linearScaling();
