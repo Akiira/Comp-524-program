@@ -19,15 +19,16 @@ Simulation::~Simulation(){
 }
 
 Simulation::Simulation(int populationSize, int numberOfCutPoints, double mutationProb) {
-	this->populationSize = populationSize;
-	population = new Population { populationSize };
+	this->populationSize    = populationSize;
 	this->numberOfCutPoints = numberOfCutPoints;
-	this->mutationProb = mutationProb;
+	this->mutationProb      = mutationProb;
+
+	population = new Population { populationSize };
 }
 
 void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
 	this->numberOfCutPoints = numberOfCutPoints;
-	this->mutationProb = mutationProb;
+	this->mutationProb      = mutationProb;
 	int currentGen { 0 };
 
 	do {
@@ -63,14 +64,14 @@ void Simulation::TestCaseCrossover() {
 		tc1->mutate();
 		tc2->mutate();
 
-		if( parent->getChromosome()->coversNew(child1) ) {
+		if( parent->getChromosome()->isCoveringNew(child1) ) {
 			delete child2;
 			parent->getChromosome()->replaceDuplicateTestCase(child1);
 			parent->evaluateBaseFitness();
 			population->updatePopulationsFitness();
 			break;
 		}
-		else if( parent->getChromosome()->coversNew(child2) ) {
+		else if( parent->getChromosome()->isCoveringNew(child2) ) {
 			delete child1;
 			parent->getChromosome()->replaceDuplicateTestCase(child2);
 			parent->evaluateBaseFitness();

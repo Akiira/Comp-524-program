@@ -173,7 +173,7 @@ void Population::computeCoverageRatio() {
 
 // Return index instead to ultimately be able to pass it to replaceParent
 //	and save unnecessary looping to determine the index of the parent to replace
-int Population::fitnessProportionalSelect() {
+int Population::fitnessProportionalSelect() const {
 //If totalFitness is zero then an organism is selected at random.
 	long toss;
 	int i = 0;
@@ -195,75 +195,6 @@ int Population::fitnessProportionalSelect() {
 }
 
 
-int Population::randomSelect() {
-	return uniformInRange(0, populationSize-1);
-}
-
-int Population::tournamentSelect() {
-	int numSelected = .10 * populationSize;
-
-	int bestIndex = 0, bestFitness = -1;
-	for (int i = 0; i < numSelected; i++) {
-		int next = randomSelect();
-		if (population[next]->getScaledFitness() > bestFitness) {
-			bestIndex = next;
-			bestFitness = population[next]->getScaledFitness();
-		}
-	}
-
-	return bestIndex;
-}
-
-void Population::crossoverWithDominance(const Organism& parent1, const Organism& parent2, Organism*& child1) {
-	// This crossover assumes same sized parents
-	assert(parent1.getNumberOfTestCases() == parent2.getNumberOfTestCases());
-
-	TestCase** betterTestCases;
-	TestCase** worseTestCases;
-
-	int betterParent { ( parent1.getScaledFitness() >= parent2.getScaledFitness() ? 1 : 2 ) };
-	int tossBoundary = 0;
-	switch(betterParent) {
-		case 1:
-			if (parent1.getScaledFitness() == 0) {
-				tossBoundary = 0;
-			}
-			else {
-				tossBoundary = parent2.getScaledFitness() / parent1.getScaledFitness() * 50;
-			}
-			betterTestCases = parent1.chromosome->getAllTestCases();
-			worseTestCases = parent2.chromosome->getAllTestCases();
-			break;
-		case 2:
-			if (parent1.getScaledFitness() == 0) {
-				tossBoundary = 0;
-			}
-			else {
-				tossBoundary = parent2.getScaledFitness() / parent1.getScaledFitness() * 50;
-			}
-			tossBoundary = parent1.getScaledFitness() / parent2.getScaledFitness() * 50;
-			betterTestCases = parent2.chromosome->getAllTestCases();
-			worseTestCases = parent1.chromosome->getAllTestCases();
-			break;
-	}
-
-	int testSuiteSize = parent1.getNumberOfTestCases();
-
-
-	TestCase** child1TestCases = new TestCase*[testSuiteSize] { };
-
-	for (int i = 0; i < parent1.getNumberOfTestCases(); i++) {
-		int toss = uniformInRange(1, 100);
-		if (toss < tossBoundary) {
-			child1TestCases[i] = new TestCase { *worseTestCases[i] };
-		}
-		else {
-			child1TestCases[i] = new TestCase { *betterTestCases[i] };
-		}
-	}
-
-	child1 = new Organism { testSuiteSize, testSuiteSize, child1TestCases };
-}
 
 void Population::crossover(const Organism& parent1, const Organism& parent2,
 		Organism*& child1, Organism*& child2, int numberOfCutPoints) {
@@ -505,7 +436,7 @@ bool Population::isCoveringNewPred(const bool * coverage) const {
 	return false;
 }
 
-void Population::printPopulationFitness() {
+void Population::printPopulationFitness() const {
 	int bestFitness = population[0]->getFitness();
 	int bestFitnessScaled = population[0]->getScaledFitness();
 	int worstFitness = population[populationSize-1]->getFitness();
@@ -518,7 +449,7 @@ void Population::printPopulationFitness() {
 	cout << "Difference between best and worst Scaled: " << bestFitnessScaled - worstFitnessScaled << endl;
 }
 
-void Population::printPopulationCoverage() {
+void Population::printPopulationCoverage() const {
 	cout << "Population Coverage:" << endl;
 	targetCFG->printPopulationCoverage(edgesCovered, predicatesCovered);
 	cout << "Coverage Ratio: " << coverageRatio << endl << endl;
@@ -575,98 +506,171 @@ void Population::linearScaling() {
 	}
 }
 
-//void Population::evaluateOrganismsFitness(Organism* org) {
-//	double base = 1.0;
-//	auto edges = org->getChromosome()->getEdgeCoverageCounts();
-//	org->evaluateBaseFitness();
-//
-//	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
-//		if ( edges[i] ) {
-//			int timesCoveredByPopulation = edgesCovered[i];
-//			if ( timesCoveredByPopulation < 5 && base < 5.0 ) {
-//				base *= 4.0;
-//			} else if ( timesCoveredByPopulation < 5 && base < 5.0 ) {
-//				base *= 3.0;
-//			} else if ( timesCoveredByPopulation < 10 && base < 5.0 ) {
-//				base *= 2.0;
-//			} else if ( timesCoveredByPopulation < 20 && base < 5.0 ) {
-//				base *= 1.5;
-//			} else if ( timesCoveredByPopulation < 50 && base < 5.0 ) {
-//				base *= 1.0;
-//			} else if ( timesCoveredByPopulation < 100 && base > 0.5  ) {
-//				base *= 0.95;
-//			} else if ( timesCoveredByPopulation < 200 && base > 0.5  ) {
-//				base *= 0.90;
-//			} else if ( base > 0.5 ) {
-//				base *= 0.85;
-//			}
-//		}
-//	}
-//
-//	auto preds = org->getChromosome()->getPredicateCoverageCounts();
-//
-//	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
-//		if (preds[i]) {
-//			int timesCoveredByPopulation = preds[i];
-//			if (timesCoveredByPopulation < 2 && base < 5.0) {
-//				base *= 4.0;
-//			} else if (timesCoveredByPopulation < 5 && base < 5.0) {
-//				base *= 3.0;
-//			} else if (timesCoveredByPopulation < 10 && base < 5.0) {
-//				base *= 2.0;
-//			} else if (timesCoveredByPopulation < 20 && base < 5.0) {
-//				base *= 1.5;
-//			} else if (timesCoveredByPopulation < 50 && base < 5.0) {
-//				base *= 1.0;
-//			} else if (timesCoveredByPopulation < 100 && base > 0.5 ) {
-//				base *= 0.95;
-//			} else if (timesCoveredByPopulation < 200 && base > 0.5 ) {
-//				base *= 0.90;
-//			} else if ( base > 0.5 ) {
-//				base *= 0.85;
-//			}
-//		}
-//	}
-//
-//	org->setFitness(org->getFitness() * base);
-//}
+//========================== OLD FUNCTIONS =====================================//
 
-//void Population::crossover(Organism* child) {
-//	TestCase *child1 { }, *child2 { };
-//	auto tc1 = child->chromosome->getRandomTestCase();
-//	auto tc2 = child->chromosome->getRandomTestCase();
-//
-//	for (int i = 0; i < 100; ++i) {
-//		do {
-//			if(tc1 != tc2 ){
-//				break;
-//			}
-//
-//			tc1 = child->chromosome->getRandomTestCase();
-//			tc2 = child->chromosome->getRandomTestCase();
-//		} while (true);
-//
-//		crossover(*tc1, *tc2, child1, child2, 2);
-//
-//		if( child->chromosome->coversNew(child1) ) {
-//			cout << "\tTest Case Crossover Worked." << endl;
-//			child->chromosome->replaceDuplicateTestCase(child1);
-//			evaluateOrganismsFitness(child);
-//			updatePopulationsFitness();
-//			delete child2;
-//			break;
-//		}
-//		else if( child->chromosome->coversNew(child2) ) {
-//			cout << "\tTest Case Crossover Worked." << endl;
-//			child->chromosome->replaceDuplicateTestCase(child2);
-//			evaluateOrganismsFitness(child);
-//			updatePopulationsFitness();
-//			delete child1;
-//			break;
-//		} else {
-//			delete child1;
-//			delete child2;
-//		}
-//	}
-//	cout << "\tTest Case Crossover Did Not Work." << endl;
-//}
+
+void Population::evaluateOrganismsFitness(Organism* org) {
+	double base = 1.0;
+	auto edges = org->getChromosome()->getEdgeCoverageCounts();
+	org->evaluateBaseFitness();
+
+	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
+		if ( edges[i] ) {
+			int timesCoveredByPopulation = edgesCovered[i];
+			if ( timesCoveredByPopulation < 5 && base < 5.0 ) {
+				base *= 4.0;
+			} else if ( timesCoveredByPopulation < 5 && base < 5.0 ) {
+				base *= 3.0;
+			} else if ( timesCoveredByPopulation < 10 && base < 5.0 ) {
+				base *= 2.0;
+			} else if ( timesCoveredByPopulation < 20 && base < 5.0 ) {
+				base *= 1.5;
+			} else if ( timesCoveredByPopulation < 50 && base < 5.0 ) {
+				base *= 1.0;
+			} else if ( timesCoveredByPopulation < 100 && base > 0.5  ) {
+				base *= 0.95;
+			} else if ( timesCoveredByPopulation < 200 && base > 0.5  ) {
+				base *= 0.90;
+			} else if ( base > 0.5 ) {
+				base *= 0.85;
+			}
+		}
+	}
+
+	auto preds = org->getChromosome()->getPredicateCoverageCounts();
+
+	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
+		if (preds[i]) {
+			int timesCoveredByPopulation = preds[i];
+			if (timesCoveredByPopulation < 2 && base < 5.0) {
+				base *= 4.0;
+			} else if (timesCoveredByPopulation < 5 && base < 5.0) {
+				base *= 3.0;
+			} else if (timesCoveredByPopulation < 10 && base < 5.0) {
+				base *= 2.0;
+			} else if (timesCoveredByPopulation < 20 && base < 5.0) {
+				base *= 1.5;
+			} else if (timesCoveredByPopulation < 50 && base < 5.0) {
+				base *= 1.0;
+			} else if (timesCoveredByPopulation < 100 && base > 0.5 ) {
+				base *= 0.95;
+			} else if (timesCoveredByPopulation < 200 && base > 0.5 ) {
+				base *= 0.90;
+			} else if ( base > 0.5 ) {
+				base *= 0.85;
+			}
+		}
+	}
+
+	org->setFitness(org->getFitness() * base);
+}
+
+void Population::crossover(Organism* child) {
+	TestCase *child1 { }, *child2 { };
+	auto tc1 = child->chromosome->getRandomTestCase();
+	auto tc2 = child->chromosome->getRandomTestCase();
+
+	for (int i = 0; i < 100; ++i) {
+		do {
+			if(tc1 != tc2 ){
+				break;
+			}
+
+			tc1 = child->chromosome->getRandomTestCase();
+			tc2 = child->chromosome->getRandomTestCase();
+		} while (true);
+
+		crossover(*tc1, *tc2, child1, child2, 2);
+
+		if( child->chromosome->isCoveringNew(child1) ) {
+			cout << "\tTest Case Crossover Worked." << endl;
+			child->chromosome->replaceDuplicateTestCase(child1);
+			evaluateOrganismsFitness(child);
+			updatePopulationsFitness();
+			delete child2;
+			break;
+		}
+		else if( child->chromosome->isCoveringNew(child2) ) {
+			cout << "\tTest Case Crossover Worked." << endl;
+			child->chromosome->replaceDuplicateTestCase(child2);
+			evaluateOrganismsFitness(child);
+			updatePopulationsFitness();
+			delete child1;
+			break;
+		} else {
+			delete child1;
+			delete child2;
+		}
+	}
+	cout << "\tTest Case Crossover Did Not Work." << endl;
+}
+
+void Population::crossoverWithDominance(const Organism& parent1, const Organism& parent2, Organism*& child1) {
+	// This crossover assumes same sized parents
+	assert(parent1.getNumberOfTestCases() == parent2.getNumberOfTestCases());
+
+	TestCase** betterTestCases;
+	TestCase** worseTestCases;
+
+	int betterParent { ( parent1.getScaledFitness() >= parent2.getScaledFitness() ? 1 : 2 ) };
+	int tossBoundary = 0;
+	switch(betterParent) {
+		case 1:
+			if (parent1.getScaledFitness() == 0) {
+				tossBoundary = 0;
+			}
+			else {
+				tossBoundary = parent2.getScaledFitness() / parent1.getScaledFitness() * 50;
+			}
+			betterTestCases = parent1.chromosome->getAllTestCases();
+			worseTestCases = parent2.chromosome->getAllTestCases();
+			break;
+		case 2:
+			if (parent1.getScaledFitness() == 0) {
+				tossBoundary = 0;
+			}
+			else {
+				tossBoundary = parent2.getScaledFitness() / parent1.getScaledFitness() * 50;
+			}
+			tossBoundary = parent1.getScaledFitness() / parent2.getScaledFitness() * 50;
+			betterTestCases = parent2.chromosome->getAllTestCases();
+			worseTestCases = parent1.chromosome->getAllTestCases();
+			break;
+	}
+
+	int testSuiteSize = parent1.getNumberOfTestCases();
+
+
+	TestCase** child1TestCases = new TestCase*[testSuiteSize] { };
+
+	for (int i = 0; i < parent1.getNumberOfTestCases(); i++) {
+		int toss = uniformInRange(1, 100);
+		if (toss < tossBoundary) {
+			child1TestCases[i] = new TestCase { *worseTestCases[i] };
+		}
+		else {
+			child1TestCases[i] = new TestCase { *betterTestCases[i] };
+		}
+	}
+
+	child1 = new Organism { testSuiteSize, testSuiteSize, child1TestCases };
+}
+
+int Population::randomSelect() const {
+	return uniformInRange(0, populationSize-1);
+}
+
+int Population::tournamentSelect() const {
+	int numSelected = .10 * populationSize;
+
+	int bestIndex = 0, bestFitness = -1;
+	for (int i = 0; i < numSelected; i++) {
+		int next = randomSelect();
+		if (population[next]->getScaledFitness() > bestFitness) {
+			bestIndex = next;
+			bestFitness = population[next]->getScaledFitness();
+		}
+	}
+
+	return bestIndex;
+}

@@ -25,6 +25,7 @@ public:
 	Simulation(int populationSize, double mutationProb): Simulation(populationSize, 2, mutationProb){};
 	Simulation(int populationSize): Simulation(populationSize, 2, 0.02){};
 
+	//========================== CORE FUNCTIONS ====================================//
 
 	void run(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
 	void TestCaseCrossover();
@@ -48,7 +49,7 @@ public:
 		this->run(numberOfGenerations, this->numberOfCutPoints, mutationProb);
 	}
 
-	//============================ OLD FUNCTIONS =======================//
+	//========================== OLD FUNCTIONS =====================================//
 
 	TestCase* localOptFromMiddle (TestCase* oldTC);
 	void runWithTournamentSelectAndCrossoverWithDominance(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
