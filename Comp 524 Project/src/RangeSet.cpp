@@ -43,7 +43,7 @@ TestCase* RangeSet::getNewTestCase() {
 	if (globalPopulation->coversNewEdgesOrPredicates(retval->getEdgesCovered(), true) ||
 			globalPopulation->coversNewEdgesOrPredicates(retval->getPredicatesCovered(), false) ) {
 		for (int i = 0; i < numberOfParameters; i++) {
-			tmp[i]->numOfUses++;
+			tmp[i]->incrementUses(inputParameters[i]);
 			totalUsefulness++;
 		}
 		sortRangesByUsefulness();
@@ -89,14 +89,14 @@ Range** RangeSet::selectRangesForNewTestCaseProportionalToUsefulness() {
 void RangeSet::adaptRangesBasedOnUsefulness() {
 
 	int index = 0;
-	while (ranges[index]->numOfUses > 0.10 * globalPopulation->getPopulationSize() * globalPopulation->getTestSuiteSize())
+	while (ranges[index]->numOfUses > 0.10 * totalUsefulness)
 	{
 		cout << "Splitting a really good range" << endl;
 		splitRange(index);
 		index++;
 	}
 	index = numberOfRanges-1;
-	while (index >= 0 && numberOfRanges > minNumberOfRanges && ranges[index]->numOfUses < 0.001 * globalPopulation->getPopulationSize() *  globalPopulation->getTestSuiteSize())
+	while (index >= 0 && numberOfRanges > minNumberOfRanges && ranges[index]->numOfUses < 0.01 * totalUsefulness)
 	{
 		cout << "Deleting a bad range" << endl;
 		deleteRange(index);
@@ -108,10 +108,9 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 
 void RangeSet::splitRange(int index) {
 	Range* old = ranges[index];
-	Range* new1 = (new Range(old->start, old->end / 2));
-	Range* new2 = (new Range(old->end / 2 + 1, old->end));
-	new1->numOfUses = old->numOfUses / 2;
-	new2->numOfUses = old->numOfUses / 2;
+	Range* new1 = (new Range(old->start, old->end / 2), old);
+	Range* new2 = (new Range(old->end / 2 + 1, old->end, old));
+
 	deleteRange(index);
 	addRange(new1);
 	addRange(new2);

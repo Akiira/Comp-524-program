@@ -462,7 +462,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 			}
 
 			nextStartNeg = nextStartNeg - size - 1;
-			Range* nextRangeNeg = new Range(nextStartNeg, nextStartPos + size);
+			Range* nextRangeNeg = new Range(nextStartNeg, nextStartNeg + size);
 			TestCase* tcNeg = new TestCase(nextRangeNeg);
 			targetCFG->setCoverageOfTestCase(tcNeg);
 			if (finalSuite->wouldAddNewCoverage(tcNeg)) {
