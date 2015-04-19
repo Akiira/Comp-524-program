@@ -17,9 +17,15 @@ class Simulation
 public:
 	virtual ~Simulation();
 
-	Simulation(int populationSize, int numberOfCutPoints, double mutationProb, double crossOverProb, int numberOfGenerations);
-	Simulation(int populationSize);
+	Simulation(int populationSize, int numberOfCutPoints, double mutationProb);
+	Simulation(int populationSize, int numberOfCutPoints): Simulation(populationSize, numberOfCutPoints, 0.02){};
+	Simulation(int populationSize, double mutationProb): Simulation(populationSize, 2, mutationProb){};
+	Simulation(int populationSize): Simulation(populationSize, 2, 0.02){};
 
+	void TestSuiteCrossover(int currentGen);
+	void run(int numberOfGenerations);
+	void run(int numberOfGenerations, int numberOfCutPoints);
+	void run(int numberOfGenerations, double mutationProb);
 	void run(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
 	void runWithTournamentSelectAndCrossoverWithDominance(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
 	void runWithFlags(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
@@ -28,7 +34,8 @@ public:
 	TestCase* callRandomLocalOpt(Organism* child);
 
 	bool coveredAnyNew(bool* uncovered, bool* covered, bool edge);
-	bool coveredAnyNewForPopulation(bool* uncovered, bool edge) ;
+	bool coveredAnyNewForPopulation(bool* , bool ) ;
+
 	void tryLocalOptimization();
 	TestCase* callRandomLocalOpt();
 	TestCase* localOptFromZero (bool edgeOrPredicate, TestCase* oldTC);
@@ -40,6 +47,8 @@ private:
 	Population* population;
 
 	int populationSize;
+	int numberOfCutPoints;
+	double mutationProb;
 
 	double adaptMutationBasedOnOrganismsCoverage(Organism* org);
 	double adaptMutationBasedOnCoverageRatio(double pM);

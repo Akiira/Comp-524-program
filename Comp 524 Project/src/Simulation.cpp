@@ -17,70 +17,136 @@ Simulation::~Simulation(){
 	delete population;
 }
 
-Simulation::Simulation(int populationSize) {
+Simulation::Simulation(int populationSize, int numberOfCutPoints, double mutationProb) {
 	this->populationSize = populationSize;
 	population = new Population { populationSize };
+	this->numberOfCutPoints = numberOfCutPoints;
+	this->mutationProb = mutationProb;
+}
+
+//TODO move these to header file
+void Simulation::run(int numberOfGenerations) {
+	this->run(numberOfGenerations, this->numberOfCutPoints, this->mutationProb);
+}
+
+void Simulation::run(int numberOfGenerations, int numberOfCutPoints) {
+	this->run(numberOfGenerations, numberOfCutPoints, this->mutationProb);
+}
+
+void Simulation::run(int numberOfGenerations, double mutationProb) {
+	this->run(numberOfGenerations, this->numberOfCutPoints, mutationProb);
 }
 
 void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
-	int i { 0 };
-	Organism *child1 { }, *child2 { };
+		int currentGen { 0 };
 
-	do{
-		//population->printPopulationFitness();
-		//population->printPopulationCoverage();
-		auto parent1Index = population->fitnessProportionalSelect();
-		auto parent2Index = population->fitnessProportionalSelect();
-		auto parent1 = population->getOrganismByIndex(parent1Index);
-		auto parent2 = population->getOrganismByIndex(parent2Index);
 
-		cout << "Generation # " << i << " CoverageRatio: " << population->getCoverageRatio() << endl;
+		do{
+			TestSuiteCrossover(currentGen);
+			//TODO Needs range set stuff
+			//TODO needs to do tc crossover
 
-		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
-
-		if(i % 5 == 4 ) {
-			population->crossover(child1);
-			population->crossover(child2);
-		}
-
-		double newProb;
-		newProb = adaptMutationBasedOnCoverageRatio(mutationProb);
-		child1->mutate(newProb);
-		child2->mutate(newProb);
-
-		// Attempt to replace the worst of the two parents
-		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
-
-		if(child1 <= child2){
-			if( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) {
-				tryLocalOptimization(child2);
-			}
-			population->replaceParentThenReplaceWorst(parentToReplace, child2);
-			delete child1;
-			child1 = NULL;
-		}
-		else {
-			if( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) {
-				tryLocalOptimization(child1);
-			}
-			population->replaceParentThenReplaceWorst(parentToReplace, child1);
-			delete child2;
-			child2 = NULL;
-		}
-		if (i % 100) {
-			//rangeSet->adaptRangesBasedOnUsefulness();
-		}
-
-		i++;
-
-	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
-
-	population->getBestOrganism()->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
-	population->printPopulationFitness();
-	population->printPopulationCoverage();
-
-	//Organism* final = constructFinalOrganism();
+			currentGen++;
+		} while( currentGen < numberOfGenerations );
 }
+
+void Simulation::TestSuiteCrossover(int currentGen) {
+	Organism *child1 { }, *child2 { };
+	auto parent1Index = population->fitnessProportionalSelect();
+	auto parent2Index = population->fitnessProportionalSelect();
+	auto parent1 = population->getOrganismByIndex(parent1Index);
+	auto parent2 = population->getOrganismByIndex(parent2Index);
+
+	population->crossover(*parent1, *parent2, child1, child2,
+			numberOfCutPoints);
+	if (currentGen % 5 == 4) {
+		population->crossover(child1);
+		population->crossover(child2);
+	}
+
+	double newProb;
+	newProb = adaptMutationBasedOnCoverageRatio(mutationProb);
+	child1->mutate(newProb);
+	child2->mutate(newProb);
+
+	// Attempt to replace the worst of the two parents
+	auto parentToReplace = (parent1 <= parent2 ? parent1Index : parent2Index);
+
+	if (child1 <= child2) {
+		if (currentGen % 5 == 0 || population->getCoverageRatio() > 0.95) {
+			tryLocalOptimization (child2);
+		}
+		population->replaceParentThenReplaceWorst(parentToReplace, child2);
+		delete child1;
+		child1 = NULL;
+	} else {
+		if (currentGen % 5 == 0 || population->getCoverageRatio() > 0.95) {
+			tryLocalOptimization (child1);
+		}
+		population->replaceParentThenReplaceWorst(parentToReplace, child1);
+		delete child2;
+		child2 = NULL;
+	}
+}
+//void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
+//	int i { 0 };
+//	Organism *child1 { }, *child2 { };
+//
+//	do{
+//		//population->printPopulationFitness();
+//		//population->printPopulationCoverage();
+//		auto parent1Index = population->fitnessProportionalSelect();
+//		auto parent2Index = population->fitnessProportionalSelect();
+//		auto parent1 = population->getOrganismByIndex(parent1Index);
+//		auto parent2 = population->getOrganismByIndex(parent2Index);
+//
+//		cout << "Generation # " << i << " CoverageRatio: " << population->getCoverageRatio() << endl;
+//
+//		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
+//
+//		if(i % 5 == 4 ) {
+//			population->crossover(child1);
+//			population->crossover(child2);
+//		}
+//
+//		double newProb;
+//		newProb = adaptMutationBasedOnCoverageRatio(mutationProb);
+//		child1->mutate(newProb);
+//		child2->mutate(newProb);
+//
+//		// Attempt to replace the worst of the two parents
+//		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
+//
+//		if(child1 <= child2){
+//			if( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) {
+//				tryLocalOptimization(child2);
+//			}
+//			population->replaceParentThenReplaceWorst(parentToReplace, child2);
+//			delete child1;
+//			child1 = NULL;
+//		}
+//		else {
+//			if( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) {
+//				tryLocalOptimization(child1);
+//			}
+//			population->replaceParentThenReplaceWorst(parentToReplace, child1);
+//			delete child2;
+//			child2 = NULL;
+//		}
+//		if (i % 100) {
+//			//rangeSet->adaptRangesBasedOnUsefulness();
+//		}
+//
+//		i++;
+//
+//	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
+//
+//	population->getBestOrganism()->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
+//	population->printPopulationFitness();
+//	population->printPopulationCoverage();
+//
+//	//Organism* final = constructFinalOrganism();
+//}
 
 void getUserInput() {
 	const int GEN_AND_RATIO = 0, PRINT_FITNESS = 1, PRINT_FITNESS_ONCE = 2,
@@ -129,7 +195,7 @@ void Simulation::runWithFlags(int numberOfGenerations, int numberOfCutPoints, do
 	int i { 0 };
 	Organism *child1 { }, *child2 { };
 
-	std::thread t(getUserInput);
+	//std::thread t(getUserInput);
 
 
 	do{
@@ -186,7 +252,7 @@ void Simulation::runWithFlags(int numberOfGenerations, int numberOfCutPoints, do
 		i++;
 
 	}while(i < numberOfGenerations && population->getCoverageRatio() < 1);
-	t.join();
+	//t.join();
 	population->getBestOrganism()->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
 	population->printPopulationFitness();
 	population->printPopulationCoverage();
