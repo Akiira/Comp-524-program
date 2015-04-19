@@ -28,18 +28,16 @@ private:
 
 	double coverageRatio;
 
-	// SHared code between constructors
-	void initializeMembersAndAllocateMemory(int numberOfTestCases, int maxNumberOfTestCases);
-	void fillTestSuiteWithRandomTestCases();
-	void fillTestSuiteWithRandomTestCasesInRanges();
-
 
 public:
 	virtual ~TestSuite();
 
 	TestSuite(const TestSuite&);
-	TestSuite(int numberOfTestCases, int maxNumberOfTestCases);
-	TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCasesToCopy);
+	TestSuite(int numberOfTestCases) : TestSuite(numberOfTestCases, numberOfTestCases) {}
+	TestSuite(int numberOfTestCases, int maxNumberOfTestCases): TestSuite(numberOfTestCases, numberOfTestCases, 0) {}
+	TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCases);
+
+	//============================MUTATOR FUNCTIONS=======================//
 
 	void setTestCase(int index, TestCase* testCase);
 	void replaceRandomTestCase(TestCase* testCase);
@@ -47,13 +45,14 @@ public:
 	void addTestCase(TestCase* testCase);
 	void removeTestCase(int index);
 
-	bool canRemoveTestCaseWithoutChangingCoverage(int index);
-
 	void resetCoverage();
 	void calculateTestSuiteCoverage();
-	bool coversNewEdge(TestCase* );
-
 	void sortTestSuiteByCoverageCounts();
+
+	//============================PREDICATE FUNCTIONS=======================//
+
+	bool canRemoveTestCaseWithoutChangingCoverage(int index) const;
+	bool coversNewEdge(TestCase* ) const;
 
 	//============================PRINT FUNCTIONS=======================//
 
@@ -64,12 +63,10 @@ public:
 
 	//============================GETTER FUNCTIONS=======================//
 
-	TestCase** getAllTestCases() const;
-	TestCase* getTestCase(int index);
-	TestCase* getDuplicateTestCase();
-	TestCase* getRandomTestCase();
-	TestCase* getTestCaseThatCoversPredicate(int predicateNumber);
-	TestCase* getTestCaseThatCoversEdge(int edgeNumber);
+	TestCase* getDuplicateTestCase() const;
+	TestCase* getRandomTestCase() const;
+	TestCase* getTestCaseThatCoversPredicate(int predicateNumber) const;
+	TestCase* getTestCaseThatCoversEdge(int edgeNumber) const;
 
 	bool* getAllUncoveredEdges() const {
 		auto unCovered = new bool[numberOfEdges];
@@ -105,6 +102,14 @@ public:
 		}
 
 		return dupes;
+	}
+
+	TestCase** getAllTestCases() const{
+		return  testCases;
+	}
+
+	TestCase* getTestCase(int index) const {
+		return  testCases[index];
 	}
 
 	int* getEdgeCoverageCounts() const {
