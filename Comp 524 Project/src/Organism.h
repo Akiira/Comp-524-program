@@ -8,6 +8,7 @@
 #if !defined(EA_FD308F31_83AB_4efc_8F0F_05730A9FF804__INCLUDED_)
 #define EA_FD308F31_83AB_4efc_8F0F_05730A9FF804__INCLUDED_
 
+#include <cassert>
 #include "TestSuite.h"
 
 class ControlFlowGraph;
@@ -53,6 +54,7 @@ public:
 	}
 
 	void setScaledFitness(int scaledFitness) {
+		assert(scaledFitness >= 0);
 		this->scaledFitness = scaledFitness;
 	}
 

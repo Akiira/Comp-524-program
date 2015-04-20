@@ -85,7 +85,7 @@ public:
 private:
 	Organism** population;
 	int populationSize;
-	int totalFitness;
+	long long totalFitness;
 	int* edgesCovered;
 	int* predicatesCovered;
 	double coverageRatio;

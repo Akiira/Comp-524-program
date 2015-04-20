@@ -39,6 +39,7 @@ Population::Population(int popSize) {
 }
 
 void Population::updatePopulationsFitness() {
+	updateCoverage();
 
 	if( SCALING == LINEAR ) {
 		linearScaling();
@@ -75,6 +76,12 @@ void Population::updatePopulationsFitness() {
 			evaluateSharedFitness(population[i]);
 			totalFitness += population[i]->getScaledFitness();
 
+			if( totalFitness < 0 ) {
+				printf("\t i: %d, pop size: %d, last sf: %d \n", i, populationSize, population[i]->getScaledFitness());
+			}
+			if( totalFitness > 99999 ) {
+				printf("\t i: %d, pop size: %d, last sf: %d \n", i, populationSize, population[i]->getScaledFitness());
+			}
 			assert(totalFitness >= 0); //Overflow
 		}
 
@@ -297,11 +304,6 @@ int* Population::selectCutPoints(int &numCutPoints, int upperBound) {
 		numLeft--;
 	}
 
-	for (int i = 0; i < numCutPoints; ++i) {
-		cerr << cutPoints[i] << " ";
-	}
-	cerr << endl;
-
 	return cutPoints;
 }
 //int* Population::selectCutPoints(int numCutPoints, int upperBound) {
@@ -346,6 +348,7 @@ void Population::updateCoverage() {
 
 	// Calculate new coverage
 	for (int i = 0; i < populationSize; ++i) {
+		population[i]->evaluateBaseFitness();
 		auto edgeCov = population[i]->chromosome->getEdgeCoverageCounts();
 		auto predCov = population[i]->chromosome->getPredicateCoverageCounts();
 
@@ -489,19 +492,21 @@ void Population::evaluateSharedFitness(Organism* org) {
 	auto edges = org->getChromosome()->getEdgeCoverageCounts();
 	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
 		if ( edges[i] ) {
-			sharedFitness += (double)edges[i] * (100.0 / (double)edgesCovered[i]);
+			assert(edgesCovered[i] > 0);
+			sharedFitness += 100.0 * ((double)edges[i] / (double)edgesCovered[i]);
 		}
 	}
 
 	auto preds = org->getChromosome()->getPredicateCoverageCounts();
 	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
 		if (preds[i]) {
-			sharedFitness += (double)preds[i] * (100.0 / (double)predicatesCovered[i]);
+			assert(predicatesCovered[i] > 0);
+			sharedFitness +=  100.0 * ((double)preds[i] / (double)predicatesCovered[i]);
 		}
 	}
 
-	assert(sharedFitness > 0);
-	org->setScaledFitness(sharedFitness);
+	assert(sharedFitness >= 0);
+	org->setScaledFitness(sharedFitness + 0.5);
 }
 
 

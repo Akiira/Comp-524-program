@@ -126,6 +126,7 @@ void Simulation::testSuiteCrossover(int currentGen) {
 		if (currentGen % 10 == 0 || population->getCoverageRatio() > 0.95) {
 			tryLocalOptimization (child2);
 		}
+		child2->evaluateBaseFitness();
 		population->replaceParentThenReplaceWorst(parentToReplace, child2);
 		delete child1;
 		child1 = NULL;
@@ -133,6 +134,7 @@ void Simulation::testSuiteCrossover(int currentGen) {
 		if (currentGen % 10 == 0 || population->getCoverageRatio() > 0.95) {
 			tryLocalOptimization (child1);
 		}
+		child1->evaluateBaseFitness();
 		population->replaceParentThenReplaceWorst(parentToReplace, child1);
 		delete child2;
 		child2 = NULL;
@@ -144,8 +146,6 @@ void Simulation::tryLocalOptimization(Organism* org) {
 
 	if( tc ) {
 		org->getChromosome()->replaceDuplicateTestCase(tc);
-		org->evaluateBaseFitness();
-		population->updatePopulationsFitness();
 	}
 }
 
