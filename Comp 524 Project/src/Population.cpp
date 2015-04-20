@@ -33,6 +33,7 @@ Population::Population(int popSize) {
 
 	totalFitness = 0;
 
+	updateCoverage();
 	updatePopulationsFitness();
 	sortPopulationByFitness();
 }
@@ -73,6 +74,8 @@ void Population::updatePopulationsFitness() {
 		for(int i = 0; i < populationSize; i++) {
 			evaluateSharedFitness(population[i]);
 			totalFitness += population[i]->getScaledFitness();
+
+			assert(totalFitness >= 0); //Overflow
 		}
 
 	} else if ( totalFitness == 0 ) { // No scaling, initializing fitness for the first time
@@ -81,6 +84,8 @@ void Population::updatePopulationsFitness() {
 			fitness = population[i]->getFitness();
 			population[i]->setScaledFitness(fitness);
 			totalFitness += fitness;
+
+			assert(totalFitness >= 0); //Overflow
 		}
 	} else { // No scaling, only need to take one new organism into account
 		totalFitness += lastReplacedFitness;
@@ -178,7 +183,12 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 
 void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 		TestCase*& child1, TestCase*& child2, int numberOfCutPoints) {
-	auto cutPoints = selectCutPoints(numberOfCutPoints, parent1.getNumberOfParameters());
+
+	if(numberOfCutPoints >= targetCFG->getNumberOfParameters()) {
+		numberOfCutPoints = targetCFG->getNumberOfParameters() - 1;
+	}
+
+	auto cutPoints = selectCutPoints(numberOfCutPoints, targetCFG->getNumberOfParameters());
 	bool alternate { true };
 	int current { 0 };
 	child1 = new TestCase();
@@ -452,6 +462,7 @@ void Population::evaluateSharedFitness(Organism* org) {
 		}
 	}
 
+	assert(sharedFitness > 0);
 	org->setScaledFitness(sharedFitness);
 }
 
