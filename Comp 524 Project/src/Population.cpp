@@ -126,11 +126,11 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 		Organism*& child1, Organism*& child2, int numberOfCutPoints) {
 
 	// Swap things so that parent1TestCases refers to the array with the most test cases
-	TestCase** parent1TestCases = (parent1.getNumberOfTestCases() >= parent2.getNumberOfTestCases() ? parent1.chromosome->getAllTestCases() : parent2.chromosome->getAllTestCases());
-	TestCase** parent2TestCases = (parent1.getNumberOfTestCases() >= parent2.getNumberOfTestCases() ? parent2.chromosome->getAllTestCases() : parent1.chromosome->getAllTestCases());
+	TestCase** parent1TestCases = parent1.chromosome->getAllTestCases();
+	TestCase** parent2TestCases = parent2.chromosome->getAllTestCases();
 
-	int parent1NumberOfTestCases { ( parent1.getNumberOfTestCases() >= parent2.getNumberOfTestCases() ? parent1.getNumberOfTestCases() : parent2.getNumberOfTestCases()) };
-	int parent2NumberOfTestCases { ( parent1.getNumberOfTestCases() >= parent2.getNumberOfTestCases() ? parent2.getNumberOfTestCases() : parent1.getNumberOfTestCases()) };
+	int parent1NumberOfTestCases { parent1.getNumberOfTestCases() };
+	int parent2NumberOfTestCases { parent2.getNumberOfTestCases() };
 
 	// Use parent2NumberOfTestCases as the upperBound of cutpoints since parent2 must be <= parent1
 	int* cutPoints = selectCutPoints(numberOfCutPoints,	parent2NumberOfTestCases);
@@ -146,7 +146,7 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 				child1TestCases[j] = new TestCase { *parent1TestCases[j] };
 				child2TestCases[j] = new TestCase { *parent2TestCases[j] };
 			}
-		}  //if
+		}
 		else {
 			for (int j = current; j <= cutPoints[i]; j++) {
 				child1TestCases[j] = new TestCase { *parent2TestCases[j] };
@@ -272,30 +272,67 @@ void Population::replaceOrganism(int organismIndex, Organism* newOrganism) {
 	moveOrganismToSortedPosition(organismIndex);
 }
 
-int* Population::selectCutPoints(int numCutPoints, int upperBound) {
+//From: http://stackoverflow.com/questions/48087/select-a-random-n-elements-from-listt-in-c-sharp
+int* Population::selectCutPoints(int &numCutPoints, int upperBound) {
 
 	if(numCutPoints >= upperBound) {
-		numCutPoints = uniformInRange(0, targetCFG->getNumberOfParameters() - 1);
+		numCutPoints = uniformInRange(0, upperBound - 1);
 	}
-
-	assert(numCutPoints < upperBound && numCutPoints >= 0);
+	assert(numCutPoints < upperBound);
+	assert(numCutPoints >= 0);
 
 	//select numCutPoints randomly in the range [0..orgLength-1]
 	//and store their locations in the cutPoints array
 	int* cutPoints = new int[numCutPoints] { };
-
-	int m { 0 };   // the number of points selected so far
-	int i { 0 };  //index for cutPoints array
-
-	for (int t = 0; (t < upperBound) && (m < numCutPoints); t++) {
-		if (((upperBound - t) * uniform01()) < (numCutPoints - m)) {
-			cutPoints[i] = t;
-			i++;
-			m++;
+	int index = 0, numLeft = upperBound, needed = numCutPoints;
+	for (int i = 0; i < upperBound; ++i) {
+		if(needed == 0 || numLeft == 0) {
+			break;
 		}
+		if( uniform01() <= ((double) needed / (double) numLeft)) {
+			cutPoints[index] = i;
+			index++;
+			needed--;
+		}
+		numLeft--;
 	}
+
+	for (int i = 0; i < numCutPoints; ++i) {
+		cerr << cutPoints[i] << " ";
+	}
+	cerr << endl;
+
 	return cutPoints;
 }
+//int* Population::selectCutPoints(int numCutPoints, int upperBound) {
+//
+//	if(numCutPoints >= upperBound) {
+//		numCutPoints = uniformInRange(0, upperBound - 1);
+//	}
+//
+//	assert(numCutPoints < upperBound && numCutPoints >= 0);
+//
+//	//select numCutPoints randomly in the range [0..orgLength-1]
+//	//and store their locations in the cutPoints array
+//	int* cutPoints = new int[numCutPoints] { };
+//
+//	int m { 0 };   // the number of points selected so far
+//	int i { 0 };  // index for cutPoints array
+//
+//	for (int t = 0; (t < upperBound) && (m < numCutPoints); t++) {
+//		if (cutPoints[i] < 0) {
+//			cutPoints[i] = 0;
+//		}
+//
+//		if (((upperBound - t) * uniform01()) < (numCutPoints - m)) {
+//			assert(t >= 0);
+//			cutPoints[i] = t;
+//			i++;
+//			m++;
+//		}
+//	}
+//	return cutPoints;
+//}
 
 void Population::updateCoverage() {
 	// Clear any previous coverage

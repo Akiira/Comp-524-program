@@ -215,7 +215,7 @@ void runTests(int popStart, int popEnd, short cutPtsStart,
 			for(double mutation = mutationStart; mutation <= mutationEnd; mutation += MUTATION_STEP)
 			{
 				int sumOfGenerations = 0;
-
+				printf("Testing population: %d, cutPoints: %d, mutation: %f, on: %s", population, cutPoints, mutation, testProgram.c_str());
 				for(int i = 0; i < TEST_RUNS; i++)
 				{
 					cout << "\tTest Num: " << i << " ";

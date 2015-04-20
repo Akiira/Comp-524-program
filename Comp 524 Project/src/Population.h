@@ -94,7 +94,7 @@ private:
 	//TODO remove hard coding of value
 	const static typeOfScaling SCALING = SHARING;
 
-	int* selectCutPoints(int numberOfCutPoints, int upperBound);
+	int* selectCutPoints(int& numberOfCutPoints, int upperBound);
 
 	void updateCoverage();
 	void updateCoverageBeforeReplacement(int organismToBeReplaced, Organism* child);
