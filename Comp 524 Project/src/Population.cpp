@@ -184,10 +184,6 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 		TestCase*& child1, TestCase*& child2, int numberOfCutPoints) {
 
-	if(numberOfCutPoints >= targetCFG->getNumberOfParameters()) {
-		numberOfCutPoints = targetCFG->getNumberOfParameters() - 1;
-	}
-
 	auto cutPoints = selectCutPoints(numberOfCutPoints, targetCFG->getNumberOfParameters());
 	bool alternate { true };
 	int current { 0 };
@@ -277,7 +273,12 @@ void Population::replaceOrganism(int organismIndex, Organism* newOrganism) {
 }
 
 int* Population::selectCutPoints(int numCutPoints, int upperBound) {
-	assert(numCutPoints < upperBound);
+
+	if(numCutPoints >= upperBound) {
+		numCutPoints = uniformInRange(0, targetCFG->getNumberOfParameters() - 1);
+	}
+
+	assert(numCutPoints < upperBound && numCutPoints >= 0);
 
 	//select numCutPoints randomly in the range [0..orgLength-1]
 	//and store their locations in the cutPoints array

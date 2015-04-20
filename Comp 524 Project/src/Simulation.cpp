@@ -58,6 +58,10 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 }
 
 void Simulation::testCaseCrossover() {
+	if( targetCFG->getNumberOfParameters() <= 1 ) {
+		return;
+	}
+
 	TestCase *child1 { }, *child2 { };
 
 	auto parent = population->getOrganism(population->fitnessProportionalSelect());
