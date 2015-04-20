@@ -434,7 +434,8 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 	Range** rangePool = new Range*[edgesPlusPreds];
 	rangePool[0] = currRange;
 	int rangePoolSize = 1;
-	for (int tryNum = 1; tryNum <= 3; tryNum++) {
+	//TODO: Tune this
+	for (int tryNum = 1; tryNum <= 1; tryNum++) {
 		int size = startSize * tryNum;
 		int nextStartPos = currStart;
 		int nextStartNeg = currStart;
@@ -462,7 +463,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 			}
 
 			nextStartNeg = nextStartNeg - size - 1;
-			Range* nextRangeNeg = new Range(nextStartNeg, nextStartPos + size);
+			Range* nextRangeNeg = new Range(nextStartNeg, nextStartNeg + size);
 			TestCase* tcNeg = new TestCase(nextRangeNeg);
 			targetCFG->setCoverageOfTestCase(tcNeg);
 			if (finalSuite->wouldAddNewCoverage(tcNeg)) {

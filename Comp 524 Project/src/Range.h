@@ -11,6 +11,7 @@
 class Range {
 public:
 	Range(int start, int end);
+	Range(int start, int end, Range* source); // used when splitting
 	Range(const Range& other);
 	virtual ~Range();
 	int start;
@@ -18,9 +19,16 @@ public:
 	// Idea is maybe focus on ranges that have proven especially useful
 	int numOfUses;
 
+	/* Each element will be 25 in size
+	usesArraySize = (end - start / 25) + 1
+	*/
+	int usesArraySize;
+	int* usesArray;
 
 
-	void incrementUses();
+	void printRange();
+
+	void incrementUses(int valueUsed);
 
 };
 

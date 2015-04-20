@@ -16,6 +16,7 @@
 RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges) {
 	this->numberOfRanges = numberOfRanges;
 	this->maxNumberOfRanges = maxNumberOfRanges;
+	this->minNumberOfRanges = 5;
 	this->ranges = ranges;
 	this->totalUsefulness = 0;
 	for (int i = 0; i < numberOfRanges; i++) {
@@ -42,7 +43,7 @@ TestCase* RangeSet::getNewTestCase() {
 	if (globalPopulation->coversNewEdgesOrPredicates(retval->getEdgesCovered(), true) ||
 			globalPopulation->coversNewEdgesOrPredicates(retval->getPredicatesCovered(), false) ) {
 		for (int i = 0; i < numberOfParameters; i++) {
-			tmp[i]->numOfUses++;
+			tmp[i]->incrementUses(inputParameters[i]);
 			totalUsefulness++;
 		}
 		sortRangesByUsefulness();
@@ -54,7 +55,8 @@ Range** RangeSet::randomlySelectRangesForNewTestCase() {
 	int numberOfParameters = targetCFG->getNumberOfParameters();
 	Range** retval = new Range*[numberOfParameters];
 	for (int i = 0; i < numberOfParameters; i++) {
-		retval[i] = ranges[uniformInRange(0, numberOfRanges-1)];
+		int x = uniformInRange(0, numberOfRanges-1);
+		retval[i] = ranges[x];
 	}
 	return retval;
 }
@@ -87,35 +89,37 @@ Range** RangeSet::selectRangesForNewTestCaseProportionalToUsefulness() {
 void RangeSet::adaptRangesBasedOnUsefulness() {
 
 	int index = 0;
-	while (ranges[index]->numOfUses > 0.10 * globalPopulation->getTestSuiteSize())
+	while (ranges[index]->numOfUses > 0.10 * totalUsefulness)
 	{
-		cout << "Splitting a really good range" << endl;
+		cout << "Splitting a really good range and exploring adjacents" << endl;
+		addRangesAdjacentToExistingRange(index);
 		splitRange(index);
 		index++;
 	}
 	index = numberOfRanges-1;
-	while (ranges[index]->numOfUses < 0.01 * globalPopulation->getTestSuiteSize())
+	while (index >= 0 && numberOfRanges > minNumberOfRanges && ranges[index]->numOfUses < 0.01 * totalUsefulness)
 	{
 		cout << "Deleting a bad range" << endl;
 		deleteRange(index);
 		index--;
 	}
 	sortRangesByUsefulness();
+	printRanges();
 
 } // May split, delete, or combine ranges maybe
 
 void RangeSet::splitRange(int index) {
 	Range* old = ranges[index];
-	Range* new1 = (new Range(old->start, old->end / 2));
-	Range* new2 = (new Range(old->end / 2 + 1, old->end));
-	new1->numOfUses = old->numOfUses / 2;
-	new2->numOfUses = old->numOfUses / 2;
+	Range* new1 = (new Range(old->start, old->end / 2), old);
+	Range* new2 = (new Range(old->end / 2 + 1, old->end, old));
+
 	deleteRange(index);
 	addRange(new1);
 	addRange(new2);
 }
 
 void RangeSet::deleteRange(int index) {
+	assert(numberOfRanges > minNumberOfRanges);
 	totalUsefulness -= ranges[index]->numOfUses;
 	delete ranges[index];
 	for (int i = index; i < numberOfRanges-1; i++) {
@@ -125,6 +129,12 @@ void RangeSet::deleteRange(int index) {
 	numberOfRanges--;
 }
 
+void RangeSet::addRangesAdjacentToExistingRange(int index) {
+	Range* existing = ranges[index];
+	int size = existing->end - existing->start;
+	addRange(new Range(existing->start - size, existing->start));
+	addRange(new Range(existing->end, existing->end + size));
+}
 
 void RangeSet::addRange(Range* r) {
 	if (numberOfRanges < maxNumberOfRanges) {
@@ -171,4 +181,8 @@ void RangeSet::moveRangeToSortedPosition(int indexToSort) {
 	}
 }
 
-
+void RangeSet::printRanges() {
+	for (int i = 0; i < numberOfRanges; i++) {
+		ranges[i]->printRange();
+	}
+}
