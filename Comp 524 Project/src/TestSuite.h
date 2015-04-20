@@ -26,7 +26,7 @@ public:
 
 	TestSuite(int numberOfTestCases) : TestSuite(numberOfTestCases, numberOfTestCases) {}
 	TestSuite(int numberOfTestCases, int maxNumberOfTestCases): TestSuite(numberOfTestCases, numberOfTestCases, 0) {}
-	TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCases): TestSuite(numberOfTestCases, numberOfTestCases, testCases, 0) {};
+	TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCases): TestSuite(numberOfTestCases, maxNumberOfTestCases, testCases, 0) {};
 
 	// Actually implements
 	TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCases, Range* range);
