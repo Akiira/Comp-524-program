@@ -1,4 +1,4 @@
-#include <iostream>
+
 #include "TestCase.h"
 #include "TestSuite.h"
 #include "ControlFlowGraph.h"
@@ -12,16 +12,46 @@
 #include "MedHardCFG.h"
 #include "HardCFG.h"
 
+#include <iostream>
+#include <fstream>
 #include <chrono>
 #include <ctime>
 
-
 using namespace std;
 
-ControlFlowGraph*targetCFG { };
+void testCutPointsToMutationProb();
+void testPopulationSizeToCutPoints();
+void testPopulationSizeToMutationProb();
+void printFileHeader(int i);
+void printFileFooter(int i);
+void printFileDataEntry(int population, short cutpoints, double mutation, double average, int i);
+void runConfiguration(int popStart, int popEnd, short cutPtsStart,
+					  short cutPtsEnd, double mutationStart, double mutationEnd);
+
+ControlFlowGraph* targetCFG { };
+ofstream* outputFile;
+string testProgram;
+
+const float MUTATION_STANDARD = 0.02;
+const float MUTATION_START = 0.00;
+const float MUTATION_END = 0.75;
+const float MUTATION_STEP = 0.05;
+
+const short CUTPOINTS_STANDARD = 2;
+const short CUTPOINTS_START = 0;
+const short CUTPOINTS_END = 20;//TODO handle upper bound for smaller number of parameters
+const short CUTPOINTS_STEP = 1;
+
+const short POPULATION_STANDARD = 150;
+const short POPULATION_START = 50;
+const short POPULATION_END = 500;
+const short POPULATION_STEP = 25;
+
+const short TEST_RUNS = 40;
+const short GENERATIONS = 10000;
 
 //Flags to interactivly set printing during simulation
-
+//TODO I may get rid of all these since we dont have time to make use of them.
 bool printPopFitnessOnce;
 bool printPopFitness;
 bool printGenerationAndRatio;
@@ -54,9 +84,130 @@ int main() {
     cout << "elapsed time: " << elapsed_seconds.count() << endl;
     cout << "finished computation at " << std::ctime(&end_time);
 
+    //run test on mutation and cut points
+    //run test on population size and cut points
+
 	return 0;
 }
 
+void testCutPointsToMutationProb()
+{
+	outputFile = new ofstream("cuts_To_Mutation_100Pop.txt", ios::out | ios::trunc);
+	printFileHeader(0);
+
+	runConfiguration(POPULATION_STANDARD, POPULATION_STANDARD, CUTPOINTS_START,	CUTPOINTS_END,
+									MUTATION_START, MUTATION_END);
+}
+
+void testPopulationSizeToMutationProb()
+{
+	outputFile = new ofstream("pop_To_Mutation.txt", ios::out | ios::trunc);
+	printFileHeader(0);
+	runConfiguration(POPULATION_START, POPULATION_END, CUTPOINTS_STANDARD, CUTPOINTS_STANDARD,
+									MUTATION_START, MUTATION_END);
+}
+
+void testPopulationSizeToCutPoints()
+{
+	outputFile = new ofstream("pop_To_CutPoints.txt", ios::out | ios::trunc);
+	printFileHeader(0);
+	runConfiguration(POPULATION_START, POPULATION_END, CUTPOINTS_START,	CUTPOINTS_END,
+									MUTATION_STANDARD, MUTATION_STANDARD);
+}
+
+void printFileHeader(int i) {
+	*outputFile << "(* Number of tests per point: " << TEST_RUNS <<  "*)" << endl;
+	*outputFile << "(* Maximum Generations: " << GENERATIONS <<  "*)" << endl;
+	*outputFile << "(* Test Program: " << testProgram <<  "*)" << endl;
+
+	switch (i) {
+		case 0:
+			*outputFile << "(* {Cut Points, Mutation Probability, Generations} *)" << endl;
+			*outputFile << "(* Standard Population Size: " << POPULATION_STANDARD << "*)" <<  endl;
+			break;
+		case 1:
+			*outputFile << "(* {Population Size, Mutation Probability, Generations} *)" << endl;
+			*outputFile << "(* Standard Cut Points: " << CUTPOINTS_STANDARD << "*)" <<  endl;
+			break;
+		case 2:
+			*outputFile << "(* {Population Size, Cut Points, Generations} *)" << endl;
+			*outputFile << "(* Standard Mutation Probability: " << MUTATION_STANDARD << " *)" << endl;
+			break;
+		default:
+			break;
+	}
+}
+
+void printFileFooter(int i) {
+	switch (i)
+	{
+		case 0: // Mapping Cut Points to Mutation Probability
+			*outputFile << "}, AxesLabel -> {Cut Size, Mutation Probability, Generations}, ColorFunction -> \"Rainbow\"]";
+			break;
+		case 1: // Mapping Population Size to Mutation Probability
+			*outputFile << "}, AxesLabel -> {Population Size, Mutation Probability, Generations}, ColorFunction -> \"Rainbow\"]";
+			break;
+		case 2: // Mapping Population Size to Cut Points
+			*outputFile << "}, AxesLabel -> {Population Size, Cut Points, Generations}, ColorFunction -> \"Rainbow\"]";
+			break;
+		default:
+			cout << "ERROR, invalid test configuration";
+			break;
+	}
+}
+
+void printFileDataEntry(int population, short cutpoints, double mutation, double average, int i) {
+	switch (i)
+	{
+		case 0: // Mapping Cut Points to Mutation Probability
+			*outputFile << "{" << cutpoints << ", " << mutation << ", " << average << "}, ";
+			break;
+		case 1: // Mapping Population Size to Mutation Probability
+			*outputFile << "{" << population << ", " << mutation << ", " << average << "}, ";
+			break;
+		case 2: // Mapping Population Size to Cut Points
+			*outputFile << "{" << population << ", " << cutpoints << ", " << average << "}, ";
+			break;
+		default:
+			cout << "ERROR, invalid test configuration";
+			break;
+	}
+}
+
+void runConfiguration(int popStart, int popEnd, short cutPtsStart,
+					  short cutPtsEnd, double mutationStart, double mutationEnd)
+{
+
+	*outputFile << "ListPlot3D[{";
+
+	for (int population = popStart; population < popEnd; population += POPULATION_STEP) {
+		for(short cutPoints = cutPtsStart; cutPoints <= cutPtsEnd; cutPoints += CUTPOINTS_STEP) {
+			for(double mutation = mutationStart; mutation <= mutationEnd; mutation += MUTATION_STEP) {
+				int sumOfGenerations = 0;
+				for(int i = 0; i < TEST_RUNS; i++) {
+					cout << "\tTest Num: " << i << " ";
+
+					Simulation* sim = new Simulation(population);
+					int temp = sim->run(GENERATIONS, cutPoints, mutation);
+					delete sim;
+					sumOfGenerations += temp;
+
+					cout << "\t# of gen: " << temp << endl;
+				}
+
+				double average = ((double)sumOfGenerations) / ((double)TEST_RUNS);
+				printFileDataEntry(population, cutPoints, mutation, average, 0);
+				outputFile->flush();
+
+				cout << "Average number of generations: " << average << endl;
+			}
+		}
+
+	}
+
+	outputFile->close();
+	cout << "Data written to file" << endl;
+}
 
 
 
