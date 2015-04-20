@@ -20,6 +20,12 @@ void Range::printRange() {
 	}
 	cout << endl << endl;
 }
+
+
+void Range::printRangeSimple() {
+	cout << "[ " << start << ", " << end << " ] " << "Size " << (end-start) << " Uses: " << numOfUses << " " << "UsesArraySize: " << usesArraySize <<  endl;
+}
+
 Range::Range(int start, int end) {
 	this->start = start;
 	this->end = end;

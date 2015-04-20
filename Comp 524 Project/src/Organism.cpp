@@ -44,13 +44,15 @@ Organism::Organism(int numberOfTestCases, int maxNumberOfTestCases, Range *range
 void Organism::mutate(double mutationProb) {
 	int numberOfTestCases = chromosome->getNumberOfTestCases();
 
+	//TODO: Revisit this
 	for (int i = 0; i < numberOfTestCases; i++) {
 		double toss = uniform01();
 		if (toss < mutationProb) {
-			//TestCase* newTestCase = new TestCase();
 			TestCase* newTestCase = rangeSet->getNewTestCase();
 			targetCFG->setCoverageOfTestCase(newTestCase);
-			chromosome->setTestCase(i, newTestCase);
+			if (chromosome->wouldAddNewCoverage(newTestCase)) {
+				chromosome->replaceDuplicateTestCase(newTestCase);
+			}
 		}
 	}
 

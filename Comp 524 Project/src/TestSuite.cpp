@@ -54,8 +54,13 @@ TestSuite::TestSuite(const TestSuite& testSuite) {
 TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases){
 	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
 	this->testCases = new TestCase*[maxNumberOfTestCases] { };
-	//fillTestSuiteWithRandomTestCases();
-	fillTestSuiteWithTestCasesFromRangeSet();
+	assert(testCases != 0);
+
+	// All test case parameters chosen from random sets of ranges.
+	for(int i = 0; i < numberOfTestCases; i++){
+		testCases[i] = rangeSet->getNewTestCase();
+		targetCFG->setCoverageOfTestCase(testCases[i]);
+	}
 
 }
 
@@ -63,18 +68,12 @@ TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, Range* ran
 	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
 	this->testCases = new TestCase*[maxNumberOfTestCases] { };
 
-	fillTestSuiteWithTestCasesFromSingleRange(range);
-
+	// All test case parameters from this single range.
+	for(int i = 0; i < numberOfTestCases; i++){
+		testCases[i] = rangeSet->getNewTestCaseEntirelyFromRange(range);
+		targetCFG->setCoverageOfTestCase(testCases[i]);
+	}
 }
-
-/*	Depreciated
-// Replaces the other constructor, will fill testCase 0 - edges+preds with values in that range, the rest with random ranges
-TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases){
-	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
-	this->testCases = new TestCase*[maxNumberOfTestCases] { };
-	fillTestSuiteWithRandomTestCasesInRanges();
-}
-*/
 
 TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCases) {
 	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
@@ -92,48 +91,6 @@ void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, int ma
 	this->edgeCoverageCounts = new int[numberOfEdges] { };
 	this->predicateCoverageCounts = new int[numberOfPredicates] { };
 }
-
-void TestSuite::fillTestSuiteWithRandomTestCases() {
-	assert(testCases != 0);
-	for(int i = 0; i < numberOfTestCases; i++){
-		testCases[i] = new TestCase { };
-		targetCFG->setCoverageOfTestCase(testCases[i]);
-	}
-}
-
-void TestSuite::fillTestSuiteWithTestCasesFromRangeSet() {
-	assert(testCases != 0);
-	for(int i = 0; i < numberOfTestCases; i++){
-		testCases[i] = rangeSet->getNewTestCase();
-		targetCFG->setCoverageOfTestCase(testCases[i]);
-	}
-}
-
-void TestSuite::fillTestSuiteWithTestCasesFromSingleRange(Range* range) {
-	for(int i = 0; i < numberOfTestCases; i++){
-		testCases[i] = new TestCase(range);
-		targetCFG->setCoverageOfTestCase(testCases[i]);
-	}
-}
-
-
-/* Depreciated
-void TestSuite::fillTestSuiteWithRandomTestCasesInRanges() {
-	assert(testCases != 0);
-	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	assert(numberOfTestCases >= edgesPlusPreds);
-
-	for(int i = 0; i < edgesPlusPreds; i++){
-		testCases[i] = new TestCase {i};
-		targetCFG->setCoverageOfTestCase(testCases[i]);
-	}
-
-	for (int i = edgesPlusPreds; i < numberOfTestCases; i++) {
-		testCases[i] = new TestCase {};
-		targetCFG->setCoverageOfTestCase(testCases[i]);
-	}
-}
-*/
 
 void TestSuite::sortTestSuiteByCoverageCounts() {
 	int i, j;
@@ -207,6 +164,7 @@ void TestSuite::replaceRandomTestCase(TestCase* testCase) {
 void TestSuite::replaceDuplicateTestCase(TestCase* testCase) {
 	auto tc = getDuplicateTestCase();
 
+	// TODO: SHould the old one be deleted??
 	if( tc ) {
 		*tc = *testCase;
 		calculateTestSuiteCoverage();

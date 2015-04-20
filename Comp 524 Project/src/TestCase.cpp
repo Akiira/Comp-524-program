@@ -54,55 +54,10 @@ TestCase::TestCase() {
 	inputParameters = new int[numberOfParameters] { };
 	numCovered = 0;
 
-	generateParametersFromGlobalRangeSet();
+	// Note these will be overwritten in almost all uses. Keep this
+	//	to remain compatability with RandomSearcher and old test code
+	generateRandomParameters();
 }
-
-TestCase::TestCase(bool empty) {
-
-	numberOfEdges      = targetCFG->getNumberOfEdges();
-	numberOfParameters = targetCFG->getNumberOfParameters();
-	numberOfPredicates = targetCFG->getNumberOfPredicates();
-
-	edgesCovered = new bool[numberOfEdges] { };
-	predicatesCovered = new bool[numberOfPredicates] { };
-	inputParameters = new int[numberOfParameters] { };
-	numCovered = 0;
-
-	if (!empty) {
-		generateParametersFromGlobalRangeSet();
-	}
-}
-
-TestCase::TestCase(Range* range) {
-	numberOfEdges      = targetCFG->getNumberOfEdges();
-	numberOfParameters = targetCFG->getNumberOfParameters();
-	numberOfPredicates = targetCFG->getNumberOfPredicates();
-
-	edgesCovered = new bool[numberOfEdges] { };
-	predicatesCovered = new bool[numberOfPredicates] { };
-	inputParameters = new int[numberOfParameters] { };
-	numCovered = 0;
-
-	generateParametersFromSingleRange(range);
-}
-
-/*	Depreciated
-TestCase::TestCase(int rangeNum) {
-	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	assert(rangeNum >= 0 && rangeNum < edgesPlusPreds);
-	numberOfEdges      = targetCFG->getNumberOfEdges();
-	numberOfParameters = targetCFG->getNumberOfParameters();
-	numberOfPredicates = targetCFG->getNumberOfPredicates();
-
-	edgesCovered = new bool[numberOfEdges] { };
-	predicatesCovered = new bool[numberOfPredicates] { };
-	inputParameters = new int[numberOfParameters] { };
-	numCovered = 0;
-
-	generateRandomParametersInRange(rangeNum);
-}
-*/
-
 
 TestCase::TestCase(const TestCase& that) {
 
@@ -121,22 +76,6 @@ TestCase::TestCase(const TestCase& that) {
 	memcpy(inputParameters, that.inputParameters, sizeof(int) * numberOfParameters);
 }
 
-void TestCase::generateParametersFromSingleRange(Range* range) {
-	for(int i = 0; i < numberOfParameters; i++)
-	{
-		inputParameters[i] = uniformInRange(range->start, range->end);
-	}
-}
-
-void TestCase::generateParametersFromGlobalRangeSet() {
-	Range** ranges = rangeSet->randomlySelectRangesForNewTestCase();
-	for(int i = 0; i < numberOfParameters; i++)
-	{
-		inputParameters[i] = uniformInRange(ranges[i]->start, ranges[i]->end);
-	}
-}
-
-/*	Depreciated
 void TestCase::generateRandomParameters() {
 	//for each parameter generate a random value
 	for(int i = 0; i < numberOfParameters; i++)
@@ -145,36 +84,6 @@ void TestCase::generateRandomParameters() {
 											targetCFG->getUpperBoundForParameter(i));
 	}
 }
-*/
-
-/*	Depreciated
-void TestCase::generateRandomParametersInRange(int rangeNum) {
-	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	assert(rangeNum >= 0 && rangeNum < edgesPlusPreds);
-
-	for(int i = 0; i < numberOfParameters; i++)
-	{
-		long rangeSize = (targetCFG->getUpperBoundForParameter(i) - targetCFG->getLowerBoundForParameter(i)) / edgesPlusPreds;
-		long lower = targetCFG->getLowerBoundForParameter(i) + rangeNum * rangeSize;
-		long upper = targetCFG->getUpperBoundForParameter(i) + ((rangeNum+1) * rangeSize) - 1;
-		inputParameters[i] = uniformInRange(lower, upper);
-	}
-}
-*/
-
-/*	Depreciated
-void TestCase::generateRandomParametersFromRandomRanges() {
-	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	for(int i = 0; i < numberOfParameters; i++)
-	{
-		int rangeNum = uniformInRange(0, edgesPlusPreds-1);
-		long rangeSize = (targetCFG->getUpperBoundForParameter(i) - targetCFG->getLowerBoundForParameter(i)) / edgesPlusPreds;
-		long lower = targetCFG->getLowerBoundForParameter(i) + rangeNum * rangeSize;
-		long upper = targetCFG->getUpperBoundForParameter(i) + ((rangeNum+1) * rangeSize) - 1;
-		inputParameters[i] = uniformInRange(lower, upper);
-	}
-}
-*/
 
 bool TestCase::hasSameCoverage(TestCase* that) {
 	int edges = targetCFG->getNumberOfEdges();

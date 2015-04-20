@@ -27,6 +27,7 @@ public:
 
 
 	void printRange();
+	void printRangeSimple();
 
 	void incrementUses(int valueUsed);
 

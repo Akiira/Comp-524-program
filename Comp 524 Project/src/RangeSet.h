@@ -16,7 +16,7 @@ public:
 	RangeSet();
 	virtual ~RangeSet();
 
-
+	RangeSet(int numberOfRanges, int maxNumberOfRanges);
 	RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges);
 
 	// Return an array of targetCFG.numberOfParameters ranges to use during test case gen
@@ -27,6 +27,8 @@ public:
 	Range** selectRangesForNewTestCaseProportionalToUsefulness();
 
 	TestCase* getNewTestCase();
+	TestCase* getNewTestCaseEntirelyFromRange(Range* range);
+	TestCase* getNewTestCaseEntirelyFromRange(int start, int end);
 
 	void adaptRangesBasedOnUsefulness(); // May split, delete, or combine ranges maybe
 
@@ -40,13 +42,15 @@ public:
 	}
 
 	void printRanges();
+	void printRangesSimple();
+	void addRange(Range* r);
 
 private:
 	int totalUsefulness;
 	int numberOfRanges, maxNumberOfRanges;
 	int minNumberOfRanges;
 	Range** ranges;
-	void addRange(Range* r);
+
 	void splitRange(int index);
 	void addRangesAdjacentToExistingRange(int index);
 	void deleteRange(int index);

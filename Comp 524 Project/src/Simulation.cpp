@@ -44,6 +44,7 @@ void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double muta
 
 		population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 
+		// This is actually working pretty well now with the new ranges.
 		if(i % 5 == 4 ) {
 			population->crossover(child1);
 			population->crossover(child2);
@@ -54,25 +55,31 @@ void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double muta
 		child1->mutate(newProb);
 		child2->mutate(newProb);
 
+		// ATTENTION: We were missing this before, you're more familiar with the new fitness tructure than I am
+		//	but I know we have to make sure were not comparing two different types of fitness. I think this is ok
+		//	because the organism < and <= operators use fitness not scaled fitness.
+		population->evaluateOrganismsFitness(child1);
+		population->evaluateOrganismsFitness(child2);
+
 		// Attempt to replace the worst of the two parents
 		auto parentToReplace = ( parent1 <= parent2 ? parent1Index : parent2Index );
 
 		if(child1 <= child2){
-			/*
+
 			if( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) {
-				tryLocalOptimization(child2);
+				//tryLocalOptimization(child2);
 			}
-			*/
+
 			population->replaceParentThenReplaceWorst(parentToReplace, child2);
 			delete child1;
 			child1 = NULL;
 		}
 		else {
-			/*
+
 			if( i % 5 == 0 || population->getCoverageRatio() > 0.95 ) {
-				tryLocalOptimization(child1);
+				//tryLocalOptimization(child1);
 			}
-			*/
+
 			population->replaceParentThenReplaceWorst(parentToReplace, child1);
 			delete child2;
 			child2 = NULL;
@@ -148,6 +155,8 @@ TestCase* Simulation::callRandomLocalOpt(Organism* child){
 		edgeOrPredicate = false;
 
 	//TODO change probability based on how succesful they are, or try all each time
+	return localOptFromGivenParams(edgeOrPredicate, oldTC);
+	/*
 	switch (uniformInRange(0, 2)) {
 		case 0:
 			return localOptFromGivenParams(edgeOrPredicate, oldTC);
@@ -163,6 +172,7 @@ TestCase* Simulation::callRandomLocalOpt(Organism* child){
 			assert(false);
 			break;
 	}
+	*/
 }
 
 TestCase* Simulation::localOptFromZero (bool edgeOrPredicate, TestCase* oldTC) {
@@ -420,20 +430,21 @@ double Simulation::adaptMutationBasedOnCoverageRatio(double pM) {
 }
 
 void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
-	int startSize = 1000, currStart = -500;
-	Range* currRange = new Range(currStart, currStart + startSize);
-	TestCase* tc1 = new TestCase(currRange);
-	targetCFG->setCoverageOfTestCase(tc1);
 	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	Organism* finalOrg = new Organism(0, edgesPlusPreds, new TestCase*[edgesPlusPreds] { });
+	rangeSet = new RangeSet(0, edgesPlusPreds);
 
+	int startSize = 1000, currStart = -500;
+
+	Organism* finalOrg = new Organism(0, edgesPlusPreds, new TestCase*[edgesPlusPreds] { });
 	TestSuite* finalSuite = finalOrg->getChromosome();
+
+	TestCase* tc1 = rangeSet->getNewTestCaseEntirelyFromRange(currStart, currStart + startSize);
 	finalSuite->addTestCase(tc1);
 	finalSuite->calculateTestSuiteCoverage();
 
-	Range** rangePool = new Range*[edgesPlusPreds];
-	rangePool[0] = currRange;
-	int rangePoolSize = 1;
+	Range* startingRange = new Range(currStart, currStart + startSize);
+	rangeSet->addRange(startingRange);
+
 	//TODO: Tune this
 	for (int tryNum = 1; tryNum <= 1; tryNum++) {
 		int size = startSize * tryNum;
@@ -445,50 +456,44 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 		while(nextStartPos < numeric_limits<int>::max() - size && nextStartNeg > numeric_limits<int>::min() + size) {
 
 			nextStartPos = nextStartPos + size + 1;
-			Range* nextRangePos = new Range(nextStartPos, nextStartPos + size);
-			TestCase* tcPos = new TestCase(nextRangePos);
-			targetCFG->setCoverageOfTestCase(tcPos);
+			TestCase* tcPos = rangeSet->getNewTestCaseEntirelyFromRange(nextStartPos, nextStartPos + size);
+
 			if (finalSuite->wouldAddNewCoverage(tcPos)) {
-				cout << "Adding # " << rangePoolSize << " range start: " << nextStartPos << endl;
 				finalSuite->addTestCase(tcPos);
 				finalSuite->calculateTestSuiteCoverage();
 				finalSuite->printTestSuiteCoverageRatio();
 
-				rangePool[rangePoolSize] = nextRangePos;
-				rangePoolSize++;
+				Range* newRange = new Range(nextStartPos, nextStartPos + size);
+				rangeSet->addRange(newRange);
 			}
 			else {
 				delete tcPos;
-				delete nextRangePos;
 			}
 
 			nextStartNeg = nextStartNeg - size - 1;
-			Range* nextRangeNeg = new Range(nextStartNeg, nextStartNeg + size);
-			TestCase* tcNeg = new TestCase(nextRangeNeg);
+			TestCase* tcNeg = rangeSet->getNewTestCaseEntirelyFromRange(nextStartNeg, nextStartNeg + size);
 			targetCFG->setCoverageOfTestCase(tcNeg);
 			if (finalSuite->wouldAddNewCoverage(tcNeg)) {
-				cout << "Adding # " << rangePoolSize << " range start: " << nextStartNeg << endl;
 				finalSuite->addTestCase(tcNeg);
 				finalSuite->calculateTestSuiteCoverage();
 				finalSuite->printTestSuiteCoverageRatio();
 
-				rangePool[rangePoolSize] = nextRangeNeg;
-				rangePoolSize++;
+				Range* newRange = new Range(nextStartNeg, nextStartNeg + size);
+				rangeSet->addRange(newRange);
 			}
 			else {
 				delete tcNeg;
-				delete nextRangeNeg;
 			}
 			totalIterations++;
 		}
 
 		cout << "End of try # " << tryNum << endl;
-		finalSuite->printTestSuiteCoverageRatio();
+		rangeSet->printRangesSimple();
 	}
 	finalOrg->evaluateBaseFitness();
 	finalOrg->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
 	delete finalOrg;
 
-	rangeSet = new RangeSet(rangePoolSize, edgesPlusPreds, rangePool);
+
 	cout << "made it" << endl;
 }

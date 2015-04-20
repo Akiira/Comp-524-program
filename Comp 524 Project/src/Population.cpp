@@ -503,6 +503,7 @@ int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 }
 
 void Population::replaceParentThenReplaceWorst(int parentIndex, Organism* child) {
+	cout << "IN replaceParentThenReplaceWorst: " << "difference between parent and child: " <<  population[parentIndex]->getFitness() - child->getFitness() << endl;
 	if (child->getFitness() >= population[parentIndex]->getFitness()) {
 		replaceOrganismAtIndexWithChild(parentIndex, child);
 	}

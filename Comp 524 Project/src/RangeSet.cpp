@@ -25,15 +25,23 @@ RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges) {
 	printRanges();
 }
 
+RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges) {
+	this->numberOfRanges = numberOfRanges;
+	this->maxNumberOfRanges = maxNumberOfRanges;
+	this->minNumberOfRanges = 5;
+	this->ranges = new Range*[maxNumberOfRanges];
+	this->totalUsefulness = 0;
+}
+
 RangeSet::~RangeSet() {
 	delete[] ranges;
 }
 
 TestCase* RangeSet::getNewTestCase() {
-	//Range** tmp = selectRangesForNewTestCaseProportionalToUsefulness();
-	Range** tmp = randomlySelectRangesForNewTestCase();
+	Range** tmp = selectRangesForNewTestCaseProportionalToUsefulness();
+	//Range** tmp = randomlySelectRangesForNewTestCase();
 	int numberOfParameters = targetCFG->getNumberOfParameters();
-	TestCase* retval = new TestCase(true); // empty test case
+	TestCase* retval = new TestCase(); // empty test case
 	int* inputParameters = new int[numberOfParameters] {};
 	for(int i = 0; i < numberOfParameters; i++)
 	{
@@ -49,6 +57,40 @@ TestCase* RangeSet::getNewTestCase() {
 		}
 		sortRangesByUsefulness();
 	}
+	return retval;
+}
+
+TestCase* RangeSet::getNewTestCaseEntirelyFromRange(Range* range) {
+	int numberOfParameters = targetCFG->getNumberOfParameters();
+	TestCase* retval = new TestCase(); // empty test case
+	int* inputParameters = new int[numberOfParameters] {};
+	for(int i = 0; i < numberOfParameters; i++)
+	{
+		inputParameters[i] = uniformInRange(range->start, range->end);
+	}
+	retval->setInputParametersWithReference(&inputParameters);
+	targetCFG->setCoverageOfTestCase(retval);
+	if (globalPopulation->coversNewEdgesOrPredicates(retval->getEdgesCovered(), true) ||
+			globalPopulation->coversNewEdgesOrPredicates(retval->getPredicatesCovered(), false) ) {
+		for (int i = 0; i < numberOfParameters; i++) {
+			range->incrementUses(inputParameters[i]);
+			totalUsefulness++;
+		}
+		sortRangesByUsefulness();
+	}
+	return retval;
+}
+
+TestCase* RangeSet::getNewTestCaseEntirelyFromRange(int start, int end) {
+	int numberOfParameters = targetCFG->getNumberOfParameters();
+	TestCase* retval = new TestCase(); // empty test case
+	int* inputParameters = new int[numberOfParameters] {};
+	for(int i = 0; i < numberOfParameters; i++)
+	{
+		inputParameters[i] = uniformInRange(start, end);
+	}
+	retval->setInputParametersWithReference(&inputParameters);
+	targetCFG->setCoverageOfTestCase(retval);
 	return retval;
 }
 
@@ -89,31 +131,44 @@ Range** RangeSet::selectRangesForNewTestCaseProportionalToUsefulness() {
 
 void RangeSet::adaptRangesBasedOnUsefulness() {
 
+
+
 	int index = 0;
-	while (ranges[index]->numOfUses > 0.10 * totalUsefulness)
+	while (ranges[index]->numOfUses > 0.05 * totalUsefulness)
 	{
-		cout << "Splitting a really good range and exploring adjacents" << endl;
+		//cout << "Splitting a really good range and exploring adjacents" << endl;
+		cout << "Ranges before expore adjacent: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		printRangesSimple();
 		addRangesAdjacentToExistingRange(index);
+
+
+		cout << "Ranges after explore adjacent and before split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		printRangesSimple();
 		splitRange(index);
+		cout << "Ranges after split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		printRangesSimple();
 		index++;
 	}
 	index = numberOfRanges-1;
 	while (index >= 0 && numberOfRanges > minNumberOfRanges && ranges[index]->numOfUses < 0.01 * totalUsefulness)
 	{
-		cout << "Deleting a bad range" << endl;
+		cout << "Ranges before delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		printRangesSimple();
 		deleteRange(index);
+		cout << "Ranges after delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		printRangesSimple();
 		index--;
 	}
 	sortRangesByUsefulness();
-	//printRanges();
+
 
 } // May split, delete, or combine ranges maybe
 
 void RangeSet::splitRange(int index) {
 	Range* old = ranges[index];
 	int oldSize = (old->end - old->start);
-	Range* new1 = (new Range(old->start, old->start + (oldSize / 2) ), old);
-	Range* new2 = (new Range( old->start + (oldSize / 2), old->end, old));
+	Range* new1 = new Range(old->start, old->start + (oldSize / 2), old);
+	Range* new2 = new Range( old->start + (oldSize / 2), old->end, old);
 
 	deleteRange(index);
 	addRange(new1);
@@ -128,8 +183,13 @@ void RangeSet::deleteRange(int index) {
 	//	if he knows why. This causes a segmentation fault or bad alloc sometimes
 	//delete ranges[index];
 	for (int i = index; i < numberOfRanges-1; i++) {
+		Range* old = ranges[i];
 		ranges[i] = ranges[i+1];
+
+		assert(old != ranges[i]);
 	}
+
+
 	cout << "after delete" << endl;
 	numberOfRanges--;
 }
@@ -189,5 +249,11 @@ void RangeSet::moveRangeToSortedPosition(int indexToSort) {
 void RangeSet::printRanges() {
 	for (int i = 0; i < numberOfRanges; i++) {
 		ranges[i]->printRange();
+	}
+}
+
+void RangeSet::printRangesSimple() {
+	for (int i = 0; i < numberOfRanges; i++) {
+		ranges[i]->printRangeSimple();
 	}
 }
