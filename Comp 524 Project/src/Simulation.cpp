@@ -440,6 +440,10 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 				delete tcNeg;
 			}
 			totalIterations++;
+
+			if (finalSuite->getCoverageRatio() == 1) {
+				break;
+			}
 		}
 
 		cout << "End of try # " << tryNum << endl;

@@ -68,8 +68,8 @@ TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase**
 		if (range != NULL) {
 			// All test case parameters from this single range.
 			for(int i = 0; i < numberOfTestCases; i++){
-				testCases[i] = rangeSet->getNewTestCaseEntirelyFromRange(range);
-				targetCFG->setCoverageOfTestCase(testCases[i]);
+				this->testCases[i] = rangeSet->getNewTestCaseEntirelyFromRange(range);
+				targetCFG->setCoverageOfTestCase(this->testCases[i]);
 			}
 		} else {
 			// Random should probably be rangeSet random

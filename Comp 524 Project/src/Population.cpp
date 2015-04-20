@@ -20,7 +20,9 @@ Population::~Population() {
 }
 
 Population::Population(int popSize) {
+
 	globalPopulation = this;
+
 	edgesCovered = new int[targetCFG->getNumberOfEdges()] { };
 	predicatesCovered = new int[targetCFG->getNumberOfPredicates()] { };
 	population = new Organism*[popSize] { };
@@ -42,7 +44,6 @@ Population::Population(int popSize) {
 	}
 
 	totalFitness = 0;
-
 	updateCoverage();
 	updatePopulationsFitness();
 	sortPopulationByFitness();
