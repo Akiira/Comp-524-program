@@ -8,9 +8,11 @@
 #if !defined(EA_B2C38A95_D3AD_472b_BE3C_F83540FB1055__INCLUDED_)
 #define EA_B2C38A95_D3AD_472b_BE3C_F83540FB1055__INCLUDED_
 
+
 //Forward declaration
 class ControlFlowGraph;
 class Range;
+
 class TestCase
 {
 
@@ -18,35 +20,31 @@ public:
 	virtual ~TestCase();
 
 	TestCase();
-	// Copy constructor
 	TestCase(const TestCase& that);
 
-	//TestCase(int rangeNum);
 
-	TestCase(bool empty); // If empty is true it doesn't create input parameters.
 	TestCase(Range* range);
 
+	//============================MUTATOR FUNCTIONS=======================//
 
 	void mutate();
+	void addEdgeCoverage(int edge);
+	void addPredicateCoverage(int predicate);
+	void setInputParameters(int[]);
+	void setInputParameter(int index, int newValue);
+	void clearCoverage();
+
+	//============================PRINT FUNCTIONS=======================//
+
+	void printInputsAndCoverage();
+	void printInputsOnly();
+
+	//============================GETTER FUNCTIONS=======================//
 
 	bool* getEdgesCovered() const;
 	bool* getPredicatesCovered() const;
 	int* getInputParameters() const;
 	int getInputParameterAtIndex(int index) const;
-
-	void addEdgeCoverage(int edge);
-	void addPredicateCoverage(int predicate);
-	void setInputParameters(int[]);
-	void setInputParametersWithReference(int* []);
-	void setInputParameterAtIndex(int index, int newValue);
-
-	void clearCoverage();
-	void printInputsAndCoverage();
-	void printInputsOnly();
-
-	bool hasSameCoverage(TestCase* that);
-
-	TestCase& operator=(const TestCase& org);
 
 	int getNumberOfParameters() const {
 		return numberOfParameters;
@@ -55,6 +53,12 @@ public:
 	int getNumberCovered() const {
 		return numCovered;
 	}
+
+	bool hasSameCoverage(TestCase* that);
+
+	//===========================OVERLOADED OPERATORS==========================//
+
+	TestCase& operator=(const TestCase& org);
 
 private:
 	int numberOfParameters;
@@ -69,13 +73,5 @@ private:
 	int numCovered;
 
 	void generateRandomParameters();
-
-	void generateParametersFromSingleRange(Range* range);
-	void generateParametersFromGlobalRangeSet();
-	//void generateRandomParametersInRange(int rangeNum);
-	//void generateRandomParametersFromRandomRanges();
-
-
-
 };
 #endif // !defined(EA_B2C38A95_D3AD_472b_BE3C_F83540FB1055__INCLUDED_)

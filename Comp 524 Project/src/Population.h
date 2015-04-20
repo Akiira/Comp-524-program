@@ -14,34 +14,35 @@ class TestCase;
 
 class Population
 {
-
 public:
+
+	//========================== CONSTRUCTORS AND DESTRUCTORS ======================//
+
 	virtual ~Population();
 
-	Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSize);
 	Population(int popSize);
-	void crossover(const Organism& parent1, const Organism& parent2, Organism*& offspring1, Organism*& offspring2, int numberOfCutPoints);
-	void crossover(Organism*& child);
+	Population(int popSize, int initialTestSuiteSize, int maxTestSuiteSize);
+
+	//========================== CORE FUNCTIONS ====================================//
+
+	void crossover(const Organism& parent1, const Organism& parent2,
+			Organism*& offspring1, Organism*& offspring2, int numberOfCutPoints);
 	void crossover(const TestCase& parent1, const TestCase& parent2,
 			TestCase*& child1, TestCase*& child2, int numberOfCutPoints);
 
-	void crossoverWithDominance(const Organism& parent1, const Organism& parent2, Organism*& offspring1);
-
 	void replaceParentThenReplaceWorst(int parentIndex, Organism* child);
 	void replaceWorst(Organism* offspring);
-	void replaceOrganismAtIndexWithChild(int organismToReplace, Organism* child);
+	void replaceOrganism(int organismToReplace, Organism* child);
 
-	void evaluateOrganismsFitness(Organism* org);
+
 	void updatePopulationsFitness();
-
-	int randomSelect();
-	int tournamentSelect();
-	int fitnessProportionalSelect();
-
-	bool coversNewEdgesOrPredicates(bool* uncovered, bool edge) ;
+	int fitnessProportionalSelect() const;
 
 	void printPopulationFitness();
 	void printPopulationCoverage();
+
+	//========================== GETTER FUNCTIONS===================================//
+
 
 	int* getEdgesCovered() const {
 		return edgesCovered;
@@ -55,7 +56,7 @@ public:
 		return population[0];
 	}
 
-	Organism* getOrganismByIndex(int index) const {
+	Organism* getOrganism(int index) const {
 		return population[index];
 	}
 
@@ -66,6 +67,7 @@ public:
 	double getCoverageRatio() const {
 		return coverageRatio;
 	}
+
 
 	int getTestSuiteSize() const {
 		return testSuiteSize;
@@ -78,27 +80,47 @@ public:
 
 
 
+	//========================== PREDICATE FUNCTIONS================================//
+
+
+	bool isCoveringNew(const TestCase * tc) const;
+	bool isCoveringNewEdge(const bool * coverage) const;
+	bool isCoveringNewPred(const bool * coverage) const;
+
+	//========================== PRINT FUNCTIONS====================================//
+
+	void printPopulationFitness() const;
+	void printPopulationCoverage() const;
+
+	//========================== OLD FUNCTIONS =====================================//
+
+	void evaluateOrganismsFitness(Organism* org);
+	void crossover(Organism* child);
+	void crossoverWithDominance(const Organism& parent1, const Organism& parent2, Organism*& offspring1);
+	int randomSelect() const;
+	int tournamentSelect() const;
 
 private:
 	Organism** population;
 	int populationSize;
 	int testSuiteSize;
-	int totalFitness;
+	long long totalFitness;
+
 	int* edgesCovered;
 	int* predicatesCovered;
 	double coverageRatio;
 	int lastReplacedFitness;
 
 	//TODO remove hard coding of value
-	const static typeOfScaling SCALING = LINEAR;
+	const static typeOfScaling SCALING = SHARING;
 
-	int* selectCutPoints(int numberOfCutPoints, int upperBound);
-	void computePopulationLevelCoverage();
+	int* selectCutPoints(int& numberOfCutPoints, int upperBound);
 
-
-	void linearScaling();
-
+	void updateCoverage();
 	void updateCoverageBeforeReplacement(int organismToBeReplaced, Organism* child);
+
+	void evaluateSharedFitness(Organism* org);
+	void linearScaling();
 
 	void sortPopulationByFitness();
 	void moveOrganismToSortedPosition(int indexToSort);

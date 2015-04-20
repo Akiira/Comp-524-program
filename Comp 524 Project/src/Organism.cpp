@@ -37,7 +37,7 @@ Organism::Organism(int numOfTestCases, int maxNumberOfTestCases ) {
 }
 
 Organism::Organism(int numberOfTestCases, int maxNumberOfTestCases, Range *range) {
-	chromosome = new TestSuite { numberOfTestCases, maxNumberOfTestCases, range};
+	chromosome = new TestSuite { range, numberOfTestCases, maxNumberOfTestCases};
 	evaluateBaseFitness();
 }
 
@@ -48,9 +48,11 @@ void Organism::mutate(double mutationProb) {
 	for (int i = 0; i < numberOfTestCases; i++) {
 		double toss = uniform01();
 		if (toss < mutationProb) {
+
 			TestCase* newTestCase = rangeSet->getNewTestCase();
+
 			targetCFG->setCoverageOfTestCase(newTestCase);
-			if (chromosome->wouldAddNewCoverage(newTestCase)) {
+			if (chromosome->isCoveringNew(newTestCase)) {
 				chromosome->replaceDuplicateTestCase(newTestCase);
 			}
 		}
@@ -107,7 +109,7 @@ int Organism::fitnessFunction02() {
 	return retval * 10000 / chromosome->getNumberOfTestCases() ;
 }
 
-// This should be one using th epopulation coverage stuff
+// This should be one using the population coverage stuff
 int Organism::fitnessFunction03() {
 	//TODO: Wanted to just make population a global variable, problem was witht he typeOfScaling type and enum, they
 	//	would have had to be put in population instead because of the forward references. Wanted to talk to you about it
@@ -118,9 +120,18 @@ int Organism::fitnessFunction03() {
 	return 0;
 }
 void Organism::evaluateBaseFitness(){
+	fitness = 0;
 	chromosome->calculateTestSuiteCoverage();
+	auto counts = chromosome->getEdgeCoverageCounts();
 
-	fitness = fitnessFunction01();
+	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
+		fitness += (counts[i] ? 1 : 0);
+	}
+
+	counts = chromosome->getPredicateCoverageCounts();
+	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
+		fitness += (counts[i] ? 1 : 0);
+	}
 
 	// Simply set scaledFitness to fitness here in case were not using scaling
 	//	if scaling is used this will be overwritten by a call to Population::scalePopulationFitness
@@ -130,15 +141,15 @@ void Organism::evaluateBaseFitness(){
 //============================PRINT FUNCTIONS=======================//
 
 void Organism::printAll() {
-	cout << "Fitness: " << fitness << endl;
+	cout << "Fitness: " << fitness << ", Scaled Fitness: " << scaledFitness << endl;
 	chromosome->printAll();
 }
-void Organism::printFitnessAndTestSuiteCoverage() {
-	cout << "Fitness: " << fitness << endl;
+void Organism::printFitnessAndTestSuiteCoverage() const {
+	cout << "Fitness: " << fitness << ", Scaled Fitness: " << scaledFitness << endl;
 	chromosome->printTestSuiteCoverage();
 }
-void Organism::printFitnessAndTestSuiteCoverageAndTestCaseInputs() {
-	cout << "Fitness: " << fitness << endl;
+void Organism::printFitnessAndTestSuiteCoverageAndTestCaseInputs() const {
+	cout << "Fitness: " << fitness << ", Scaled Fitness: " << scaledFitness << endl;
 	chromosome->printTestSuiteCoverage();
 	chromosome->printTestCaseInputsOnly();
 }

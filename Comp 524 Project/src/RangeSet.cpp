@@ -47,10 +47,9 @@ TestCase* RangeSet::getNewTestCase() {
 	{
 		inputParameters[i] = uniformInRange(tmp[i]->start, tmp[i]->end);
 	}
-	retval->setInputParametersWithReference(&inputParameters);
+	retval->setInputParameters(inputParameters);
 	targetCFG->setCoverageOfTestCase(retval);
-	if (globalPopulation->coversNewEdgesOrPredicates(retval->getEdgesCovered(), true) ||
-			globalPopulation->coversNewEdgesOrPredicates(retval->getPredicatesCovered(), false) ) {
+	if (globalPopulation->isCoveringNew(retval)) {
 		for (int i = 0; i < numberOfParameters; i++) {
 			tmp[i]->incrementUses(inputParameters[i]);
 			totalUsefulness++;
@@ -68,10 +67,9 @@ TestCase* RangeSet::getNewTestCaseEntirelyFromRange(Range* range) {
 	{
 		inputParameters[i] = uniformInRange(range->start, range->end);
 	}
-	retval->setInputParametersWithReference(&inputParameters);
+	retval->setInputParameters(inputParameters);
 	targetCFG->setCoverageOfTestCase(retval);
-	if (globalPopulation->coversNewEdgesOrPredicates(retval->getEdgesCovered(), true) ||
-			globalPopulation->coversNewEdgesOrPredicates(retval->getPredicatesCovered(), false) ) {
+	if (globalPopulation->isCoveringNew(retval)) {
 		for (int i = 0; i < numberOfParameters; i++) {
 			range->incrementUses(inputParameters[i]);
 			totalUsefulness++;
@@ -89,7 +87,7 @@ TestCase* RangeSet::getNewTestCaseEntirelyFromRange(int start, int end) {
 	{
 		inputParameters[i] = uniformInRange(start, end);
 	}
-	retval->setInputParametersWithReference(&inputParameters);
+	retval->setInputParameters(inputParameters);
 	targetCFG->setCoverageOfTestCase(retval);
 	return retval;
 }

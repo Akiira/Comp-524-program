@@ -20,8 +20,8 @@ public:
 
 	void setCoverageOfTestCase(TestCase* testCase);
 
-	void printTestCaseCoverage(TestCase* testCase) const;
-	void printTestSuiteCoverage(TestSuite* testSuite) const;
+	void printTestCaseCoverage(const TestCase* testCase) const;
+	void printTestSuiteCoverage(const TestSuite* testSuite) const;
 	void printPopulationCoverage(int* edges, int* predicates) const;
 
 	int getNumberOfEdges() const;

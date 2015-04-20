@@ -15,14 +15,14 @@ ControlFlowGraph::~ControlFlowGraph(){
 }
 
 void ControlFlowGraph::setCoverageOfTestCase(TestCase* testCase) {
-	// Reset coverage and assign testCase ptr to the passed testCase
+	testCase->clearCoverage();
 	this->testCase = testCase;
 
 	// Run through the CFG calculating coverage as it goes.
 	runTestCase();
 }
 
-void ControlFlowGraph::printTestCaseCoverage(TestCase* testCase) const{
+void ControlFlowGraph::printTestCaseCoverage(const TestCase* testCase) const{
 	int* inputParameters = testCase->getInputParameters();
 	bool* edgesCovered = testCase->getEdgesCovered();
 	bool* predicatesCovered = testCase->getPredicatesCovered();
@@ -32,7 +32,7 @@ void ControlFlowGraph::printTestCaseCoverage(TestCase* testCase) const{
 	printPredicatesCovered(predicatesCovered);
 }
 
-void ControlFlowGraph::printTestSuiteCoverage(TestSuite* testSuite) const{
+void ControlFlowGraph::printTestSuiteCoverage(const TestSuite* testSuite) const{
 	int* edgesCovered = testSuite->getEdgeCoverageCounts();
 	int* predicatesCovered = testSuite->getPredicateCoverageCounts();
 
