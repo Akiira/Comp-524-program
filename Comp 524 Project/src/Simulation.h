@@ -27,7 +27,7 @@ public:
 
 	//========================== CORE FUNCTIONS ====================================//
 
-	void run(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
+	int run(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
 	void testCaseCrossover();
 	void testSuiteCrossover(int currentGen);
 
@@ -37,16 +37,16 @@ public:
 	TestCase* localOptFromGivenParams (TestCase* oldTC);
 
 
-	void run(int numberOfGenerations) {
-		this->run(numberOfGenerations, this->numberOfCutPoints, this->mutationProb);
+	int run(int numberOfGenerations) {
+		return run(numberOfGenerations, this->numberOfCutPoints, this->mutationProb);
 	}
 
-	void run(int numberOfGenerations, int numberOfCutPoints) {
-		this->run(numberOfGenerations, numberOfCutPoints, this->mutationProb);
+	int run(int numberOfGenerations, int numberOfCutPoints) {
+		return run(numberOfGenerations, numberOfCutPoints, this->mutationProb);
 	}
 
-	void run(int numberOfGenerations, double mutationProb) {
-		this->run(numberOfGenerations, this->numberOfCutPoints, mutationProb);
+	int run(int numberOfGenerations, double mutationProb) {
+		return run(numberOfGenerations, this->numberOfCutPoints, mutationProb);
 	}
 
 	//========================== OLD FUNCTIONS =====================================//

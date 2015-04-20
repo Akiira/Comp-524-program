@@ -26,7 +26,7 @@ Simulation::Simulation(int populationSize, int numberOfCutPoints, double mutatio
 	population = new Population { populationSize };
 }
 
-void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
+int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
 	this->numberOfCutPoints = numberOfCutPoints;
 	this->mutationProb      = mutationProb;
 	int currentGen { 0 };
@@ -53,6 +53,8 @@ void Simulation::run(int numberOfGenerations, int numberOfCutPoints, double muta
 		gensOfNoImprov++;
 		currentGen++;
 	} while (currentGen < numberOfGenerations && population->getCoverageRatio() < 1);
+
+	return currentGen;
 }
 
 void Simulation::testCaseCrossover() {
