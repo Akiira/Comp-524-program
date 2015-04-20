@@ -37,31 +37,7 @@ Population::Population(int popSize) {
 	sortPopulationByFitness();
 }
 
-void Population::evaluateSharedFitness(Organism* org) {
-	double sharedFitness = 0;
-	org->evaluateBaseFitness();
-
-	auto edges = org->getChromosome()->getEdgeCoverageCounts();
-	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
-		if ( edges[i] ) {
-			sharedFitness += (double)edges[i] * (100.0 / (double)edgesCovered[i]);
-		}
-	}
-
-	auto preds = org->getChromosome()->getPredicateCoverageCounts();
-	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
-		if (preds[i]) {
-			sharedFitness += (double)preds[i] * (100.0 / (double)predicatesCovered[i]);
-		}
-	}
-
-	org->setScaledFitness(sharedFitness);
-}
-
-
-
 void Population::updatePopulationsFitness() {
-	computeCoverageRatio();
 
 	if( SCALING == LINEAR ) {
 		linearScaling();
@@ -116,61 +92,6 @@ void Population::updatePopulationsFitness() {
 //	How much more efficient is this and should we go through and change all to
 //	be this way?
 //
-void Population::sortPopulationByFitness() {
-	int i, j;
-	Organism* tmp;
-	for (i = populationSize - 1; i > 1; i--) {
-		for (j = 0; j < i; j++) {
-			if (population[j]->fitness < population[j + 1]->fitness) {
-				tmp = population[j];
-				population[j] = population[j + 1];
-				population[j + 1] = tmp;
-			}
-		}
-	}
-}
-
-void Population::computeCoverageRatio() {
-	// Clear any previous coverage
-	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-		edgesCovered[j] = 0;
-	}
-
-	for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
-		predicatesCovered[j] = 0;
-	}
-
-	// Calculate new coverage
-	for (int i = 0; i < populationSize; ++i) {
-		auto edgeCov = population[i]->chromosome->getEdgeCoverageCounts();
-		auto predCov = population[i]->chromosome->getPredicateCoverageCounts();
-
-		for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-			edgesCovered[j] += edgeCov[j];
-		}
-
-		for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
-			predicatesCovered[j] += predCov[j];
-		}
-	}
-
-	// Calculate the coverage ratio
-	double numCovered = 0;
-	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
-		if (edgesCovered[j] > 0) {
-			numCovered++;
-		}
-	}
-
-	for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
-		if (predicatesCovered[j] > 0) {
-			numCovered++;
-		}
-	}
-
-	coverageRatio = numCovered / (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
-}
-
 // Return index instead to ultimately be able to pass it to replaceParent
 //	and save unnecessary looping to determine the index of the parent to replace
 int Population::fitnessProportionalSelect() const {
@@ -295,6 +216,56 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 	}
 }
 
+void Population::replaceParentThenReplaceWorst(int parentIndex, Organism* child) {
+	if (child->getScaledFitness() >= population[parentIndex]->getScaledFitness()) {
+		if( printReplacement ) {
+			cout << "-------------REPLACEMENT-----------------\n";
+			cout << "Child replaced parent.\n-------------END REPLACEMENT-----------------\n\n";
+		}
+		replaceOrganism(parentIndex, child);
+	}
+	else {
+		replaceWorst(child);
+	}
+}
+
+void Population::replaceWorst(Organism* child) {
+	int worst { populationSize - 1 };
+
+	if (child->getScaledFitness() >= population[worst]->getScaledFitness()) {
+		if( printReplacement ) {
+			cout << "-------------REPLACEMENT-----------------\n";
+			cout << "Child replaced worst.\n-------------END REPLACEMENT-----------------\n\n";
+		}
+		replaceOrganism(worst, child);
+	} else {
+		if( printReplacement ) {
+			cout << "-------------REPLACEMENT-----------------\n";
+			cout << "Child was not used\n-------------END REPLACEMENT-----------------\n\n";
+		}
+		delete child;
+		child = NULL;
+	}
+}
+
+// A private utility function to perform the actual replacement, any checking of whether or not to
+//	perform the replacement must be done by the calling function.
+void Population::replaceOrganism(int organismIndex, Organism* newOrganism) {
+
+	//updateCoverageBeforeReplacement(organismIndex, newOrganism); For some reason this wasn't working?
+
+	totalFitness -= population[organismIndex]->getScaledFitness();
+
+	delete population[organismIndex];
+	population[organismIndex] = newOrganism;
+
+	lastReplacedFitness = newOrganism->getScaledFitness();
+	updateCoverage();
+	updatePopulationsFitness();
+
+	moveOrganismToSortedPosition(organismIndex);
+}
+
 int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 	assert(numCutPoints < upperBound);
 
@@ -315,56 +286,47 @@ int* Population::selectCutPoints(int numCutPoints, int upperBound) {
 	return cutPoints;
 }
 
-void Population::replaceParentThenReplaceWorst(int parentIndex, Organism* child) {
-	if (child->getScaledFitness() >= population[parentIndex]->getScaledFitness()) {
-		if( printReplacement ) {
-			cout << "-------------REPLACEMENT-----------------\n";
-			cout << "Child replaced parent.\n-------------END REPLACEMENT-----------------\n\n";
+void Population::updateCoverage() {
+	// Clear any previous coverage
+	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+		edgesCovered[j] = 0;
+	}
+
+	for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
+		predicatesCovered[j] = 0;
+	}
+
+	// Calculate new coverage
+	for (int i = 0; i < populationSize; ++i) {
+		auto edgeCov = population[i]->chromosome->getEdgeCoverageCounts();
+		auto predCov = population[i]->chromosome->getPredicateCoverageCounts();
+
+		for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+			edgesCovered[j] += edgeCov[j];
 		}
-		replaceOrganismAtIndexWithChild(parentIndex, child);
+
+		for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
+			predicatesCovered[j] += predCov[j];
+		}
 	}
-	else {
-		replaceWorst(child);
+
+	// Calculate the coverage ratio
+	double numCovered = 0;
+	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
+		if (edgesCovered[j] > 0) {
+			numCovered++;
+		}
 	}
+
+	for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
+		if (predicatesCovered[j] > 0) {
+			numCovered++;
+		}
+	}
+
+	coverageRatio = numCovered / (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
 }
 
-void Population::replaceWorst(Organism* child) {
-	int worst { populationSize - 1 };
-
-	if (child->getScaledFitness() >= population[worst]->getScaledFitness()) {
-		if( printReplacement ) {
-			cout << "-------------REPLACEMENT-----------------\n";
-			cout << "Child replaced worst.\n-------------END REPLACEMENT-----------------\n\n";
-		}
-		replaceOrganismAtIndexWithChild(worst, child);
-	} else {
-		if( printReplacement ) {
-			cout << "-------------REPLACEMENT-----------------\n";
-			cout << "Child was not used, SF: " << child->getScaledFitness() << "\n-------------END REPLACEMENT-----------------\n\n";
-		}
-		delete child;
-		child = NULL;
-	}
-}
-
-// A private utility function to perform the actual replacement, any checking of whether or not to
-//	perform the replacement must be done by the calling function.
-void Population::replaceOrganismAtIndexWithChild(int organismToReplace, Organism* child) {
-
-	updateCoverageBeforeReplacement(organismToReplace, child);
-
-	totalFitness -= population[organismToReplace]->getScaledFitness();
-
-	delete population[organismToReplace];
-	population[organismToReplace] = child;
-
-	lastReplacedFitness = child->getScaledFitness();
-	updatePopulationsFitness();
-
-	moveOrganismToSortedPosition(organismToReplace);
-}
-
-// Shared by all replacement schemes, should be called before the organismToBeReplaced is deleted
 void Population::updateCoverageBeforeReplacement(int organismToBeReplaced, Organism* child) {
 	auto replacedEdgeCov = population[organismToBeReplaced]->getChromosome()->getEdgeCoverageCounts();
 	auto replacedPredCov = population[organismToBeReplaced]->getChromosome()->getPredicateCoverageCounts();
@@ -387,6 +349,21 @@ void Population::updateCoverageBeforeReplacement(int organismToBeReplaced, Organ
 	}
 	coverageRatio = ((double) numCovered) / (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
 
+}
+
+// Shared by all replacement schemes, should be called before the organismToBeReplaced is deleted
+void Population::sortPopulationByFitness() {
+	int i, j;
+	Organism* tmp;
+	for (i = populationSize - 1; i > 1; i--) {
+		for (j = 0; j < i; j++) {
+			if (population[j]->fitness < population[j + 1]->fitness) {
+				tmp = population[j];
+				population[j] = population[j + 1];
+				population[j + 1] = tmp;
+			}
+		}
+	}
 }
 
 // Note this method assumes the organism at indexToSort is >= the organism as indexToSort+1
@@ -453,6 +430,29 @@ void Population::printPopulationCoverage() const {
 	cout << "Population Coverage:" << endl;
 	targetCFG->printPopulationCoverage(edgesCovered, predicatesCovered);
 	cout << "Coverage Ratio: " << coverageRatio << endl << endl;
+}
+
+
+
+void Population::evaluateSharedFitness(Organism* org) {
+	double sharedFitness = 0;
+	org->evaluateBaseFitness();
+
+	auto edges = org->getChromosome()->getEdgeCoverageCounts();
+	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
+		if ( edges[i] ) {
+			sharedFitness += (double)edges[i] * (100.0 / (double)edgesCovered[i]);
+		}
+	}
+
+	auto preds = org->getChromosome()->getPredicateCoverageCounts();
+	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
+		if (preds[i]) {
+			sharedFitness += (double)preds[i] * (100.0 / (double)predicatesCovered[i]);
+		}
+	}
+
+	org->setScaledFitness(sharedFitness);
 }
 
 
