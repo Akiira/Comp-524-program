@@ -417,7 +417,7 @@ void Population::crossover(Organism*& child) {
 		crossover(*tc1, *tc2, child1, child2, targetCFG->getNumberOfParameters() * 0.5);
 
 		if( child->chromosome->wouldAddNewCoverage(child1) ) {
-			cout << "\tTest Case Crossover Worked." << endl;
+			//cout << "\tTest Case Crossover Worked." << endl;
 			child->chromosome->replaceDuplicateTestCase(child1);
 			evaluateOrganismsFitness(child);
 			updatePopulationsFitness();
@@ -425,7 +425,7 @@ void Population::crossover(Organism*& child) {
 			break;
 		}
 		else if( child->chromosome->wouldAddNewCoverage(child2) ) {
-			cout << "\tTest Case Crossover Worked." << endl;
+			//cout << "\tTest Case Crossover Worked." << endl;
 			child->chromosome->replaceDuplicateTestCase(child2);
 			evaluateOrganismsFitness(child);
 			updatePopulationsFitness();
@@ -436,7 +436,7 @@ void Population::crossover(Organism*& child) {
 			delete child2;
 		}
 	}
-	cout << "\tTest Case Crossover Did Not Work." << endl;
+	//cout << "\tTest Case Crossover Did Not Work." << endl;
 }
 
 void Population::crossover(const TestCase& parent1, const TestCase& parent2,

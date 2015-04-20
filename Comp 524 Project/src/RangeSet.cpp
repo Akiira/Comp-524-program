@@ -22,6 +22,7 @@ RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges) {
 	for (int i = 0; i < numberOfRanges; i++) {
 		totalUsefulness += ranges[i]->numOfUses;	// Likely pointless because they'll be 0.
 	}
+	printRanges();
 }
 
 RangeSet::~RangeSet() {
@@ -33,10 +34,10 @@ TestCase* RangeSet::getNewTestCase() {
 	Range** tmp = randomlySelectRangesForNewTestCase();
 	int numberOfParameters = targetCFG->getNumberOfParameters();
 	TestCase* retval = new TestCase(true); // empty test case
-	int* inputParameters = new int[numberOfParameters];
+	int* inputParameters = new int[numberOfParameters] {};
 	for(int i = 0; i < numberOfParameters; i++)
 	{
-		inputParameters[i] = uniformInRange(ranges[i]->start, ranges[i]->end);
+		inputParameters[i] = uniformInRange(tmp[i]->start, tmp[i]->end);
 	}
 	retval->setInputParametersWithReference(&inputParameters);
 	targetCFG->setCoverageOfTestCase(retval);
@@ -104,14 +105,15 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 		index--;
 	}
 	sortRangesByUsefulness();
-	printRanges();
+	//printRanges();
 
 } // May split, delete, or combine ranges maybe
 
 void RangeSet::splitRange(int index) {
 	Range* old = ranges[index];
-	Range* new1 = (new Range(old->start, old->end / 2), old);
-	Range* new2 = (new Range(old->end / 2 + 1, old->end, old));
+	int oldSize = (old->end - old->start);
+	Range* new1 = (new Range(old->start, old->start + (oldSize / 2) ), old);
+	Range* new2 = (new Range( old->start + (oldSize / 2), old->end, old));
 
 	deleteRange(index);
 	addRange(new1);
@@ -121,7 +123,10 @@ void RangeSet::splitRange(int index) {
 void RangeSet::deleteRange(int index) {
 	assert(numberOfRanges > minNumberOfRanges);
 	totalUsefulness -= ranges[index]->numOfUses;
-	delete ranges[index];
+	//TODO: I really don't understand why this causes a problem.
+	//	I think this is a memory leak otherwise. Investigate and ask Randall
+	//	if he knows why. This causes a segmentation fault or bad alloc sometimes
+	//delete ranges[index];
 	for (int i = index; i < numberOfRanges-1; i++) {
 		ranges[i] = ranges[i+1];
 	}
