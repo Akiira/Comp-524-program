@@ -18,7 +18,7 @@ TriangleProblemGraph::~TriangleProblemGraph() {
 
 TriangleProblemGraph::TriangleProblemGraph() {
 	numberOfEdges = 12;
-	numberOfPredicates = 20;
+	numberOfPredicates = 21;
 
 	numberOfParameters = 3;
 
@@ -101,7 +101,7 @@ inline void TriangleProblemGraph::block2() {
 		else if( 2*A < sum && 2*C < sum ) {
 			testCase->addPredicateCoverage(predicates::B2_TFT);
 		} else {
-			assert(false);
+			testCase->addPredicateCoverage(predicates::B2_FFF);
 		}
 	}
 }
