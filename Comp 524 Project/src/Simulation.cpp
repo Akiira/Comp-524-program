@@ -409,7 +409,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 		int nextStartNeg = currStart;
 		int totalIterations = 0;
 
-		cout << "Starting tryNum # " << tryNum << " : Range Size: " << size << endl;
+		//cout << "Starting tryNum # " << tryNum << " : Range Size: " << size << endl;
 		while(nextStartPos < numeric_limits<int>::max() - size && nextStartNeg > numeric_limits<int>::min() + size) {
 
 			nextStartPos = nextStartPos + size + 1;
@@ -418,7 +418,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 			if (finalSuite->isCoveringNew(tcPos)) {
 				finalSuite->addTestCase(tcPos);
 				finalSuite->calculateTestSuiteCoverage();
-				finalSuite->printTestSuiteCoverageRatio();
+				//finalSuite->printTestSuiteCoverageRatio();
 
 				Range* newRange = new Range(nextStartPos, nextStartPos + size);
 				rangeSet->addRange(newRange);
@@ -433,7 +433,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 			if (finalSuite->isCoveringNew(tcNeg)) {
 				finalSuite->addTestCase(tcNeg);
 				finalSuite->calculateTestSuiteCoverage();
-				finalSuite->printTestSuiteCoverageRatio();
+				//finalSuite->printTestSuiteCoverageRatio();
 
 				Range* newRange = new Range(nextStartNeg, nextStartNeg + size);
 				rangeSet->addRange(newRange);
@@ -448,11 +448,11 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 			}
 		}
 
-		cout << "End of try # " << tryNum << endl;
-		rangeSet->printRangesSimple();
+		//cout << "End of try # " << tryNum << endl;
+		//rangeSet->printRangesSimple();
 	}
-	finalOrg->evaluateBaseFitness();
-	finalOrg->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
+	//finalOrg->evaluateBaseFitness();
+	//finalOrg->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
 	delete finalOrg;
 }
 
