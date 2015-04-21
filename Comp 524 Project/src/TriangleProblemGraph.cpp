@@ -83,7 +83,7 @@ inline void TriangleProblemGraph::runTestCase() {
 
 inline void TriangleProblemGraph::block2() {
 
-	int sum { A + B + C };
+	long long sum { A + B + C };
 
 	if( 2*A < sum && 2*B < sum && 2*C < sum ) {
 		testCase->addPredicateCoverage(predicates::B2_TTT);

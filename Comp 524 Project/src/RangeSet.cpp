@@ -34,6 +34,9 @@ RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges) {
 }
 
 RangeSet::~RangeSet() {
+	for (int i = 0; i < numberOfRanges; i++) {
+		delete ranges[i];
+	}
 	delete[] ranges;
 }
 

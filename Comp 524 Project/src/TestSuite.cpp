@@ -72,7 +72,6 @@ TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase**
 				targetCFG->setCoverageOfTestCase(this->testCases[i]);
 			}
 		} else {
-			// Random should probably be rangeSet random
 			for (int i = 0; i < numberOfTestCases; i++) {
 				this->testCases[i] = rangeSet->getNewTestCase();
 			}
