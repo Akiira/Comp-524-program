@@ -135,7 +135,7 @@ int* TestCase::getInputParameters() const{
 	return  inputParameters;
 }
 
-int TestCase::getInputParameterAtIndex(int index) const{
+int TestCase::getParameter(int index) const{
 	assert( index >= 0 );
 	assert( index < numberOfParameters );
 	return inputParameters[index];

@@ -166,9 +166,9 @@ inline void MediumCFG::block14() {
 
 inline void MediumCFG::block23() {
 	//mu > 500 sigma > 10000
-	int a1 = testCase->getInputParameterAtIndex(0),
-		a2 = testCase->getInputParameterAtIndex(0),
-		a3 = testCase->getInputParameterAtIndex(0);
+	int a1 = testCase->getParameter(0),
+		a2 = testCase->getParameter(0),
+		a3 = testCase->getParameter(0);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addEdgeCoverage(edges::B23toB55);
@@ -223,9 +223,9 @@ inline void MediumCFG::block24() {
 
 inline void MediumCFG::block25() {
 	//mu > 500 sigma > 2500 sigma < 5000
-	int a1 = testCase->getInputParameterAtIndex(0),
-		a2 = testCase->getInputParameterAtIndex(0),
-		a3 = testCase->getInputParameterAtIndex(0);
+	int a1 = testCase->getParameter(0),
+		a2 = testCase->getParameter(0),
+		a3 = testCase->getParameter(0);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addEdgeCoverage(edges::B25toB61);
@@ -280,9 +280,9 @@ inline void MediumCFG::block26() {
 
 inline void MediumCFG::block27() {
 	//mu > 500 sigma < 250
-	int a1 = testCase->getInputParameterAtIndex(0),
-		a2 = testCase->getInputParameterAtIndex(0),
-		a3 = testCase->getInputParameterAtIndex(0);
+	int a1 = testCase->getParameter(0),
+		a2 = testCase->getParameter(0),
+		a3 = testCase->getParameter(0);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addEdgeCoverage(edges::B27toB67);
@@ -337,9 +337,9 @@ inline void MediumCFG::block28() {
 
 inline void MediumCFG::block29() {
 	//mu > 500 sigma < 750 sigma > 500
-	int a1 = testCase->getInputParameterAtIndex(0),
-		a2 = testCase->getInputParameterAtIndex(0),
-		a3 = testCase->getInputParameterAtIndex(0);
+	int a1 = testCase->getParameter(0),
+		a2 = testCase->getParameter(0),
+		a3 = testCase->getParameter(0);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addEdgeCoverage(edges::B29toB73);

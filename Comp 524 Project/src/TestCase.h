@@ -44,7 +44,7 @@ public:
 	bool* getEdgesCovered() const;
 	bool* getPredicatesCovered() const;
 	int* getInputParameters() const;
-	int getInputParameterAtIndex(int index) const;
+	int getParameter(int index) const;
 
 	int getNumberOfParameters() const {
 		return numberOfParameters;

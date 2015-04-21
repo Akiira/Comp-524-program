@@ -47,9 +47,9 @@ int TriangleProblemGraph::getUpperBoundForParameter(int parameter) {
 inline void TriangleProblemGraph::runTestCase() {
 	testCase->clearCoverage();
 
-	A = testCase->getInputParameterAtIndex(0);
-	B = testCase->getInputParameterAtIndex(1);
-	C = testCase->getInputParameterAtIndex(2);
+	A = testCase->getParameter(0);
+	B = testCase->getParameter(1);
+	C = testCase->getParameter(2);
 
 	if( A > 0 && B > 0 && C >0 ) {
 		testCase->addEdgeCoverage(edges::B0toB2);

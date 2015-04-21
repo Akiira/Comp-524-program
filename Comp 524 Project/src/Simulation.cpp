@@ -196,7 +196,7 @@ TestCase* Simulation::localOptFromZero (TestCase* oldTC) {
 				if( uniformInRange(1, 100) >= 5 ) {
 					tc->setInputParameter(var, uniformInRange(-NeighborhoodSize, NeighborhoodSize));
 				} else {
-					tc->setInputParameter(var, tc->getInputParameterAtIndex(var) / (2 * (j + 1)));
+					tc->setInputParameter(var, tc->getParameter(var) / (2 * (j + 1)));
 				}
 			}
 			targetCFG->setCoverageOfTestCase(tc);
@@ -222,7 +222,7 @@ TestCase* Simulation::localOptFromGivenParams (TestCase* oldTC)  {
 
 		for (int j = 0; j < (15 + NeighborhoodSize/15); ++j) {
 			for (int var = 0; var < targetCFG->getNumberOfParameters(); ++var) {
-				long newValue = oldTC->getInputParameterAtIndex(var) + uniformInRange(-NeighborhoodSize, NeighborhoodSize);
+				long newValue = oldTC->getParameter(var) + uniformInRange(-NeighborhoodSize, NeighborhoodSize);
 
 				if( newValue > targetCFG->getUpperBoundForParameter(var) ) {
 					newValue = targetCFG->getUpperBoundForParameter(var);

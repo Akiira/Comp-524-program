@@ -74,7 +74,7 @@ TestCase* RangeSet::getNewTestCaseEntirelyFromRange(Range* range) {
 
 	if (globalPopulation->isCoveringNew(retval)) {
 		for (int i = 0; i < targetCFG->getNumberOfParameters(); i++) {
-			range->incrementUses(retval->getInputParameterAtIndex(i));
+			range->incrementUses(retval->getParameter(i));
 			totalUsefulness++;
 		}
 		sortRangesByUsefulness();
