@@ -156,8 +156,7 @@ void TestCase::addPredicateCoverage(int predicate) {
 }
 
 void TestCase::setInputParameters(int newValues[]) {
-	for(int i = 0; i < numberOfParameters; i++)
-	{
+	for(int i = 0; i < numberOfParameters; i++)	{
 		inputParameters[i] = newValues[i];
 	}
 }

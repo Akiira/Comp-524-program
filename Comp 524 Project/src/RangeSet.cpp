@@ -88,11 +88,14 @@ TestCase* RangeSet::getNewTestCaseEntirelyFromRange(int start, int end) {
 	int numberOfParameters = targetCFG->getNumberOfParameters();
 	TestCase* retval = new TestCase(); // empty test case
 	int* inputParameters = new int[numberOfParameters] {};
-	for(int i = 0; i < numberOfParameters; i++)
-	{
+
+	for(int i = 0; i < numberOfParameters; i++)	{
 		inputParameters[i] = uniformInRange(start, end);
 	}
+
 	retval->setInputParameters(inputParameters);
+	delete[] inputParameters;
+
 	targetCFG->setCoverageOfTestCase(retval);
 	return retval;
 }
