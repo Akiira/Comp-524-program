@@ -44,12 +44,10 @@ RangeSet::~RangeSet() {
 
 TestCase* RangeSet::getNewTestCase() {
 	Range** tmp = selectRangesForNewTestCaseProportionalToUsefulness();
-	//Range** tmp = randomlySelectRangesForNewTestCase();
 	int numberOfParameters = targetCFG->getNumberOfParameters();
 	TestCase* retval = new TestCase(); // empty test case
 	int* inputParameters = new int[numberOfParameters] {};
-	for(int i = 0; i < numberOfParameters; i++)
-	{
+	for(int i = 0; i < numberOfParameters; i++)	{
 		inputParameters[i] = uniformInRange(tmp[i]->start, tmp[i]->end);
 	}
 	retval->setInputParameters(inputParameters);
@@ -61,6 +59,9 @@ TestCase* RangeSet::getNewTestCase() {
 		}
 		sortRangesByUsefulness();
 	}
+
+	delete[] tmp;
+
 	return retval;
 }
 
