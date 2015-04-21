@@ -27,9 +27,9 @@ public:
 
 private:
 	int rangeForEachParameter[3][2];
-	int A;
-	int B;
-	int C;
+	long A;
+	long B;
+	long C;
 
 	//http://www.ercim.eu/publication/Ercim_News/enw58/diaz1.gif
 

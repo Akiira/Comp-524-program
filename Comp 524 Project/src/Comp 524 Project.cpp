@@ -55,7 +55,7 @@ const short POPULATION_END = 500;
 const short POPULATION_STEP = 25;
 
 const short TEST_RUNS = 20;
-const short GENERATIONS = 200;
+const short GENERATIONS = 1500;
 
 //Flags to interactivly set printing during simulation
 //TODO I may get rid of all these since we dont have time to make use of them.
@@ -124,6 +124,7 @@ void setTarget(int i) {
 }
 
 void runTestsOnAllGraphs() {
+
 	for (int graph = 1; graph < 6; ++graph) {
 		setTarget(graph);
 		testCutPointsToMutationProb();
