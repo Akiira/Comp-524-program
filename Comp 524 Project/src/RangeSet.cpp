@@ -182,20 +182,14 @@ void RangeSet::splitRange(int index) {
 void RangeSet::deleteRange(int index) {
 	assert(numberOfRanges > minNumberOfRanges);
 	totalUsefulness -= ranges[index]->numOfUses;
-	//TODO: I really don't understand why this causes a problem.
-	//	I think this is a memory leak otherwise. Investigate and ask Randall
-	//	if he knows why. This causes a segmentation fault or bad alloc sometimes
-	//delete ranges[index];
-	for (int i = index; i < numberOfRanges-1; i++) {
+
+	delete ranges[index];
+	numberOfRanges--;
+
+	for (int i = index; i < numberOfRanges; i++) {
 		Range* old = ranges[i];
 		ranges[i] = ranges[i+1];
-
-		assert(old != ranges[i]);
 	}
-
-
-	cout << "after delete" << endl;
-	numberOfRanges--;
 }
 
 void RangeSet::addRangesAdjacentToExistingRange(int index) {
