@@ -35,7 +35,9 @@ RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges) {
 }
 
 RangeSet::~RangeSet() {
-	delete[] ranges;
+	for (int i = 0; i < numberOfRanges; ++i) {
+		delete ranges[i];
+	}
 }
 
 TestCase* RangeSet::getNewTestCase() {
