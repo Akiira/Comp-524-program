@@ -44,17 +44,16 @@ RangeSet::~RangeSet() {
 
 TestCase* RangeSet::getNewTestCase() {
 	Range** tmp = selectRangesForNewTestCaseProportionalToUsefulness();
-	int numberOfParameters = targetCFG->getNumberOfParameters();
 	TestCase* retval = new TestCase(); // empty test case
-	int* inputParameters = new int[numberOfParameters] {};
-	for(int i = 0; i < numberOfParameters; i++)	{
-		inputParameters[i] = uniformInRange(tmp[i]->start, tmp[i]->end);
+
+	for(int i = 0; i < targetCFG->getNumberOfParameters(); i++)	{
+		retval->setInputParameter(i, uniformInRange(tmp[i]->start, tmp[i]->end));
 	}
-	retval->setInputParameters(inputParameters);
 	targetCFG->setCoverageOfTestCase(retval);
+
 	if (globalPopulation->isCoveringNew(retval)) {
-		for (int i = 0; i < numberOfParameters; i++) {
-			tmp[i]->incrementUses(inputParameters[i]);
+		for (int i = 0; i < targetCFG->getNumberOfParameters(); i++) {
+			tmp[i]->incrementUses(retval->getParameter(i));
 			totalUsefulness++;
 		}
 		sortRangesByUsefulness();
@@ -179,7 +178,7 @@ void RangeSet::deleteRange(int index) {
 	assert(numberOfRanges > minNumberOfRanges);
 	totalUsefulness -= ranges[index]->numOfUses;
 
-	delete ranges[index];
+	//delete ranges[index];
 	numberOfRanges--;
 
 	for (int i = index; i < numberOfRanges; i++) {
