@@ -215,6 +215,9 @@ void RangeSet::addRange(Range* r) {
 		for (int i = 0; i < numberOfRanges; i++) {
 			tmp[i] = new Range(*ranges[i]);
 		}
+		for (int i = 0; i < numberOfRanges; i++) {
+			delete ranges[i];
+		}
 		delete[] ranges;
 		ranges = tmp;
 		ranges[numberOfRanges] = r;
