@@ -45,7 +45,7 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 	int gensOfNoImprov = 0;
 
 	do {
-		cout << "\tGeneration # " << currentGen << " CoverageRatio: " << population->getCoverageRatio() << endl;
+		cout << "\t\tGeneration # " << currentGen << " CoverageRatio: " << population->getCoverageRatio() << endl;
 
 		if( gensOfNoImprov == 20 || currentGen % 30 == 0 ){
 			testSuiteCrossover(currentGen);
@@ -92,8 +92,8 @@ void Simulation::testCaseCrossover() {
 		} while (true);
 
 		population->crossover(*tc1, *tc2, child1, child2, 2);
-		tc1->mutate();
-		tc2->mutate();
+		child1->mutate();
+		child2->mutate();
 
 		if( parent->getChromosome()->isCoveringNew(child1) ) {
 			delete child2;
