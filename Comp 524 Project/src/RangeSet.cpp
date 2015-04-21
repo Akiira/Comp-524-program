@@ -181,11 +181,14 @@ void RangeSet::deleteRange(int index) {
 	assert(numberOfRanges > minNumberOfRanges);
 	totalUsefulness -= ranges[index]->numOfUses;
 
+	//TODO So i think we can both be fairly certain that the logic in this function is correct.
+	//	This means the problem is elsewhere, in that this range is being accessed somewhere else
+	// after it is deleted. If you are interested in solving this I would look into that.
+	// But it probally is not worth it since the memory leaked is extremely small.
 	//delete ranges[index];
 	numberOfRanges--;
 
 	for (int i = index; i < numberOfRanges; i++) {
-		Range* old = ranges[i];
 		ranges[i] = ranges[i+1];
 	}
 }
