@@ -110,24 +110,23 @@ unsigned int RangeSet::getRandomRange() const {
 }
 
 Range** RangeSet::selectRangesForNewTestCaseProportionalToUsefulness() {
-	//If totalFitness is zero then an organism is selected at random.
-	long toss;
-	int i;
+	Range** retval = new Range*[targetCFG->getNumberOfParameters()];
 	int sum;
-	int numberOfParameters = targetCFG->getNumberOfParameters();
-	Range** retval = new Range*[numberOfParameters];
-	for (int param = 0; param < numberOfParameters; param++) {
-		i = 0;
+
+	for (int param = 0; param < targetCFG->getNumberOfParameters(); param++) {
+		int i = 0;
+
 		if (totalUsefulness == 0) {
-			i = uniformInRange(0, numberOfRanges - 1);
+			i = getRandomRange();
 		} else {
 			sum = ranges[0]->numOfUses;
-			toss = uniformInRange(0, totalUsefulness-1);
+			long toss = uniformInRange(0, totalUsefulness-1);
 			while (sum < toss) {
 				i++;
 				sum += ranges[i]->numOfUses;
 			}
 		}
+
 		retval[param] = ranges[i];
 	}
 
