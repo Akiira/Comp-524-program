@@ -410,7 +410,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 		int totalIterations = 0;
 
 		//cout << "Starting tryNum # " << tryNum << " : Range Size: " << size << endl;
-		while(nextStartPos < numeric_limits<int>::max() - size && nextStartNeg > numeric_limits<int>::min() + size) {
+		while(nextStartPos < numeric_limits<int>::max()/2 - size && nextStartNeg > numeric_limits<int>::min()/2 + size) {
 
 			nextStartPos = nextStartPos + size + 1;
 			TestCase* tcPos = rangeSet->getNewTestCaseEntirelyFromRange(nextStartPos, nextStartPos + size);
