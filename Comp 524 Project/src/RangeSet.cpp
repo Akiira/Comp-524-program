@@ -66,8 +66,8 @@ TestCase* RangeSet::getNewTestCase() {
 
 TestCase* RangeSet::getNewTestCaseEntirelyFromRange(Range* range) {
 	int numberOfParameters = targetCFG->getNumberOfParameters();
-	TestCase* retval = new TestCase(); // empty test case
-	int* inputParameters = new int[numberOfParameters] {};
+	TestCase* retval       = new TestCase(); // empty test case
+	int* inputParameters   = new int[numberOfParameters] {};
 
 	for(int i = 0; i < numberOfParameters; i++)	{
 		inputParameters[i] = uniformInRange(range->start, range->end);
@@ -90,18 +90,14 @@ TestCase* RangeSet::getNewTestCaseEntirelyFromRange(Range* range) {
 }
 
 TestCase* RangeSet::getNewTestCaseEntirelyFromRange(int start, int end) {
-	int numberOfParameters = targetCFG->getNumberOfParameters();
 	TestCase* retval = new TestCase(); // empty test case
-	int* inputParameters = new int[numberOfParameters] {};
 
-	for(int i = 0; i < numberOfParameters; i++)	{
-		inputParameters[i] = uniformInRange(start, end);
+	for(int i = 0; i < targetCFG->getNumberOfParameters(); i++)	{
+		retval->setInputParameter(i, uniformInRange(start, end));
 	}
 
-	retval->setInputParameters(inputParameters);
-	delete[] inputParameters;
-
 	targetCFG->setCoverageOfTestCase(retval);
+
 	return retval;
 }
 
