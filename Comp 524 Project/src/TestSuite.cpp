@@ -142,6 +142,7 @@ void TestSuite::replaceDuplicateTestCase(TestCase* testCase) {
 	auto tc = getDuplicateTestCase();
 
 	// TODO: SHould the old one be deleted??
+	//     : No, it is already deleted in the overloaded = operator.
 	if( tc ) {
 		*tc = *testCase;
 		calculateTestSuiteCoverage();

@@ -11,21 +11,6 @@
 using std::cout;
 using std::endl;
 
-void Range::printRange() {
-	cout << "[ " << start << ", " << end << " ] " << "Size " << (end-start) << endl;
-	cout << "Uses:" << numOfUses << " " << "UsesArraySize: " << usesArraySize <<  endl;
-	cout << "Usage buckets: " << endl;
-	for (int i = 0; i < usesArraySize; i++) {
-		 cout << usesArray[i] << ", ";
-	}
-	cout << endl << endl;
-}
-
-
-void Range::printRangeSimple() {
-	cout << "[ " << start << ", " << end << " ] " << "Size " << (end-start) << " Uses: " << numOfUses << " " << "UsesArraySize: " << usesArraySize <<  endl;
-}
-
 Range::Range(int start, int end) {
 	this->start = start;
 	this->end = end;
@@ -62,6 +47,23 @@ Range::Range(const Range& other) {
 Range::~Range() {
 	delete[] usesArray;
 }
+
+void Range::printRange() {
+//	cout << "[ " << start << ", " << end << " ] " << "Size " << (end-start) << endl;
+//	cout << "Uses:" << numOfUses << " " << "UsesArraySize: " << usesArraySize <<  endl;
+//	cout << "Usage buckets: " << endl;
+//	for (int i = 0; i < usesArraySize; i++) {
+//		 cout << usesArray[i] << ", ";
+//	}
+//	cout << endl << endl;
+}
+
+
+void Range::printRangeSimple() {
+	//cout << "[ " << start << ", " << end << " ] " << "Size " << (end-start) << " Uses: " << numOfUses << " " << "UsesArraySize: " << usesArraySize <<  endl;
+}
+
+
 
 void Range::incrementUses(int valueUsed) {
 	int bucket = (valueUsed - start) / 25;

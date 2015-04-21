@@ -13,6 +13,7 @@
 #include "TestCase.h"
 #include "Population.h"
 #include <iostream>
+
 RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges) {
 	this->numberOfRanges = numberOfRanges;
 	this->maxNumberOfRanges = maxNumberOfRanges;
@@ -22,7 +23,7 @@ RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges) {
 	for (int i = 0; i < numberOfRanges; i++) {
 		totalUsefulness += ranges[i]->numOfUses;	// Likely pointless because they'll be 0.
 	}
-	printRanges();
+	//printRanges();
 }
 
 RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges) {
@@ -129,31 +130,29 @@ Range** RangeSet::selectRangesForNewTestCaseProportionalToUsefulness() {
 
 void RangeSet::adaptRangesBasedOnUsefulness() {
 
-
-
 	int index = 0;
 	while (ranges[index]->numOfUses > 0.05 * totalUsefulness)
 	{
 		//cout << "Splitting a really good range and exploring adjacents" << endl;
-		cout << "Ranges before expore adjacent: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		//cout << "Ranges before expore adjacent: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		printRangesSimple();
 		addRangesAdjacentToExistingRange(index);
 
 
-		cout << "Ranges after explore adjacent and before split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		//cout << "Ranges after explore adjacent and before split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		printRangesSimple();
 		splitRange(index);
-		cout << "Ranges after split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		//cout << "Ranges after split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		printRangesSimple();
 		index++;
 	}
 	index = numberOfRanges-1;
 	while (index >= 0 && numberOfRanges > minNumberOfRanges && ranges[index]->numOfUses < 0.01 * totalUsefulness)
 	{
-		cout << "Ranges before delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		//cout << "Ranges before delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		printRangesSimple();
 		deleteRange(index);
-		cout << "Ranges after delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		//cout << "Ranges after delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		printRangesSimple();
 		index--;
 	}
@@ -245,13 +244,13 @@ void RangeSet::moveRangeToSortedPosition(int indexToSort) {
 }
 
 void RangeSet::printRanges() {
-	for (int i = 0; i < numberOfRanges; i++) {
-		ranges[i]->printRange();
-	}
+//	for (int i = 0; i < numberOfRanges; i++) {
+//		ranges[i]->printRange();
+//	}
 }
 
 void RangeSet::printRangesSimple() {
-	for (int i = 0; i < numberOfRanges; i++) {
-		ranges[i]->printRangeSimple();
-	}
+//	for (int i = 0; i < numberOfRanges; i++) {
+//		ranges[i]->printRangeSimple();
+//	}
 }

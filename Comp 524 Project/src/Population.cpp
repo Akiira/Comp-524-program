@@ -87,13 +87,13 @@ void Population::updatePopulationsFitness() {
 			evaluateSharedFitness(population[i]);
 			totalFitness += population[i]->getScaledFitness();
 
-			if( totalFitness < 0 ) {
-				printf("\t i: %d, pop size: %d, last sf: %d \n", i, populationSize, population[i]->getScaledFitness());
-			}
-			if( totalFitness > 99999 ) {
-				printf("\t i: %d, pop size: %d, last sf: %d \n", i, populationSize, population[i]->getScaledFitness());
-			}
-			assert(totalFitness >= 0); //Overflow
+//			if( totalFitness < 0 ) {
+//				printf("\t i: %d, pop size: %d, last sf: %d \n", i, populationSize, population[i]->getScaledFitness());
+//			}
+//			if( totalFitness > 99999 ) {
+//				printf("\t i: %d, pop size: %d, last sf: %d \n", i, populationSize, population[i]->getScaledFitness());
+//			}
+			assert(totalFitness >= 0); //Overflow or other problem
 		}
 
 	} else if ( totalFitness == 0 ) { // No scaling, initializing fitness for the first time
@@ -103,7 +103,7 @@ void Population::updatePopulationsFitness() {
 			population[i]->setScaledFitness(fitness);
 			totalFitness += fitness;
 
-			assert(totalFitness >= 0); //Overflow
+			assert(totalFitness >= 0); //Overflow or other problem
 		}
 	} else { // No scaling, only need to take one new organism into account
 		totalFitness += lastReplacedFitness;
@@ -242,10 +242,10 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 
 void Population::replaceParentThenReplaceWorst(int parentIndex, Organism* child) {
 	if (child->getScaledFitness() >= population[parentIndex]->getScaledFitness()) {
-		if( printReplacement ) {
-			cout << "-------------REPLACEMENT-----------------\n";
-			cout << "Child replaced parent.\n-------------END REPLACEMENT-----------------\n\n";
-		}
+//		if( printReplacement ) {
+//			cout << "-------------REPLACEMENT-----------------\n";
+//			cout << "Child replaced parent.\n-------------END REPLACEMENT-----------------\n\n";
+//		}
 		replaceOrganism(parentIndex, child);
 	}
 	else {
@@ -257,16 +257,16 @@ void Population::replaceWorst(Organism* child) {
 	int worst { populationSize - 1 };
 
 	if (child->getScaledFitness() >= population[worst]->getScaledFitness()) {
-		if( printReplacement ) {
-			cout << "-------------REPLACEMENT-----------------\n";
-			cout << "Child replaced worst.\n-------------END REPLACEMENT-----------------\n\n";
-		}
+//		if( printReplacement ) {
+//			cout << "-------------REPLACEMENT-----------------\n";
+//			cout << "Child replaced worst.\n-------------END REPLACEMENT-----------------\n\n";
+//		}
 		replaceOrganism(worst, child);
 	} else {
-		if( printReplacement ) {
-			cout << "-------------REPLACEMENT-----------------\n";
-			cout << "Child was not used\n-------------END REPLACEMENT-----------------\n\n";
-		}
+//		if( printReplacement ) {
+//			cout << "-------------REPLACEMENT-----------------\n";
+//			cout << "Child was not used\n-------------END REPLACEMENT-----------------\n\n";
+//		}
 		delete child;
 		child = NULL;
 	}
