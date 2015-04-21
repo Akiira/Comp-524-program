@@ -223,12 +223,10 @@ void RangeSet::addRange(Range* r) {
 }
 
 void RangeSet::sortRangesByUsefulness() {
-	int i, j;
-	Range* tmp;
-	for (i = numberOfRanges - 1; i > 1; i--) {
-		for (j = 0; j < i; j++) {
+	for (int i = numberOfRanges - 1; i > 1; i--) {
+		for (int j = 0; j < i; j++) {
 			if (ranges[j]->numOfUses < ranges[j + 1]->numOfUses) {
-				tmp = ranges[j];
+				Range* tmp = ranges[j];
 				ranges[j] = ranges[j + 1];
 				ranges[j + 1] = tmp;
 			}
@@ -237,11 +235,10 @@ void RangeSet::sortRangesByUsefulness() {
 }
 
 void RangeSet::moveRangeToSortedPosition(int indexToSort) {
-	Range* tmp;
 	int i = indexToSort;
 	// Move the child left while its fitness is greater than it's left neighbor
 	while ((i > 0) && (ranges[i]->numOfUses > ranges[i - 1]->numOfUses)) {
-		tmp = ranges[i];
+		Range* tmp = ranges[i];
 		ranges[i] = ranges[i - 1];
 		ranges[i - 1] = tmp;
 		i--;
