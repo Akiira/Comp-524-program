@@ -68,12 +68,14 @@ TestCase* RangeSet::getNewTestCaseEntirelyFromRange(Range* range) {
 	int numberOfParameters = targetCFG->getNumberOfParameters();
 	TestCase* retval = new TestCase(); // empty test case
 	int* inputParameters = new int[numberOfParameters] {};
-	for(int i = 0; i < numberOfParameters; i++)
-	{
+
+	for(int i = 0; i < numberOfParameters; i++)	{
 		inputParameters[i] = uniformInRange(range->start, range->end);
 	}
+
 	retval->setInputParameters(inputParameters);
 	targetCFG->setCoverageOfTestCase(retval);
+
 	if (globalPopulation->isCoveringNew(retval)) {
 		for (int i = 0; i < numberOfParameters; i++) {
 			range->incrementUses(inputParameters[i]);
@@ -81,6 +83,9 @@ TestCase* RangeSet::getNewTestCaseEntirelyFromRange(Range* range) {
 		}
 		sortRangesByUsefulness();
 	}
+
+	delete[] inputParameters;
+
 	return retval;
 }
 
