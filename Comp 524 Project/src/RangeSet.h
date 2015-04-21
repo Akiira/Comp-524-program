@@ -51,6 +51,7 @@ private:
 	int minNumberOfRanges;
 	Range** ranges;
 
+	unsigned int getRandomRange() const;
 	void splitRange(int index);
 	void addRangesAdjacentToExistingRange(int index);
 	void deleteRange(int index);

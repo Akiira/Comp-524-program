@@ -96,13 +96,17 @@ TestCase* RangeSet::getNewTestCaseEntirelyFromRange(int start, int end) {
 }
 
 Range** RangeSet::randomlySelectRangesForNewTestCase() {
-	int numberOfParameters = targetCFG->getNumberOfParameters();
-	Range** retval = new Range*[numberOfParameters];
-	for (int i = 0; i < numberOfParameters; i++) {
-		int x = uniformInRange(0, numberOfRanges-1);
-		retval[i] = ranges[x];
+	Range** retval = new Range*[targetCFG->getNumberOfParameters()];
+
+	for (int i = 0; i < targetCFG->getNumberOfParameters(); i++) {
+		retval[i] = ranges[getRandomRange()];
 	}
+
 	return retval;
+}
+
+unsigned int RangeSet::getRandomRange() const {
+	return uniformInRange(0, numberOfRanges-1);
 }
 
 Range** RangeSet::selectRangesForNewTestCaseProportionalToUsefulness() {
