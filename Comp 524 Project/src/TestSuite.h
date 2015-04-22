@@ -20,7 +20,6 @@ public:
 
 	TestSuite(const TestSuite&);
 
-
 	TestSuite(Range *range, int numberOfTestCases): TestSuite(range, numberOfTestCases, numberOfTestCases) {};
 	TestSuite(Range *range, int numberOfTestCases, int maxNumberOfTestCases) : TestSuite(numberOfTestCases, maxNumberOfTestCases, 0, range) {};
 
@@ -48,8 +47,6 @@ public:
 
 	//========================== GETTER FUNCTIONS===================================//
 
-	//TestCase** getAllTestCases() const;	TODO: Do we need these
-	//TestCase* getTestCase(int index);
 	TestCase* getDuplicateTestCase() const;
 	TestCase* getRandomTestCase() const;
 	TestCase* getTestCaseThatCoversPredicate(int predicateNumber) const;
@@ -120,12 +117,10 @@ public:
 	//========================== OVERLOADED OPERATORS ==============================//
 
 	TestSuite& operator=(const TestSuite& org);
-	bool operator==(const TestSuite& right);
 
 private:
 	int numberOfTestCases;
 	int maxNumberOfTestCases;
-
 
 	int numberOfParameters;
 	int numberOfEdges;

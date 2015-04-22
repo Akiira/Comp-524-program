@@ -178,7 +178,7 @@ void TestCase::printInputsOnly() const {
 	cout << endl;
 }
 
-TestCase& TestCase::operator =(const TestCase& org) {
+TestCase& TestCase::operator=(const TestCase& org) {
 	if(this != &org){
 		delete[] inputParameters;
 		delete[] edgesCovered;

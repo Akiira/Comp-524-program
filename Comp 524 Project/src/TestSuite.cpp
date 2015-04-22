@@ -21,12 +21,15 @@ using std::endl;
 TestSuite::~TestSuite(){
 	delete[] edgeCoverageCounts;
 	edgeCoverageCounts = NULL;
+
 	delete[] predicateCoverageCounts;
 	predicateCoverageCounts = NULL;
+
 	for(int i = 0; i < numberOfTestCases; i++){
 		delete testCases[i];
 		testCases[i] = NULL;
 	}
+
 	delete[] testCases;
 	testCases = NULL;
 }
@@ -82,12 +85,10 @@ TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase**
 }
 
 void TestSuite::sortTestSuiteByCoverageCounts() {
-	int i, j;
-	TestCase* tmp;
-	for (i = numberOfTestCases - 1; i > 1; i--) {
-		for (j = 0; j < i; j++) {
+	for (int i = numberOfTestCases - 1; i > 1; i--) {
+		for (int j = 0; j < i; j++) {
 			if (testCases[j]->getNumberCovered() < testCases[j + 1]->getNumberCovered() ) {
-				tmp = testCases[j];
+				TestCase *tmp = testCases[j];
 				testCases[j] = testCases[j + 1];
 				testCases[j + 1] = tmp;
 			}
@@ -140,8 +141,6 @@ void TestSuite::replaceRandomTestCase(TestCase* testCase) {
 void TestSuite::replaceDuplicateTestCase(TestCase* testCase) {
 	auto tc = getDuplicateTestCase();
 
-	// TODO: SHould the old one be deleted??
-	//     : No, it is already deleted in the overloaded = operator.
 	if( tc ) {
 		*tc = *testCase;
 		calculateTestSuiteCoverage();
@@ -277,12 +276,11 @@ void TestSuite::calculateTestSuiteCoverage() {
 	coverageRatio = numCovered / (numberOfEdges + numberOfPredicates);
 }
 
-bool TestSuite::isCoveringNew(const TestCase * tc) const {
+bool TestSuite::isCoveringNew(const TestCase *tc) const {
 	return (isCoveringNewEdge(tc->getEdgesCovered()) || isCoveringNewPred(tc->getPredicatesCovered()));
 }
 
-bool TestSuite::isCoveringNewEdge(const bool * coverage) const {
-
+bool TestSuite::isCoveringNewEdge(const bool *coverage) const {
 	for (int i = 0; i < numberOfEdges; ++i) {
 		if(edgeCoverageCounts[i] == 0 && coverage[i] == true){
 			return true;
@@ -290,8 +288,8 @@ bool TestSuite::isCoveringNewEdge(const bool * coverage) const {
 	}
 	return false;
 }
-bool TestSuite::isCoveringNewPred(const bool * coverage) const {
 
+bool TestSuite::isCoveringNewPred(const bool *coverage) const {
 	for (int i = 0; i < numberOfPredicates; ++i) {
 		if(predicateCoverageCounts[i] == 0 && coverage[i] == true){
 			return true;
@@ -301,9 +299,7 @@ bool TestSuite::isCoveringNewPred(const bool * coverage) const {
 	return false;
 }
 
-
-
-TestSuite& TestSuite::operator =(const TestSuite& other) {
+TestSuite& TestSuite::operator=(const TestSuite& other) {
 	if(this != &other){
 		delete[] edgeCoverageCounts;
 		delete[] predicateCoverageCounts;
@@ -334,10 +330,4 @@ TestSuite& TestSuite::operator =(const TestSuite& other) {
 	}
 
 	return *this;
-}
-
-bool TestSuite::operator==(const TestSuite& right) {
-	//TODO implement this
-	assert(false);
-	return false;
 }
