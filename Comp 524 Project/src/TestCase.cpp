@@ -73,7 +73,7 @@ void TestCase::generateRandomParameters() {
 }
 
 
-bool TestCase::hasSameCoverage(TestCase* that) {
+bool TestCase::hasSameCoverage(TestCase* that) const {
 	int edges = targetCFG->getNumberOfEdges();
 	int preds = targetCFG->getNumberOfPredicates();
 	bool same = true;
@@ -162,15 +162,16 @@ void TestCase::setInputParameters(int newValues[]) {
 }
 
 void TestCase::setInputParameter(int index, int newValue) {
-	assert(index >= 0 && index < numberOfParameters);
+	assert( index >= 0 );
+	assert( index < numberOfParameters );
 	inputParameters[index] = newValue;
 }
 
-void TestCase::printInputsAndCoverage() {
+void TestCase::printInputsAndCoverage() const {
 	targetCFG->printTestCaseCoverage(this);
 }
 
-void TestCase::printInputsOnly() {
+void TestCase::printInputsOnly() const {
 	for (int i = 0; i < this->numberOfParameters; i++) {
 		cout << "\t" << inputParameters[i];
 	}

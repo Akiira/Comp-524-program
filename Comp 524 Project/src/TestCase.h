@@ -21,8 +21,6 @@ public:
 
 	TestCase();
 	TestCase(const TestCase& that);
-
-
 	TestCase(Range* range);
 
 	//============================MUTATOR FUNCTIONS=======================//
@@ -36,8 +34,8 @@ public:
 
 	//============================PRINT FUNCTIONS=======================//
 
-	void printInputsAndCoverage();
-	void printInputsOnly();
+	void printInputsAndCoverage() const;
+	void printInputsOnly() const;
 
 	//============================GETTER FUNCTIONS=======================//
 
@@ -54,7 +52,7 @@ public:
 		return numCovered;
 	}
 
-	bool hasSameCoverage(TestCase* that);
+	bool hasSameCoverage(TestCase* that) const;
 
 	//===========================OVERLOADED OPERATORS==========================//
 
