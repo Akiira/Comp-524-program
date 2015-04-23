@@ -53,6 +53,21 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 
 		testCaseCrossover();
 
+		/*
+		 * Ultimately results in calling these functions
+		 * 		TestSuite::calculateTestSuiteCoverage() on every testSuite	--clears and re sums all test case coverage counts to get testSuite coverage counts
+		 * 		Organism::evaluateBaseFitness() on every organism	-- sets non scaled fitness to simple sum of edges and predicates covered
+		 * 		Population::updateCoverage() -- clears and re sums all test suite coverage counts to get population coverage counts
+		 * 		Population::evaluateSharedFitness() -- sets scaledFitness of each organism based upon a simplistic form of fitness sharing
+		 * 		-- recalculates the totalFitness as the sum of all scaledFitness values
+		 * 		Population::sortPopulationByFitness() -- puts the population in sorted order by shared fitness
+		 *
+		 * Always calling once here after all the actions taken by testSuiteCrossover and testCaseCrossover drastically simplifies logic
+		 * we were struggling with. More incremental updates as were striving for originally would be nice but in most cases we ended up
+		 * calling this anyway at various places as our algorithm evolved into its current form.
+		 */
+		population->updatePopulationsFitness();
+
 		if( lastGensCoverage <= population->getCoverageRatio() ) {
 			lastGensCoverage = population->getCoverageRatio();
 			gensOfNoImprov = 0;
@@ -67,6 +82,8 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 		currentGen++;
 	} while (currentGen <= numberOfGenerations && population->getCoverageRatio() < 1);
 
+	TestSuite* finalTestSuite = rangeSet->getFinalTestSuite();
+	finalTestSuite->printAll();
 	return currentGen;
 }
 
@@ -92,21 +109,23 @@ void Simulation::testCaseCrossover() {
 		} while (true);
 
 		population->crossover(*tc1, *tc2, child1, child2, 2);
-		tc1->mutate();
-		tc2->mutate();
 
+		child1->mutate();
+		child2->mutate();
+
+		// Moved these out of mutate because I think it's easier to read this way.
+		targetCFG->setCoverageOfTestCase(child1);
+		targetCFG->setCoverageOfTestCase(child2);
+
+		// replaceDuplicateTestCase recalculates test suite coverage afterwards so this loop is valid.
 		if( parent->getChromosome()->isCoveringNew(child1) ) {
 			delete child2;
 			parent->getChromosome()->replaceDuplicateTestCase(child1);
-			parent->evaluateBaseFitness();
-			population->updatePopulationsFitness();
 			break;
 		}
 		else if( parent->getChromosome()->isCoveringNew(child2) ) {
 			delete child1;
 			parent->getChromosome()->replaceDuplicateTestCase(child2);
-			parent->evaluateBaseFitness();
-			population->updatePopulationsFitness();
 			break;
 		} else {
 			delete child1;
@@ -131,6 +150,13 @@ void Simulation::testSuiteCrossover(int currentGen) {
 	child1->mutate(newProb);
 	child2->mutate(newProb);
 
+	// Brought these calls out of mutate to be more explicit in what happens.
+	// We are now comparing solely on how many edges and predicates are covered
+	//	for the purposes of replacement. This is probably not ideal. We can't do
+	//	it on shared fitness though because they have to be in the population first.
+	child1->evaluateBaseFitness();
+	child2->evaluateBaseFitness();
+
 	// Attempt to replace the worst of the two parents
 	auto parentToReplace = (parent1 <= parent2 ? parent1Index : parent2Index);
 
@@ -139,7 +165,7 @@ void Simulation::testSuiteCrossover(int currentGen) {
 		if (currentGen % 10 == 0 || population->getCoverageRatio() > 0.95) {
 			tryLocalOptimization (child2);
 		}
-		child2->evaluateBaseFitness();
+
 		population->replaceParentThenReplaceWorst(parentToReplace, child2);
 		delete child1;
 		child1 = NULL;
@@ -147,7 +173,7 @@ void Simulation::testSuiteCrossover(int currentGen) {
 		if (currentGen % 10 == 0 || population->getCoverageRatio() > 0.95) {
 			tryLocalOptimization (child1);
 		}
-		child1->evaluateBaseFitness();
+
 		population->replaceParentThenReplaceWorst(parentToReplace, child1);
 		delete child2;
 		child2 = NULL;
@@ -159,6 +185,7 @@ void Simulation::tryLocalOptimization(Organism* org) {
 
 	if( tc ) {
 		org->getChromosome()->replaceDuplicateTestCase(tc);
+		rangeSet->offerToFinalTestSuite(tc);
 	}
 }
 
@@ -170,9 +197,10 @@ TestCase* Simulation::callRandomLocalOpt(Organism* org){
 			return localOptFromGivenParams(oldTC);
 			break;
 		case 1:
-			return localOptFromZero(oldTC);
+			return localOptFromGivenParams(oldTC);
 			break;
 		case 2:
+			//return localOptFromGivenParams(oldTC);
 			return localOptFromZero(oldTC);
 			//return localOptFromMiddle(oldTC);
 			break;
@@ -186,7 +214,7 @@ TestCase* Simulation::localOptFromZero (TestCase* oldTC) {
 	int NeighborhoodSize { 1 };
 
 	for(int i = 0; i < 1000; ++i) {
-		TestCase* tc = new TestCase { };
+		TestCase* tc = new TestCase { };	// empty test case
 		tc->setInputParameters(oldTC->getInputParameters());
 
 		for (int j = 0; j < 150; ++j) { //Try searching this particular neighborhood X times
@@ -213,7 +241,7 @@ TestCase* Simulation::localOptFromZero (TestCase* oldTC) {
 }
 
 TestCase* Simulation::localOptFromGivenParams (TestCase* oldTC)  {
-	TestCase* tc = new TestCase { };
+	TestCase* tc = new TestCase { };	// empty test case
 	int NeighborhoodSize { 1 };
 
 	tc->setInputParameters(oldTC->getInputParameters());
@@ -243,99 +271,6 @@ TestCase* Simulation::localOptFromGivenParams (TestCase* oldTC)  {
 	}
 
 	return NULL;
-}
-
-void Simulation::minimizeOrganism(Organism* orgToMinimize) {
-	TestSuite* suite = orgToMinimize->getChromosome();
-	suite->sortTestSuiteByCoverageCounts();
-	for (int i = orgToMinimize->getNumberOfTestCases()-1; i >= 0; i--) {
-		if (suite->canRemoveTestCaseWithoutChangingCoverage(i)) {
-			suite->removeTestCase(i);
-			suite->calculateTestSuiteCoverage();
-		}
-	}
-}
-
-Organism* Simulation::constructFinalOrganism() {
-	Organism* finalOrg;
-
-	if (hasEquivalentCoverageToPopulation(population->getBestOrganism())) {
-		cout << "Already has all the coverage" << endl;
-		finalOrg = new Organism(*population->getBestOrganism());
-	}
-	else {
-		cout << "Doesn't have all the coverage" << endl;
-		// Start with a copy of bestOrganismSeen, with room to grow
-		TestSuite* bestChromosome = population->getBestOrganism()->getChromosome();
-		TestCase** bestTestCasesSeen = bestChromosome->getAllTestCases();
-		finalOrg = new Organism(0, bestChromosome->getNumberOfTestCases() * 2, new TestCase*[bestChromosome->getNumberOfTestCases() * 2] { });
-
-		TestSuite* finalSuite = finalOrg->getChromosome();
-		for (int i = 0; i < bestChromosome->getNumberOfTestCases(); i++) {
-			finalSuite->addTestCase(new TestCase { *bestTestCasesSeen[i] });
-		}
-		finalSuite->calculateTestSuiteCoverage();
-
-		int* populationEdges = population->getEdgesCovered();
-		int* populationPredicates = population->getPredicatesCovered();
-
-		for (int predicateNum = 0; predicateNum < targetCFG->getNumberOfPredicates(); predicateNum++) {
-			int* testSuitePreds = finalOrg->getChromosome()->getPredicateCoverageCounts();
-			if (populationPredicates[predicateNum] > 0 && testSuitePreds[predicateNum] == 0) {
-				for (int j = 0; j < populationSize; j++) {
-					TestCase* missingTestCase = population->getOrganism(j)->getChromosome()->getTestCaseThatCoversPredicate(predicateNum);
-					if (missingTestCase != NULL) {
-						finalSuite->addTestCase(new TestCase(*missingTestCase));
-						finalSuite->calculateTestSuiteCoverage();
-						break; // Done with this predicate, find the next
-					}
-				}
-			}
-		}
-
-		// I don't believe this is actually necessary since hitting all the predicates should always imply hitting all the edges,
-		//	but I included it anyway just in case.
-		for (int edgeNum = 0; edgeNum < targetCFG->getNumberOfEdges(); edgeNum++) {
-			int* testSuiteEdges = finalOrg->getChromosome()->getEdgeCoverageCounts();
-			if (populationEdges[edgeNum] > 0 && testSuiteEdges[edgeNum] == 0) {
-				for (int j = 0; j < populationSize; j++) {
-					TestCase* missingTestCase = population->getOrganism(j)->getChromosome()->getTestCaseThatCoversEdge(edgeNum);
-					if (missingTestCase != NULL) {
-						finalSuite->addTestCase(new TestCase(*missingTestCase));
-						finalSuite->calculateTestSuiteCoverage();
-						break; // Done with this predicate, find the next
-					}
-				}
-			}
-		}
-		finalOrg->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
-		assert(hasEquivalentCoverageToPopulation(finalOrg));
-	}
-
-	minimizeOrganism(finalOrg);
-	finalOrg->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
-	return finalOrg;
-}
-
-
-bool Simulation::hasEquivalentCoverageToPopulation(Organism* organism) {
-	int* populationEdges = population->getEdgesCovered();
-	int* populationPredicates = population->getPredicatesCovered();
-	int* testSuiteEdges = organism->getChromosome()->getEdgeCoverageCounts();
-	int* testSuitePredicates = organism->getChromosome()->getPredicateCoverageCounts();
-
-	for (int i = 0; i < targetCFG->getNumberOfEdges(); i++) {
-		if (testSuiteEdges[i] == 0 && populationEdges[i] > 0) {
-			return false;
-		}
-	}
-
-	for (int i = 0; i < targetCFG->getNumberOfPredicates(); i++) {
-		if (testSuitePredicates[i] == 0 && populationPredicates[i] > 0) {
-			return false;
-		}
-	}
-	return true;
 }
 
 double Simulation::adaptMutationBasedOnOrganismsCoverage(Organism* org) {
@@ -392,12 +327,11 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 
 	int startSize = 1000, currStart = -500;
 
-	Organism* finalOrg = new Organism(0, edgesPlusPreds, new TestCase*[edgesPlusPreds] { });
-	TestSuite* finalSuite = finalOrg->getChromosome();
+	TestSuite* tmpSuite = new TestSuite(0, edgesPlusPreds, new TestCase*[edgesPlusPreds] { });
 
 	TestCase* tc1 = rangeSet->getNewTestCaseEntirelyFromRange(currStart, currStart + startSize);
-	finalSuite->addTestCase(tc1);
-	finalSuite->calculateTestSuiteCoverage();
+	tmpSuite->addTestCase(tc1);
+	tmpSuite->calculateTestSuiteCoverage();
 
 	Range* startingRange = new Range(currStart, currStart + startSize);
 	rangeSet->addRange(startingRange);
@@ -415,10 +349,9 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 			nextStartPos = nextStartPos + size + 1;
 			TestCase* tcPos = rangeSet->getNewTestCaseEntirelyFromRange(nextStartPos, nextStartPos + size);
 
-			if (finalSuite->isCoveringNew(tcPos)) {
-				finalSuite->addTestCase(tcPos);
-				finalSuite->calculateTestSuiteCoverage();
-				finalSuite->printTestSuiteCoverageRatio();
+			if (tmpSuite->isCoveringNew(tcPos)) {
+				tmpSuite->addTestCase(tcPos);
+				tmpSuite->calculateTestSuiteCoverage();
 
 				Range* newRange = new Range(nextStartPos, nextStartPos + size);
 				rangeSet->addRange(newRange);
@@ -430,10 +363,9 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 			nextStartNeg = nextStartNeg - size - 1;
 			TestCase* tcNeg = rangeSet->getNewTestCaseEntirelyFromRange(nextStartNeg, nextStartNeg + size);
 			targetCFG->setCoverageOfTestCase(tcNeg);
-			if (finalSuite->isCoveringNew(tcNeg)) {
-				finalSuite->addTestCase(tcNeg);
-				finalSuite->calculateTestSuiteCoverage();
-				finalSuite->printTestSuiteCoverageRatio();
+			if (tmpSuite->isCoveringNew(tcNeg)) {
+				tmpSuite->addTestCase(tcNeg);
+				tmpSuite->calculateTestSuiteCoverage();
 
 				Range* newRange = new Range(nextStartNeg, nextStartNeg + size);
 				rangeSet->addRange(newRange);
@@ -443,17 +375,16 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 			}
 			totalIterations++;
 
-			if (finalSuite->getCoverageRatio() == 1) {
+			if (tmpSuite->getCoverageRatio() == 1) {
 				break;
 			}
 		}
-
 		cout << "End of try # " << tryNum << endl;
-		rangeSet->printRangesSimple();
 	}
-	finalOrg->evaluateBaseFitness();
-	finalOrg->printFitnessAndTestSuiteCoverageAndTestCaseInputs();
-	delete finalOrg;
+	delete tmpSuite;
+	cout << "Global range set has been initialized" << endl;
+	rangeSet->printRangesSimple();
+
 }
 
 //============================ OLD FUNCTIONS =======================//
