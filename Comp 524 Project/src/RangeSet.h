@@ -9,6 +9,7 @@
 #define RANGESET_H_
 class Range;
 class TestCase;
+class TestSuite;
 
 #include <cassert>
 class RangeSet {
@@ -41,6 +42,12 @@ public:
 		return ranges[index];
 	}
 
+	TestSuite* getFinalTestSuite() {
+		return finalTestSuite;
+	}
+
+	void offerToFinalTestSuite(TestCase* tc);
+
 	void printRanges();
 	void printRangesSimple();
 	void addRange(Range* r);
@@ -50,6 +57,8 @@ private:
 	int numberOfRanges, maxNumberOfRanges;
 	int minNumberOfRanges;
 	Range** ranges;
+
+	TestSuite* finalTestSuite;
 
 	void splitRange(int index);
 	void addRangesAdjacentToExistingRange(int index);

@@ -12,6 +12,7 @@
 #include "ControlFlowGraph.h"
 #include "TestCase.h"
 #include "Population.h"
+#include "TestSuite.h"
 #include <iostream>
 
 RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges) {
@@ -23,6 +24,10 @@ RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges) {
 	for (int i = 0; i < numberOfRanges; i++) {
 		totalUsefulness += ranges[i]->numOfUses;	// Likely pointless because they'll be 0.
 	}
+
+	// Start as blank organism. Grow whenever rangeSet generates a test case that covers something new.
+	int edgesPlusPred = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+	finalTestSuite = new TestSuite(0, edgesPlusPred, new TestCase*[edgesPlusPred]);
 	//printRanges();
 }
 
@@ -32,6 +37,10 @@ RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges) {
 	this->minNumberOfRanges = 5;
 	this->ranges = new Range*[maxNumberOfRanges];
 	this->totalUsefulness = 0;
+
+	// Start as blank organism. Grow whenever rangeSet generates a test case that covers something new.
+	int edgesPlusPred = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+	finalTestSuite = new TestSuite(0, edgesPlusPred, new TestCase*[edgesPlusPred]);
 }
 
 RangeSet::~RangeSet() {
@@ -40,6 +49,16 @@ RangeSet::~RangeSet() {
 		delete ranges[i];
 	}
 	delete[] ranges;
+	delete finalTestSuite;
+}
+
+// This is called from tryLocalOpt, the only place a test case can be generated
+//	outside of the rangeSet.
+void RangeSet::offerToFinalTestSuite(TestCase* tc) {
+	if (finalTestSuite->isCoveringNew(tc)) {
+		finalTestSuite->addTestCase(new TestCase(*tc));
+		finalTestSuite->calculateTestSuiteCoverage();
+	}
 }
 
 TestCase* RangeSet::getNewTestCase() {
@@ -51,7 +70,10 @@ TestCase* RangeSet::getNewTestCase() {
 	}
 	targetCFG->setCoverageOfTestCase(retval);
 
-	if (globalPopulation->isCoveringNew(retval)) {
+	if (finalTestSuite->isCoveringNew(retval)) {
+		finalTestSuite->addTestCase(new TestCase(*retval));
+		finalTestSuite->calculateTestSuiteCoverage();
+
 		for (int i = 0; i < targetCFG->getNumberOfParameters(); i++) {
 			tmp[i]->incrementUses(retval->getParameter(i));
 			totalUsefulness++;
@@ -72,7 +94,10 @@ TestCase* RangeSet::getNewTestCaseEntirelyFromRange(Range* range) {
 	}
 	targetCFG->setCoverageOfTestCase(retval);
 
-	if (globalPopulation->isCoveringNew(retval)) {
+	if (finalTestSuite->isCoveringNew(retval)) {
+		finalTestSuite->addTestCase(new TestCase(*retval));
+		finalTestSuite->calculateTestSuiteCoverage();
+
 		for (int i = 0; i < targetCFG->getNumberOfParameters(); i++) {
 			range->incrementUses(retval->getParameter(i));
 			totalUsefulness++;
@@ -243,13 +268,13 @@ void RangeSet::moveRangeToSortedPosition(int indexToSort) {
 }
 
 void RangeSet::printRanges() {
-//	for (int i = 0; i < numberOfRanges; i++) {
-//		ranges[i]->printRange();
-//	}
+	for (int i = 0; i < numberOfRanges; i++) {
+		ranges[i]->printRange();
+	}
 }
 
 void RangeSet::printRangesSimple() {
-//	for (int i = 0; i < numberOfRanges; i++) {
-//		ranges[i]->printRangeSimple();
-//	}
+	for (int i = 0; i < numberOfRanges; i++) {
+		ranges[i]->printRangeSimple();
+	}
 }
