@@ -34,7 +34,6 @@ public:
 	//========================== MUTATOR FUNCTIONS =================================//
 
 	void setTestCase(int index, TestCase* testCase);
-	void replaceRandomTestCase(TestCase* testCase);
 	void replaceDuplicateTestCase(TestCase* testCase);
 	void addTestCase(TestCase* testCase);
 	void removeTestCase(int index);

@@ -131,19 +131,12 @@ void TestSuite::setTestCase(int index, TestCase* testCase) {
 	testCases[index] = testCase;
 }
 
-void TestSuite::replaceRandomTestCase(TestCase* testCase) {
-	int index = uniformInRange(0, numberOfTestCases - 1);
-	delete testCases[index];
-	testCases[index] = testCase;
-}
-
 void TestSuite::replaceDuplicateTestCase(TestCase* testCase) {
 	auto tc = getDuplicateTestCase();
 
-	// TODO: SHould the old one be deleted??
-	//     : No, it is already deleted in the overloaded = operator.
 	if( tc ) {
 		*tc = *testCase;
+		// THis handles the subtraction of old tc's coverage.
 		calculateTestSuiteCoverage();
 	}
 }
