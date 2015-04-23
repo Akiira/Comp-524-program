@@ -23,6 +23,9 @@ public:
 	TestCase(const TestCase& that);
 	TestCase(Range* range);
 
+	static TestCase* getRandomTestCase();
+
+
 	//============================MUTATOR FUNCTIONS=======================//
 
 	void mutate();

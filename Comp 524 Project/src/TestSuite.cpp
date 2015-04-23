@@ -132,17 +132,12 @@ void TestSuite::setTestCase(int index, TestCase* testCase) {
 	testCases[index] = testCase;
 }
 
-void TestSuite::replaceRandomTestCase(TestCase* testCase) {
-	int index = uniformInRange(0, numberOfTestCases - 1);
-	delete testCases[index];
-	testCases[index] = testCase;
-}
-
 void TestSuite::replaceDuplicateTestCase(TestCase* testCase) {
 	auto tc = getDuplicateTestCase();
 
 	if( tc ) {
 		*tc = *testCase;
+		// THis handles the subtraction of old tc's coverage.
 		calculateTestSuiteCoverage();
 	}
 }
@@ -231,7 +226,7 @@ void TestSuite::printTestSuiteCoverageRatio() const{
 
 void TestSuite::printAll() const {
 	printTestSuiteCoverage();
-	printTestCaseInputsAndCoverage();
+	printTestCaseInputsOnly();
 	printTestSuiteCoverageRatio();
 }
 

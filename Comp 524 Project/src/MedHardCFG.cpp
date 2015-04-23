@@ -25,8 +25,11 @@ MedHardCFG::MedHardCFG() {
 	testCase = NULL;
 
 	for (int i = 0; i < numberOfParameters; ++i) {
-		rangeForEachParameter[i][0] = numeric_limits<int>::min() / ( i + 6 );
-		rangeForEachParameter[i][1] = numeric_limits<int>::max() / ( i + 6 );
+		//rangeForEachParameter[i][0] = numeric_limits<int>::min() / ( i + 6 );
+		//rangeForEachParameter[i][1] = numeric_limits<int>::max() / ( i + 6 );
+
+		rangeForEachParameter[i][0] = numeric_limits<int>::min();
+		rangeForEachParameter[i][1] = numeric_limits<int>::max();
 	}
 
 	Mu = 0;

@@ -26,13 +26,11 @@ void testCutPointsToMutationProb();
 void testPopulationSizeToCutPoints();
 void testPopulationSizeToMutationProb();
 void printFileHeader();
-void printFileFooter();
 void printFileDataEntry(int, short, double, double);
 void runTests(int, int, short, short, double, double);
 
 ControlFlowGraph*targetCFG { };
 RangeSet*rangeSet { };
-Population*globalPopulation { };	// TODO: This is currently used by rangeSet, but I realized it may be a problem for multithreading tests.
 
 ofstream* outputFile;
 string testProgram;

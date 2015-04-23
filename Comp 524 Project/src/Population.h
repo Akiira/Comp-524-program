@@ -77,9 +77,6 @@ public:
 		return populationSize;
 	}
 
-
-
-
 	//========================== PREDICATE FUNCTIONS================================//
 
 
@@ -94,11 +91,7 @@ public:
 
 	//========================== OLD FUNCTIONS =====================================//
 
-	void evaluateOrganismsFitness(Organism* org);
-	void crossover(Organism* child);
-	void crossoverWithDominance(const Organism& parent1, const Organism& parent2, Organism*& offspring1);
-	int randomSelect() const;
-	int tournamentSelect() const;
+	// Deleted because it was confusing me.
 
 private:
 	Organism** population;
@@ -117,12 +110,11 @@ private:
 	int* selectCutPoints(int& numberOfCutPoints, int upperBound);
 
 	void updateCoverage();
-	void updateCoverageBeforeReplacement(int organismToBeReplaced, Organism* child);
 
 	void evaluateSharedFitness(Organism* org);
+
 	void linearScaling();
 
 	void sortPopulationByFitness();
-	void moveOrganismToSortedPosition(int indexToSort);
 };
 #endif // !defined(EA_BE7C8399_4BC5_48f6_93FA_2B1C440AB247__INCLUDED_)

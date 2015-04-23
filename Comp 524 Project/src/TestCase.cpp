@@ -39,12 +39,6 @@ TestCase::TestCase() {
 	inputParameters = new int[numberOfParameters] { };
 	numCovered = 0;
 
-	// Note these will be overwritten in almost all uses. Keep this
-	//	to remain compatability with RandomSearcher and old test code
-
-
-	generateRandomParameters();
-	targetCFG->setCoverageOfTestCase(this);
 }
 
 TestCase::TestCase(const TestCase& that) {
@@ -64,14 +58,17 @@ TestCase::TestCase(const TestCase& that) {
 	memcpy(inputParameters, that.inputParameters, sizeof(int) * numberOfParameters);
 }
 
-void TestCase::generateRandomParameters() {
+// Static member function, Can be used by random searcher.
+TestCase* TestCase::getRandomTestCase() {
+	TestCase* retval = new TestCase();
 
-	for(int i = 0; i < numberOfParameters; i++)	{
-		inputParameters[i] = uniformInRange(targetCFG->getLowerBoundForParameter(i),
+	for(int i = 0; i < retval->numberOfParameters; i++)	{
+		retval->inputParameters[i] = uniformInRange(targetCFG->getLowerBoundForParameter(i),
 											targetCFG->getUpperBoundForParameter(i));
 	}
+	targetCFG->setCoverageOfTestCase(retval);
+	return retval;
 }
-
 
 bool TestCase::hasSameCoverage(TestCase* that) const {
 	int edges = targetCFG->getNumberOfEdges();

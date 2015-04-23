@@ -27,7 +27,7 @@ void RandomSearcher::search() {
 	auto edges = new bool[numOfEdges];
 	auto attempts = 1;
 	do {
-		auto test = new TestCase();
+		auto test = TestCase::getRandomTestCase();
 		targetCFG->setCoverageOfTestCase(test);
 
 		auto temp = test->getEdgesCovered();
@@ -60,7 +60,7 @@ void RandomSearcher::searchForPredicates() {
 	auto preds = new bool[numOfPreds];
 	long attempts { 1 };
 	do {
-		auto test = new TestCase();
+		auto test = TestCase::getRandomTestCase();
 		targetCFG->setCoverageOfTestCase(test);
 
 		auto temp = test->getPredicatesCovered();
