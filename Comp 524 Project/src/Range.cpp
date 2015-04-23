@@ -31,8 +31,8 @@ Range::Range(int start, int end, Range* source) {
 	// Todo not sure about this logic
 
 	for (int j = 0, i = (source->end - start) / 25; j < usesArraySize; j++, i++) {
-		usesArray[j] = source->usesArray[i];
-		numOfUses += source->usesArray[i];
+		usesArray[j] = source->usesArray[i]/2;
+		numOfUses += source->usesArray[i]/2;
 	}
 }
 
