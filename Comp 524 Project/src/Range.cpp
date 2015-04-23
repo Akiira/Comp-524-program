@@ -49,18 +49,18 @@ Range::~Range() {
 }
 
 void Range::printRange() {
-//	cout << "[ " << start << ", " << end << " ] " << "Size " << (end-start) << endl;
-//	cout << "Uses:" << numOfUses << " " << "UsesArraySize: " << usesArraySize <<  endl;
-//	cout << "Usage buckets: " << endl;
-//	for (int i = 0; i < usesArraySize; i++) {
-//		 cout << usesArray[i] << ", ";
-//	}
-//	cout << endl << endl;
+	cout << "[ " << start << ", " << end << " ] " << "Size " << (end-start) << endl;
+	cout << "Uses:" << numOfUses << " " << "UsesArraySize: " << usesArraySize <<  endl;
+	cout << "Usage buckets: " << endl;
+	for (int i = 0; i < usesArraySize; i++) {
+		 cout << usesArray[i] << ", ";
+	}
+	cout << endl << endl;
 }
 
 
 void Range::printRangeSimple() {
-	//cout << "[ " << start << ", " << end << " ] " << "Size " << (end-start) << " Uses: " << numOfUses << " " << "UsesArraySize: " << usesArraySize <<  endl;
+	cout << "[ " << start << ", " << end << " ] " << "Size " << (end-start) << " Uses: " << numOfUses << " " << "UsesArraySize: " << usesArraySize <<  endl;
 }
 
 
