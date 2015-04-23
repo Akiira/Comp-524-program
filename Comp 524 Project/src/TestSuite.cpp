@@ -225,7 +225,7 @@ void TestSuite::printTestSuiteCoverageRatio() const{
 
 void TestSuite::printAll() const {
 	printTestSuiteCoverage();
-	printTestCaseInputsAndCoverage();
+	printTestCaseInputsOnly();
 	printTestSuiteCoverageRatio();
 }
 
