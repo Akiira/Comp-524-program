@@ -21,8 +21,6 @@ Population::~Population() {
 
 Population::Population(int popSize) {
 
-	globalPopulation = this;
-
 	edgesCovered = new int[targetCFG->getNumberOfEdges()] { };
 	predicatesCovered = new int[targetCFG->getNumberOfPredicates()] { };
 	population = new Organism*[popSize] { };

@@ -32,7 +32,6 @@ void runTests(int, int, short, short, double, double);
 
 ControlFlowGraph*targetCFG { };
 RangeSet*rangeSet { };
-Population*globalPopulation { };	// TODO: This is currently used by rangeSet, but I realized it may be a problem for multithreading tests.
 
 ofstream* outputFile;
 string testProgram;
