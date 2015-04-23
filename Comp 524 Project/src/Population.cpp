@@ -296,6 +296,20 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 	}
 }
 
+void Population::replaceParentWithUnion(int parentIndex, Organism* child) {
+	TestCase** parentTestCases = population[parentIndex]->getChromosome()->getAllTestCases();
+	int parentSize = population[parentIndex]->getChromosome()->getNumberOfTestCases();
+
+	TestSuite* childChromosome = child->getChromosome();
+
+	for (int i = 0; i < parentSize; i++) {
+		if (childChromosome->isCoveringNew(parentTestCases[i])) {
+			childChromosome->replaceDuplicateTestCase(parentTestCases[i]);
+		}
+	}
+	replaceOrganism(parentIndex, child);
+}
+
 void Population::replaceParentThenReplaceWorst(int parentIndex, Organism* child) {
 	// Cannot compare scaled fitness here as the child has not been scaled with the population yet.
 	if (child->getFitness() >= population[parentIndex]->getFitness()) {

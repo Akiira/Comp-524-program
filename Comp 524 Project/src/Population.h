@@ -30,6 +30,7 @@ public:
 	void crossover(const TestCase& parent1, const TestCase& parent2,
 			TestCase*& child1, TestCase*& child2, int numberOfCutPoints);
 
+	void replaceParentWithUnion(int parentIndex, Organism* child);
 	void replaceParentThenReplaceWorst(int parentIndex, Organism* child);
 	void replaceWorst(Organism* offspring);
 	void replaceOrganism(int organismToReplace, Organism* child);

@@ -62,28 +62,34 @@ void RangeSet::offerToFinalTestSuite(TestCase* tc) {
 }
 
 TestCase* RangeSet::getNewTestCase() {
-	Range** tmp = selectRangesForNewTestCaseProportionalToUsefulness();
-	TestCase* retval = new TestCase(); // empty test case
-
-	for(int i = 0; i < targetCFG->getNumberOfParameters(); i++)	{
-		retval->setInputParameter(i, uniformInRange(tmp[i]->start, tmp[i]->end));
+	int toss = uniformInRange(0, 100);
+	if (toss < 25) {
+		return getNewTestCaseEntirelyFromRange(ranges[uniformInRange(0, numberOfRanges-1)]);
 	}
-	targetCFG->setCoverageOfTestCase(retval);
+	else {
+		Range** tmp = selectRangesForNewTestCaseProportionalToUsefulness();
+		TestCase* retval = new TestCase(); // empty test case
 
-	if (finalTestSuite->isCoveringNew(retval)) {
-		finalTestSuite->addTestCase(new TestCase(*retval));
-		finalTestSuite->calculateTestSuiteCoverage();
-
-		for (int i = 0; i < targetCFG->getNumberOfParameters(); i++) {
-			tmp[i]->incrementUses(retval->getParameter(i));
-			totalUsefulness++;
+		for(int i = 0; i < targetCFG->getNumberOfParameters(); i++)	{
+			retval->setInputParameter(i, uniformInRange(tmp[i]->start, tmp[i]->end));
 		}
-		sortRangesByUsefulness();
+		targetCFG->setCoverageOfTestCase(retval);
+
+		if (finalTestSuite->isCoveringNew(retval)) {
+			finalTestSuite->addTestCase(new TestCase(*retval));
+			finalTestSuite->calculateTestSuiteCoverage();
+
+			for (int i = 0; i < targetCFG->getNumberOfParameters(); i++) {
+				tmp[i]->incrementUses(retval->getParameter(i));
+				totalUsefulness++;
+			}
+			sortRangesByUsefulness();
+		}
+
+		delete[] tmp;
+
+		return retval;
 	}
-
-	delete[] tmp;
-
-	return retval;
 }
 
 TestCase* RangeSet::getNewTestCaseEntirelyFromRange(Range* range) {
@@ -168,40 +174,41 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 	stdDev /= numberOfRanges;
 	stdDev = sqrt(stdDev);
 	cout << "Mean Usefulness: " << mean << " StdDev: " << stdDev << endl;
-
+	cout << "Old Range set: " << endl;
+	printRangesSimple();
 	int index = numberOfRanges-1;
 	while (index >= 0 && numberOfRanges > minNumberOfRanges && ranges[index]->numOfUses < mean - (2 * stdDev))
 	{
-		cout << endl <<  "Ranges before delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
-		printRangesSimple();
+		//cout << endl <<  "Ranges before delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		//printRangesSimple();
 		deleteRange(index);
-		cout << endl <<  "Ranges after delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
-		printRangesSimple();
+		//cout << endl <<  "Ranges after delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		//printRangesSimple();
 		index--;
 	}
 
 	index = 0;
-	while (ranges[index]->numOfUses > mean + stdDev)
+	while (ranges[index]->numOfUses > mean + (0.5 *stdDev))
 	{
-		cout << endl <<  "Splitting a really good range and exploring adjacents" << endl;
-		cout << endl <<  "Ranges before expore adjacent: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
-		printRangesSimple();
+		//cout << endl <<  "Splitting a really good range and exploring adjacents" << endl;
+		//cout << endl <<  "Ranges before expore adjacent: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		//printRangesSimple();
 		addRangesAdjacentToExistingRange(index);
 
 
-		cout << endl << "Ranges after explore adjacent and before split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
-		printRangesSimple();
+		//cout << endl << "Ranges after explore adjacent and before split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		//printRangesSimple();
 		splitRange(index);
-		cout << "Ranges after split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
-		printRangesSimple();
+		//cout << "Ranges after split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		//printRangesSimple();
 		index++;
 	}
 
 	addNewRandomRange();
 
 	sortRangesByUsefulness();
-
-
+	cout << "New Range set: " << endl;
+	printRangesSimple();
 } // May split, delete, or combine ranges maybe
 
 void RangeSet::addNewRandomRange() {
