@@ -22,14 +22,14 @@ public:
 						  B5toB7, B4toB8, B8toB9, B8toB10, B10toB11, B10toB12 }; };
 
 	struct predicates { enum { B0_TTT, B0_TTF, B0_TFT, B0_FTT, B0_TFF, B0_FFT, B0_FTF, B0_FFF,
-							   B2_TTT, B2_TTF, B2_TFT, B2_FTT,
+							   B2_TTT, B2_TTF, B2_TFT, B2_FTT, B2_FFF,
 							   B4_T, B4_F, B5_T, B5_F, B8_T, B8_F, B10_T, B10_F}; };
 
 private:
 	int rangeForEachParameter[3][2];
-	int A;
-	int B;
-	int C;
+	long A;
+	long B;
+	long C;
 
 	//http://www.ercim.eu/publication/Ercim_News/enw58/diaz1.gif
 

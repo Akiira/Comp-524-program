@@ -8,10 +8,6 @@
 #if !defined(EA_36970A6C_11F2_400d_B9FF_6A9242FEA2B5__INCLUDED_)
 #define EA_36970A6C_11F2_400d_B9FF_6A9242FEA2B5__INCLUDED_
 
-#include "TestCase.h"
-#include "TestSuite.h"
-
-#include <iostream>
 //Forward declaration
 class TestCase;
 class TestSuite;
@@ -24,8 +20,8 @@ public:
 
 	void setCoverageOfTestCase(TestCase* testCase);
 
-	void printTestCaseCoverage(TestCase* testCase) const;
-	void printTestSuiteCoverage(TestSuite* testSuite) const;
+	void printTestCaseCoverage(const TestCase* testCase) const;
+	void printTestSuiteCoverage(const TestSuite* testSuite) const;
 	void printPopulationCoverage(int* edges, int* predicates) const;
 
 	int getNumberOfEdges() const;

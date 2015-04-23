@@ -8,38 +8,46 @@
 #if !defined(EA_B2C38A95_D3AD_472b_BE3C_F83540FB1055__INCLUDED_)
 #define EA_B2C38A95_D3AD_472b_BE3C_F83540FB1055__INCLUDED_
 
+
 //Forward declaration
 class ControlFlowGraph;
+class Range;
 
 class TestCase
 {
 
 public:
+
+	//========================== CONSTRUCTORS AND DESTRUCTORS ======================//
+
 	virtual ~TestCase();
 
 	TestCase();
-	// Copy constructor
 	TestCase(const TestCase& that);
-	TestCase(int rangeNum);
+	TestCase(Range* range);
+
+	static TestCase* getRandomTestCase();
+
+	//========================== MUTATOR FUNCTIONS =================================//
 
 	void mutate();
+	void addEdgeCoverage(int edge);
+	void addPredicateCoverage(int predicate);
+	void setInputParameters(int[]);
+	void setInputParameter(int index, int newValue);
+	void clearCoverage();
+
+	//========================== PRINT FUNCTIONS ===================================//
+
+	void printInputsAndCoverage() const;
+	void printInputsOnly() const;
+
+	//========================== GETTER FUNCTIONS ==================================//
 
 	bool* getEdgesCovered() const;
 	bool* getPredicatesCovered() const;
 	int* getInputParameters() const;
-	int getInputParameterAtIndex(int index) const;
-
-	void addEdgeCoverage(int edge);
-	void addPredicateCoverage(int predicate);
-	void setInputParameters(int[]);
-	void setInputParametersWithReference(int* []);
-	void setInputParameterAtIndex(int index, int newValue);
-
-	void clearCoverage();
-	void printInputsAndCoverage();
-	void printInputsOnly();
-
-	TestCase& operator=(const TestCase& org);
+	int getParameter(int index) const;
 
 	int getNumberOfParameters() const {
 		return numberOfParameters;
@@ -49,12 +57,18 @@ public:
 		return numCovered;
 	}
 
-private:
-	int numberOfParameters;
-	int numberOfEdges;
-	int numberOfPredicates;
+	//========================== PREDICATE FUNCTIONS ===============================//
 
+	bool hasSameCoverage(TestCase* that) const;
+
+	//========================== OVERLOADED OPERATORS ==============================//
+
+	TestCase& operator=(const TestCase& org);
+
+private:
+	int numberOfParameters, numberOfEdges, numberOfPredicates;
 	int* inputParameters;
+
 	bool* edgesCovered;
 	bool* predicatesCovered;
 
@@ -62,8 +76,5 @@ private:
 	int numCovered;
 
 	void generateRandomParameters();
-	void generateRandomParametersInRange(int rangeNum);
-	void generateRandomParametersFromRandomRanges();
-
 };
 #endif // !defined(EA_B2C38A95_D3AD_472b_BE3C_F83540FB1055__INCLUDED_)

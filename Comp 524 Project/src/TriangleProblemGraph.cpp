@@ -7,6 +7,10 @@
 
 #include "TriangleProblemGraph.h"
 #include <cassert>
+#include <iostream>
+#include <limits>
+#include "TestCase.h"
+using std::numeric_limits;
 using std::endl;
 using std::cout;
 
@@ -16,7 +20,7 @@ TriangleProblemGraph::~TriangleProblemGraph() {
 
 TriangleProblemGraph::TriangleProblemGraph() {
 	numberOfEdges = 12;
-	numberOfPredicates = 20;
+	numberOfPredicates = 21;
 
 	numberOfParameters = 3;
 
@@ -24,12 +28,19 @@ TriangleProblemGraph::TriangleProblemGraph() {
 	A = -666;
 	B = -666;
 	C = -666;
+	/*
 	rangeForEachParameter[0][0] = -100;
 	rangeForEachParameter[0][1] = 10000;
 	rangeForEachParameter[1][0] = -100;
 	rangeForEachParameter[1][1] = 10000;
 	rangeForEachParameter[2][0] = -100;
 	rangeForEachParameter[2][1] = 10000;
+	*/
+
+	for (int i = 0; i < numberOfParameters; ++i) {
+		rangeForEachParameter[i][0] = numeric_limits<int>::min();
+		rangeForEachParameter[i][1] = numeric_limits<int>::max();
+	}
 }
 
 
@@ -45,9 +56,9 @@ int TriangleProblemGraph::getUpperBoundForParameter(int parameter) {
 inline void TriangleProblemGraph::runTestCase() {
 	testCase->clearCoverage();
 
-	A = testCase->getInputParameterAtIndex(0);
-	B = testCase->getInputParameterAtIndex(1);
-	C = testCase->getInputParameterAtIndex(2);
+	A = testCase->getParameter(0);
+	B = testCase->getParameter(1);
+	C = testCase->getParameter(2);
 
 	if( A > 0 && B > 0 && C >0 ) {
 		testCase->addEdgeCoverage(edges::B0toB2);
@@ -81,7 +92,7 @@ inline void TriangleProblemGraph::runTestCase() {
 
 inline void TriangleProblemGraph::block2() {
 
-	int sum { A + B + C };
+	long long sum { A + B + C };
 
 	if( 2*A < sum && 2*B < sum && 2*C < sum ) {
 		testCase->addPredicateCoverage(predicates::B2_TTT);
@@ -99,7 +110,7 @@ inline void TriangleProblemGraph::block2() {
 		else if( 2*A < sum && 2*C < sum ) {
 			testCase->addPredicateCoverage(predicates::B2_TFT);
 		} else {
-			assert(false);
+			testCase->addPredicateCoverage(predicates::B2_FFF);
 		}
 	}
 }

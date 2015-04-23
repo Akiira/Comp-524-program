@@ -11,6 +11,7 @@
 #include <iostream>
 #include <cassert>
 #include "Random.h"
+#include "RangeSet.h"
 using std::cout;
 using std::endl;
 
@@ -35,19 +36,28 @@ Organism::Organism(int numOfTestCases, int maxNumberOfTestCases ) {
 	evaluateBaseFitness();
 }
 
+Organism::Organism(int numberOfTestCases, int maxNumberOfTestCases, Range *range) {
+	chromosome = new TestSuite { range, numberOfTestCases, maxNumberOfTestCases};
+	evaluateBaseFitness();
+}
+
 void Organism::mutate(double mutationProb) {
 	int numberOfTestCases = chromosome->getNumberOfTestCases();
 
+	//TODO: Revisit this
 	for (int i = 0; i < numberOfTestCases; i++) {
 		double toss = uniform01();
 		if (toss < mutationProb) {
-			TestCase* newTestCase = new TestCase();
-			targetCFG->setCoverageOfTestCase(newTestCase);
-			chromosome->setTestCase(i, newTestCase);
+
+			TestCase* newTestCase = rangeSet->getNewTestCase();
+
+			if (chromosome->isCoveringNew(newTestCase)) {
+				chromosome->replaceDuplicateTestCase(newTestCase);
+				// Organism fitness will be reevalated in the simulation loop
+				//	so wont do it here.
+			}
 		}
 	}
-
-	evaluateBaseFitness();
 }
 
 // An idea I had for a quick fitness function
@@ -98,7 +108,7 @@ int Organism::fitnessFunction02() {
 	return retval * 10000 / chromosome->getNumberOfTestCases() ;
 }
 
-// This should be one using th epopulation coverage stuff
+// This should be one using the population coverage stuff
 int Organism::fitnessFunction03() {
 	//TODO: Wanted to just make population a global variable, problem was witht he typeOfScaling type and enum, they
 	//	would have had to be put in population instead because of the forward references. Wanted to talk to you about it
@@ -109,9 +119,18 @@ int Organism::fitnessFunction03() {
 	return 0;
 }
 void Organism::evaluateBaseFitness(){
+	fitness = 0;
 	chromosome->calculateTestSuiteCoverage();
+	auto counts = chromosome->getEdgeCoverageCounts();
 
-	fitness = fitnessFunction01();
+	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
+		fitness += (counts[i] ? 1 : 0);
+	}
+
+	counts = chromosome->getPredicateCoverageCounts();
+	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
+		fitness += (counts[i] ? 1 : 0);
+	}
 
 	// Simply set scaledFitness to fitness here in case were not using scaling
 	//	if scaling is used this will be overwritten by a call to Population::scalePopulationFitness
@@ -121,15 +140,15 @@ void Organism::evaluateBaseFitness(){
 //============================PRINT FUNCTIONS=======================//
 
 void Organism::printAll() {
-	cout << "Fitness: " << fitness << endl;
+	cout << "Fitness: " << fitness << ", Scaled Fitness: " << scaledFitness << endl;
 	chromosome->printAll();
 }
-void Organism::printFitnessAndTestSuiteCoverage() {
-	cout << "Fitness: " << fitness << endl;
+void Organism::printFitnessAndTestSuiteCoverage() const {
+	cout << "Fitness: " << fitness << ", Scaled Fitness: " << scaledFitness << endl;
 	chromosome->printTestSuiteCoverage();
 }
-void Organism::printFitnessAndTestSuiteCoverageAndTestCaseInputs() {
-	cout << "Fitness: " << fitness << endl;
+void Organism::printFitnessAndTestSuiteCoverageAndTestCaseInputs() const {
+	cout << "Fitness: " << fitness << ", Scaled Fitness: " << scaledFitness << endl;
 	chromosome->printTestSuiteCoverage();
 	chromosome->printTestCaseInputsOnly();
 }
@@ -198,17 +217,18 @@ bool Organism::operator<(const Organism& right) {
 }
 
 bool Organism::operator==(const Organism* right) {
+assert(false);
 
-	//They could be the same objects in memory or just have the same
-	// test cases and coverage
-	if( this->chromosome == right->chromosome ) {
-		return true;
-	}
-	else if ( *this->chromosome == *right->chromosome ) {
-		return true;
-	} else {
-		return false;
-	}
+//	//They could be the same objects in memory or just have the same
+//	// test cases and coverage
+//	if( this->chromosome == right->chromosome ) {
+//		return true;
+//	}
+//	else if ( *this->chromosome == *right->chromosome ) {
+//		return true;
+//	} else {
+//		return false;
+//	}
 }
 
 Organism& Organism::operator=(const Organism& org) {

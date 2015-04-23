@@ -10,84 +10,46 @@
 
 #include "TestCase.h"
 
+
 class TestSuite
 {
-private:
-	int numberOfTestCases;
-	int maxNumberOfTestCases;
-
-
-	int numberOfParameters;
-	int numberOfEdges;
-	int numberOfPredicates;
-
-	int* edgeCoverageCounts;
-	int* predicateCoverageCounts;
-
-	TestCase** testCases;
-
-	double coverageRatio;
-
-	// SHared code between constructors
-	void initializeMembersAndAllocateMemory(int numberOfTestCases, int maxNumberOfTestCases);
-	void fillTestSuiteWithRandomTestCases();
-	void fillTestSuiteWithRandomTestCasesInRanges();
-
-
 public:
+
+	//========================== CONSTRUCTORS AND DESTRUCTORS ======================//
 	virtual ~TestSuite();
 
 	TestSuite(const TestSuite&);
-	TestSuite(int numberOfTestCases, int maxNumberOfTestCases);
-	TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCasesToCopy);
+
+	TestSuite(Range *range, int numberOfTestCases): TestSuite(range, numberOfTestCases, numberOfTestCases) {};
+	TestSuite(Range *range, int numberOfTestCases, int maxNumberOfTestCases) : TestSuite(numberOfTestCases, maxNumberOfTestCases, 0, range) {};
+
+	TestSuite(int numberOfTestCases) : TestSuite(numberOfTestCases, numberOfTestCases) {}
+	TestSuite(int numberOfTestCases, int maxNumberOfTestCases): TestSuite(numberOfTestCases, numberOfTestCases, 0) {}
+	TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCases): TestSuite(numberOfTestCases, maxNumberOfTestCases, testCases, 0) {};
+
+	// Actually implements
+	TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCases, Range* range);
+
+	//========================== MUTATOR FUNCTIONS =================================//
 
 	void setTestCase(int index, TestCase* testCase);
-	void replaceRandomTestCase(TestCase* testCase);
 	void replaceDuplicateTestCase(TestCase* testCase);
 	void addTestCase(TestCase* testCase);
 	void removeTestCase(int index);
 
-	bool canRemoveTestCaseWithoutChangingCoverage(int index);
-
 	void resetCoverage();
 	void calculateTestSuiteCoverage();
-	bool coversNewEdge(TestCase* );
+
+
 
 	void sortTestSuiteByCoverageCounts();
 
-	//============================PRINT FUNCTIONS=======================//
+	//========================== GETTER FUNCTIONS ==================================//
 
-	void printTestCaseInputsAndCoverage();
-	void printTestCaseInputsOnly();
-	void printTestSuiteCoverage();
-	void printAll();
-
-	//============================GETTER FUNCTIONS=======================//
-
-	TestCase** getAllTestCases() const;
-	TestCase* getTestCase(int index);
-	TestCase* getDuplicateTestCase();
-	TestCase* getRandomTestCase();
-	TestCase* getTestCaseThatCoversPredicate(int predicateNumber);
-	TestCase* getTestCaseThatCoversEdge(int edgeNumber);
-
-	bool* getAllUncoveredEdges() const {
-		auto unCovered = new bool[numberOfEdges];
-		for (int i = 0; i < numberOfEdges; ++i) {
-			unCovered[i] = ( edgeCoverageCounts[i] == 0 ? true : false );
-		}
-
-		return unCovered;
-	}
-
-	bool* getAllUncoveredPredicates() const {
-		auto unCovered = new bool[numberOfPredicates];
-		for (int i = 0; i < numberOfPredicates; ++i) {
-			unCovered[i] = ( edgeCoverageCounts[i] == 0 ? true : false );
-		}
-
-		return unCovered;
-	}
+	TestCase* getDuplicateTestCase() const;
+	TestCase* getRandomTestCase() const;
+	TestCase* getTestCaseThatCoversPredicate(int predicateNumber) const;
+	TestCase* getTestCaseThatCoversEdge(int edgeNumber) const;
 
 	bool* getDuplicateEdges() const {
 		auto dupes = new bool[numberOfEdges];
@@ -105,6 +67,14 @@ public:
 		}
 
 		return dupes;
+	}
+
+	TestCase** getAllTestCases() const{
+		return  testCases;
+	}
+
+	TestCase* getTestCase(int index) const {
+		return  testCases[index];
 	}
 
 	int* getEdgeCoverageCounts() const {
@@ -127,9 +97,39 @@ public:
 		return coverageRatio;
 	}
 
-	//===========================OVERLOADED OPERATORS===========================
+	//========================== PREDICATE FUNCTIONS ===============================//
+
+	bool canRemoveTestCaseWithoutChangingCoverage(int index) const;
+
+	bool isCoveringNew(const TestCase * tc) const;
+	bool isCoveringNewEdge(const bool * coverage) const;
+	bool isCoveringNewPred(const bool * coverage) const;
+
+	//========================== PRINT FUNCTIONS ===================================//
+
+	void printTestCaseInputsAndCoverage() const;
+	void printTestCaseInputsOnly() const;
+	void printTestSuiteCoverage() const;
+	void printAll() const;
+	void printTestSuiteCoverageRatio() const;
+
+	//========================== OVERLOADED OPERATORS ==============================//
 
 	TestSuite& operator=(const TestSuite& org);
-	bool operator==(const TestSuite& right);
+
+private:
+	int numberOfTestCases;
+	int maxNumberOfTestCases;
+
+	int numberOfParameters;
+	int numberOfEdges;
+	int numberOfPredicates;
+
+	int* edgeCoverageCounts;
+	int* predicateCoverageCounts;
+
+	TestCase** testCases;
+
+	double coverageRatio;
 };
 #endif // !defined(EA_04823F4F_8B3F_4bb8_9DBC_42A1717DC256__INCLUDED_)

@@ -9,10 +9,13 @@
 #include "ControlFlowGraph.h"
 #include "Random.h"
 #include "GlobalVariables.h"
+#include "Range.h"
+#include "RangeSet.h"
 
 #include <string>
 #include <cassert>
 #include <cstring>
+#include <iostream>
 
 TestCase::~TestCase(){
 	delete[] edgesCovered;
@@ -25,7 +28,7 @@ TestCase::~TestCase(){
 	inputParameters = NULL;
 }
 
-/*	Original constructor, just went between param max and min
+// IMPORTANT: In almost all cases now you should use the functions in rangeSet to get test cases
 TestCase::TestCase() {
 	numberOfEdges      = targetCFG->getNumberOfEdges();
 	numberOfParameters = targetCFG->getNumberOfParameters();
@@ -36,37 +39,6 @@ TestCase::TestCase() {
 	inputParameters = new int[numberOfParameters] { };
 	numCovered = 0;
 
-	generateRandomParameters();
-}
-*/
-
-// Make this pull from random ranges instead.
-TestCase::TestCase() {
-	numberOfEdges      = targetCFG->getNumberOfEdges();
-	numberOfParameters = targetCFG->getNumberOfParameters();
-	numberOfPredicates = targetCFG->getNumberOfPredicates();
-
-	edgesCovered = new bool[numberOfEdges] { };
-	predicatesCovered = new bool[numberOfPredicates] { };
-	inputParameters = new int[numberOfParameters] { };
-	numCovered = 0;
-
-	generateRandomParametersFromRandomRanges();
-}
-
-TestCase::TestCase(int rangeNum) {
-	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	assert(rangeNum >= 0 && rangeNum < edgesPlusPreds);
-	numberOfEdges      = targetCFG->getNumberOfEdges();
-	numberOfParameters = targetCFG->getNumberOfParameters();
-	numberOfPredicates = targetCFG->getNumberOfPredicates();
-
-	edgesCovered = new bool[numberOfEdges] { };
-	predicatesCovered = new bool[numberOfPredicates] { };
-	inputParameters = new int[numberOfParameters] { };
-	numCovered = 0;
-
-	generateRandomParametersInRange(rangeNum);
 }
 
 TestCase::TestCase(const TestCase& that) {
@@ -86,39 +58,29 @@ TestCase::TestCase(const TestCase& that) {
 	memcpy(inputParameters, that.inputParameters, sizeof(int) * numberOfParameters);
 }
 
-// Not used anymore
-void TestCase::generateRandomParameters() {
-	//for each parameter generate a random value
-	for(int i = 0; i < numberOfParameters; i++)
-	{
-		inputParameters[i] = uniformInRange(targetCFG->getLowerBoundForParameter(i),
+// Static member function, Can be used by random searcher.
+TestCase* TestCase::getRandomTestCase() {
+	TestCase* retval = new TestCase();
+
+	for(int i = 0; i < retval->numberOfParameters; i++)	{
+		retval->inputParameters[i] = uniformInRange(targetCFG->getLowerBoundForParameter(i),
 											targetCFG->getUpperBoundForParameter(i));
 	}
+	targetCFG->setCoverageOfTestCase(retval);
+	return retval;
 }
 
-void TestCase::generateRandomParametersInRange(int rangeNum) {
-	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	assert(rangeNum >= 0 && rangeNum < edgesPlusPreds);
-
-	for(int i = 0; i < numberOfParameters; i++)
-	{
-		long rangeSize = (targetCFG->getUpperBoundForParameter(i) - targetCFG->getLowerBoundForParameter(i)) / edgesPlusPreds;
-		long lower = targetCFG->getLowerBoundForParameter(i) + rangeNum * rangeSize;
-		long upper = targetCFG->getUpperBoundForParameter(i) + ((rangeNum+1) * rangeSize) - 1;
-		inputParameters[i] = uniformInRange(lower, upper);
+bool TestCase::hasSameCoverage(TestCase* that) const {
+	int edges = targetCFG->getNumberOfEdges();
+	int preds = targetCFG->getNumberOfPredicates();
+	bool same = true;
+	for (int i = 0; i < edges && same; i++) {
+		same &= this->edgesCovered[i] == that->edgesCovered[i];
 	}
-}
-
-void TestCase::generateRandomParametersFromRandomRanges() {
-	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	for(int i = 0; i < numberOfParameters; i++)
-	{
-		int rangeNum = uniformInRange(0, edgesPlusPreds-1);
-		long rangeSize = (targetCFG->getUpperBoundForParameter(i) - targetCFG->getLowerBoundForParameter(i)) / edgesPlusPreds;
-		long lower = targetCFG->getLowerBoundForParameter(i) + rangeNum * rangeSize;
-		long upper = targetCFG->getUpperBoundForParameter(i) + ((rangeNum+1) * rangeSize) - 1;
-		inputParameters[i] = uniformInRange(lower, upper);
+	for (int i = 0; i < preds && same; i++) {
+		same &= this->predicatesCovered[i] == that->predicatesCovered[i];
 	}
+	return same;
 }
 
 
@@ -142,29 +104,20 @@ void TestCase::mutate() {
 			}
 		}
 	}
+
+	targetCFG->setCoverageOfTestCase(this);
 }
 
 void TestCase::clearCoverage() {
-	for(int i = 0; i < numberOfEdges; i++)
-	{
+	numCovered = 0;
+
+	for(int i = 0; i < numberOfEdges; i++) {
 		edgesCovered[i] = false;
 	}
 
-	for(int i = 0; i < numberOfPredicates; i++)
-	{
+	for(int i = 0; i < numberOfPredicates; i++)	{
 		predicatesCovered[i] = false;
 	}
-}
-
-void TestCase::printInputsAndCoverage() {
-	targetCFG->printTestCaseCoverage(this);
-}
-
-void TestCase::printInputsOnly() {
-	for (int i = 0; i < this->numberOfParameters; i++) {
-		cout << "\t" << inputParameters[i];
-	}
-	cout << endl;
 }
 
 bool* TestCase::getEdgesCovered() const{
@@ -179,8 +132,9 @@ int* TestCase::getInputParameters() const{
 	return  inputParameters;
 }
 
-int TestCase::getInputParameterAtIndex(int index) const{
-	assert(index >= 0 && index < numberOfParameters);
+int TestCase::getParameter(int index) const{
+	assert( index >= 0 );
+	assert( index < numberOfParameters );
 	return inputParameters[index];
 }
 
@@ -199,25 +153,29 @@ void TestCase::addPredicateCoverage(int predicate) {
 }
 
 void TestCase::setInputParameters(int newValues[]) {
-	for(int i = 0; i < numberOfParameters; i++)
-	{
+	for(int i = 0; i < numberOfParameters; i++)	{
 		inputParameters[i] = newValues[i];
 	}
 }
 
-void TestCase::setInputParametersWithReference(int* newValues[]) {
-
-	delete inputParameters;
-	inputParameters = *newValues;
-
-}
-
-void TestCase::setInputParameterAtIndex(int index, int newValue) {
-	assert(index >= 0 && index < numberOfParameters);
+void TestCase::setInputParameter(int index, int newValue) {
+	assert( index >= 0 );
+	assert( index < numberOfParameters );
 	inputParameters[index] = newValue;
 }
 
-TestCase& TestCase::operator =(const TestCase& org) {
+void TestCase::printInputsAndCoverage() const {
+	targetCFG->printTestCaseCoverage(this);
+}
+
+void TestCase::printInputsOnly() const {
+	for (int i = 0; i < this->numberOfParameters; i++) {
+		cout << "\t" << inputParameters[i];
+	}
+	cout << endl;
+}
+
+TestCase& TestCase::operator=(const TestCase& org) {
 	if(this != &org){
 		delete[] inputParameters;
 		delete[] edgesCovered;

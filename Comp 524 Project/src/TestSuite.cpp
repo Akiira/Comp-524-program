@@ -6,11 +6,14 @@
 ///////////////////////////////////////////////////////////
 
 #include "TestSuite.h"
+#include "ControlFlowGraph.h"
 #include "GlobalVariables.h"
 #include "Random.h"
 #include <iostream>
 #include <cassert>
 #include <cstring>
+#include "RangeSet.h"
+#include "Range.h"
 
 using std::cout;
 using std::endl;
@@ -18,12 +21,15 @@ using std::endl;
 TestSuite::~TestSuite(){
 	delete[] edgeCoverageCounts;
 	edgeCoverageCounts = NULL;
+
 	delete[] predicateCoverageCounts;
 	predicateCoverageCounts = NULL;
+
 	for(int i = 0; i < numberOfTestCases; i++){
 		delete testCases[i];
 		testCases[i] = NULL;
 	}
+
 	delete[] testCases;
 	testCases = NULL;
 }
@@ -45,30 +51,10 @@ TestSuite::TestSuite(const TestSuite& testSuite) {
 	}
 }
 
-// Fill the new suite with random test cases and evaluate the coverage of all the test cases
-// Note still need to call calculateTestSuiteCoverage which will be done by Organism.setFitness
-
-/*TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases){
-	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
-	this->testCases = new TestCase*[maxNumberOfTestCases] { };
-	fillTestSuiteWithRandomTestCases();
-}*/
-
-// Replaces the other constructor, will fill testCase 0 - edges+preds with values in that range, the rest with random ranges
-TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases){
-	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
-	this->testCases = new TestCase*[maxNumberOfTestCases] { };
-	fillTestSuiteWithRandomTestCasesInRanges();
-}
-
-TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCases) {
-	initializeMembersAndAllocateMemory(numberOfTestCases, maxNumberOfTestCases);
-	this->testCases = testCases;
-}
-
-void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, int maxNumberOfTestCases) {
+TestSuite::TestSuite(int numberOfTestCases, int maxNumberOfTestCases, TestCase** testCases, Range* range) {
 	assert(numberOfTestCases >= 0 );
 	assert(maxNumberOfTestCases >= numberOfTestCases);
+
 	this->maxNumberOfTestCases = maxNumberOfTestCases;
 	this->numberOfTestCases = numberOfTestCases;
 	this->numberOfParameters = targetCFG->getNumberOfParameters();
@@ -76,40 +62,33 @@ void TestSuite::initializeMembersAndAllocateMemory(int numberOfTestCases, int ma
 	this->numberOfPredicates = targetCFG->getNumberOfPredicates();
 	this->edgeCoverageCounts = new int[numberOfEdges] { };
 	this->predicateCoverageCounts = new int[numberOfPredicates] { };
-}
 
-void TestSuite::fillTestSuiteWithRandomTestCases() {
-	assert(testCases != 0);
-	for(int i = 0; i < numberOfTestCases; i++){
-		testCases[i] = new TestCase { };
-		targetCFG->setCoverageOfTestCase(testCases[i]);
-	}
-}
+	if (testCases != NULL) {
+		this->testCases = testCases;
+	} else {
+		this->testCases = new TestCase*[maxNumberOfTestCases] { };
 
-// W
-void TestSuite::fillTestSuiteWithRandomTestCasesInRanges() {
-	assert(testCases != 0);
-	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	assert(numberOfTestCases >= edgesPlusPreds);
-
-	for(int i = 0; i < edgesPlusPreds; i++){
-		testCases[i] = new TestCase {i};
-		targetCFG->setCoverageOfTestCase(testCases[i]);
+		if (range != NULL) {
+			// All test case parameters from this single range.
+			for(int i = 0; i < numberOfTestCases; i++){
+				this->testCases[i] = rangeSet->getNewTestCaseEntirelyFromRange(range);
+				targetCFG->setCoverageOfTestCase(this->testCases[i]);
+			}
+		} else {
+			for (int i = 0; i < numberOfTestCases; i++) {
+				this->testCases[i] = rangeSet->getNewTestCase();
+			}
+		}
 	}
 
-	for (int i = edgesPlusPreds; i < numberOfTestCases; i++) {
-		testCases[i] = new TestCase {};
-		targetCFG->setCoverageOfTestCase(testCases[i]);
-	}
+	coverageRatio = 0;
 }
 
 void TestSuite::sortTestSuiteByCoverageCounts() {
-	int i, j;
-	TestCase* tmp;
-	for (i = numberOfTestCases - 1; i > 1; i--) {
-		for (j = 0; j < i; j++) {
+	for (int i = numberOfTestCases - 1; i > 1; i--) {
+		for (int j = 0; j < i; j++) {
 			if (testCases[j]->getNumberCovered() < testCases[j + 1]->getNumberCovered() ) {
-				tmp = testCases[j];
+				TestCase *tmp = testCases[j];
 				testCases[j] = testCases[j + 1];
 				testCases[j + 1] = tmp;
 			}
@@ -117,19 +96,7 @@ void TestSuite::sortTestSuiteByCoverageCounts() {
 	}
 }
 
-TestCase** TestSuite::getAllTestCases() const{
-	return  testCases;
-}
-
-
-TestCase* TestSuite::getTestCase(int index){
-
-	assert(index >= 0  &&  index < numberOfTestCases);
-
-	return  testCases[index];
-}
-
-TestCase* TestSuite::getTestCaseThatCoversPredicate(int predicateNumber) {
+TestCase* TestSuite::getTestCaseThatCoversPredicate(int predicateNumber) const {
 	if (!predicateCoverageCounts[predicateNumber] > 0) {
 		return NULL;
 	}
@@ -145,7 +112,7 @@ TestCase* TestSuite::getTestCaseThatCoversPredicate(int predicateNumber) {
 	return NULL;
 }
 
-TestCase* TestSuite::getTestCaseThatCoversEdge(int edgeNumber) {
+TestCase* TestSuite::getTestCaseThatCoversEdge(int edgeNumber) const {
 	if (!edgeCoverageCounts[edgeNumber] > 0) {
 		return NULL;
 	}
@@ -157,17 +124,10 @@ TestCase* TestSuite::getTestCaseThatCoversEdge(int edgeNumber) {
 		}
 	}
 
-	assert(false);
 	return NULL;
 }
 
 void TestSuite::setTestCase(int index, TestCase* testCase) {
-	delete testCases[index];
-	testCases[index] = testCase;
-}
-
-void TestSuite::replaceRandomTestCase(TestCase* testCase) {
-	int index = uniformInRange(0, numberOfTestCases - 1);
 	delete testCases[index];
 	testCases[index] = testCase;
 }
@@ -177,6 +137,7 @@ void TestSuite::replaceDuplicateTestCase(TestCase* testCase) {
 
 	if( tc ) {
 		*tc = *testCase;
+		// THis handles the subtraction of old tc's coverage.
 		calculateTestSuiteCoverage();
 	}
 }
@@ -203,23 +164,22 @@ void TestSuite::removeTestCase(int index) {
 	numberOfTestCases--;
 }
 
-TestCase* TestSuite::getDuplicateTestCase() {
+TestCase* TestSuite::getDuplicateTestCase() const {
 
 	for (int i = 0; i < numberOfTestCases; ++i) {
 		if( canRemoveTestCaseWithoutChangingCoverage(i) ) {
 			return getTestCase(i);
 		}
 	}
-
+	assert(false);
 	return NULL;
 }
 
-TestCase* TestSuite::getRandomTestCase() {
-
+TestCase* TestSuite::getRandomTestCase() const {
 	return testCases[uniformInRange(0, numberOfTestCases - 1)];
 }
 
-bool TestSuite::canRemoveTestCaseWithoutChangingCoverage(int index) {
+bool TestSuite::canRemoveTestCaseWithoutChangingCoverage(int index) const {
 	assert(index >= 0 && index < numberOfTestCases);
 	bool* edges = testCases[index]->getEdgesCovered();
 	bool* preds = testCases[index]->getPredicatesCovered();
@@ -238,17 +198,8 @@ bool TestSuite::canRemoveTestCaseWithoutChangingCoverage(int index) {
 	return true;
 }
 
-void TestSuite::printAll() {
-	printTestSuiteCoverage();
-	printTestCaseInputsAndCoverage();
-}
 
-void TestSuite::printTestSuiteCoverage() {
-	cout << "Test Suite Coverage:" << endl;
-	targetCFG->printTestSuiteCoverage(this);
-}
-
-void TestSuite::printTestCaseInputsAndCoverage() {
+void TestSuite::printTestCaseInputsAndCoverage() const {
 	cout << endl << "Test Cases:" << endl;
 	for (int i = 0; i < numberOfTestCases; i++) {
 		std::cout << endl << "Test Case #" << i << endl;
@@ -256,12 +207,27 @@ void TestSuite::printTestCaseInputsAndCoverage() {
 	}
 }
 
-void TestSuite::printTestCaseInputsOnly() {
+void TestSuite::printTestCaseInputsOnly() const {
 	cout << endl << "Test Cases:" << endl;
 	for (int i = 0; i < numberOfTestCases; i++) {
 		std::cout << "#" << i;
 		testCases[i]->printInputsOnly();
 	}
+}
+
+void TestSuite::printTestSuiteCoverage() const {
+	cout << "Test Suite Coverage:" << endl;
+	targetCFG->printTestSuiteCoverage(this);
+}
+
+void TestSuite::printTestSuiteCoverageRatio() const{
+	cout << "Test Suite Coverage Ratio: " << coverageRatio << endl;
+}
+
+void TestSuite::printAll() const {
+	printTestSuiteCoverage();
+	printTestCaseInputsOnly();
+	printTestSuiteCoverageRatio();
 }
 
 void TestSuite::resetCoverage() {
@@ -302,26 +268,25 @@ void TestSuite::calculateTestSuiteCoverage() {
 			numCovered++;
 		}
 	}
-	coverageRatio = numCovered / (targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates());
+	coverageRatio = numCovered / (numberOfEdges + numberOfPredicates);
 }
 
-bool TestSuite::coversNewEdge(TestCase* tc) {
-	auto edges = getAllUncoveredEdges();
-	auto covEdges = tc->getEdgesCovered();
+bool TestSuite::isCoveringNew(const TestCase *tc) const {
+	return (isCoveringNewEdge(tc->getEdgesCovered()) || isCoveringNewPred(tc->getPredicatesCovered()));
+}
 
+bool TestSuite::isCoveringNewEdge(const bool *coverage) const {
 	for (int i = 0; i < numberOfEdges; ++i) {
-		if(edges[i] == false && covEdges[i] == true){
-			delete[] edges;
+		if(edgeCoverageCounts[i] == 0 && coverage[i] == true){
 			return true;
 		}
 	}
+	return false;
+}
 
-	auto preds = getAllUncoveredPredicates();
-	auto covPreds = tc->getPredicatesCovered();
-
+bool TestSuite::isCoveringNewPred(const bool *coverage) const {
 	for (int i = 0; i < numberOfPredicates; ++i) {
-		if(preds[i] == false && covPreds[i] == true){
-			delete[] preds;
+		if(predicateCoverageCounts[i] == 0 && coverage[i] == true){
 			return true;
 		}
 	}
@@ -329,7 +294,7 @@ bool TestSuite::coversNewEdge(TestCase* tc) {
 	return false;
 }
 
-TestSuite& TestSuite::operator =(const TestSuite& other) {
+TestSuite& TestSuite::operator=(const TestSuite& other) {
 	if(this != &other){
 		delete[] edgeCoverageCounts;
 		delete[] predicateCoverageCounts;
@@ -360,10 +325,4 @@ TestSuite& TestSuite::operator =(const TestSuite& other) {
 	}
 
 	return *this;
-}
-
-bool TestSuite::operator==(const TestSuite& right) {
-	//TODO implement this
-	assert(false);
-	return false;
 }

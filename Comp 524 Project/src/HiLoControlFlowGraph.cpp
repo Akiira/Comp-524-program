@@ -8,6 +8,10 @@
 #include "Random.h"
 #include <cstring>
 #include <cassert>
+#include <iostream>
+#include "TestCase.h"
+#include <limits>
+using std::numeric_limits;
 using std::endl;
 using std::cout;
 
@@ -22,12 +26,19 @@ HiLoControlFlowGraph::HiLoControlFlowGraph() {
 	numberOfProgramVariables = 5;
 	programVariables = new int[numberOfProgramVariables] { };
 
+	/*
 	rangeForEachParameter[0][0] = -100;
 	rangeForEachParameter[0][1] = 100;
 	rangeForEachParameter[1][0] = -100;
 	rangeForEachParameter[1][1] = 100;
 	rangeForEachParameter[2][0] = -15000;
 	rangeForEachParameter[2][1] = 15000;
+	*/
+
+	for (int i = 0; i < numberOfParameters; ++i) {
+		rangeForEachParameter[i][0] = numeric_limits<int>::min();
+		rangeForEachParameter[i][1] = numeric_limits<int>::max();
+	}
 }
 
 int HiLoControlFlowGraph::getLowerBoundForParameter(int parameter) {
