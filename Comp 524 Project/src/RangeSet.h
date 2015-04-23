@@ -51,6 +51,7 @@ public:
 	void printRanges();
 	void printRangesSimple();
 	void addRange(Range* r);
+	void addNewRandomRange();
 
 private:
 	int totalUsefulness;

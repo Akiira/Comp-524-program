@@ -68,13 +68,13 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 		 */
 		population->updatePopulationsFitness();
 
-		if( lastGensCoverage <= population->getCoverageRatio() ) {
+		if( lastGensCoverage < population->getCoverageRatio() ) {
 			lastGensCoverage = population->getCoverageRatio();
 			gensOfNoImprov = 0;
 		}
 
 		//TODO Needs range set stuff
-		if (gensOfNoImprov == 50) {
+		if (gensOfNoImprov == 30 || currentGen % 100 == 1) {
 			rangeSet->adaptRangesBasedOnUsefulness();
 		}
 
@@ -325,7 +325,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
 	rangeSet = new RangeSet(0, edgesPlusPreds);
 
-	int startSize = 1000, currStart = -500;
+	int startSize = 5000, currStart = -2500;
 
 	TestSuite* tmpSuite = new TestSuite(0, edgesPlusPreds, new TestCase*[edgesPlusPreds] { });
 
@@ -337,8 +337,8 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 	rangeSet->addRange(startingRange);
 
 	//TODO: Tune this
-	for (int tryNum = 1; tryNum <= 1; tryNum++) {
-		int size = startSize * tryNum;
+	for (int tryNum = 1; tryNum <= 2; tryNum++) {
+		int size = startSize / tryNum;
 		int nextStartPos = currStart;
 		int nextStartNeg = currStart;
 		int totalIterations = 0;
@@ -346,7 +346,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 		cout << "Starting tryNum # " << tryNum << " : Range Size: " << size << endl;
 		while(nextStartPos < numeric_limits<int>::max() - size && nextStartNeg > numeric_limits<int>::min() + size) {
 
-			nextStartPos = nextStartPos + size + 1;
+			nextStartPos = nextStartPos + size;
 			TestCase* tcPos = rangeSet->getNewTestCaseEntirelyFromRange(nextStartPos, nextStartPos + size);
 
 			if (tmpSuite->isCoveringNew(tcPos)) {
@@ -360,7 +360,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 				delete tcPos;
 			}
 
-			nextStartNeg = nextStartNeg - size - 1;
+			nextStartNeg = nextStartNeg - size;
 			TestCase* tcNeg = rangeSet->getNewTestCaseEntirelyFromRange(nextStartNeg, nextStartNeg + size);
 			targetCFG->setCoverageOfTestCase(tcNeg);
 			if (tmpSuite->isCoveringNew(tcNeg)) {
