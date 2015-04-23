@@ -22,6 +22,8 @@ public:
 	TestCase();
 	TestCase(const TestCase& that);
 
+	static TestCase* getRandomTestCase();
+
 
 	TestCase(Range* range);
 
