@@ -17,6 +17,9 @@ class Organism
 {
 
 public:
+
+	//========================== CONSTRUCTORS AND DESTRUCTORS ======================//
+
 	virtual ~Organism();
 
 	Organism(const Organism& org);
@@ -25,33 +28,14 @@ public:
 	Organism(int numOfTestCases, int maxNumberOfTestCases, int rangeNum);
 	Organism(int numberOfTestCases, int maxNumberOfTestCases, Range *range);
 
-	TestSuite* getChromosome() const;
+	//========================== MUTATOR FUNCTIONS =================================//
+
 	void mutate(double mutationProb);
-
 	void evaluateBaseFitness();
-
-	int getUncoveredEdge() const;
-	int getUncoveredPredicate() const;
-	int getFitness() const;
-	int getNumberOfTestCases() const;
-	int getMaxNumberOfTestCases() const;
-
-	bool operator<=(const Organism& right);
-	bool operator<(const Organism& right);
-	bool operator==(const Organism* right);
-	Organism& operator=(const Organism& org);
-
-	void printAll();
-	void printFitnessAndTestSuiteCoverage() const;
-	void printFitnessAndTestSuiteCoverageAndTestCaseInputs() const;
 
 	void setFitness(int fitness) {
 		this->fitness = fitness;
 		this->scaledFitness = fitness;
-	}
-
-	int getScaledFitness() const {
-		return scaledFitness;
 	}
 
 	void setScaledFitness(int scaledFitness) {
@@ -59,12 +43,37 @@ public:
 		this->scaledFitness = scaledFitness;
 	}
 
+	//========================== GETTER FUNCTIONS ==================================//
+
+	TestSuite* getChromosome() const;
+	int getUncoveredEdge() const;
+	int getUncoveredPredicate() const;
+	int getFitness() const;
+	int getNumberOfTestCases() const;
+	int getMaxNumberOfTestCases() const;
+
+	int getScaledFitness() const {
+		return scaledFitness;
+	}
+
+	//========================== PRINT FUNCTIONS ===================================//
+
+	void printAll();
+	void printFitnessAndTestSuiteCoverage() const;
+	void printFitnessAndTestSuiteCoverageAndTestCaseInputs() const;
+
+	//========================== OVERLOADED OPERATORS ==============================//
+
+	bool operator<=(const Organism& right);
+	bool operator<(const Organism& right);
+	bool operator==(const Organism* right);
+	Organism& operator=(const Organism& org);
+
 	friend class Population;
 
 private:
 	TestSuite* chromosome;
-	int fitness;
-	int scaledFitness;
+	int fitness, scaledFitness;
 
 	int fitnessFunction01();
 	int fitnessFunction02();

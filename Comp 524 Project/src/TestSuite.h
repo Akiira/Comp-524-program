@@ -44,7 +44,7 @@ public:
 
 	void sortTestSuiteByCoverageCounts();
 
-	//========================== GETTER FUNCTIONS===================================//
+	//========================== GETTER FUNCTIONS ==================================//
 
 	TestCase* getDuplicateTestCase() const;
 	TestCase* getRandomTestCase() const;
@@ -97,7 +97,7 @@ public:
 		return coverageRatio;
 	}
 
-	//========================== PREDICATE FUNCTIONS================================//
+	//========================== PREDICATE FUNCTIONS ===============================//
 
 	bool canRemoveTestCaseWithoutChangingCoverage(int index) const;
 
@@ -105,7 +105,7 @@ public:
 	bool isCoveringNewEdge(const bool * coverage) const;
 	bool isCoveringNewPred(const bool * coverage) const;
 
-	//========================== PRINT FUNCTIONS====================================//
+	//========================== PRINT FUNCTIONS ===================================//
 
 	void printTestCaseInputsAndCoverage() const;
 	void printTestCaseInputsOnly() const;

@@ -2,7 +2,7 @@
  * RangeSet.cpp
  *
  *  Created on: Apr 10, 2015
- *      Author: amb6470
+ *      Author: Austin and Randall
  */
 
 #include "RangeSet.h"
@@ -28,7 +28,6 @@ RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges) {
 	// Start as blank organism. Grow whenever rangeSet generates a test case that covers something new.
 	int edgesPlusPred = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
 	finalTestSuite = new TestSuite(0, edgesPlusPred, new TestCase*[edgesPlusPred]);
-	//printRanges();
 }
 
 RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges) {
@@ -44,7 +43,6 @@ RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges) {
 }
 
 RangeSet::~RangeSet() {
-
 	for (int i = 0; i < numberOfRanges; i++) {
 		delete ranges[i];
 	}
@@ -120,16 +118,6 @@ TestCase* RangeSet::getNewTestCaseEntirelyFromRange(int start, int end) {
 	return retval;
 }
 
-Range** RangeSet::randomlySelectRangesForNewTestCase() {
-	Range** retval = new Range*[targetCFG->getNumberOfParameters()];
-
-	for (int i = 0; i < targetCFG->getNumberOfParameters(); i++) {
-		retval[i] = ranges[getRandomRange()];
-	}
-
-	return retval;
-}
-
 unsigned int RangeSet::getRandomRange() const {
 	return uniformInRange(0, numberOfRanges-1);
 }
@@ -163,26 +151,21 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 	int index = 0;
 	while (ranges[index]->numOfUses > 0.05 * totalUsefulness)
 	{
-		//cout << "Splitting a really good range and exploring adjacents" << endl;
-		//cout << "Ranges before expore adjacent: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		printRangesSimple();
 		addRangesAdjacentToExistingRange(index);
 
-
-		//cout << "Ranges after explore adjacent and before split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		printRangesSimple();
 		splitRange(index);
-		//cout << "Ranges after split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+
 		printRangesSimple();
 		index++;
 	}
 	index = numberOfRanges-1;
 	while (index >= 0 && numberOfRanges > minNumberOfRanges && ranges[index]->numOfUses < 0.01 * totalUsefulness)
 	{
-		//cout << "Ranges before delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		printRangesSimple();
 		deleteRange(index);
-		//cout << "Ranges after delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+
 		printRangesSimple();
 		index--;
 	}
@@ -203,7 +186,7 @@ void RangeSet::splitRange(int index) {
 }
 
 void RangeSet::deleteRange(int index) {
-	assert(numberOfRanges > minNumberOfRanges);
+	assert(numberOfRanges >= minNumberOfRanges);
 	totalUsefulness -= ranges[index]->numOfUses;
 
 	//TODO So i think we can both be fairly certain that the logic in this function is correct.

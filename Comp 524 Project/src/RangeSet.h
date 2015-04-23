@@ -2,36 +2,41 @@
  * RangeSet.h
  *
  *  Created on: Apr 10, 2015
- *      Author: amb6470
+ *      Author: Austin and Randall
  */
 
 #ifndef RANGESET_H_
 #define RANGESET_H_
+
 class Range;
 class TestCase;
 class TestSuite;
 
 #include <cassert>
-class RangeSet {
+class RangeSet
+{
 public:
-	RangeSet();
+
+	//========================== CONSTRUCTORS AND DESTRUCTORS ======================//
+
 	virtual ~RangeSet();
 
+	RangeSet();
 	RangeSet(int numberOfRanges, int maxNumberOfRanges);
 	RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges);
 
-	// Return an array of targetCFG.numberOfParameters ranges to use during test case gen
+	//========================== CORE FUNCTIONS ====================================//
 
-	// Depreciated should use getNewTestCase instead. TestCase constructor should be changed.
-	//	But will leave for now because I'm tired.
-	Range** randomlySelectRangesForNewTestCase();
 	Range** selectRangesForNewTestCaseProportionalToUsefulness();
+	void addRange(Range* r);
+	void adaptRangesBasedOnUsefulness(); // May split, delete, or combine ranges maybe
+	void offerToFinalTestSuite(TestCase* tc);
+
+	//========================== GETTER FUNCTIONS ==================================//
 
 	TestCase* getNewTestCase();
 	TestCase* getNewTestCaseEntirelyFromRange(Range* range);
 	TestCase* getNewTestCaseEntirelyFromRange(int start, int end);
-
-	void adaptRangesBasedOnUsefulness(); // May split, delete, or combine ranges maybe
 
 	int getNumberOfRanges() const {
 		return numberOfRanges;
@@ -46,26 +51,23 @@ public:
 		return finalTestSuite;
 	}
 
-	void offerToFinalTestSuite(TestCase* tc);
+	//========================== PRINT FUNCTIONS ===================================//
 
 	void printRanges();
 	void printRangesSimple();
-	void addRange(Range* r);
 
 private:
-	int totalUsefulness;
-	int numberOfRanges, maxNumberOfRanges;
-	int minNumberOfRanges;
+	int totalUsefulness, numberOfRanges, maxNumberOfRanges, minNumberOfRanges;
 	Range** ranges;
-
+	TestSuite* finalTestSuite;
 
 	unsigned int getRandomRange() const;
 
-	TestSuite* finalTestSuite;
+	void addRangesAdjacentToExistingRange(int index);
 
 	void splitRange(int index);
-	void addRangesAdjacentToExistingRange(int index);
 	void deleteRange(int index);
+
 	void sortRangesByUsefulness();
 	void moveRangeToSortedPosition(int indexToSort);
 };

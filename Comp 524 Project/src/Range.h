@@ -2,35 +2,34 @@
  * Range.h
  *
  *  Created on: Apr 9, 2015
- *      Author: amb6470
+ *      Author: Austin and Randall
  */
 
 #ifndef RANGE_H_
 #define RANGE_H_
 
-class Range {
+class Range
+{
 public:
+
+	int start, end, numOfUses, usesArraySize;
+	int* usesArray;
+
+	//========================== CONSTRUCTORS AND DESTRUCTORS ======================//
+	virtual ~Range();
+
 	Range(int start, int end);
 	Range(int start, int end, Range* source); // used when splitting
 	Range(const Range& other);
-	virtual ~Range();
 
-	int start;
-	int end;
-	// Idea is maybe focus on ranges that have proven especially useful
-	int numOfUses;
+	//========================== CORE FUNCTIONS ====================================//
 
-	/* Each element will be 25 in size
-	usesArraySize = (end - start / 25) + 1
-	*/
-	int usesArraySize;
-	int* usesArray;
+	void incrementUses(int valueUsed);
 
+	//========================== PRINT FUNCTIONS ===================================//
 
 	void printRange();
 	void printRangeSimple();
-
-	void incrementUses(int valueUsed);
 };
 
 #endif /* RANGE_H_ */

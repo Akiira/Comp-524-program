@@ -17,6 +17,9 @@ class TestCase
 {
 
 public:
+
+	//========================== CONSTRUCTORS AND DESTRUCTORS ======================//
+
 	virtual ~TestCase();
 
 	TestCase();
@@ -25,8 +28,7 @@ public:
 
 	static TestCase* getRandomTestCase();
 
-
-	//============================MUTATOR FUNCTIONS=======================//
+	//========================== MUTATOR FUNCTIONS =================================//
 
 	void mutate();
 	void addEdgeCoverage(int edge);
@@ -35,12 +37,12 @@ public:
 	void setInputParameter(int index, int newValue);
 	void clearCoverage();
 
-	//============================PRINT FUNCTIONS=======================//
+	//========================== PRINT FUNCTIONS ===================================//
 
 	void printInputsAndCoverage() const;
 	void printInputsOnly() const;
 
-	//============================GETTER FUNCTIONS=======================//
+	//========================== GETTER FUNCTIONS ==================================//
 
 	bool* getEdgesCovered() const;
 	bool* getPredicatesCovered() const;
@@ -55,18 +57,18 @@ public:
 		return numCovered;
 	}
 
+	//========================== PREDICATE FUNCTIONS ===============================//
+
 	bool hasSameCoverage(TestCase* that) const;
 
-	//===========================OVERLOADED OPERATORS==========================//
+	//========================== OVERLOADED OPERATORS ==============================//
 
 	TestCase& operator=(const TestCase& org);
 
 private:
-	int numberOfParameters;
-	int numberOfEdges;
-	int numberOfPredicates;
-
+	int numberOfParameters, numberOfEdges, numberOfPredicates;
 	int* inputParameters;
+
 	bool* edgesCovered;
 	bool* predicatesCovered;
 
