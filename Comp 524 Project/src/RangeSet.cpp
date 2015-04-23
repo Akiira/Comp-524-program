@@ -60,11 +60,6 @@ void RangeSet::offerToFinalTestSuite(TestCase* tc) {
 }
 
 TestCase* RangeSet::getNewTestCase() {
-	int toss = uniformInRange(0, 100);
-	if (toss < 25) {
-		return getNewTestCaseEntirelyFromRange(ranges[uniformInRange(0, numberOfRanges-1)]);
-	}
-	else {
 		Range** tmp = selectRangesForNewTestCaseProportionalToUsefulness();
 		TestCase* retval = new TestCase(); // empty test case
 
@@ -87,7 +82,6 @@ TestCase* RangeSet::getNewTestCase() {
 		delete[] tmp;
 
 		return retval;
-	}
 }
 
 TestCase* RangeSet::getNewTestCaseEntirelyFromRange(Range* range) {
@@ -153,7 +147,6 @@ Range** RangeSet::selectRangesForNewTestCaseProportionalToUsefulness() {
 }
 
 void RangeSet::adaptRangesBasedOnUsefulness() {
-
 	double mean = totalUsefulness / numberOfRanges;
 	double stdDev = 0;
 
@@ -164,11 +157,11 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 	}
 	stdDev /= numberOfRanges;
 	stdDev = sqrt(stdDev);
-	cout << "Mean Usefulness: " << mean << " StdDev: " << stdDev << endl;
-	cout << "Old Range set: " << endl;
-	printRangesSimple();
+	cout << "Adpating Ranges: " << "Mean Usefulness: " << mean << " StdDev: " << stdDev << endl;
+	//cout << "Old Range set: " << endl;
+	//printRangesSimple();
 	int index = numberOfRanges-1;
-	while (index >= 0 && numberOfRanges > minNumberOfRanges && ranges[index]->numOfUses < mean - (2 * stdDev))
+	while (index >= 0 && numberOfRanges > minNumberOfRanges && (ranges[index]->numOfUses == 0 || ranges[index]->numOfUses < mean -  stdDev))
 	{
 		//cout << endl <<  "Ranges before delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		//printRangesSimple();
@@ -179,7 +172,7 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 	}
 
 	index = 0;
-	while (ranges[index]->numOfUses > mean + (0.5 *stdDev))
+	while (ranges[index]->numOfUses > mean + stdDev)
 	{
 		//cout << endl <<  "Splitting a really good range and exploring adjacents" << endl;
 		//cout << endl <<  "Ranges before expore adjacent: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
@@ -197,8 +190,8 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 	addNewRandomRange();
 
 	sortRangesByUsefulness();
-	cout << "New Range set: " << endl;
-	printRangesSimple();
+	//cout << "New Range set: " << endl;
+	//printRangesSimple();
 } // May split, delete, or combine ranges maybe
 
 void RangeSet::addNewRandomRange() {
