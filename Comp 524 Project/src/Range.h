@@ -14,6 +14,7 @@ public:
 	Range(int start, int end, Range* source); // used when splitting
 	Range(const Range& other);
 	virtual ~Range();
+
 	int start;
 	int end;
 	// Idea is maybe focus on ranges that have proven especially useful
@@ -30,7 +31,6 @@ public:
 	void printRangeSimple();
 
 	void incrementUses(int valueUsed);
-
 };
 
 #endif /* RANGE_H_ */

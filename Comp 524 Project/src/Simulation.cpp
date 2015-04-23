@@ -446,6 +446,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 			if (finalSuite->getCoverageRatio() == 1) {
 				break;
 			}
+
 		}
 
 		//cout << "End of try # " << tryNum << endl;
