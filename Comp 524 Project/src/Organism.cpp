@@ -51,14 +51,13 @@ void Organism::mutate(double mutationProb) {
 
 			TestCase* newTestCase = rangeSet->getNewTestCase();
 
-			targetCFG->setCoverageOfTestCase(newTestCase);
 			if (chromosome->isCoveringNew(newTestCase)) {
 				chromosome->replaceDuplicateTestCase(newTestCase);
+				// Organism fitness will be reevalated in the simulation loop
+				//	so wont do it here.
 			}
 		}
 	}
-
-	evaluateBaseFitness();
 }
 
 // An idea I had for a quick fitness function
