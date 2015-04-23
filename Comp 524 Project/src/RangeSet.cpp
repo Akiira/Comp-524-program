@@ -60,28 +60,34 @@ void RangeSet::offerToFinalTestSuite(TestCase* tc) {
 }
 
 TestCase* RangeSet::getNewTestCase() {
-	Range** tmp = selectRangesForNewTestCaseProportionalToUsefulness();
-	TestCase* retval = new TestCase(); // empty test case
-
-	for(int i = 0; i < targetCFG->getNumberOfParameters(); i++)	{
-		retval->setInputParameter(i, uniformInRange(tmp[i]->start, tmp[i]->end));
+	int toss = uniformInRange(0, 100);
+	if (toss < 25) {
+		return getNewTestCaseEntirelyFromRange(ranges[uniformInRange(0, numberOfRanges-1)]);
 	}
-	targetCFG->setCoverageOfTestCase(retval);
+	else {
+		Range** tmp = selectRangesForNewTestCaseProportionalToUsefulness();
+		TestCase* retval = new TestCase(); // empty test case
 
-	if (finalTestSuite->isCoveringNew(retval)) {
-		finalTestSuite->addTestCase(new TestCase(*retval));
-		finalTestSuite->calculateTestSuiteCoverage();
-
-		for (int i = 0; i < targetCFG->getNumberOfParameters(); i++) {
-			tmp[i]->incrementUses(retval->getParameter(i));
-			totalUsefulness++;
+		for(int i = 0; i < targetCFG->getNumberOfParameters(); i++)	{
+			retval->setInputParameter(i, uniformInRange(tmp[i]->start, tmp[i]->end));
 		}
-		sortRangesByUsefulness();
+		targetCFG->setCoverageOfTestCase(retval);
+
+		if (finalTestSuite->isCoveringNew(retval)) {
+			finalTestSuite->addTestCase(new TestCase(*retval));
+			finalTestSuite->calculateTestSuiteCoverage();
+
+			for (int i = 0; i < targetCFG->getNumberOfParameters(); i++) {
+				tmp[i]->incrementUses(retval->getParameter(i));
+				totalUsefulness++;
+			}
+			sortRangesByUsefulness();
+		}
+
+		delete[] tmp;
+
+		return retval;
 	}
-
-	delete[] tmp;
-
-	return retval;
 }
 
 TestCase* RangeSet::getNewTestCaseEntirelyFromRange(Range* range) {
@@ -148,52 +154,82 @@ Range** RangeSet::selectRangesForNewTestCaseProportionalToUsefulness() {
 
 void RangeSet::adaptRangesBasedOnUsefulness() {
 
-	int index = 0;
-	while (ranges[index]->numOfUses > 0.05 * totalUsefulness)
-	{
-		printRangesSimple();
-		addRangesAdjacentToExistingRange(index);
+	double mean = totalUsefulness / numberOfRanges;
+	double stdDev = 0;
 
-		printRangesSimple();
-		splitRange(index);
-
-		printRangesSimple();
-		index++;
+	double tmp = 0.0;
+	for (int i = 0; i< numberOfRanges; i++) {
+		tmp = mean - ranges[i]->numOfUses;
+		stdDev += tmp * tmp;
 	}
-	index = numberOfRanges-1;
-	while (index >= 0 && numberOfRanges > minNumberOfRanges && ranges[index]->numOfUses < 0.01 * totalUsefulness)
+	stdDev /= numberOfRanges;
+	stdDev = sqrt(stdDev);
+	cout << "Mean Usefulness: " << mean << " StdDev: " << stdDev << endl;
+	cout << "Old Range set: " << endl;
+	printRangesSimple();
+	int index = numberOfRanges-1;
+	while (index >= 0 && numberOfRanges > minNumberOfRanges && ranges[index]->numOfUses < mean - (2 * stdDev))
 	{
-		printRangesSimple();
+		//cout << endl <<  "Ranges before delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		//printRangesSimple();
 		deleteRange(index);
-
-		printRangesSimple();
+		//cout << endl <<  "Ranges after delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		//printRangesSimple();
 		index--;
 	}
+
+	index = 0;
+	while (ranges[index]->numOfUses > mean + (0.5 *stdDev))
+	{
+		//cout << endl <<  "Splitting a really good range and exploring adjacents" << endl;
+		//cout << endl <<  "Ranges before expore adjacent: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		//printRangesSimple();
+		addRangesAdjacentToExistingRange(index);
+
+		//cout << endl << "Ranges after explore adjacent and before split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		//printRangesSimple();
+		splitRange(index);
+
+		//cout << "Ranges after split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
+		//printRangesSimple();
+		index++;
+	}
+	addNewRandomRange();
+
 	sortRangesByUsefulness();
-
-
+	cout << "New Range set: " << endl;
+	printRangesSimple();
 } // May split, delete, or combine ranges maybe
 
+void RangeSet::addNewRandomRange() {
+	int size = uniformInRange(100, 100000);
+
+	int randomStart = uniformInRange(numeric_limits<int>::min(), numeric_limits<int>::max() - size);
+
+	addRange(new Range(randomStart, randomStart + size));
+}
 void RangeSet::splitRange(int index) {
 	Range* old = ranges[index];
 	int oldSize = (old->end - old->start);
-	Range* new1 = new Range(old->start, old->start + (oldSize / 2), old);
-	Range* new2 = new Range( old->start + (oldSize / 2), old->end, old);
+	if ((oldSize / 2) > 25) {
+		Range* new1 = new Range(old->start, old->start + (oldSize / 2), old);
+		Range* new2 = new Range( old->start + (oldSize / 2), old->end, old);
 
-	deleteRange(index);
-	addRange(new1);
-	addRange(new2);
+		deleteRange(index);
+		addRange(new1);
+		addRange(new2);
+	}
+	else {
+		cout << "Cant split anymore because range is same size as the buckets." << endl;
+	}
 }
 
 void RangeSet::deleteRange(int index) {
 	assert(numberOfRanges >= minNumberOfRanges);
 	totalUsefulness -= ranges[index]->numOfUses;
 
-	//TODO So i think we can both be fairly certain that the logic in this function is correct.
-	//	This means the problem is elsewhere, in that this range is being accessed somewhere else
-	// after it is deleted. If you are interested in solving this I would look into that.
-	// But it probally is not worth it since the memory leaked is extremely small.
-	//delete ranges[index];
+	//TODO: It seems with my latest fixes this is ok now.
+	delete ranges[index];
 	numberOfRanges--;
 
 	for (int i = index; i < numberOfRanges; i++) {
@@ -204,8 +240,14 @@ void RangeSet::deleteRange(int index) {
 void RangeSet::addRangesAdjacentToExistingRange(int index) {
 	Range* existing = ranges[index];
 	int size = existing->end - existing->start;
-	addRange(new Range(existing->start - size, existing->start));
-	addRange(new Range(existing->end, existing->end + size));
+	Range* new1 = new Range(existing->start - size, existing->start);
+	Range* new2 = new Range(existing->end, existing->end + size);
+	// Seed them with some usefulness so they aren't immedietly discarded and
+	//	since we know this area does seem promising.
+	new1->numOfUses = existing->numOfUses / 2;
+	new2->numOfUses = existing->numOfUses / 2;
+	addRange(new1);
+	addRange(new2);
 }
 
 void RangeSet::addRange(Range* r) {

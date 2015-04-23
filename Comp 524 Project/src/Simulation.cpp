@@ -68,13 +68,13 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 		 */
 		population->updatePopulationsFitness();
 
-		if( lastGensCoverage <= population->getCoverageRatio() ) {
+		if( lastGensCoverage < population->getCoverageRatio() ) {
 			lastGensCoverage = population->getCoverageRatio();
 			gensOfNoImprov = 0;
 		}
 
 		//TODO Needs range set stuff
-		if (gensOfNoImprov == 50) {
+		if (gensOfNoImprov == 30 || currentGen % 100 == 1) {
 			rangeSet->adaptRangesBasedOnUsefulness();
 		}
 
@@ -112,11 +112,13 @@ void Simulation::testCaseCrossover() {
 		child1->mutate();
 		child2->mutate();
 
+		rangeSet->offerToFinalTestSuite(child1);
+		rangeSet->offerToFinalTestSuite(child2);
+
 		// Moved these out of mutate because I think it's easier to read this way.
 		targetCFG->setCoverageOfTestCase(child1);
 		targetCFG->setCoverageOfTestCase(child2);
 
-		// replaceDuplicateTestCase recalculates test suite coverage afterwards so this loop is valid.
 		if( parent->getChromosome()->isCoveringNew(child1) ) {
 			delete child2;
 			parent->getChromosome()->replaceDuplicateTestCase(child1);
@@ -149,34 +151,16 @@ void Simulation::testSuiteCrossover(int currentGen) {
 	child1->mutate(newProb);
 	child2->mutate(newProb);
 
-	// Brought these calls out of mutate to be more explicit in what happens.
-	// We are now comparing solely on how many edges and predicates are covered
-	//	for the purposes of replacement. This is probably not ideal. We can't do
-	//	it on shared fitness though because they have to be in the population first.
-	child1->evaluateBaseFitness();
-	child2->evaluateBaseFitness();
-
-	// Attempt to replace the worst of the two parents
-	auto parentToReplace = (parent1 <= parent2 ? parent1Index : parent2Index);
-
-	//TODO when should local opt be done? does it make sense to leave it here?
-	if (child1 <= child2) {
-		if (currentGen % 10 == 0 || population->getCoverageRatio() > 0.95) {
-			tryLocalOptimization (child2);
-		}
-
-		population->replaceParentThenReplaceWorst(parentToReplace, child2);
-		delete child1;
-		child1 = NULL;
-	} else {
-		if (currentGen % 10 == 0 || population->getCoverageRatio() > 0.95) {
-			tryLocalOptimization (child1);
-		}
-
-		population->replaceParentThenReplaceWorst(parentToReplace, child1);
-		delete child2;
-		child2 = NULL;
+	if (currentGen % 10 == 0 || population->getCoverageRatio() > 0.95) {
+		tryLocalOptimization (child1);
 	}
+
+	if (currentGen % 10 == 0 || population->getCoverageRatio() > 0.95) {
+		tryLocalOptimization (child2);
+	}
+
+	population->replaceParentWithUnion(parent2Index, child1);
+	population->replaceParentWithUnion(parent1Index, child2);
 }
 
 void Simulation::tryLocalOptimization(Organism* org) {
@@ -319,7 +303,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
 	rangeSet = new RangeSet(0, edgesPlusPreds);
 
-	int startSize = 1000, currStart = -500;
+	int startSize = 5000, currStart = -2500;
 
 	TestSuite* tmpSuite = new TestSuite(0, edgesPlusPreds, new TestCase*[edgesPlusPreds] { });
 
@@ -331,8 +315,8 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 	rangeSet->addRange(startingRange);
 
 	//TODO: Tune this
-	for (int tryNum = 1; tryNum <= 1; tryNum++) {
-		int size = startSize * tryNum;
+	for (int tryNum = 1; tryNum <= 2; tryNum++) {
+		int size = startSize / tryNum;
 		int nextStartPos = currStart;
 		int nextStartNeg = currStart;
 		int totalIterations = 0;
@@ -340,7 +324,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 		//cout << "Starting tryNum # " << tryNum << " : Range Size: " << size << endl;
 		while(nextStartPos < numeric_limits<int>::max()/2 - size && nextStartNeg > numeric_limits<int>::min()/2 + size) {
 
-			nextStartPos = nextStartPos + size + 1;
+			nextStartPos = nextStartPos + size;
 			TestCase* tcPos = rangeSet->getNewTestCaseEntirelyFromRange(nextStartPos, nextStartPos + size);
 
 			if (tmpSuite->isCoveringNew(tcPos)) {
@@ -354,7 +338,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 				delete tcPos;
 			}
 
-			nextStartNeg = nextStartNeg - size - 1;
+			nextStartNeg = nextStartNeg - size;
 			TestCase* tcNeg = rangeSet->getNewTestCaseEntirelyFromRange(nextStartNeg, nextStartNeg + size);
 			targetCFG->setCoverageOfTestCase(tcNeg);
 

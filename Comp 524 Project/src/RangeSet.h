@@ -29,6 +29,7 @@ public:
 
 	Range** selectRangesForNewTestCaseProportionalToUsefulness();
 	void addRange(Range* r);
+	void addNewRandomRange();
 	void adaptRangesBasedOnUsefulness(); // May split, delete, or combine ranges maybe
 	void offerToFinalTestSuite(TestCase* tc);
 
@@ -55,6 +56,7 @@ public:
 
 	void printRanges();
 	void printRangesSimple();
+
 
 private:
 	int totalUsefulness, numberOfRanges, maxNumberOfRanges, minNumberOfRanges;

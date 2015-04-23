@@ -16,24 +16,42 @@ Range::Range(int start, int end) {
 	this->start = start;
 	this->end = end;
 	this->numOfUses = 0;
-	this->usesArraySize = (end - start) / 25 + 1;
-	assert(usesArraySize > 0);
+	this->usesArraySize = (end - start) / 25;
+	if ((end - start) % 25 != 0) {
+		usesArraySize++;
+	}
+
 	this->usesArray = new int[usesArraySize]{};
 }
 
+// Used by RangeSet::splitRange
 Range::Range(int start, int end, Range* source) {
 	this->start = start;
 	this->end = end;
 	this->numOfUses = 0;
-	this->usesArraySize = (end - start) / 25 + 1;
-	assert(usesArraySize > 0);
-	this->usesArray = new int[usesArraySize] {};
-	// Todo not sure about this logic
 
-	for (int j = 0, i = (source->end - start) / 25; j < usesArraySize; j++, i++) {
-		usesArray[j] = source->usesArray[i]/2;
-		numOfUses += source->usesArray[i]/2;
+	this->usesArraySize = (end - start) / 25;
+	if ((end - start) % 25 != 0) {
+		usesArraySize++;
 	}
+	this->usesArray = new int[usesArraySize] {};
+
+		int i = (start - source->start) / 25;	// The bucket that start falls into
+		int j = 0; // index for the new Range's usesArray.
+		for (; j < source->usesArraySize / 2; j++, i++) {
+			usesArray[j] = source->usesArray[i];
+			numOfUses += source->usesArray[i];
+		}
+		// Handle the boundary cases
+		if (j < usesArraySize) {
+			if ((j* 25 < end) && i < source->usesArraySize) {
+				usesArray[j] = source->usesArray[i];
+			}
+			else {
+				usesArray[j] = 0;
+			}
+		}
+
 }
 
 Range::Range(const Range& other) {
@@ -54,7 +72,7 @@ Range::~Range() {
 
 void Range::printRange() {
 	cout << "[ " << start << ", " << end << " ] " << "Size " << (end-start) << endl;
-	cout << "Uses:" << numOfUses << " " << "UsesArraySize: " << usesArraySize <<  endl;
+	cout << "Uses:" << numOfUses <<  endl;
 	cout << "Usage buckets: " << endl;
 	for (int i = 0; i < usesArraySize; i++) {
 		 cout << usesArray[i] << ", ";
@@ -64,15 +82,13 @@ void Range::printRange() {
 
 
 void Range::printRangeSimple() {
-	cout << "[ " << start << ", " << end << " ] " << "Size " << (end-start) << " Uses: " << numOfUses << " " << "UsesArraySize: " << usesArraySize <<  endl;
+	cout << "[ " << start << ", " << end << " ] " << "Size " << (end-start) << " Uses: " << numOfUses << endl;
 }
-
-
 
 void Range::incrementUses(int valueUsed) {
 	int bucket = (valueUsed - start) / 25;
-	assert(bucket < usesArraySize);
-	assert(bucket >= 0);
+	assert(bucket >= 0 || bucket < usesArraySize);
+
 	usesArray[bucket]++;
 	numOfUses++;
 	assert(numOfUses > 0);
