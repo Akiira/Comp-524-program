@@ -8,7 +8,9 @@
 #include "TriangleProblemGraph.h"
 #include <cassert>
 #include <iostream>
+#include <limits>
 #include "TestCase.h"
+using std::numeric_limits;
 using std::endl;
 using std::cout;
 
@@ -26,12 +28,19 @@ TriangleProblemGraph::TriangleProblemGraph() {
 	A = -666;
 	B = -666;
 	C = -666;
+	/*
 	rangeForEachParameter[0][0] = -100;
 	rangeForEachParameter[0][1] = 10000;
 	rangeForEachParameter[1][0] = -100;
 	rangeForEachParameter[1][1] = 10000;
 	rangeForEachParameter[2][0] = -100;
 	rangeForEachParameter[2][1] = 10000;
+	*/
+
+	for (int i = 0; i < numberOfParameters; ++i) {
+		rangeForEachParameter[i][0] = numeric_limits<int>::min();
+		rangeForEachParameter[i][1] = numeric_limits<int>::max();
+	}
 }
 
 
