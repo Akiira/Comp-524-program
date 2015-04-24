@@ -234,9 +234,9 @@ void runTests(int popStart, int popEnd, short cutPtsStart,
 					cout << "\t# of gen: " << temp << endl;
 				}
 
-				*outputFile << "(* Average Coverage Ratio: " << ((double)sumOfCoverageRatios) / ((double)TEST_RUNS) <<  " *)\n" << endl;
 				double average = ((double)sumOfGenerations) / ((double)TEST_RUNS);
 				printFileDataEntry(population, cutPoints, mutation, average);
+				*outputFile << "\t\t(* Average Coverage Ratio: " << ((double)sumOfCoverageRatios) / ((double)TEST_RUNS) <<  " *)" << endl;
 				outputFile->flush();
 
 				cout << "Average number of generations: " << average << endl;
