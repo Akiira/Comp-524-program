@@ -123,7 +123,7 @@ void setTarget(int i) {
 
 void runTestsOnAllGraphs() {
 
-	for (int graph = 1; graph < 2; ++graph) {
+	for (int graph = 3; graph < 6; ++graph) {
 		setTarget(graph);
 		testCutPointsToMutationProb();
 		testPopulationSizeToMutationProb();
@@ -229,10 +229,9 @@ void runTests(int popStart, int popEnd, short cutPtsStart,
 
 					sumOfCoverageRatios += rangeSet->getFinalTestSuite()->getCoverageRatio();
 					sumOfGenerations += temp;
+					cout << "\t# of gen: " << temp << " cov: " << rangeSet->getFinalTestSuite()->getCoverageRatio() << endl;
 
 					delete sim;
-
-					cout << "\t# of gen: " << temp << " cov: " << rangeSet->getFinalTestSuite()->getCoverageRatio() << endl;
 				}
 
 				double average = ((double)sumOfGenerations) / ((double)TEST_RUNS);
