@@ -52,7 +52,7 @@ const short POPULATION_START = 50;
 const short POPULATION_END = 500;
 const short POPULATION_STEP = 50;
 
-const short TEST_RUNS = 2;
+const short TEST_RUNS = 50;
 const short GENERATIONS = 10000;
 
 //Flags to interactivly set printing during simulation
@@ -123,7 +123,7 @@ void setTarget(int i) {
 
 void runTestsOnAllGraphs() {
 
-	for (int graph = 0; graph < 1; ++graph) {
+	for (int graph = 1; graph < 2; ++graph) {
 		setTarget(graph);
 		testCutPointsToMutationProb();
 		testPopulationSizeToMutationProb();
@@ -228,10 +228,11 @@ void runTests(int popStart, int popEnd, short cutPtsStart,
 					int temp = sim->run(GENERATIONS, cutPoints, mutation);
 
 					delete sim;
+
 					sumOfCoverageRatios += rangeSet->getFinalTestSuite()->getCoverageRatio();
 					sumOfGenerations += temp;
 
-					cout << "\t# of gen: " << temp << endl;
+					cout << "\t# of gen: " << temp << " cov: " << rangeSet->getFinalTestSuite()->getCoverageRatio() << endl;
 				}
 
 				double average = ((double)sumOfGenerations) / ((double)TEST_RUNS);
