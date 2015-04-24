@@ -218,21 +218,23 @@ void runTests(int popStart, int popEnd, short cutPtsStart,
 			for(double mutation = mutationStart; mutation <= mutationEnd; mutation += MUTATION_STEP)
 			{
 				int sumOfGenerations = 0;
-				printf("Testing population: %d, cutPoints: %d, mutation: %f, on: %s", population, cutPoints, mutation, testProgram.c_str());
+				double sumOfCoverageRatios = 0;
+				printf("Testing population: %d, cutPoints: %d, mutation: %f, on: %s\n", population, cutPoints, mutation, testProgram.c_str());
 				for(int i = 0; i < TEST_RUNS; i++)
 				{
-					cout << "\tTest Num: " << i << " ";
+					cout << "\tTest Num: " << i << " " << endl;
 
 					Simulation* sim = new Simulation(population);
 					int temp = sim->run(GENERATIONS, cutPoints, mutation);
-					double cr = finalTestSuite->getCoverageRatio();
-					*outputFile << "\n(* Coverage Ratio: " << testProgram <<  " *)" << endl;
+
 					delete sim;
+					sumOfCoverageRatios += rangeSet->getFinalTestSuite()->getCoverageRatio();
 					sumOfGenerations += temp;
 
 					cout << "\t# of gen: " << temp << endl;
 				}
 
+				*outputFile << "(* Average Coverage Ratio: " << ((double)sumOfCoverageRatios) / ((double)TEST_RUNS) <<  " *)\n" << endl;
 				double average = ((double)sumOfGenerations) / ((double)TEST_RUNS);
 				printFileDataEntry(population, cutPoints, mutation, average);
 				outputFile->flush();

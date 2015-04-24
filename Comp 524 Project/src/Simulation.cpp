@@ -363,7 +363,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 	}
 
 	delete tmpSuite;
-	cout << "Global range set has been initialized" << endl;
+	//cout << "\t\tGlobal range set has been initialized" << endl;
 	//rangeSet->printRangesSimple();
 }
 
