@@ -227,10 +227,10 @@ void runTests(int popStart, int popEnd, short cutPtsStart,
 					Simulation* sim = new Simulation(population);
 					int temp = sim->run(GENERATIONS, cutPoints, mutation);
 
-					delete sim;
-
 					sumOfCoverageRatios += rangeSet->getFinalTestSuite()->getCoverageRatio();
 					sumOfGenerations += temp;
+
+					delete sim;
 
 					cout << "\t# of gen: " << temp << " cov: " << rangeSet->getFinalTestSuite()->getCoverageRatio() << endl;
 				}
