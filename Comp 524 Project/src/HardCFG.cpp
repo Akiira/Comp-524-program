@@ -258,7 +258,7 @@ inline void HardCFG::block14() {
 		testCase->addPredicateCoverage(predicates::B14_T);
 		block29();
 	} else {
-		testCase->addEdgeCoverage(edges::B14toB29);
+		testCase->addEdgeCoverage(edges::B14toB30);
 		testCase->addPredicateCoverage(predicates::B14_F);
 		block30();
 	}
