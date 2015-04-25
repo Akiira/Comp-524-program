@@ -18,9 +18,9 @@ using std::numeric_limits;
 
 MedHardCFG::MedHardCFG() {
 	numberOfEdges = 39;
-	numberOfPredicates = 90;
+	numberOfPredicates = 79;
 
-	numberOfParameters = 5;
+	numberOfParameters = 4;
 
 	testCase = NULL;
 
@@ -61,6 +61,7 @@ inline void MedHardCFG::runTestCase() {
 	//TODO test all edges and predicates are actually reachable
 
 	testCase->addEdgeCoverage(edges::B0toB1);
+	testCase->addPredicateCoverage(predicates::B0_T);
 	block1();
 }
 

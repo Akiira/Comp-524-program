@@ -17,13 +17,13 @@ using std::cout;
 using std::numeric_limits;
 
 /*
- * Tweaks from hard graph: smaller ranges, from 10 parameters to 5, graph cut in half
- *  edges from 78 to 39 and predicates from 180 to 90
+ * Tweaks from hard graph: smaller ranges, from 10 parameters to 4, graph cut in half
+ *  edges from 78 to 39 and predicates from 150 to 72
  */
 
 MediumCFG::MediumCFG() {
 	numberOfEdges = 39;
-	numberOfPredicates = 90;
+	numberOfPredicates = 71;
 
 	numberOfParameters = 4;
 

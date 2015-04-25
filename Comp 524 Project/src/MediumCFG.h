@@ -27,7 +27,7 @@ public:
 	}; };
 
 	struct predicates { enum {
-	B0_T, B0_F,
+	B0_F,
 	B2_T, B2_F,
 	B5_T, B5_F,
 	B6_T, B6_F,
@@ -35,14 +35,7 @@ public:
 	B12_T, B12_F,
 	B13_T, B13_F,
 	B14_T, B14_F,
-	B23_T, B23_F,
-	B24_T, B24_F,
-	B25_T, B25_F,
-	B26_T, B26_F,
-	B27_T, B27_F,
-	B28_T, B28_F,
-	B29_T, B29_F,
-	B30_T, B30_F, //60 + 8*4 + + 4*10 + 4*12 = 180
+	//15 + 4*4=16 + 4*10=40 = 71
 	B23_TT, B23_FT, B23_TF, B23_FF,
 	B24A_TT, B24A_FT, B24A_TF, B24A_FF, B24B_TT, B24B_FT, B24B_TF, B24B_FF, B24C_T, B24C_F,
 	B25_TT, B25_FT, B25_TF, B25_FF,
