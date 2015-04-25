@@ -552,7 +552,7 @@ void MediumCFG::printEdgesCovered(int* edgesCovered) const{
 	cout << "---------------------------------------------------------------------------" << endl;
 	for(int j = 0; j < 6; j++)
 	{
-		cout << "   " << edgesCovered[32 + j] << "   |";
+		cout << "   " << edgesCovered[33 + j] << "   |";
 	}
 	cout << endl;
 }
