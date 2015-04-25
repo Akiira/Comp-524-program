@@ -177,7 +177,7 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 	}
 	stdDev /= numberOfRanges;
 	stdDev = sqrt(stdDev);
-	cout << "\t\tAdpating Ranges: " << "Mean Usefulness: " << mean << " StdDev: " << stdDev << endl;
+	//cout << "\t\tAdpating Ranges: " << "Mean Usefulness: " << mean << " StdDev: " << stdDev << endl;
 	//cout << "Old Range set: " << endl;
 	//printRangesSimple();
 	int index = numberOfRanges-1;

@@ -1,0 +1,295 @@
+Testing population: 150, cutPoints: 0, mutation: 0.000000, on: Hard
+	Test Num: 0 
+		Generation # 0 CoverageRatio: 0.359649
+		Adpating Ranges: Mean Usefulness: 8 StdDev: 18.5003
+		Generation # 100 CoverageRatio: 0.47807
+		Adpating Ranges: Mean Usefulness: 14 StdDev: 10.9742
+		Generation # 200 CoverageRatio: 0.662281
+		Adpating Ranges: Mean Usefulness: 12 StdDev: 7.47193
+		Generation # 300 CoverageRatio: 0.732456
+		Adpating Ranges: Mean Usefulness: 10 StdDev: 5.50983
+		Adpating Ranges: Mean Usefulness: 10 StdDev: 3.86609
+		Generation # 400 CoverageRatio: 0.789474
+		Adpating Ranges: Mean Usefulness: 10 StdDev: 2.83051
+		Adpating Ranges: Mean Usefulness: 9 StdDev: 3.12517
+		Generation # 500 CoverageRatio: 0.79386
+		Adpating Ranges: Mean Usefulness: 9 StdDev: 2.35702
+		Generation # 600 CoverageRatio: 0.79386
+		Adpating Ranges: Mean Usefulness: 8 StdDev: 3.24198
+Test Suite Coverage:
+
+Edge Coverage
+ B0toB1-B1toB3-B1toB4-B3toB7-B3toB8-B4toB9-B4toB10-B7toB15,
+---------------------------------------------------------------------------
+   30   |   16   |   14   |   8   |   8   |   7   |   7   |   4   |
+B7toB16-B8toB17-B8toB18-B9toB19-B9toB20-B10toB21-B10toB22
+---------------------------------------------------------------------------
+   4   |   4   |   4   |   3   |   4   |   3   |   4   |
+B15toB31, B15toB32, B16toB33, B16toB34, B16toB35, B16toB36 
+---------------------------------------------------------------------------
+   1   |   3   |   1   |   1   |   0   |   2   |
+B17toB37, B17toB38, B18toB39, B18toB40, B18toB41, B18toB42 
+---------------------------------------------------------------------------
+   1   |   3   |   1   |   1   |   0   |   2   |
+B19toB43, B19toB44, B20toB45, B20toB46, B20toB47, B20toB48 
+---------------------------------------------------------------------------
+   0   |   3   |   1   |   1   |   0   |   2   |
+B21toB49, B21toB50, B22toB51, B22toB52, B22toB53, B22toB54 
+---------------------------------------------------------------------------
+   0   |   3   |   1   |   1   |   0   |   2   |
+B0toB2-B2toB5-B2toB6-B5toB11-B5toB12-B6toB13-B6toB14-B11toB23,
+---------------------------------------------------------------------------
+   24   |   14   |   10   |   7   |   7   |   3   |   7   |   3   |
+B11toB24-B12toB25-B12toB26-B13toB27-B13toB28-B14toB29-B14toB30 
+---------------------------------------------------------------------------
+   4   |   3   |   4   |   1   |   2   |   3   |   4   |
+B23toB55, B23toB56, B24toB57, B24toB58, B24toB59, B24toB60,
+---------------------------------------------------------------------------
+   0   |   3   |   1   |   1   |   1   |   1   |
+B25toB61, B25toB62, B26toB63, B26toB64, B26toB65, B26toB66,
+---------------------------------------------------------------------------
+   0   |   3   |   1   |   1   |   1   |   1   |
+B27toB67, B27toB68, B28toB69, B28toB70, B28toB71, B28toB72,
+---------------------------------------------------------------------------
+   0   |   1   |   0   |   0   |   1   |   1   |
+B29toB73, B29toB74, B30toB75, B30toB76, B30toB77, B30toB78
+---------------------------------------------------------------------------
+   0   |   3   |   1   |   1   |   1   |   1   |
+	TODO
+i: 0 covered: 30
+i: 1 covered: 24
+i: 2 covered: 16
+i: 3 covered: 14
+i: 4 covered: 14
+i: 5 covered: 10
+i: 6 covered: 8
+i: 7 covered: 8
+i: 8 covered: 7
+i: 9 covered: 7
+i: 10 covered: 7
+i: 11 covered: 7
+i: 12 covered: 3
+i: 13 covered: 7
+i: 14 covered: 4
+i: 15 covered: 4
+i: 16 covered: 4
+i: 17 covered: 4
+i: 18 covered: 3
+i: 19 covered: 4
+i: 20 covered: 3
+i: 21 covered: 4
+i: 22 covered: 3
+i: 23 covered: 4
+i: 24 covered: 3
+i: 25 covered: 4
+i: 26 covered: 1
+i: 27 covered: 2
+i: 28 covered: 3
+i: 29 covered: 4
+i: 30 covered: 1
+i: 31 covered: 1
+i: 32 covered: 1
+i: 33 covered: 1
+i: 34 covered: 1
+i: 35 covered: 1
+i: 36 covered: 1
+i: 37 covered: 1
+i: 38 covered: 1
+i: 39 covered: 1
+i: 40 covered: 0
+i: 41 covered: 1
+i: 42 covered: 0
+i: 43 covered: 1
+i: 44 covered: 0
+i: 45 covered: 1
+i: 46 covered: 1
+i: 47 covered: 1
+i: 48 covered: 1
+i: 49 covered: 1
+i: 50 covered: 1
+i: 51 covered: 1
+i: 52 covered: 1
+i: 53 covered: 1
+i: 54 covered: 1
+i: 55 covered: 1
+i: 56 covered: 0
+i: 57 covered: 1
+i: 58 covered: 0
+i: 59 covered: 1
+i: 60 covered: 0
+i: 61 covered: 1
+i: 62 covered: 0
+i: 63 covered: 1
+i: 64 covered: 1
+i: 65 covered: 1
+i: 66 covered: 1
+i: 67 covered: 1
+i: 68 covered: 1
+i: 69 covered: 1
+i: 70 covered: 1
+i: 71 covered: 1
+i: 72 covered: 0
+i: 73 covered: 1
+i: 74 covered: 0
+i: 75 covered: 1
+i: 76 covered: 0
+i: 77 covered: 1
+i: 78 covered: 0
+i: 79 covered: 1
+i: 80 covered: 1
+i: 81 covered: 1
+i: 82 covered: 1
+i: 83 covered: 1
+i: 84 covered: 1
+i: 85 covered: 1
+i: 86 covered: 1
+i: 87 covered: 1
+i: 88 covered: 0
+i: 89 covered: 1
+i: 90 covered: 0
+i: 91 covered: 1
+i: 92 covered: 0
+i: 93 covered: 1
+i: 94 covered: 0
+i: 95 covered: 1
+i: 96 covered: 1
+i: 97 covered: 1
+i: 98 covered: 1
+i: 99 covered: 0
+i: 100 covered: 1
+i: 101 covered: 2
+i: 102 covered: 1
+i: 103 covered: 2
+i: 104 covered: 0
+i: 105 covered: 0
+i: 106 covered: 1
+i: 107 covered: 1
+i: 108 covered: 0
+i: 109 covered: 1
+i: 110 covered: 1
+i: 111 covered: 1
+i: 112 covered: 1
+i: 113 covered: 0
+i: 114 covered: 1
+i: 115 covered: 2
+i: 116 covered: 1
+i: 117 covered: 2
+i: 118 covered: 0
+i: 119 covered: 0
+i: 120 covered: 1
+i: 121 covered: 1
+i: 122 covered: 0
+i: 123 covered: 0
+i: 124 covered: 0
+i: 125 covered: 1
+i: 126 covered: 0
+i: 127 covered: 0
+i: 128 covered: 0
+i: 129 covered: 2
+i: 130 covered: 0
+i: 131 covered: 2
+i: 132 covered: 0
+i: 133 covered: 0
+i: 134 covered: 1
+i: 135 covered: 1
+i: 136 covered: 0
+i: 137 covered: 1
+i: 138 covered: 1
+i: 139 covered: 1
+i: 140 covered: 1
+i: 141 covered: 0
+i: 142 covered: 1
+i: 143 covered: 2
+i: 144 covered: 1
+i: 145 covered: 2
+i: 146 covered: 0
+i: 147 covered: 0
+i: 148 covered: 1
+i: 149 covered: 1
+
+Test Cases:
+#0	-155	-352	2018	-174	-1100	-1500	-2263	-1384	-1016	1284
+#1	-386	-665	1008	574	156	1749	1758	984	-1364	1043
+#2	-1459	2212	2417	-357	1751	151	1659	-67	857	-117
+#3	-203	2250	-1123	1867	1201	1824	-1466	2489	921	963
+#4	-361	-1092	-686	-2106	328	-437	-1828	-1185	-2405	-120
+#5	1371	366	1138	186	1636	1861	2414	399	-688	-149
+#6	880	-384	-294	211	1831	1526	430	841	1554	728
+#7	-88	-87	1666	676	-1381	204	989	386	1923	1467
+#8	4736	5666	4689	5502	5063	5291	5093	6209	5351	5377
+#9	-21438	-18434	-18434	-21815	-19139	-19817	-21917	-21929	-21242	-18950
+#10	84056	82572	83306	84046	85186	84439	83341	82933	83431	85022
+#11	-3616639	-3616208	-3616251	-3615873	-3616700	-3615970	-3615348	-3616756	-3616738	-3616752
+#12	-3616243	-3616019	-3615469	-3616208	-3616275	-3616089	-3616049	-3616377	-3615924	-3616081
+#13	4454567	4453345	4453461	4453474	4454074	4453674	4453124	4453098	4454427	4454089
+#14	19997691	19997811	19997918	19997617	19998114	19997593	19997600	19998203	19997774	19998061
+#15	19999571	19999191	19999191	19998799	19998159	19997789	19999083	19998724	19998314	19998255
+#16	-26298505	-26298505	-26299555	-26298764	-26299282	-26298665	-26298887	-26297769	-26299123	-26298947
+#17	267806030	267806030	267806176	267806177	267805511	267806080	267806116	267806106	267805243	267807301
+#18	1257	1257	-668	-507	600	1017	-960	1106	-1591	-2076
+#19	267806912	267803576	267806640	267803550	267805739	267805678	267805623	267806998	267804104	267804014
+#20	82344	83061	86695	87187	82303	81853	81897	81764	86640	88350
+#21	4456800	4457422	4457422	4455401	4454880	4457079	4455876	4449882	4450004	4451108
+#22	267807595	267805693	267807513	267804802	267806353	267806305	267806616	267805021	267806336	267807678
+#23	84297	86406	85137	85856	84912	85870	84113	87017	86450	83158
+#24	-1	-1	-1	1	1	0	-1	-1	0	-1
+#25	267803072	267803072	267803001	267812048	267803576	267807933	267803626	267811691	267800393	267807635
+#26	-146006189	-146005942	-146006648	-146005690	-146006192	-146007257	-146006412	-146006434	-146005313	-146005245
+#27	0	-1	1	0	1	-1	1	0	-1	-1
+#28	1	1	0	-1	0	0	1	1	-1	1
+#29	267810488	267804515	267800943	267812898	267802318	267812425	267800531	267800933	267801699	267812957
+#30	0	1	1	1	1	0	0	1	1	0
+#31	-28	20	-26	30	-8	-27	31	29	-23	30
+#32	-32913513	-32914137	-32914137	-32914730	-32914668	-32914189	-32913925	-32914206	-32914448	-32912992
+#33	27	35	-23	3	-30	-32	8	-28	-32	27
+#34	-70	15	-67	68	-61	60	-43	63	21	-39
+#35	6893	-2507	-5758	-6429	6127	2812	-209	-4899	6166	4754
+#36	-32914025	-32913909	267806471	267807018	267805944	267805607	-32914204	-32914474	-32913896	-32912640
+#37	-1	1	1	1	1	1	-1	1	-293	-1
+#38	98180	106226	103756	107403	100959	106170	108101	106819	106542	88892
+#39	267808245	267801091	267802637	267804760	267813034	267806083	267797241	267811364	267813516	267801563
+#40	6	0	-48	15	40	-31	34	5	-40	45
+#41	-30	-28	24	7	23	-20	-37	40	40	-27
+#42	55	31	38	-67	16	-66	37	43	-60	68
+#43	61	-29	-90	96	16	-98	92	-73	-62	85
+#44	29	46	-81	33	54	48	63	-75	-45	90
+#45	104	-111	-97	-114	-14	109	94	-119	111	94
+#46	-9	-9	-104	118	103	54	-101	-45	26	-85
+#47	-7	-89	0	55	33	0	79	-10	-87	10
+#48	160	183	87	-130	-31	-119	187	170	-23	54
+#49	17	-207	-252	199	241	-163	220	-111	-168	220
+#50	549	609	33	-400	-18	-884	708	1042	673	-766
+#51	0	0	0	-108	0	265	0	149	-35	-18
+#52	40	40	-62	4454275	4454185	4452863	4454166	4453871	4453077	4453924
+#53	-435	-379	-379	640	161	-732	-394	756	17314874	-500
+Test Suite Coverage Ratio: 0.79386
+	# of gen: 650 cov: 0.79386
+	Test Num: 1 
+		Generation # 0 CoverageRatio: 0.372807
+		Adpating Ranges: Mean Usefulness: 8 StdDev: 16.2481
+		Generation # 100 CoverageRatio: 0.526316
+		Adpating Ranges: Mean Usefulness: 13 StdDev: 10.0871
+		Generation # 200 CoverageRatio: 0.596491
+		Adpating Ranges: Mean Usefulness: 12 StdDev: 6.83455
+Testing population: 150, cutPoints: 0, mutation: 0.000000, on: Hard
+	Test Num: 0 
+		Generation # 0 CoverageRatio: 0.372807
+		Generation # 100 CoverageRatio: 0.508772
+		Generation # 200 CoverageRatio: 0.614035
+		Generation # 300 CoverageRatio: 0.710526
+		Generation # 400 CoverageRatio: 0.785088
+		Generation # 500 CoverageRatio: 0.789474
+		Generation # 600 CoverageRatio: 0.789474
+		Generation # 700 CoverageRatio: 0.798246
+		Generation # 800 CoverageRatio: 0.807018
+		Generation # 900 CoverageRatio: 0.824561
+		Generation # 1000 CoverageRatio: 0.824561
+	# of gen: 1090 cov: 0.824561
+	Test Num: 1 
+		Generation # 0 CoverageRatio: 0.350877
+		Generation # 100 CoverageRatio: 0.52193
+		Generation # 200 CoverageRatio: 0.622807
+		Generation # 300 CoverageRatio: 0.701754
+		Generation # 400 CoverageRatio: 0.75
+		Generation # 500 CoverageRatio: 0.798246
+		Generation # 600 CoverageRatio: 0.828947
