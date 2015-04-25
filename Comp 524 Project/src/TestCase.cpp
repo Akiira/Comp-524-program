@@ -83,14 +83,11 @@ bool TestCase::hasSameCoverage(TestCase* that) const {
 	return same;
 }
 
-
-//This is another type of mutation we could use, perhaps in addition to other operators.
-//The only thing that would need changing if we use this, is to change it from uniformInRange
-// to a gaussian distribution; so it has a higher probability of picking closer numbers.
-// Atleast, that how it is in the book.
 void TestCase::mutate() {
 	for(int i = 0; i < numberOfParameters; i++){
-		int x = uniformInRange(1, 10);
+		//int x = uniformInRange(1, 10);
+		// These numbers are most often between -3 and 3, and usually less than 0.3, scale that up a bit.
+		int x = normalDist(0, 1, 10) * 100;
 
 		if(uniformInRange(0,1)){
 			inputParameters[i] += x;

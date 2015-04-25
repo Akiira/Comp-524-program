@@ -15,6 +15,6 @@ using namespace std;
 extern long uniformInRange(long from, long to);
 extern function<double()> uniform01;
 extern mt19937 mersenne;
-
+extern double normalDist( double mu, double sigma, int n );
 
 #endif // !defined(EA_48879502_EC2C_4c41_94A4_804A9E653A41__INCLUDED_)
