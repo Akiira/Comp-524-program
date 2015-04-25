@@ -532,7 +532,7 @@ inline void HardCFG::block23() {
 		if( (a1 == a2) ) {
 			testCase->addPredicateCoverage(predicates::B23_TF);
 		} else if( (a2 == a3) ) {
-			testCase->addPredicateCoverage(predicates::B23_TF);
+			testCase->addPredicateCoverage(predicates::B23_FT);
 		} else {
 			testCase->addPredicateCoverage(predicates::B23_FF);
 		}
@@ -997,5 +997,9 @@ void HardCFG::printEdgesCovered(int* edgesCovered) const{
 
 void HardCFG::printPredicatesCovered(int* predicatesCovered) const{
 	cout << "\tTODO" << endl;//TODO printPredicatesCovered
+
+	for (int i = 0; i < numberOfPredicates; i++) {
+		cout << "i: " << i << " covered: " << predicatesCovered[i] << endl;
+	}
 
 }

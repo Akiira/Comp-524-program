@@ -180,7 +180,7 @@ inline void MediumCFG::block23() {
 		if( (a1 == a2) ) {
 			testCase->addPredicateCoverage(predicates::B23_TF);
 		} else if( (a2 == a3) ) {
-			testCase->addPredicateCoverage(predicates::B23_TF);
+			testCase->addPredicateCoverage(predicates::B23_FT);
 		} else {
 			testCase->addPredicateCoverage(predicates::B23_FF);
 		}
