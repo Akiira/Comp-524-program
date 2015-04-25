@@ -30,8 +30,8 @@ public:
 	void findPromisingRangesAndCreateTheGlobalRangeSet();
 
 	int run(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
-	void testCaseCrossover(int currentGen, Organism* parent);
-	void testSuiteCrossover();
+	void testCaseCrossoverAndMutation(Organism* parent);
+	void testSuiteCrossoverAndMutation();
 
 	void tryLocalOptimization(Organism* org);
 	TestCase* callRandomLocalOpt(Organism* org);
