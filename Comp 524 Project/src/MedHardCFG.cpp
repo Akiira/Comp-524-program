@@ -244,7 +244,7 @@ inline void MedHardCFG::block17() {
 		} else {
 			testCase->addPredicateCoverage(predicates::B17_FF);
 		}
-		testCase->addEdgeCoverage(edges::B17toB37);
+		testCase->addEdgeCoverage(edges::B17toB38);
 	}
 }
 

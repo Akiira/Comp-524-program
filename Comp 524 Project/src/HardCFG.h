@@ -10,6 +10,8 @@
 
 #include "ControlFlowGraph.h"
 
+// Note there are only 30 blocks. So any edges to blocks > 30 are actually
+//	just representative of reaching the end of the program in different ways.
 class HardCFG: public ControlFlowGraph {
 public:
 	HardCFG();
