@@ -174,9 +174,6 @@ void TestCase::printInputsOnly() const {
 
 TestCase& TestCase::operator=(const TestCase& org) {
 	if(this != &org){
-		delete[] inputParameters;
-		delete[] edgesCovered;
-		delete[] predicatesCovered;
 
 		numberOfEdges = org.numberOfEdges;
 		numberOfParameters = org.numberOfParameters;
