@@ -24,6 +24,7 @@ Population::Population(int popSize) {
 	edgesCovered = new int[targetCFG->getNumberOfEdges()] { };
 	predicatesCovered = new int[targetCFG->getNumberOfPredicates()] { };
 
+
 	population = new Organism*[popSize] { };
 	populationSize = popSize;
 	testSuiteSize = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
@@ -62,6 +63,7 @@ Population::Population(int popSize) {
 		population[rangeNum] = new Organism { testSuiteSize, testSuiteSize, range };
 	}
 	*/
+
 
 
 	totalFitness = 0;

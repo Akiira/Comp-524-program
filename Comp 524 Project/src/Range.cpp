@@ -17,7 +17,7 @@ Range::Range(int start, int end) {
 	this->end = end;
 	this->numOfUses = 0;
 	this->usesArraySize = (end - start) / 25;
-	if ((end - start) % 25 != 0) {
+	if ((end - start) % 25 != 0 || (end - start) / 25 == 0) {
 		usesArraySize++;
 	}
 
@@ -31,7 +31,7 @@ Range::Range(int start, int end, Range* source) {
 	this->numOfUses = 0;
 
 	this->usesArraySize = (end - start) / 25;
-	if ((end - start) % 25 != 0) {
+	if ((end - start) % 25 != 0 || (end - start) / 25 == 0) {
 		usesArraySize++;
 	}
 	this->usesArray = new int[usesArraySize] {};

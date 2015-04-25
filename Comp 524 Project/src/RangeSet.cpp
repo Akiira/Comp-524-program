@@ -14,6 +14,8 @@
 #include "Population.h"
 #include "TestSuite.h"
 #include <iostream>
+#include <limits>
+using std::numeric_limits;
 
 RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges) {
 	this->numberOfRanges = numberOfRanges;
@@ -50,12 +52,30 @@ RangeSet::~RangeSet() {
 	delete finalTestSuite;
 }
 
-// This is called from tryLocalOpt, the only place a test case can be generated
-//	outside of the rangeSet.
+// This is called from tryLocalOpt and after test case crossover and mutation,
+//	the only place a test case can be generated outside of the rangeSet.
 void RangeSet::offerToFinalTestSuite(TestCase* tc) {
+
 	if (finalTestSuite->isCoveringNew(tc)) {
 		finalTestSuite->addTestCase(new TestCase(*tc));
 		finalTestSuite->calculateTestSuiteCoverage();
+
+		// Add a corresponding range to the range set.
+		int max, min;
+		max = min = tc->getInputParameters()[0];
+
+		for (int i = 1; i < tc->getNumberOfParameters(); i++) {
+			int param = tc->getInputParameters()[i];
+
+			if (param > max) { max = param; }
+			else if (param < min) { min = param; }
+		}
+		Range* newRange = new Range(min, max);
+
+		for (int i = 0; i < tc->getNumberOfParameters(); i++) {
+			newRange->incrementUses(tc->getInputParameters()[i]);
+		}
+		addRange(newRange);
 	}
 }
 
@@ -157,7 +177,7 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 	}
 	stdDev /= numberOfRanges;
 	stdDev = sqrt(stdDev);
-	cout << "Adpating Ranges: " << "Mean Usefulness: " << mean << " StdDev: " << stdDev << endl;
+	cout << "\t\tAdpating Ranges: " << "Mean Usefulness: " << mean << " StdDev: " << stdDev << endl;
 	//cout << "Old Range set: " << endl;
 	//printRangesSimple();
 	int index = numberOfRanges-1;
@@ -213,7 +233,7 @@ void RangeSet::splitRange(int index) {
 		addRange(new2);
 	}
 	else {
-		cout << "Cant split anymore because range is same size as the buckets." << endl;
+		//cout << "Cant split anymore because range is same size as the buckets." << endl;
 	}
 }
 

@@ -45,7 +45,9 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 	int gensOfNoImprov = 0;
 
 	do {
-		cout << "\t\tGeneration # " << currentGen << " CoverageRatio: " << population->getCoverageRatio() << endl;
+		if (currentGen % 100 == 0 ) {
+			cout << "\t\tGeneration # " << currentGen << " CoverageRatio: " << population->getCoverageRatio() << endl;
+		}
 
 		if( gensOfNoImprov == 20 || currentGen % 30 == 0 ){
 			testSuiteCrossoverAndMutation();
