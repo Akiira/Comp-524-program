@@ -48,10 +48,20 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 		cout << "\t\tGeneration # " << currentGen << " CoverageRatio: " << population->getCoverageRatio() << endl;
 
 		if( gensOfNoImprov == 20 || currentGen % 30 == 0 ){
-			testSuiteCrossover(currentGen);
+			testSuiteCrossover();
 		}
 
-		testCaseCrossover();
+		auto parent = population->getOrganism(population->fitnessProportionalSelect());
+
+		testCaseCrossover(currentGen, parent);
+
+		double newProb;
+		newProb = adaptMutationBasedOnCoverageRatio(mutationProb);
+		parent->mutate(newProb);
+
+		if (gensOfNoImprov == 20 || population->getCoverageRatio() > 0.95) {
+			tryLocalOptimization (parent);
+		}
 
 		/*
 		 * Ultimately results in calling these functions
@@ -73,7 +83,6 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 			gensOfNoImprov = 0;
 		}
 
-		//TODO Needs range set stuff
 		if (gensOfNoImprov == 30 || currentGen % 100 == 1) {
 			rangeSet->adaptRangesBasedOnUsefulness();
 		}
@@ -87,14 +96,14 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 	return currentGen;
 }
 
-void Simulation::testCaseCrossover() {
+void Simulation::testCaseCrossover(int currentGen, Organism* parent) {
 	if( targetCFG->getNumberOfParameters() <= 1 ) {
 		return;
 	}
 
 	TestCase *child1 { }, *child2 { };
 
-	auto parent = population->getOrganism(population->fitnessProportionalSelect());
+
 	auto tc1    = parent->getChromosome()->getRandomTestCase();
 	auto tc2    = parent->getChromosome()->getRandomTestCase();
 
@@ -135,7 +144,7 @@ void Simulation::testCaseCrossover() {
 	}
 }
 
-void Simulation::testSuiteCrossover(int currentGen) {
+void Simulation::testSuiteCrossover() {
 	Organism *child1 { }, *child2 { };
 
 	auto parent1Index = population->fitnessProportionalSelect();
@@ -145,19 +154,6 @@ void Simulation::testSuiteCrossover(int currentGen) {
 	auto parent2 = population->getOrganism(parent2Index);
 
 	population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
-
-	double newProb;
-	newProb = adaptMutationBasedOnCoverageRatio(mutationProb);
-	child1->mutate(newProb);
-	child2->mutate(newProb);
-
-	if (currentGen % 10 == 0 || population->getCoverageRatio() > 0.95) {
-		tryLocalOptimization (child1);
-	}
-
-	if (currentGen % 10 == 0 || population->getCoverageRatio() > 0.95) {
-		tryLocalOptimization (child2);
-	}
 
 	population->replaceParentWithUnion(parent2Index, child1);
 	population->replaceParentWithUnion(parent1Index, child2);
