@@ -60,22 +60,20 @@ void RangeSet::offerToFinalTestSuite(TestCase* tc) {
 		finalTestSuite->addTestCase(new TestCase(*tc));
 		finalTestSuite->calculateTestSuiteCoverage();
 
-		// Add a corresponding range to the range set.
-		int max, min;
-		max = min = tc->getInputParameters()[0];
+		// Increment uses of a corresponding range in the range set.
 
-		for (int i = 1; i < tc->getNumberOfParameters(); i++) {
+		/*
+		for (int i = 0; i < tc->getNumberOfParameters(); i++) {
 			int param = tc->getInputParameters()[i];
 
-			if (param > max) { max = param; }
-			else if (param < min) { min = param; }
+			for (int j = 0; j < numberOfRanges; j++) {
+				Range* range = ranges[j];
+				if (param >= range->start && param <= range->end) {
+					range->incrementUses(param);
+				}
+			}
 		}
-		Range* newRange = new Range(min, max);
-
-		for (int i = 0; i < tc->getNumberOfParameters(); i++) {
-			newRange->incrementUses(tc->getInputParameters()[i]);
-		}
-		addRange(newRange);
+		*/
 	}
 }
 
@@ -238,15 +236,16 @@ void RangeSet::splitRange(int index) {
 }
 
 void RangeSet::deleteRange(int index) {
-	assert(numberOfRanges >= minNumberOfRanges);
-	totalUsefulness -= ranges[index]->numOfUses;
+	if(numberOfRanges >= minNumberOfRanges) {
+		totalUsefulness -= ranges[index]->numOfUses;
 
-	//TODO: It seems with my latest fixes this is ok now.
-	delete ranges[index];
-	numberOfRanges--;
+		//TODO: It seems with my latest fixes this is ok now.
+		delete ranges[index];
+		numberOfRanges--;
 
-	for (int i = index; i < numberOfRanges; i++) {
-		ranges[i] = ranges[i+1];
+		for (int i = index; i < numberOfRanges; i++) {
+			ranges[i] = ranges[i+1];
+		}
 	}
 }
 

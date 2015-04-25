@@ -44,28 +44,6 @@ Population::Population(int popSize) {
 		population[i] = new Organism { testSuiteSize, testSuiteSize, rangeSet->getRange(0) };
 	}
 
-
-	/*	Debating changing to this, make population size no longer a parameter but the number of ranges
-	 *	found. As I'm trying to write up the initial population generation this sort of approach
-	 *	seems to make more sense. In the other were just searching the same range over and over again.
-	 *
-	 *	And during test suite crossover the other way your very likely to just crossover test suites with the same
-	 *	ranges over and over again, just seems like a waste now that this is the algorithm we have.
-	 *
-	 *	EIther way the algorithm's performance doesnt seem to change.
-	 */
-	/*
-	population = new Organism*[rangeSet->getNumberOfRanges()] { };
-	populationSize = rangeSet->getNumberOfRanges();
-	testSuiteSize = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	for (int rangeNum = 0; rangeNum < populationSize; rangeNum++) {
-		Range* range = rangeSet->getRange(rangeNum);
-		population[rangeNum] = new Organism { testSuiteSize, testSuiteSize, range };
-	}
-	*/
-
-
-
 	totalFitness = 0;
 	updatePopulationsFitness();
 }
