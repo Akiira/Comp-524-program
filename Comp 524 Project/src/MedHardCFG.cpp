@@ -165,8 +165,8 @@ inline void MedHardCFG::block10() {
 inline void MedHardCFG::block15() {
 	//mu <= 500 sigma < 25
 	int a1 = testCase->getParameter(0),
-		a2 = testCase->getParameter(0),
-		a3 = testCase->getParameter(0);
+		a2 = testCase->getParameter(1),
+		a3 = testCase->getParameter(2);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addEdgeCoverage(edges::B15toB31);
@@ -229,8 +229,8 @@ inline void MedHardCFG::block16() {
 inline void MedHardCFG::block17() {
 	//mu <= 500 sigma >= 75 sigma < 100
 	int a1 = testCase->getParameter(0),
-		a2 = testCase->getParameter(0),
-		a3 = testCase->getParameter(0);
+		a2 = testCase->getParameter(1),
+		a3 = testCase->getParameter(2);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addEdgeCoverage(edges::B17toB37);
@@ -292,8 +292,8 @@ inline void MedHardCFG::block18() {
 inline void MedHardCFG::block19() {
 	//mu <= 500 sigma > 1000
 	int a1 = testCase->getParameter(0),
-		a2 = testCase->getParameter(0),
-		a3 = testCase->getParameter(0);
+		a2 = testCase->getParameter(1),
+		a3 = testCase->getParameter(2);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addEdgeCoverage(edges::B19toB43);
@@ -356,8 +356,8 @@ inline void MedHardCFG::block20() {
 inline void MedHardCFG::block21() {
 	//mu <= 500 sigma > 250 sigma < 500
 	int a1 = testCase->getParameter(0),
-		a2 = testCase->getParameter(0),
-		a3 = testCase->getParameter(0);
+		a2 = testCase->getParameter(1),
+		a3 = testCase->getParameter(2);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addPredicateCoverage(predicates::B21_TT);
@@ -446,10 +446,10 @@ void MedHardCFG::calculateSums(const int* values) {
 
 	for (int i = 0; i < numberOfParameters; ++i) {
 
-		if( i < 5 ) {
+		if( i < numberOfParameters / 2 ) {
 			sumOfFirstHalf += values[i];
 		} else {
-			sumOfSecondHalf += values[numberOfParameters - i - 1];
+			sumOfSecondHalf += values[i];
 		}
 	}
 	sumOfAll = sumOfFirstHalf + sumOfSecondHalf;

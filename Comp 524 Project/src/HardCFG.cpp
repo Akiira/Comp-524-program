@@ -267,8 +267,8 @@ inline void HardCFG::block14() {
 inline void HardCFG::block15() {
 	//mu <= 500 sigma < 25
 	int a1 = testCase->getParameter(0),
-		a2 = testCase->getParameter(0),
-		a3 = testCase->getParameter(0);
+		a2 = testCase->getParameter(1),
+		a3 = testCase->getParameter(2);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addEdgeCoverage(edges::B15toB31);
@@ -331,8 +331,8 @@ inline void HardCFG::block16() {
 inline void HardCFG::block17() {
 	//mu <= 500 sigma >= 75 sigma < 100
 	int a1 = testCase->getParameter(0),
-		a2 = testCase->getParameter(0),
-		a3 = testCase->getParameter(0);
+		a2 = testCase->getParameter(1),
+		a3 = testCase->getParameter(2);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addEdgeCoverage(edges::B17toB37);
@@ -394,8 +394,8 @@ inline void HardCFG::block18() {
 inline void HardCFG::block19() {
 	//mu <= 500 sigma > 1000
 	int a1 = testCase->getParameter(0),
-		a2 = testCase->getParameter(0),
-		a3 = testCase->getParameter(0);
+		a2 = testCase->getParameter(1),
+		a3 = testCase->getParameter(2);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addEdgeCoverage(edges::B19toB43);
@@ -458,8 +458,8 @@ inline void HardCFG::block20() {
 inline void HardCFG::block21() {
 	//mu <= 500 sigma > 250 sigma < 500
 	int a1 = testCase->getParameter(0),
-		a2 = testCase->getParameter(0),
-		a3 = testCase->getParameter(0);
+		a2 = testCase->getParameter(1),
+		a3 = testCase->getParameter(2);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addPredicateCoverage(predicates::B21_TT);
@@ -522,8 +522,8 @@ inline void HardCFG::block22() {
 inline void HardCFG::block23() {
 	//mu > 500 sigma > 10000
 	int a1 = testCase->getParameter(0),
-		a2 = testCase->getParameter(0),
-		a3 = testCase->getParameter(0);
+		a2 = testCase->getParameter(1),
+		a3 = testCase->getParameter(2);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addPredicateCoverage(predicates::B23_TT);
@@ -580,8 +580,8 @@ inline void HardCFG::block24() {
 inline void HardCFG::block25() {
 	//mu > 500 sigma > 2500 sigma < 5000
 	int a1 = testCase->getParameter(0),
-		a2 = testCase->getParameter(0),
-		a3 = testCase->getParameter(0);
+		a2 = testCase->getParameter(1),
+		a3 = testCase->getParameter(2);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addPredicateCoverage(predicates::B25_TT);
@@ -638,8 +638,8 @@ inline void HardCFG::block26() {
 inline void HardCFG::block27() {
 	//mu > 500 sigma < 250
 	int a1 = testCase->getParameter(0),
-		a2 = testCase->getParameter(0),
-		a3 = testCase->getParameter(0);
+		a2 = testCase->getParameter(1),
+		a3 = testCase->getParameter(2);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addPredicateCoverage(predicates::B27_TT);
@@ -696,8 +696,8 @@ inline void HardCFG::block28() {
 inline void HardCFG::block29() {
 	//mu > 500 sigma < 750 sigma > 500
 	int a1 = testCase->getParameter(0),
-		a2 = testCase->getParameter(0),
-		a3 = testCase->getParameter(0);
+		a2 = testCase->getParameter(1),
+		a3 = testCase->getParameter(2);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addPredicateCoverage(predicates::B29_TT);
@@ -787,6 +787,7 @@ void HardCFG::calculateDeviation(const int* values) {
 
 
 
+
 void HardCFG::calculateSums(const int* values) {
 	sumOfAll = 0;
 	sumOfFirstHalf = 0;
@@ -794,10 +795,11 @@ void HardCFG::calculateSums(const int* values) {
 
 	for (int i = 0; i < numberOfParameters; ++i) {
 
-		if( i < 5 ) {
+		if( i < numberOfParameters / 2 ) {
 			sumOfFirstHalf += values[i];
 		} else {
-			sumOfSecondHalf += values[numberOfParameters - i - 1];
+			sumOfSecondHalf += values[i];
+			//sumOfSecondHalf += values[numberOfParameters - i - 1];
 		}
 	}
 	sumOfAll = sumOfFirstHalf + sumOfSecondHalf;

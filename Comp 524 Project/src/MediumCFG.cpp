@@ -170,18 +170,19 @@ inline void MediumCFG::block14() {
 inline void MediumCFG::block23() {
 	//mu > 500 sigma > 10000
 	int a1 = testCase->getParameter(0),
-		a2 = testCase->getParameter(0),
-		a3 = testCase->getParameter(0);
+		a2 = testCase->getParameter(1),
+		a3 = testCase->getParameter(2);
 
 	if( (a1 == a2) && (a2 == a3) ) {
+		testCase->addPredicateCoverage(predicates::B23_TT);
 		testCase->addEdgeCoverage(edges::B23toB55);
 	} else {
 		if( (a1 == a2) ) {
-
+			testCase->addPredicateCoverage(predicates::B23_TF);
 		} else if( (a2 == a3) ) {
-
+			testCase->addPredicateCoverage(predicates::B23_TF);
 		} else {
-
+			testCase->addPredicateCoverage(predicates::B23_FF);
 		}
 		testCase->addEdgeCoverage(edges::B23toB56);
 	}
@@ -284,8 +285,8 @@ inline void MediumCFG::block26() {
 inline void MediumCFG::block27() {
 	//mu > 500 sigma < 250
 	int a1 = testCase->getParameter(0),
-		a2 = testCase->getParameter(0),
-		a3 = testCase->getParameter(0);
+		a2 = testCase->getParameter(1),
+		a3 = testCase->getParameter(2);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addEdgeCoverage(edges::B27toB67);
@@ -341,8 +342,8 @@ inline void MediumCFG::block28() {
 inline void MediumCFG::block29() {
 	//mu > 500 sigma < 750 sigma > 500
 	int a1 = testCase->getParameter(0),
-		a2 = testCase->getParameter(0),
-		a3 = testCase->getParameter(0);
+		a2 = testCase->getParameter(1),
+		a3 = testCase->getParameter(2);
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addEdgeCoverage(edges::B29toB73);
@@ -438,10 +439,10 @@ void MediumCFG::calculateSums(const int* values) {
 
 	for (int i = 0; i < numberOfParameters; ++i) {
 
-		if( i < 5 ) {
+		if( i < numberOfParameters / 2 ) {
 			sumOfFirstHalf += values[i];
 		} else {
-			sumOfSecondHalf += values[numberOfParameters - i - 1];
+			sumOfSecondHalf += values[i];
 		}
 	}
 	sumOfAll = sumOfFirstHalf + sumOfSecondHalf;
