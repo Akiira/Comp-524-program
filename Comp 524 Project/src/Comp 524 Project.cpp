@@ -55,27 +55,9 @@ const short POPULATION_STEP = 50;
 const short TEST_RUNS = 50;
 const short GENERATIONS = 10000;
 
-//Flags to interactivly set printing during simulation
-//TODO I may get rid of all these since we dont have time to make use of them.
-bool printPopFitnessOnce;
-bool printPopFitness;
-bool printGenerationAndRatio;
-bool printCoverageRatioForTScrossover;
-bool printCoverageRatioForTScrossoverOnce;
-bool printReplacement;
-bool printCoverageRatioForTCcrossover;
-
-bool changeLocalOpt;
-
-bool pauseOnTSCrossover;
-bool pauseOnTCcrossover;
-bool pauseONlocalOpt;
-bool pause;
-
 int main() {
 	chrono::time_point<chrono::system_clock> start { }, end { };
     start = chrono::system_clock::now();
-    printGenerationAndRatio = true;
 
     runTestsOnAllGraphs();
 
@@ -123,7 +105,7 @@ void setTarget(int i) {
 
 void runTestsOnAllGraphs() {
 
-	for (int graph = 5; graph < 6; ++graph) {
+	for (int graph = 4; graph < 6; ++graph) {
 		setTarget(graph);
 		testCutPointsToMutationProb();
 		testPopulationSizeToMutationProb();
