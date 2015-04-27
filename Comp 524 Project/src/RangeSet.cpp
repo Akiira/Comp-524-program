@@ -45,11 +45,22 @@ RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges) {
 }
 
 RangeSet::~RangeSet() {
-	for (int i = 0; i < numberOfRanges; i++) {
-		delete ranges[i];
+
+	if( ranges ) {
+		for (int i = 0; i < numberOfRanges; i++) {
+			if( ranges[i] ) {
+				delete ranges[i];
+				ranges[i] = 0;
+			}
+
+		}
+		delete[] ranges;
+		ranges = 0;
 	}
-	delete[] ranges;
-	delete finalTestSuite;
+
+	if( finalTestSuite ) {
+		delete finalTestSuite;
+	}
 }
 
 // This is called from tryLocalOpt and after test case crossover and mutation,
@@ -239,8 +250,11 @@ void RangeSet::deleteRange(int index) {
 	if(numberOfRanges >= minNumberOfRanges) {
 		totalUsefulness -= ranges[index]->numOfUses;
 
-		//TODO: It seems with my latest fixes this is ok now.
-		delete ranges[index];
+		if( ranges[index] ) {
+			delete ranges[index];
+			ranges[index] = 0;
+		}
+
 		numberOfRanges--;
 
 		for (int i = index; i < numberOfRanges; i++) {

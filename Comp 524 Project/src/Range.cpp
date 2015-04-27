@@ -67,7 +67,10 @@ Range::Range(const Range& other) {
 }
 
 Range::~Range() {
-	delete[] usesArray;
+	if( usesArray ) {
+		delete[] usesArray;
+		usesArray = 0;
+	}
 }
 
 void Range::printRange() {

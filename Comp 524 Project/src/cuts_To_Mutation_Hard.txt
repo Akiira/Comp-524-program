@@ -1,5 +1,0 @@
-(* Number of tests per point: 50 *)
-(* Maximum Generations: 10000 *)
-(* Test Program: Hard *)
-(* {Cut Points, Mutation Probability, Generations} *)
-(* Standard Population Size: 150 *)

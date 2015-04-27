@@ -18,14 +18,18 @@
 #include <iostream>
 
 TestCase::~TestCase(){
-	delete[] edgesCovered;
-	edgesCovered = NULL;
-
-	delete[] predicatesCovered;
-	predicatesCovered = NULL;
-
-	delete[] inputParameters;
-	inputParameters = NULL;
+	if( edgesCovered ) {
+		delete[] edgesCovered;
+		edgesCovered = NULL;
+	}
+	if( predicatesCovered ) {
+		delete[] predicatesCovered;
+		predicatesCovered = NULL;
+	}
+	if( inputParameters ) {
+		delete[] inputParameters;
+		inputParameters = NULL;
+	}
 }
 
 // IMPORTANT: In almost all cases now you should use the functions in rangeSet to get test cases
