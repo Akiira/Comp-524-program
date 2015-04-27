@@ -336,8 +336,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 				tmpSuite->addTestCase(tcPos);
 				tmpSuite->calculateTestSuiteCoverage();
 
-				Range* newRange = new Range(nextStartPos, nextStartPos + size);
-				rangeSet->addRange(newRange);
+				rangeSet->addRange(new Range(nextStartPos, nextStartPos + size));
 			}
 			else {
 				delete tcPos;
@@ -351,8 +350,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 				tmpSuite->addTestCase(tcNeg);
 				tmpSuite->calculateTestSuiteCoverage();
 
-				Range* newRange = new Range(nextStartNeg, nextStartNeg + size);
-				rangeSet->addRange(newRange);
+				rangeSet->addRange(new Range(nextStartNeg, nextStartNeg + size));
 			}
 			else {
 				delete tcNeg;
