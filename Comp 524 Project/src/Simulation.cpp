@@ -316,8 +316,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 	tmpSuite->addTestCase(tc1);
 	tmpSuite->calculateTestSuiteCoverage();
 
-	Range* startingRange = new Range(currStart, currStart + startSize);
-	rangeSet->addRange(startingRange);
+	rangeSet->addRange(new Range(currStart, currStart + startSize));
 
 	//TODO: Tune this
 	for (int tryNum = 1; tryNum <= 2; tryNum++) {

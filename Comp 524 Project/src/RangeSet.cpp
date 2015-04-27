@@ -192,6 +192,8 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 	int index = numberOfRanges-1;
 	while (index >= 0 && numberOfRanges > minNumberOfRanges && (ranges[index]->numOfUses == 0 || ranges[index]->numOfUses < mean -  stdDev))
 	{
+		assert(index >= 0);
+				assert(index < numberOfRanges);
 		//cout << endl <<  "Ranges before delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		//printRangesSimple();
 		deleteRange(index);
@@ -203,6 +205,8 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 	index = 0;
 	while (ranges[index]->numOfUses > mean + stdDev)
 	{
+		assert(index >= 0);
+		assert(index < numberOfRanges);
 		//cout << endl <<  "Splitting a really good range and exploring adjacents" << endl;
 		//cout << endl <<  "Ranges before expore adjacent: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		//printRangesSimple();
@@ -247,6 +251,9 @@ void RangeSet::splitRange(int index) {
 }
 
 void RangeSet::deleteRange(int index) {
+
+	assert(index >= 0);
+	assert(index < numberOfRanges);
 	if(numberOfRanges >= minNumberOfRanges) {
 		totalUsefulness -= ranges[index]->numOfUses;
 
@@ -287,20 +294,25 @@ void RangeSet::addRange(Range* r) {
 			tmp[i] = new Range(*ranges[i]);
 		}
 		for (int i = 0; i < numberOfRanges; i++) {
-			delete ranges[i];
+			if( ranges[i] ){
+				delete ranges[i];
+				ranges[i] = 0;
+			}
 		}
 		delete[] ranges;
 		ranges = tmp;
 		ranges[numberOfRanges] = r;
 	}
 	totalUsefulness += ranges[numberOfRanges]->numOfUses;
-	moveRangeToSortedPosition(numberOfRanges);
 	numberOfRanges++;
+	moveRangeToSortedPosition(numberOfRanges - 1);
 }
 
 void RangeSet::sortRangesByUsefulness() {
 	for (int i = numberOfRanges - 1; i > 1; i--) {
 		for (int j = 0; j < i; j++) {
+			assert(i < numberOfRanges);
+			assert(j+1 < numberOfRanges);
 			if (ranges[j]->numOfUses < ranges[j + 1]->numOfUses) {
 				Range* tmp = ranges[j];
 				ranges[j] = ranges[j + 1];
@@ -314,6 +326,7 @@ void RangeSet::moveRangeToSortedPosition(int indexToSort) {
 	int i = indexToSort;
 	// Move the child left while its fitness is greater than it's left neighbor
 	while ((i > 0) && (ranges[i]->numOfUses > ranges[i - 1]->numOfUses)) {
+		assert(i < numberOfRanges);
 		Range* tmp = ranges[i];
 		ranges[i] = ranges[i - 1];
 		ranges[i - 1] = tmp;

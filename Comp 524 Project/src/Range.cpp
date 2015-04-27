@@ -36,21 +36,25 @@ Range::Range(int start, int end, Range* source) {
 	}
 	this->usesArray = new int[usesArraySize] {};
 
-		int i = (start - source->start) / 25;	// The bucket that start falls into
-		int j = 0; // index for the new Range's usesArray.
-		for (; j < source->usesArraySize / 2; j++, i++) {
+	int i = (start - source->start) / 25;	// The bucket that start falls into
+	int j = 0; // index for the new Range's usesArray.
+	for (; j < source->usesArraySize / 2; j++, i++) {
+		assert(j < usesArraySize);
+		assert(i < source->usesArraySize);
+		usesArray[j] = source->usesArray[i];
+		numOfUses += source->usesArray[i];
+	}
+	// Handle the boundary cases
+	if (j < usesArraySize) {
+		assert(j < usesArraySize);
+		if ((j* 25 < end) && i < source->usesArraySize) {
+			assert(i < source->usesArraySize);
 			usesArray[j] = source->usesArray[i];
-			numOfUses += source->usesArray[i];
 		}
-		// Handle the boundary cases
-		if (j < usesArraySize) {
-			if ((j* 25 < end) && i < source->usesArraySize) {
-				usesArray[j] = source->usesArray[i];
-			}
-			else {
-				usesArray[j] = 0;
-			}
+		else {
+			usesArray[j] = 0;
 		}
+	}
 
 }
 
