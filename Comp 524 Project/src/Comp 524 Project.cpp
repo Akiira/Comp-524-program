@@ -121,7 +121,7 @@ void setTarget(int i) {
 
 void runTestsOnAllGraphs() {
 
-	for (int graph = 2; graph < 3; ++graph) {
+	for (int graph = 4; graph < 5; ++graph) {
 		setTarget(graph);
 		testCutPointsToMutationProb();
 		testPopulationSizeToMutationProb();
