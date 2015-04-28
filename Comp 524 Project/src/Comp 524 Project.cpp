@@ -47,16 +47,16 @@ const short CUTPOINTS_START = 0;
 const short CUTPOINTS_END = 4;
 const short CUTPOINTS_STEP = 1;
 
-const short POPULATION_STANDARD = 25;
-const short POPULATION_START = 10;
-const short POPULATION_END = 150;
-const short POPULATION_STEP = 10;
+const short POPULATION_STANDARD = 20;
+const short POPULATION_START = 5;
+const short POPULATION_END = 100;
+const short POPULATION_STEP = 5;
 
-const short TEST_RUNS = 50;
+const short TEST_RUNS = 30;
 const short GENERATIONS = 10000;
 
 void shortTest() {
-	targetCFG = new HardCFG();
+	targetCFG = new TriangleProblemGraph();
 	for(int i = 0; i < 2; i++)
 	{
 		cout << "\tTest Num: " << i << " " << endl;
@@ -74,8 +74,8 @@ int main() {
 	chrono::time_point<chrono::system_clock> start { }, end { };
     start = chrono::system_clock::now();
 
-    //runTestsOnAllGraphs();
-    shortTest();
+    runTestsOnAllGraphs();
+    //shortTest();
 
     end = chrono::system_clock::now();
 

@@ -93,7 +93,7 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 
 		gensOfNoImprov++;
 		currentGen++;
-	} while (currentGen <= numberOfGenerations && population->getCoverageRatio() < 1 && gensOfNoImprov < 250);
+	} while (currentGen <= numberOfGenerations && population->getCoverageRatio() < 1 && gensOfNoImprov < 500);
 
 	//TestSuite* finalTestSuite = rangeSet->getFinalTestSuite();
 	//finalTestSuite->printAll();
