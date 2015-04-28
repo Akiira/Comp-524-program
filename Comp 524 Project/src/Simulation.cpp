@@ -306,7 +306,7 @@ double Simulation::adaptMutationBasedOnCoverageRatio(double pM) {
 void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 
 	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	rangeSet = new RangeSet(0, edgesPlusPreds);
+	rangeSet = new RangeSet();
 
 	int startSize = 5000, currStart = -2500;
 

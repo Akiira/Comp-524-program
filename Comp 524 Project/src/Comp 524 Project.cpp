@@ -74,8 +74,8 @@ int main() {
 	chrono::time_point<chrono::system_clock> start { }, end { };
     start = chrono::system_clock::now();
 
-    //runTestsOnAllGraphs();
-    shortTest();
+    runTestsOnAllGraphs();
+    //shortTest();
 
     end = chrono::system_clock::now();
 
@@ -121,7 +121,7 @@ void setTarget(int i) {
 
 void runTestsOnAllGraphs() {
 
-	for (int graph = 4; graph < 6; ++graph) {
+	for (int graph = 2; graph < 3; ++graph) {
 		setTarget(graph);
 		testCutPointsToMutationProb();
 		testPopulationSizeToMutationProb();

@@ -127,7 +127,7 @@ void Range::incrementUses(int valueUsed) {
 		if (bucket == usesArraySize) {
 			bucket = usesArraySize - 1;
 		}
-		cout << "value: " << valueUsed << " bucket: " << bucket << " usesArraySize: " << usesArraySize << " start: " << start << " end: " << end << endl;
+		//cout << "value: " << valueUsed << " bucket: " << bucket << " usesArraySize: " << usesArraySize << " start: " << start << " end: " << end << endl;
 		assert(bucket >= 0);
 		assert(bucket < usesArraySize);
 
