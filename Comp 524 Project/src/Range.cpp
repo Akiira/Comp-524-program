@@ -11,12 +11,14 @@
 
 using std::cout;
 using std::endl;
+using std::cerr;
 
 Range::Range(int start, int end) {
 	this->start = start;
 	this->end = end;
 	this->numOfUses = 0;
-	this->usesArraySize = (end - start) / 25;
+
+	this->usesArraySize = ((end - start) / 25);
 	if ((end - start) % 25 != 0 || usesArraySize == 0) {
 		usesArraySize++;
 	}
@@ -63,11 +65,33 @@ Range::Range(const Range& other) {
 	this->end = other.end;
 	this->numOfUses = other.numOfUses;
 	this->usesArraySize = other.usesArraySize;
-	assert(usesArraySize > 0);
-	this->usesArray = new int[usesArraySize] {};
-	for (int i = 0; i < usesArraySize; i++) {
-		this->usesArray[i] = other.usesArray[i];
+	assert(other.usesArraySize > 0);
+
+	usesArray = new int[other.usesArraySize];
+	for (int i = 0; i < other.usesArraySize; i++) {
+		usesArray[i] = other.usesArray[i];
 	}
+}
+
+
+Range& Range::operator= (const Range& other) {
+	if (this != &other) {
+		this->start = other.start;
+		this->end = other.end;
+		this->numOfUses = other.numOfUses;
+
+		assert(other.usesArraySize > 0);
+
+		int * newArray = new int[other.usesArraySize];
+		for (int i = 0; i < other.usesArraySize; i++) {
+			newArray[i] = other.usesArray[i];
+		}
+		delete [] usesArray;
+
+		usesArray = newArray;
+		usesArraySize = other.usesArraySize;
+	}
+	return *this;
 }
 
 Range::~Range() {
@@ -93,12 +117,26 @@ void Range::printRangeSimple() {
 }
 
 void Range::incrementUses(int valueUsed) {
-	int bucket = (valueUsed - start) / 25;
-	assert(bucket >= 0 || bucket < usesArraySize);
+	if (valueUsed >= start && valueUsed <= end) {
+		// minus one so that when == end it falls into the last bucket.
+		int bucket = (valueUsed - start) / 25;
+		// happens when range size is perfectly divisible by 25. In cases where there is
+		//	a remainder we are adding an additional bucket so this shouldn't be an issue.
+		//	I don't think it makes sense to add an additional bucket just for the last element
+		//	though, just put it in the last bucket (so last actually might have 26 elements.)
+		if (bucket == usesArraySize) {
+			bucket = usesArraySize - 1;
+		}
+		cout << "value: " << valueUsed << " bucket: " << bucket << " usesArraySize: " << usesArraySize << " start: " << start << " end: " << end << endl;
+		assert(bucket >= 0);
+		assert(bucket < usesArraySize);
 
-	usesArray[bucket]++;
-	numOfUses++;
-	assert(numOfUses > 0);
+		usesArray[bucket]++;
+		numOfUses++;
+	}
+	else {
+		cerr << "Attempt to incrementUses with out of range parameter" << endl;
+	}
 }
 
 

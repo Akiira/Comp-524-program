@@ -9,7 +9,9 @@
 #include <iostream>
 #include <cassert>
 #include "TestCase.h"
+#include <limits>
 using std::endl;
+using std::numeric_limits;
 
 SimpleIfElseControlFlowGraph::SimpleIfElseControlFlowGraph() {
 	numberOfEdges = 4;
@@ -18,6 +20,12 @@ SimpleIfElseControlFlowGraph::SimpleIfElseControlFlowGraph() {
 	//coverage = new bool*[2];
 	//testCase->edgesCovered = new bool[numberOfEdges];
 	//testCase->predicatesCovered = new bool[numberOfPredicates];
+
+	for (int i = 0; i < numberOfParameters; ++i) {
+		rangeForEachParameter[i][0] = numeric_limits<int>::min();
+		rangeForEachParameter[i][1] = numeric_limits<int>::max();
+	}
+
 	testCase = 0;
 }
 

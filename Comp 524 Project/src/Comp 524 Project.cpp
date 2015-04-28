@@ -55,11 +55,27 @@ const short POPULATION_STEP = 50;
 const short TEST_RUNS = 50;
 const short GENERATIONS = 10000;
 
+void shortTest() {
+	targetCFG = new HiLoControlFlowGraph();
+	for(int i = 0; i < 2; i++)
+	{
+		cout << "\tTest Num: " << i << " " << endl;
+
+		Simulation* sim = new Simulation(50);
+		int temp = sim->run(1500, 2, .02);
+
+		cout << "\t# of gen: " << temp << " cov: " << rangeSet->getFinalTestSuite()->getCoverageRatio() << endl;
+
+		delete sim;
+	}
+}
+
 int main() {
 	chrono::time_point<chrono::system_clock> start { }, end { };
     start = chrono::system_clock::now();
 
-    runTestsOnAllGraphs();
+    //runTestsOnAllGraphs();
+    shortTest();
 
     end = chrono::system_clock::now();
 

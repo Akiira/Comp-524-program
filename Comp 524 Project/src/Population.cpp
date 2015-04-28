@@ -17,10 +17,11 @@ Population::~Population() {
 		delete population[i];
 	}
 	delete[] population;
+	delete[] edgesCovered;
+	delete[] predicatesCovered;
 }
 
 Population::Population(int popSize) {
-
 	edgesCovered = new int[targetCFG->getNumberOfEdges()] { };
 	predicatesCovered = new int[targetCFG->getNumberOfPredicates()] { };
 

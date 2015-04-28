@@ -30,6 +30,14 @@ public:
 
 	void printRange();
 	void printRangeSimple();
+
+	bool operator < (const Range& r) const
+	{
+		// SOrt in descending order
+	    return (numOfUses > r.numOfUses);
+	}
+
+	Range& operator= (const Range& other);
 };
 
 #endif /* RANGE_H_ */
