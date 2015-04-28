@@ -48,9 +48,9 @@ const short CUTPOINTS_END = 4;
 const short CUTPOINTS_STEP = 1;
 
 const short POPULATION_STANDARD = 25;
-const short POPULATION_START = 50;
-const short POPULATION_END = 500;
-const short POPULATION_STEP = 50;
+const short POPULATION_START = 10;
+const short POPULATION_END = 150;
+const short POPULATION_STEP = 10;
 
 const short TEST_RUNS = 50;
 const short GENERATIONS = 10000;
