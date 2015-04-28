@@ -15,7 +15,7 @@ using std::cerr;
 
 Range::Range(int start, int end) {
 	// Should never happen but just in case.
-	if (start < end) {
+	if (start > end) {
 		int tmp = start;
 		start = end;
 		end = tmp;
@@ -39,7 +39,7 @@ Range::Range(int start, int end) {
 // Used by RangeSet::splitRange
 Range::Range(int start, int end, Range* source) {
 	// Should never happen but just in case.
-	if (start < end) {
+	if (start > end) {
 		int tmp = start;
 		start = end;
 		end = tmp;
