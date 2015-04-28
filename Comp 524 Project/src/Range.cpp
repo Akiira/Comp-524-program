@@ -14,6 +14,16 @@ using std::endl;
 using std::cerr;
 
 Range::Range(int start, int end) {
+	// Should never happen but just in case.
+	if (start < end) {
+		int tmp = start;
+		start = end;
+		end = tmp;
+	}
+	else if (start == end) {
+		end = start + 1;
+	}
+
 	this->start = start;
 	this->end = end;
 	this->numOfUses = 0;
@@ -24,13 +34,20 @@ Range::Range(int start, int end) {
 	}
 
 	this->usesArray = new int[usesArraySize]{};
-
-    cout << "construct: ";
-    printRangeSimple();
 }
 
 // Used by RangeSet::splitRange
 Range::Range(int start, int end, Range* source) {
+	// Should never happen but just in case.
+	if (start < end) {
+		int tmp = start;
+		start = end;
+		end = tmp;
+	}
+	else if (start == end) {
+		end = start + 1;
+	}
+
 	this->start = start;
 	this->end = end;
 	this->numOfUses = 0;
@@ -42,33 +59,34 @@ Range::Range(int start, int end, Range* source) {
 	this->usesArray = new int[usesArraySize] {};
 
 	int i = (start - source->start) / 25;	// The bucket that start falls into
+
 	int j = 0; // index for the new Range's usesArray.
 	for (; j < source->usesArraySize / 2; j++, i++) {
-		assert(j < usesArraySize);
-		assert(i < source->usesArraySize);
-		usesArray[j] = source->usesArray[i];
-		numOfUses += source->usesArray[i];
+		// Be extra careful since we've had so many problems with this code.
+		if (j < usesArraySize) {
+			if (i < source->usesArraySize) {
+				usesArray[j] = source->usesArray[i];
+				numOfUses += source->usesArray[i];
+			} else {
+				usesArray[j] = 0;
+			}
+		}
+
 	}
 	// Handle the boundary cases
 	if (j < usesArraySize) {
-		assert(j < usesArraySize);
 		if ((j* 25 < end) && i < source->usesArraySize) {
-			assert(i < source->usesArraySize);
 			usesArray[j] = source->usesArray[i];
 		}
 		else {
 			usesArray[j] = 0;
 		}
 	}
-
-    cout << "construct: ";
-    printRangeSimple();
-
 }
 
 Range::Range(const Range& other) {
-    cout << "copy: ";
-    other.printRangeSimple();
+    //cout << "copy: ";
+    //other.printRangeSimple();
 
 	this->start = other.start;
 	this->end = other.end;
@@ -84,8 +102,8 @@ Range::Range(const Range& other) {
 
 
 Range& Range::operator= (const Range& other) {
-    cout << "assign: ";
-    other.printRangeSimple();
+    //cout << "assign: ";
+    //other.printRangeSimple();
 
 	if (this != &other) {
 		this->start = other.start;
@@ -108,8 +126,8 @@ Range& Range::operator= (const Range& other) {
 }
 
 Range::~Range() {
-    cout << "destruct: ";
-    printRangeSimple();
+   // cout << "destruct: ";
+    //printRangeSimple();
 
     // No need to check if its 0, delete on null pointer does nothing
 	delete[] usesArray;
