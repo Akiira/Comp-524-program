@@ -30,19 +30,16 @@ Population::Population(int popSize) {
 	populationSize = popSize;
 	testSuiteSize = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
 
-
 	int numberOfRanges = rangeSet->getNumberOfRanges();
-	int suitesPerRange = popSize / numberOfRanges;
-	int i = 0;
-	for (int rangeNum = 0; rangeNum < numberOfRanges; rangeNum++) {
-		Range* range = rangeSet->getRange(rangeNum);
-		for (; i < (rangeNum+1) * suitesPerRange; i++) {
-			population[i] = new Organism { testSuiteSize, testSuiteSize, range };
+	if (numberOfRanges > 0) {
+		for (int i = 0; i < populationSize; i++) {
+			int rangeNum = i % numberOfRanges;
+			population[i] = new Organism { testSuiteSize, testSuiteSize, rangeSet->getRange(rangeNum) };
 		}
 	}
-
-	for (; i < populationSize; i++) {
-		population[i] = new Organism { testSuiteSize, testSuiteSize, rangeSet->getRange(0) };
+	else {
+		// Something went wrong because at the very least one range is always added to the rangeset.
+		assert(false);
 	}
 
 	totalFitness = 0;

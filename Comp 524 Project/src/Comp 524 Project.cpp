@@ -47,7 +47,7 @@ const short CUTPOINTS_START = 0;
 const short CUTPOINTS_END = 4;
 const short CUTPOINTS_STEP = 1;
 
-const short POPULATION_STANDARD = 150;
+const short POPULATION_STANDARD = 25;
 const short POPULATION_START = 50;
 const short POPULATION_END = 500;
 const short POPULATION_STEP = 50;
@@ -56,7 +56,7 @@ const short TEST_RUNS = 50;
 const short GENERATIONS = 10000;
 
 void shortTest() {
-	targetCFG = new HiLoControlFlowGraph();
+	targetCFG = new HardCFG();
 	for(int i = 0; i < 2; i++)
 	{
 		cout << "\tTest Num: " << i << " " << endl;
@@ -74,8 +74,8 @@ int main() {
 	chrono::time_point<chrono::system_clock> start { }, end { };
     start = chrono::system_clock::now();
 
-    runTestsOnAllGraphs();
-    //shortTest();
+    //runTestsOnAllGraphs();
+    shortTest();
 
     end = chrono::system_clock::now();
 

@@ -6,28 +6,37 @@
  */
 
 #include "RangeSet.h"
-
-#include <cmath>
-#include <iterator>
-#include <limits>
-
-#include "ControlFlowGraph.h"
-#include "GlobalVariables.h"
+#include "Range.h"
 #include "Random.h"
+#include "GlobalVariables.h"
+#include "ControlFlowGraph.h"
 #include "TestCase.h"
+#include "Population.h"
 #include "TestSuite.h"
-
-using std::numeric_limits;
-using std::vector;
 #include <iostream>
-using std::cout;
-using std::endl;
-#include <algorithm>    // std::sort
+#include <limits>
+using std::numeric_limits;
 
-
-
-RangeSet::RangeSet() {
+RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges) {
+	this->numberOfRanges = numberOfRanges;
+	this->maxNumberOfRanges = maxNumberOfRanges;
 	this->minNumberOfRanges = 5;
+	this->ranges = ranges;
+	this->totalUsefulness = 0;
+	for (int i = 0; i < numberOfRanges; i++) {
+		totalUsefulness += ranges[i]->numOfUses;	// Likely pointless because they'll be 0.
+	}
+
+	// Start as blank organism. Grow whenever rangeSet generates a test case that covers something new.
+	int edgesPlusPred = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+	finalTestSuite = new TestSuite(0, edgesPlusPred, new TestCase*[edgesPlusPred]);
+}
+
+RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges) {
+	this->numberOfRanges = numberOfRanges;
+	this->maxNumberOfRanges = maxNumberOfRanges;
+	this->minNumberOfRanges = 5;
+	this->ranges = new Range*[maxNumberOfRanges];
 	this->totalUsefulness = 0;
 
 	// Start as blank organism. Grow whenever rangeSet generates a test case that covers something new.
@@ -36,6 +45,18 @@ RangeSet::RangeSet() {
 }
 
 RangeSet::~RangeSet() {
+
+	if( ranges ) {
+		for (int i = 0; i < numberOfRanges; i++) {
+			if( ranges[i] ) {
+				delete ranges[i];
+				ranges[i] = 0;
+			}
+
+		}
+		delete[] ranges;
+		ranges = 0;
+	}
 
 	if( finalTestSuite ) {
 		delete finalTestSuite;
@@ -47,17 +68,18 @@ RangeSet::~RangeSet() {
 void RangeSet::offerToFinalTestSuite(TestCase* tc) {
 
 	if (finalTestSuite->isCoveringNew(tc)) {
-		TestCase* copy = new TestCase(*tc);
-		finalTestSuite->addTestCase(copy);
+		finalTestSuite->addTestCase(new TestCase(*tc));
 		finalTestSuite->calculateTestSuiteCoverage();
 
 		// Increment uses of a corresponding range in the range set.
-		for (int i = 0; i < copy->getNumberOfParameters(); i++) {
-			int param = copy->getInputParameters()[i];
 
-			for (int j = 0; j < (int)rangesVector.size(); j++) {
-				if (param >= rangesVector[j].start && param <= rangesVector[j].end) {
-					rangesVector[j].incrementUses(param);
+
+		for (int i = 0; i < tc->getNumberOfParameters(); i++) {
+			int param = tc->getInputParameters()[i];
+
+			for (int j = 0; j < numberOfRanges; j++) {
+				if (param >= ranges[j]->start && param <= ranges[j]->end) {
+					ranges[j]->incrementUses(param);
 				}
 			}
 		}
@@ -66,11 +88,11 @@ void RangeSet::offerToFinalTestSuite(TestCase* tc) {
 }
 
 TestCase* RangeSet::getNewTestCase() {
-		vector<Range> tmp = selectRangesForNewTestCaseProportionalToUsefulness();
+		Range** tmp = selectRangesForNewTestCaseProportionalToUsefulness();
 		TestCase* retval = new TestCase(); // empty test case
 
-		for(int i = 0; i < (int)tmp.size(); i++)	{
-			retval->setInputParameter(i, uniformInRange(tmp[i].start, tmp[i].end));
+		for(int i = 0; i < targetCFG->getNumberOfParameters(); i++)	{
+			retval->setInputParameter(i, uniformInRange(tmp[i]->start, tmp[i]->end));
 		}
 		targetCFG->setCoverageOfTestCase(retval);
 
@@ -79,11 +101,13 @@ TestCase* RangeSet::getNewTestCase() {
 			finalTestSuite->calculateTestSuiteCoverage();
 
 			for (int i = 0; i < targetCFG->getNumberOfParameters(); i++) {
-				tmp[i].incrementUses(retval->getParameter(i));
+				tmp[i]->incrementUses(retval->getParameter(i));
 				totalUsefulness++;
 			}
 			sortRangesByUsefulness();
 		}
+
+		delete[] tmp;
 
 		return retval;
 }
@@ -123,11 +147,11 @@ TestCase* RangeSet::getNewTestCaseEntirelyFromRange(int start, int end) {
 }
 
 unsigned int RangeSet::getRandomRange() const {
-	return uniformInRange(0, rangesVector.size()-1);
+	return uniformInRange(0, numberOfRanges-1);
 }
 
-vector<Range> RangeSet::selectRangesForNewTestCaseProportionalToUsefulness() {
-	vector<Range> retval;
+Range** RangeSet::selectRangesForNewTestCaseProportionalToUsefulness() {
+	Range** retval = new Range*[targetCFG->getNumberOfParameters()];
 	int sum;
 
 	for (int param = 0; param < targetCFG->getNumberOfParameters(); param++) {
@@ -136,75 +160,63 @@ vector<Range> RangeSet::selectRangesForNewTestCaseProportionalToUsefulness() {
 		if (totalUsefulness == 0) {
 			i = getRandomRange();
 		} else {
-			sum = rangesVector[0].numOfUses;
+			sum = ranges[0]->numOfUses;
 			long toss = uniformInRange(0, totalUsefulness-1);
 			while (sum < toss) {
 				i++;
-				sum += rangesVector[i].numOfUses;
+				sum += ranges[i]->numOfUses;
 			}
 		}
 
-		retval.push_back(rangesVector[i]);
+		retval[param] = ranges[i];
 	}
 
 	return retval;
 }
 
 void RangeSet::adaptRangesBasedOnUsefulness() {
-	int numberOfRanges = rangesVector.size();
 	double mean = totalUsefulness / numberOfRanges;
 	double stdDev = 0;
 
 	double tmp = 0.0;
-
 	for (int i = 0; i< numberOfRanges; i++) {
-		tmp = mean - rangesVector[i].numOfUses;
+		tmp = mean - ranges[i]->numOfUses;
 		stdDev += tmp * tmp;
 	}
 	stdDev /= numberOfRanges;
 	stdDev = sqrt(stdDev);
-
 	//cout << "\t\tAdpating Ranges: " << "Mean Usefulness: " << mean << " StdDev: " << stdDev << endl;
 	//cout << "Old Range set: " << endl;
 	//printRangesSimple();
-
-	int index = rangesVector.size()-1;
-	while (index >= 0 && numberOfRanges > minNumberOfRanges && (rangesVector[index].numOfUses == 0 || rangesVector[index].numOfUses < mean -  stdDev))
+	int index = numberOfRanges-1;
+	while (index >= 0 && numberOfRanges > minNumberOfRanges && (ranges[index]->numOfUses == 0 || ranges[index]->numOfUses < mean -  stdDev))
 	{
 		assert(index >= 0);
-		assert(index < numberOfRanges);
-
+				assert(index < numberOfRanges);
 		//cout << endl <<  "Ranges before delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		//printRangesSimple();
-
 		deleteRange(index);
-
 		//cout << endl <<  "Ranges after delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		//printRangesSimple();
-
 		index--;
 	}
 
 	index = 0;
-	while (rangesVector[index].numOfUses > mean + stdDev)
+	while (ranges[index]->numOfUses > mean + stdDev)
 	{
 		assert(index >= 0);
 		assert(index < numberOfRanges);
-
 		//cout << endl <<  "Splitting a really good range and exploring adjacents" << endl;
 		//cout << endl <<  "Ranges before expore adjacent: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		//printRangesSimple();
-
 		addRangesAdjacentToExistingRange(index);
 
 		//cout << endl << "Ranges after explore adjacent and before split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		//printRangesSimple();
-
 		splitRange(index);
 
 		//cout << "Ranges after split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
 		//printRangesSimple();
-
 		index++;
 	}
 	addNewRandomRange();
@@ -222,7 +234,7 @@ void RangeSet::addNewRandomRange() {
 	addRange(new Range(randomStart, randomStart + size));
 }
 void RangeSet::splitRange(int index) {
-	Range* old = &rangesVector[index];
+	Range* old = ranges[index];
 	int oldSize = (old->end - old->start);
 	if ((oldSize / 2) > 25) {
 		Range* new1 = new Range(old->start, old->start + (oldSize / 2), old);
@@ -240,15 +252,25 @@ void RangeSet::splitRange(int index) {
 void RangeSet::deleteRange(int index) {
 
 	assert(index >= 0);
-	assert(index < (int)rangesVector.size());
-	if((int)rangesVector.size() >= minNumberOfRanges) {
-		totalUsefulness -= rangesVector[index].numOfUses;
-		rangesVector.erase (rangesVector.begin()+index);
+	assert(index < numberOfRanges);
+	if(numberOfRanges >= minNumberOfRanges) {
+		totalUsefulness -= ranges[index]->numOfUses;
+
+		if( ranges[index] ) {
+			delete ranges[index];
+			ranges[index] = 0;
+		}
+
+		numberOfRanges--;
+
+		for (int i = index; i < numberOfRanges; i++) {
+			ranges[i] = ranges[i+1];
+		}
 	}
 }
 
 void RangeSet::addRangesAdjacentToExistingRange(int index) {
-	Range* existing = &rangesVector[index];
+	Range* existing = ranges[index];
 	int size = existing->end - existing->start;
 	Range* new1 = new Range(existing->start - size, existing->start);
 	Range* new2 = new Range(existing->end, existing->end + size);
@@ -261,27 +283,64 @@ void RangeSet::addRangesAdjacentToExistingRange(int index) {
 }
 
 void RangeSet::addRange(Range* r) {
-
-	rangesVector.push_back(*r);
-
-	totalUsefulness += r->numOfUses;
-	// push_back calls copy constructor
-	delete r;
-	sortRangesByUsefulness();
+	if (numberOfRanges < maxNumberOfRanges) {
+		this->ranges[numberOfRanges] = r;
+	}
+	else {
+		maxNumberOfRanges *= 2;
+		Range** tmp = new Range*[maxNumberOfRanges];
+		for (int i = 0; i < numberOfRanges; i++) {
+			tmp[i] = new Range(*ranges[i]);
+		}
+		for (int i = 0; i < numberOfRanges; i++) {
+			if( ranges[i] ){
+				delete ranges[i];
+				ranges[i] = 0;
+			}
+		}
+		delete[] ranges;
+		ranges = tmp;
+		ranges[numberOfRanges] = r;
+	}
+	totalUsefulness += ranges[numberOfRanges]->numOfUses;
+	numberOfRanges++;
+	moveRangeToSortedPosition(numberOfRanges - 1);
 }
 
 void RangeSet::sortRangesByUsefulness() {
-	std::sort(rangesVector.begin(), rangesVector.end());
+	for (int i = numberOfRanges - 1; i > 1; i--) {
+		for (int j = 0; j < i; j++) {
+			assert(i < numberOfRanges);
+			assert(j+1 < numberOfRanges);
+			if (ranges[j]->numOfUses < ranges[j + 1]->numOfUses) {
+				Range* tmp = ranges[j];
+				ranges[j] = ranges[j + 1];
+				ranges[j + 1] = tmp;
+			}
+		}
+	}
+}
+
+void RangeSet::moveRangeToSortedPosition(int indexToSort) {
+	int i = indexToSort;
+	// Move the child left while its fitness is greater than it's left neighbor
+	while ((i > 0) && (ranges[i]->numOfUses > ranges[i - 1]->numOfUses)) {
+		assert(i < numberOfRanges);
+		Range* tmp = ranges[i];
+		ranges[i] = ranges[i - 1];
+		ranges[i - 1] = tmp;
+		i--;
+	}
 }
 
 void RangeSet::printRanges() {
-	for (int i = 0; i < (int)rangesVector.size(); i++) {
-		rangesVector[i].printRange();
+	for (int i = 0; i < numberOfRanges; i++) {
+		ranges[i]->printRange();
 	}
 }
 
 void RangeSet::printRangesSimple() {
-	for (int i = 0; i < (int)rangesVector.size(); i++) {
-		rangesVector[i].printRangeSimple();
+	for (int i = 0; i < numberOfRanges; i++) {
+		ranges[i]->printRangeSimple();
 	}
 }

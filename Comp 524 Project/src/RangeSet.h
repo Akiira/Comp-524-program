@@ -13,8 +13,6 @@ class TestCase;
 class TestSuite;
 
 #include <cassert>
-#include <vector>
-#include "Range.h"
 class RangeSet
 {
 public:
@@ -24,10 +22,12 @@ public:
 	virtual ~RangeSet();
 
 	RangeSet();
+	RangeSet(int numberOfRanges, int maxNumberOfRanges);
+	RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges);
 
 	//========================== CORE FUNCTIONS ====================================//
 
-	std::vector<Range> selectRangesForNewTestCaseProportionalToUsefulness();
+	Range** selectRangesForNewTestCaseProportionalToUsefulness();
 	void addRange(Range* r);
 	void addNewRandomRange();
 	void adaptRangesBasedOnUsefulness(); // May split, delete, or combine ranges maybe
@@ -40,13 +40,12 @@ public:
 	TestCase* getNewTestCaseEntirelyFromRange(int start, int end);
 
 	int getNumberOfRanges() const {
-		return rangesVector.size();
+		return numberOfRanges;
 	}
 
 	Range* getRange(int index) {
-		int size = rangesVector.size();
-		assert(index >= 0 && index < size);
-		return &rangesVector[index];
+		assert(index >= 0 && index < numberOfRanges);
+		return ranges[index];
 	}
 
 	TestSuite* getFinalTestSuite() {
@@ -60,12 +59,8 @@ public:
 
 
 private:
-	int totalUsefulness = 0, minNumberOfRanges = 5; /*, numberOfRanges, maxNumberOfRanges, */
-
-	//Range** ranges;
-
-	std::vector<Range> rangesVector;
-
+	int totalUsefulness, numberOfRanges, maxNumberOfRanges, minNumberOfRanges;
+	Range** ranges;
 	TestSuite* finalTestSuite;
 
 	unsigned int getRandomRange() const;

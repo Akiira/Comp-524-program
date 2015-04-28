@@ -105,12 +105,13 @@ void Simulation::testCaseCrossoverAndMutation(Organism* parent) {
 		return;
 	}
 
-	TestCase *child1 { }, *child2 { };
+	TestCase *child1, *child2;
 
 
 	auto tc1    = parent->getChromosome()->getRandomTestCase();
 	auto tc2    = parent->getChromosome()->getRandomTestCase();
 
+	bool done = false;
 	for (int i = 0; i < 100; ++i) {
 		do {
 			if (tc1 != tc2) {
@@ -125,25 +126,28 @@ void Simulation::testCaseCrossoverAndMutation(Organism* parent) {
 		child1->mutate();
 		child2->mutate();
 
-		rangeSet->offerToFinalTestSuite(child1);
-		rangeSet->offerToFinalTestSuite(child2);
-
 		// Moved these out of mutate because I think it's easier to read this way.
 		targetCFG->setCoverageOfTestCase(child1);
 		targetCFG->setCoverageOfTestCase(child2);
 
+		rangeSet->offerToFinalTestSuite(child1);
+		rangeSet->offerToFinalTestSuite(child2);
+
 		if( parent->getChromosome()->isCoveringNew(child1) ) {
-			delete child2;
 			parent->getChromosome()->replaceDuplicateTestCase(child1);
-			break;
+			done = true;
 		}
 		else if( parent->getChromosome()->isCoveringNew(child2) ) {
-			delete child1;
 			parent->getChromosome()->replaceDuplicateTestCase(child2);
+			done = true;
+		}
+		// replaceDup makes a copy, always have to delete.
+		delete child1;
+		child1 = NULL;
+		delete child2;
+		child2 = NULL;
+		if (done) {
 			break;
-		} else {
-			delete child1;
-			delete child2;
 		}
 	}
 }
@@ -174,6 +178,7 @@ void Simulation::tryLocalOptimization(Organism* org) {
 	if( tc ) {
 		org->getChromosome()->replaceDuplicateTestCase(tc);
 		rangeSet->offerToFinalTestSuite(tc);
+		delete tc;
 	}
 }
 
@@ -252,7 +257,7 @@ TestCase* Simulation::localOptFromGivenParams (TestCase* oldTC)  {
 		}
 		NeighborhoodSize += 20;
 	}
-
+	delete tc;
 	return NULL;
 }
 
@@ -306,7 +311,7 @@ double Simulation::adaptMutationBasedOnCoverageRatio(double pM) {
 void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 
 	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-	rangeSet = new RangeSet();
+	rangeSet = new RangeSet(0, edgesPlusPreds);
 
 	int startSize = 5000, currStart = -2500;
 

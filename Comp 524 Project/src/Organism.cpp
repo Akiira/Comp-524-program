@@ -56,6 +56,7 @@ void Organism::mutate(double mutationProb) {
 				// Organism fitness will be reevalated in the simulation loop
 				//	so wont do it here.
 			}
+			delete newTestCase;
 		}
 	}
 }

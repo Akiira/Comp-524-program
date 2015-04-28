@@ -29,7 +29,7 @@ public:
 	//========================== PRINT FUNCTIONS ===================================//
 
 	void printRange();
-	void printRangeSimple();
+	void printRangeSimple() const;
 
 	bool operator < (const Range& r) const
 	{

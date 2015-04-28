@@ -24,6 +24,9 @@ Range::Range(int start, int end) {
 	}
 
 	this->usesArray = new int[usesArraySize]{};
+
+    cout << "construct: ";
+    printRangeSimple();
 }
 
 // Used by RangeSet::splitRange
@@ -58,9 +61,15 @@ Range::Range(int start, int end, Range* source) {
 		}
 	}
 
+    cout << "construct: ";
+    printRangeSimple();
+
 }
 
 Range::Range(const Range& other) {
+    cout << "copy: ";
+    other.printRangeSimple();
+
 	this->start = other.start;
 	this->end = other.end;
 	this->numOfUses = other.numOfUses;
@@ -75,12 +84,16 @@ Range::Range(const Range& other) {
 
 
 Range& Range::operator= (const Range& other) {
+    cout << "assign: ";
+    other.printRangeSimple();
+
 	if (this != &other) {
 		this->start = other.start;
 		this->end = other.end;
 		this->numOfUses = other.numOfUses;
 
 		assert(other.usesArraySize > 0);
+
 
 		int * newArray = new int[other.usesArraySize];
 		for (int i = 0; i < other.usesArraySize; i++) {
@@ -95,10 +108,12 @@ Range& Range::operator= (const Range& other) {
 }
 
 Range::~Range() {
-	if( usesArray ) {
-		delete[] usesArray;
-		usesArray = 0;
-	}
+    cout << "destruct: ";
+    printRangeSimple();
+
+    // No need to check if its 0, delete on null pointer does nothing
+	delete[] usesArray;
+	usesArray = 0;
 }
 
 void Range::printRange() {
@@ -112,7 +127,7 @@ void Range::printRange() {
 }
 
 
-void Range::printRangeSimple() {
+void Range::printRangeSimple() const{
 	cout << "[ " << start << ", " << end << " ] " << "Size " << (end-start) << " Uses: " << numOfUses << endl;
 }
 
