@@ -57,13 +57,14 @@ const short TEST_RUNS = 30;
 const short GENERATIONS = 10000;
 
 int main() {
-	chrono::time_point<chrono::system_clock> start { }, end { };
-    start = chrono::system_clock::now();
+    auto start = chrono::system_clock::now();
 
     //runTestsOnAllGraphs();
-    runWithoutGA();
+    //runWithoutGA();
+    targetCFG = new HardCFG();
+    RandomSearcher::search(3);
 
-    end = chrono::system_clock::now();
+    auto end = chrono::system_clock::now();
 
     chrono::duration<double> elapsed_seconds = end-start;
     time_t end_time = std::chrono::system_clock::to_time_t(end);

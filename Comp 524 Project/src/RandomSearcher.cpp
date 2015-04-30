@@ -11,79 +11,73 @@
 #include "ControlFlowGraph.h"
 #include "TestCase.h"
 #include <iostream>
+#include <chrono>
+
 using std::cout;
 using std::endl;
-RandomSearcher::RandomSearcher() {
-	// TODO Auto-generated constructor stub
 
-}
-
-RandomSearcher::~RandomSearcher() {
-	// TODO Auto-generated destructor stub
-}
-
-void RandomSearcher::search() {
+void RandomSearcher::search(int seconds) {
 	int numOfEdges = targetCFG->getNumberOfEdges();
 	auto edges = new bool[numOfEdges];
-	auto attempts = 1;
-	do {
-		auto test = TestCase::getRandomTestCase();
-		targetCFG->setCoverageOfTestCase(test);
-
-		auto temp = test->getEdgesCovered();
-
-		for(int i = 0; i < numOfEdges; i++) {
-			if ( temp[i] ) {
-				edges[i] = true;
-			}
-		}
-
-		auto t = true;
-
-		for(int i = 0; i < numOfEdges; i++) {
-			if(edges[i] == false)
-				t = false;
-		}
-
-		delete test;
-
-		if(t)
-			break;
-		attempts++;
-	} while( true );
-
-	cout << "All edges covered. It took " << attempts << " random guesses." << endl;
-}
-
-void RandomSearcher::searchForPredicates() {
 	int numOfPreds = targetCFG->getNumberOfPredicates();
 	auto preds = new bool[numOfPreds];
-	long attempts { 1 };
+
+	auto start = chrono::system_clock::now();
+
 	do {
 		auto test = TestCase::getRandomTestCase();
 		targetCFG->setCoverageOfTestCase(test);
 
-		auto temp = test->getPredicatesCovered();
-
-		for(int i = 0; i < numOfPreds; i++) {
-			if ( temp[i] ) {
-				preds[i] = true;
-			}
-		}
-
-		auto t = true;
-
-		for(int i = 0; i < numOfPreds; i++) {
-			if(preds[i] == false)
-				t = false;
-		}
+		RandomSearcher::updateEdgeCoverage(edges, test->getEdgesCovered());
+		RandomSearcher::updatePredicateCoverage(preds, test->getPredicatesCovered());
 
 		delete test;
 
-		if(t)
+		auto diff = chrono::duration_cast<chrono::seconds> (chrono::system_clock::now() - start);
+
+		if ( diff.count() - seconds >= 0 ) {
 			break;
-		attempts++;
+		}
 	} while( true );
 
-	cout << "All predicates covered. It took " << attempts << " random guesses." << endl;
+	cout << "\nEdges: " << getEdgeCount(edges) << "/" << targetCFG->getNumberOfEdges() << "     ";
+	cout << "Edge Coverage Ratio: " << ((double)getEdgeCount(edges) / (double)targetCFG->getNumberOfEdges()) << endl;
+	cout << "Preds: " << getEdgeCount(preds) << "/" << targetCFG->getNumberOfPredicates() << "     ";
+	cout << "Preds Coverage Ratio: " << ((double)getPredCount(preds) / (double)targetCFG->getNumberOfPredicates()) << endl;
+	cout << "Overall Coverage Ratio: " << (double)(getEdgeCount(edges) + getPredCount(preds)) / (double)(targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates()) << endl;
+	cout << "\n\n";
+}
+
+void RandomSearcher::updatePredicateCoverage(bool* preds, bool* newCoverage) {
+	for(int i = 0; i < targetCFG->getNumberOfPredicates(); i++) {
+		if ( newCoverage[i] ) {
+			preds[i] = true;
+		}
+	}
+}
+
+void RandomSearcher::updateEdgeCoverage(bool* edges, bool* newCoverage) {
+	for(int i = 0; i < targetCFG->getNumberOfEdges(); i++) {
+		if ( newCoverage[i] ) {
+			edges[i] = true;
+		}
+	}
+}
+int RandomSearcher::getPredCount(bool* preds) {
+	int count = 0;
+	for(int i = 0; i < targetCFG->getNumberOfEdges(); i++) {
+		if ( preds[i] ) {
+			count++;
+		}
+	}
+	return count;
+}
+int RandomSearcher::getEdgeCount(bool* edges) {
+	int count = 0;
+	for(int i = 0; i < targetCFG->getNumberOfEdges(); i++) {
+		if ( edges[i] ) {
+			count++;
+		}
+	}
+	return count;
 }

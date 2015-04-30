@@ -8,14 +8,17 @@
 #ifndef RANDOMSEARCHER_H_
 #define RANDOMSEARCHER_H_
 
-
+#include <chrono>
 
 class RandomSearcher {
 public:
 	RandomSearcher();
 	virtual ~RandomSearcher();
-	void search();
-	void searchForPredicates();
+	static void search(int seconds);
+	static void updatePredicateCoverage(bool* preds, bool* newCoverage);
+	static void updateEdgeCoverage(bool* edges, bool* newCoverage);
+	static int getPredCount(bool* preds);
+	static int getEdgeCount(bool* edges);
 };
 
 
