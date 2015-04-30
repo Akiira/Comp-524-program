@@ -20,6 +20,7 @@
 
 using namespace std;
 
+void runWithoutGA();
 void setTarget(int);
 void runTestsOnAllGraphs();
 void testCutPointsToMutationProb();
@@ -55,27 +56,12 @@ const short POPULATION_STEP = 5;
 const short TEST_RUNS = 30;
 const short GENERATIONS = 10000;
 
-void shortTest() {
-	targetCFG = new TriangleProblemGraph();
-	for(int i = 0; i < 2; i++)
-	{
-		cout << "\tTest Num: " << i << " " << endl;
-
-		Simulation* sim = new Simulation(50);
-		int temp = sim->run(1500, 2, .02);
-
-		cout << "\t# of gen: " << temp << " cov: " << rangeSet->getFinalTestSuite()->getCoverageRatio() << endl;
-
-		delete sim;
-	}
-}
-
 int main() {
 	chrono::time_point<chrono::system_clock> start { }, end { };
     start = chrono::system_clock::now();
 
-    runTestsOnAllGraphs();
-    //shortTest();
+    //runTestsOnAllGraphs();
+    runWithoutGA();
 
     end = chrono::system_clock::now();
 
@@ -86,6 +72,17 @@ int main() {
     cout << "finished computation at " << std::ctime(&end_time);
 
 	return 0;
+}
+
+void runWithoutGA() {
+	targetCFG = new HardCFG();
+	outputFile = new ofstream("HardCFG_NoGA" + testProgram + ".txt", ios::out | ios::trunc);
+
+	runTests(50, 50, 0, 0, 0, 0);
+
+	*outputFile << "}\n ListPlot3D[Transpose@Partition[Last /@ data, 15], DataRange -> {{" << CUTPOINTS_START << ", " << CUTPOINTS_END << "}, {" << MUTATION_START << ", " << MUTATION_END << "},{" << 1 << ", " << GENERATIONS << "}}, PlotRange -> All, AxesLabel -> {Cut Size, Mutation Probability, Generations}, ColorFunction -> \"Rainbow\"]";
+	outputFile->close();
+	cout << "Data written to file" << endl;
 }
 
 void setTarget(int i) {
@@ -121,10 +118,10 @@ void setTarget(int i) {
 
 void runTestsOnAllGraphs() {
 
-	for (int graph = 4; graph < 5; ++graph) {
+	for (int graph = 2; graph == 2; ++graph) {
 		setTarget(graph);
-		testCutPointsToMutationProb();
-		testPopulationSizeToMutationProb();
+		//testCutPointsToMutationProb();
+		//testPopulationSizeToMutationProb();
 		testPopulationSizeToCutPoints();
 	}
 }
@@ -223,7 +220,14 @@ void runTests(int popStart, int popEnd, short cutPtsStart,
 					cout << "\tTest Num: " << i << " " << endl;
 
 					Simulation* sim = new Simulation(population);
-					int temp = sim->run(GENERATIONS, cutPoints, mutation);
+					int temp;
+					if(mutation <= 0.01 && cutPoints == 0) {
+						cout << "\tWithout GA" << endl;
+						temp = sim->runWithoutGA(GENERATIONS);
+					} else {
+						temp = sim->run(GENERATIONS, cutPoints, mutation);
+					}
+
 
 					sumOfCoverageRatios += rangeSet->getFinalTestSuite()->getCoverageRatio();
 					sumOfGenerations += temp;

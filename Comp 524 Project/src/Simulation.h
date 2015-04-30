@@ -30,6 +30,7 @@ public:
 	void findPromisingRangesAndCreateTheGlobalRangeSet();
 
 	int run(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
+	int runWithoutGA(int numberOfGenerations);
 	void testCaseCrossoverAndMutation(Organism* parent);
 	void testSuiteCrossoverAndMutation();
 

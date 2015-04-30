@@ -67,19 +67,6 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 			tryLocalOptimization (parent);
 		}
 
-		/*
-		 * Ultimately results in calling these functions
-		 * 		TestSuite::calculateTestSuiteCoverage() on every testSuite	--clears and re sums all test case coverage counts to get testSuite coverage counts
-		 * 		Organism::evaluateBaseFitness() on every organism	-- sets non scaled fitness to simple sum of edges and predicates covered
-		 * 		Population::updateCoverage() -- clears and re sums all test suite coverage counts to get population coverage counts
-		 * 		Population::evaluateSharedFitness() -- sets scaledFitness of each organism based upon a simplistic form of fitness sharing
-		 * 		-- recalculates the totalFitness as the sum of all scaledFitness values
-		 * 		Population::sortPopulationByFitness() -- puts the population in sorted order by shared fitness
-		 *
-		 * Always calling once here after all the actions taken by testSuiteCrossover and testCaseCrossover drastically simplifies logic
-		 * we were struggling with. More incremental updates as were striving for originally would be nice but in most cases we ended up
-		 * calling this anyway at various places as our algorithm evolved into its current form.
-		 */
 		population->updatePopulationsFitness();
 
 		if( lastGensCoverage < population->getCoverageRatio() ) {
@@ -95,8 +82,41 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 		currentGen++;
 	} while (currentGen <= numberOfGenerations && population->getCoverageRatio() < 1 && gensOfNoImprov < 500);
 
-	//TestSuite* finalTestSuite = rangeSet->getFinalTestSuite();
-	//finalTestSuite->printAll();
+	return currentGen;
+}
+
+int Simulation::runWithoutGA(int numberOfGenerations) {
+	int currentGen { 0 };
+
+	double lastGensCoverage = population->getCoverageRatio();
+	int gensOfNoImprov = 0;
+
+	do {
+		if (currentGen % 100 == 0 ) {
+			cout << "\t\tGeneration # " << currentGen << " CoverageRatio: " << population->getCoverageRatio() << endl;
+		}
+
+		auto parent = population->getOrganism(population->fitnessProportionalSelect());
+
+		if (currentGen % 10 == 0 || population->getCoverageRatio() > 0.95) {
+			tryLocalOptimization (parent);
+		}
+
+		population->updatePopulationsFitness();
+
+		if( lastGensCoverage < population->getCoverageRatio() ) {
+			lastGensCoverage = population->getCoverageRatio();
+			gensOfNoImprov = 0;
+		}
+
+		if (gensOfNoImprov == 30 || currentGen % 100 == 1) {
+			rangeSet->adaptRangesBasedOnUsefulness();
+		}
+
+		gensOfNoImprov++;
+		currentGen++;
+	} while (currentGen <= numberOfGenerations && population->getCoverageRatio() < 1 && gensOfNoImprov < 100);
+
 	return currentGen;
 }
 
