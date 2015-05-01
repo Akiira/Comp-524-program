@@ -17,9 +17,6 @@ SimpleIfElseControlFlowGraph::SimpleIfElseControlFlowGraph() {
 	numberOfEdges = 4;
 	numberOfPredicates = 2;
 	numberOfParameters = 1;
-	//coverage = new bool*[2];
-	//testCase->edgesCovered = new bool[numberOfEdges];
-	//testCase->predicatesCovered = new bool[numberOfPredicates];
 
 	for (int i = 0; i < numberOfParameters; ++i) {
 		rangeForEachParameter[i][0] = numeric_limits<int>::min();
@@ -108,32 +105,24 @@ void SimpleIfElseControlFlowGraph::runTestCase() {
 inline void SimpleIfElseControlFlowGraph::block1() {
 	int* parameters = testCase->getInputParameters();
 
-	if(parameters[0] > 2)
-	{
-		//testCase->edgesCovered[SimpleIfElseControlFlowGraph::edges::B1toB2] = true;
+	if(parameters[0] > 2) {
 		testCase->addEdgeCoverage(edges::B1toB2);
-		//testCase->predicatesCovered[SimpleIfElseControlFlowGraph::predicates::B1_T] = true;
 		testCase->addPredicateCoverage(predicates::B1_T);
 		block2();
 	}
-	else
-	{
-		//testCase->edgesCovered[SimpleIfElseControlFlowGraph::edges::B1toB3] = true;
+	else {
 		testCase->addEdgeCoverage(edges::B1toB3);
-		//testCase->predicatesCovered[SimpleIfElseControlFlowGraph::predicates::B1_F] = true;
 		testCase->addPredicateCoverage(predicates::B1_F);
 		block3();
 	}
 }
 
 inline void SimpleIfElseControlFlowGraph::block2() {
-	//testCase->edgesCovered[SimpleIfElseControlFlowGraph::edges::B2toB4] = true;
 	testCase->addEdgeCoverage(edges::B2toB4);
 	block4();
 }
 
 inline void SimpleIfElseControlFlowGraph::block3() {
-	//testCase->edgesCovered[SimpleIfElseControlFlowGraph::edges::B3toB4] = true;
 	testCase->addEdgeCoverage(edges::B3toB4);
 	block4();
 }

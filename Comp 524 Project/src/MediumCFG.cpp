@@ -17,8 +17,7 @@ using std::cout;
 using std::numeric_limits;
 
 /*
- * Tweaks from hard graph: smaller ranges, from 10 parameters to 4, graph cut in half
- *  edges from 78 to 39 and predicates from 150 to 72
+ * Tweaks from hard graph: cut in half
  */
 
 MediumCFG::MediumCFG() {
@@ -30,9 +29,6 @@ MediumCFG::MediumCFG() {
 	testCase = NULL;
 
 	for (int i = 0; i < numberOfParameters; ++i) {
-		//rangeForEachParameter[i][0] = numeric_limits<int>::min() / ( i + 6 );
-		//rangeForEachParameter[i][1] = numeric_limits<int>::max() / ( i + 6 );
-
 		rangeForEachParameter[i][0] = numeric_limits<int>::min();
 		rangeForEachParameter[i][1] = numeric_limits<int>::max();
 	}
@@ -63,11 +59,9 @@ inline void MediumCFG::runTestCase() {
 	calculateDeviation(testCase->getInputParameters());
 	calculateSums(testCase->getInputParameters());
 
-	//TODO test all edges and predicates are actually reachable
 	testCase->addEdgeCoverage(edges::B0toB2);
 	testCase->addPredicateCoverage(predicates::B0_F);
 	block2();
-
 }
 
 inline void MediumCFG::block2() {

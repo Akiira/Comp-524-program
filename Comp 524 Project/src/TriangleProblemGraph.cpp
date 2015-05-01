@@ -6,16 +6,17 @@
  */
 
 #include "TriangleProblemGraph.h"
+#include "TestCase.h"
+
 #include <cassert>
 #include <iostream>
 #include <limits>
-#include "TestCase.h"
+
 using std::numeric_limits;
 using std::endl;
 using std::cout;
 
 TriangleProblemGraph::~TriangleProblemGraph() {
-	// TODO Auto-generated destructor stub
 }
 
 TriangleProblemGraph::TriangleProblemGraph() {
@@ -25,17 +26,9 @@ TriangleProblemGraph::TriangleProblemGraph() {
 	numberOfParameters = 3;
 
 	testCase = NULL;
-	A = -666;
-	B = -666;
-	C = -666;
-	/*
-	rangeForEachParameter[0][0] = -100;
-	rangeForEachParameter[0][1] = 10000;
-	rangeForEachParameter[1][0] = -100;
-	rangeForEachParameter[1][1] = 10000;
-	rangeForEachParameter[2][0] = -100;
-	rangeForEachParameter[2][1] = 10000;
-	*/
+	A = 0;
+	B = 0;
+	C = 0;
 
 	for (int i = 0; i < numberOfParameters; ++i) {
 		rangeForEachParameter[i][0] = numeric_limits<int>::min();
