@@ -38,8 +38,9 @@ RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges) {
 		totalUsefulness += ranges[i]->numOfUses;	// Likely pointless because they'll be 0.
 	}
 
-	// Start as blank organism. Grow whenever rangeSet generates a test case that covers something new.
 	int edgesPlusPred = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+
+	// Start as blank organism. Grow whenever rangeSet generates a test case that covers something new.
 	finalTestSuite = new TestSuite(0, edgesPlusPred, new TestCase*[edgesPlusPred]);
 }
 
