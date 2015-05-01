@@ -42,7 +42,7 @@ void RandomSearcher::search(int seconds) {
 
 	cout << "\nEdges: " << getEdgeCount(edges) << "/" << targetCFG->getNumberOfEdges() << "     ";
 	cout << "Edge Coverage Ratio: " << ((double)getEdgeCount(edges) / (double)targetCFG->getNumberOfEdges()) << endl;
-	cout << "Preds: " << getEdgeCount(preds) << "/" << targetCFG->getNumberOfPredicates() << "     ";
+	cout << "Preds: " << getPredCount(preds) << "/" << targetCFG->getNumberOfPredicates() << "     ";
 	cout << "Preds Coverage Ratio: " << ((double)getPredCount(preds) / (double)targetCFG->getNumberOfPredicates()) << endl;
 	cout << "Overall Coverage Ratio: " << (double)(getEdgeCount(edges) + getPredCount(preds)) / (double)(targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates()) << endl;
 	cout << "\n\n";

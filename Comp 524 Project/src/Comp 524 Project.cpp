@@ -13,7 +13,9 @@
 #include "HardCFG.h"
 #include "Range.h"
 #include "RangeSet.h"
+
 #include <iostream>
+#include <cstdlib> 
 #include <fstream>
 #include <chrono>
 #include <ctime>
@@ -56,13 +58,13 @@ const short POPULATION_STEP = 5;
 const short TEST_RUNS = 30;
 const short GENERATIONS = 10000;
 
-int main() {
+int main(int argc, char* argv[]) {
     auto start = chrono::system_clock::now();
 
     //runTestsOnAllGraphs();
     //runWithoutGA();
     targetCFG = new HardCFG();
-    RandomSearcher::search(3);
+    RandomSearcher::search(60 * 60 * atoi(argv[1]));
 
     auto end = chrono::system_clock::now();
 
