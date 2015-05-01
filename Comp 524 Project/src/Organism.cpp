@@ -73,8 +73,6 @@ void Organism::evaluateBaseFitness(){
 		fitness += (counts[i] ? 1 : 0);
 	}
 
-	// Simply set scaledFitness to fitness here in case were not using scaling
-	//	if scaling is used this will be overwritten by a call to Population::scalePopulationFitness
 	scaledFitness = fitness;
 }
 
@@ -155,21 +153,6 @@ bool Organism::operator<=(const Organism& right) {
 
 bool Organism::operator<(const Organism& right) {
 	return (fitness < right.fitness) ? true : false;
-}
-
-bool Organism::operator==(const Organism* right) {
-assert(false);
-
-//	//They could be the same objects in memory or just have the same
-//	// test cases and coverage
-//	if( this->chromosome == right->chromosome ) {
-//		return true;
-//	}
-//	else if ( *this->chromosome == *right->chromosome ) {
-//		return true;
-//	} else {
-//		return false;
-//	}
 }
 
 Organism& Organism::operator=(const Organism& org) {
