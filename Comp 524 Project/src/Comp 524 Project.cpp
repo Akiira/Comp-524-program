@@ -1,12 +1,16 @@
+///////////////////////////////////////////////////////////
+//  Comp 524 Project.cpp
+//  Main
+//  Created on:      27-Feb-2015 12:11:44 AM
+//  Original author: Randall and Austin
+///////////////////////////////////////////////////////////
 
-#include "TestCase.h"
 #include "TestSuite.h"
 #include "ControlFlowGraph.h"
 #include "HiLoControlFlowGraph.h"
 #include "SimpleIfElseControlFlowGraph.h"
 #include "TriangleProblemGraph.h"
 #include "Simulation.h"
-#include "GlobalVariables.h"
 #include "RandomSearcher.h"
 #include "MediumCFG.h"
 #include "MedHardCFG.h"
