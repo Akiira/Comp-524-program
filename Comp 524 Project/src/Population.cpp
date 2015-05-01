@@ -9,9 +9,11 @@
 #include "Population.h"
 #include "Random.h"
 #include "Organism.h"
+#include "RangeSet.h"
+
 #include <cassert>
 #include <iostream>
-#include "RangeSet.h"
+
 Population::~Population() {
 	for (int i = 0; i < populationSize; i++) {
 		delete population[i];
@@ -24,7 +26,6 @@ Population::~Population() {
 Population::Population(int popSize) {
 	edgesCovered = new int[targetCFG->getNumberOfEdges()] { };
 	predicatesCovered = new int[targetCFG->getNumberOfPredicates()] { };
-
 
 	population = new Organism*[popSize] { };
 	populationSize = popSize;
@@ -85,12 +86,6 @@ void Population::updatePopulationsFitness() {
 			evaluateSharedFitness(population[i]);
 			totalFitness += population[i]->getScaledFitness();
 
-//			if( totalFitness < 0 ) {
-//				printf("\t i: %d, pop size: %d, last sf: %d \n", i, populationSize, population[i]->getScaledFitness());
-//			}
-//			if( totalFitness > 99999 ) {
-//				printf("\t i: %d, pop size: %d, last sf: %d \n", i, populationSize, population[i]->getScaledFitness());
-//			}
 			assert(totalFitness >= 0); //Overflow or other problem
 		}
 
@@ -156,8 +151,6 @@ void Population::updateCoverage() {
 }
 
 // PRIVATE - called at end of updatePopulationsFitness
-// Now called everytime updatePopulationFitness is called.
-//	Also changed to use scaledFitness instead of fitness.
 void Population::sortPopulationByFitness() {
 	int i, j;
 	Organism* tmp;
@@ -172,7 +165,7 @@ void Population::sortPopulationByFitness() {
 	}
 }
 
-// Return index instead to ultimately be able to pass it to replaceParent
+// Return index instead to be able to pass it to replaceParent
 //	and save unnecessary looping to determine the index of the parent to replace
 int Population::fitnessProportionalSelect() const {
 //If totalFitness is zero then an organism is selected at random.
@@ -194,8 +187,6 @@ int Population::fitnessProportionalSelect() const {
 
 	return i;
 }
-
-
 
 void Population::crossover(const Organism& parent1, const Organism& parent2,
 		Organism*& child1, Organism*& child2, int numberOfCutPoints) {
@@ -231,7 +222,9 @@ void Population::crossover(const Organism& parent1, const Organism& parent2,
 		current = cutPoints[i] + 1;
 		alternate = !alternate;
 	}
+
 	delete[] cutPoints;
+
 	//now take care of the last segments, if any
 	if (alternate) {
 		for (int j = current; j < parent2NumberOfTestCases; j++) {
@@ -262,8 +255,8 @@ void Population::crossover(const TestCase& parent1, const TestCase& parent2,
 	auto cutPoints = selectCutPoints(numberOfCutPoints, targetCFG->getNumberOfParameters());
 	bool alternate { true };
 	int current { 0 };
-	child1 = new TestCase();	// empty test case
-	child2 = new TestCase();	// empty test case
+	child1 = new TestCase();
+	child2 = new TestCase();
 
 	for (int i = 0; i < numberOfCutPoints; i++) {
 		if (alternate) {
@@ -312,12 +305,8 @@ void Population::replaceParentWithUnion(int parentIndex, Organism* child) {
 }
 
 void Population::replaceParentThenReplaceWorst(int parentIndex, Organism* child) {
-	// Cannot compare scaled fitness here as the child has not been scaled with the population yet.
+	// Don't use scaled fitness here as the child has not been scaled with the population yet.
 	if (child->getFitness() >= population[parentIndex]->getFitness()) {
-//		if( printReplacement ) {
-//			cout << "-------------REPLACEMENT-----------------\n";
-//			cout << "Child replaced parent.\n-------------END REPLACEMENT-----------------\n\n";
-//		}
 		replaceOrganism(parentIndex, child);
 	}
 	else {
@@ -327,20 +316,11 @@ void Population::replaceParentThenReplaceWorst(int parentIndex, Organism* child)
 
 void Population::replaceWorst(Organism* child) {
 	int worst { populationSize - 1 };
-	// Cannot compare scaled fitness here as the child has not been scaled with the population yet.
+	// Don't use scaled fitness here as the child has not been scaled with the population yet.
 	if (child->getFitness() >= population[worst]->getFitness()) {
-//		if( printReplacement ) {
-//			cout << "-------------REPLACEMENT-----------------\n";
-//			cout << "Child replaced worst.\n-------------END REPLACEMENT-----------------\n\n";
-//		}
 		replaceOrganism(worst, child);
 	} else {
-//		if( printReplacement ) {
-//			cout << "-------------REPLACEMENT-----------------\n";
-//			cout << "Child was not used\n-------------END REPLACEMENT-----------------\n\n";
-//		}
 		delete child;
-		child = NULL;
 	}
 }
 
@@ -354,10 +334,6 @@ void Population::replaceOrganism(int organismIndex, Organism* newOrganism) {
 	population[organismIndex] = newOrganism;
 
 	lastReplacedFitness = newOrganism->getScaledFitness();
-
-	// Removing this call, we will now call updatePopulationsFitness only once from the main simulation
-	//	loop after all operations on the current generation have been completed.
-	//updatePopulationsFitness();
 }
 
 //From: http://stackoverflow.com/questions/48087/select-a-random-n-elements-from-listt-in-c-sharp
@@ -443,12 +419,8 @@ void Population::printPopulationCoverage() const {
 
 void Population::evaluateSharedFitness(Organism* org) {
 	double sharedFitness = 0;
-
-	// UpdateCoverage is called at beginning of updatePopulatioNFItness which calls evaluateBaseFitness on
-	//	all organisms.
-	//org->evaluateBaseFitness();
-
 	auto edges = org->getChromosome()->getEdgeCoverageCounts();
+
 	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
 		if ( edges[i] ) {
 			assert(edgesCovered[i] > 0);
@@ -473,7 +445,6 @@ void Population::evaluateSharedFitness(Organism* org) {
 void Population::linearScaling() {
 	totalFitness = 0;
 
-	//TODO scaling factor needs to be updated dynamically based on the current population
 
 	//REFERENCE: http://www.cse.unr.edu/~sushil/class/gas/notes/scaling/index.html
 	//This scalingFactor "is a scaling constant that specifies the expected number
@@ -482,8 +453,6 @@ void Population::linearScaling() {
 	int max { getBestOrganism()->fitness },
 	    min { population[populationSize - 1]->getFitness() };
 
-	//TODO: if we keep this scaling we should have a separate field for scaledTotalFitness so we
-	//		can avoid this extra loop
 	for (int i = 0; i < populationSize; ++i) {
 		average += population[i]->fitness;
 	}
@@ -508,7 +477,7 @@ void Population::linearScaling() {
 	for (int i = 0; i < populationSize; i++) {
 		auto f = population[i]->getFitness();
 		auto scaledFitness = b + (a * f);
-		//cout << "Fitness: " << f << ", scaled: " << (b + (a*f)) << endl;
+
 		if ( scaledFitness >= 0) {
 			population[i]->setScaledFitness(scaledFitness);
 			totalFitness += scaledFitness;

@@ -40,8 +40,6 @@ public:
 	void resetCoverage();
 	void calculateTestSuiteCoverage();
 
-
-
 	void sortTestSuiteByCoverageCounts();
 
 	//========================== GETTER FUNCTIONS ==================================//

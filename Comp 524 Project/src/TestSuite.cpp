@@ -9,11 +9,12 @@
 #include "ControlFlowGraph.h"
 #include "GlobalVariables.h"
 #include "Random.h"
+#include "RangeSet.h"
+#include "Range.h"
+
 #include <iostream>
 #include <cassert>
 #include <cstring>
-#include "RangeSet.h"
-#include "Range.h"
 
 using std::cout;
 using std::endl;
@@ -131,7 +132,7 @@ void TestSuite::replaceDuplicateTestCase(TestCase* testCase) {
 
 	if( tc ) {
 		*tc = *testCase;
-		// THis handles the subtraction of old tc's coverage.
+		// This handles the subtraction of old tc's coverage.
 		calculateTestSuiteCoverage();
 	}
 }

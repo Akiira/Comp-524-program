@@ -29,9 +29,10 @@ TestCase::TestCase() {
 	numberOfParameters = targetCFG->getNumberOfParameters();
 	numberOfPredicates = targetCFG->getNumberOfPredicates();
 
-	edgesCovered = new bool[numberOfEdges] { };
+	edgesCovered      = new bool[numberOfEdges] { };
 	predicatesCovered = new bool[numberOfPredicates] { };
-	inputParameters = new int[numberOfParameters] { };
+	inputParameters   = new int[numberOfParameters] { };
+
 	numCovered = 0;
 }
 
@@ -68,19 +69,21 @@ bool TestCase::hasSameCoverage(TestCase* that) const {
 	int edges = targetCFG->getNumberOfEdges();
 	int preds = targetCFG->getNumberOfPredicates();
 	bool same = true;
+
 	for (int i = 0; i < edges && same; i++) {
 		same &= this->edgesCovered[i] == that->edgesCovered[i];
 	}
 	for (int i = 0; i < preds && same; i++) {
 		same &= this->predicatesCovered[i] == that->predicatesCovered[i];
 	}
+
 	return same;
 }
 
 void TestCase::mutate() {
 	for(int i = 0; i < numberOfParameters; i++){
-		//int x = uniformInRange(1, 10);
-		// These numbers are most often between -3 and 3, and usually less than 0.3, scale that up a bit.
+
+		// 100 is for scaling
 		int x = normalDist(0, 1, 10) * 100;
 
 		if(uniformInRange(0,1)){

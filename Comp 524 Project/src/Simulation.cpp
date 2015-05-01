@@ -139,7 +139,7 @@ void Simulation::testCaseCrossoverAndMutation(Organism* parent) {
 		child1->mutate();
 		child2->mutate();
 
-		// Moved these out of mutate because I think it's easier to read this way.
+		//update coverage incase it changed because of mutation
 		targetCFG->setCoverageOfTestCase(child1);
 		targetCFG->setCoverageOfTestCase(child2);
 
@@ -214,7 +214,7 @@ TestCase* Simulation::localOptFromZero (TestCase* oldTC) {
 	int NeighborhoodSize { 1 };
 
 	for(int i = 0; i < 1000; ++i) {
-		TestCase* tc = new TestCase { };	// empty test case
+		TestCase* tc = new TestCase { };
 		tc->setInputParameters(oldTC->getInputParameters());
 
 		for (int j = 0; j < 150; ++j) { //Try searching this particular neighborhood X times
@@ -241,7 +241,7 @@ TestCase* Simulation::localOptFromZero (TestCase* oldTC) {
 }
 
 TestCase* Simulation::localOptFromGivenParams (TestCase* oldTC)  {
-	TestCase* tc = new TestCase { };	// empty test case
+	TestCase* tc = new TestCase { };
 	int NeighborhoodSize { 1 };
 
 	tc->setInputParameters(oldTC->getInputParameters());
@@ -337,7 +337,6 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 
 	rangeSet->addRange(new Range(currStart, currStart + startSize));
 
-	//TODO: Tune this
 	for (int tryNum = 1; tryNum <= 2; tryNum++) {
 		int size = startSize / tryNum;
 		int nextStartPos = currStart;
