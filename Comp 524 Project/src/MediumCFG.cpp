@@ -227,13 +227,14 @@ inline void MediumCFG::block25() {
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addEdgeCoverage(edges::B25toB61);
+		testCase->addPredicateCoverage(predicates::B25_TT);
 	} else {
 		if( (a1 == a2) ) {
-
+			testCase->addPredicateCoverage(predicates::B25_TF);
 		} else if( (a2 == a3) ) {
-
+			testCase->addPredicateCoverage(predicates::B25_FT);
 		} else {
-
+			testCase->addPredicateCoverage(predicates::B25_FF);
 		}
 		testCase->addEdgeCoverage(edges::B25toB62);
 	}
@@ -284,13 +285,14 @@ inline void MediumCFG::block27() {
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addEdgeCoverage(edges::B27toB67);
+		testCase->addPredicateCoverage(predicates::B27_TT);
 	} else {
 		if( (a1 == a2) ) {
-
+			testCase->addPredicateCoverage(predicates::B27_TF);
 		} else if( (a2 == a3) ) {
-
+			testCase->addPredicateCoverage(predicates::B27_FT);
 		} else {
-
+			testCase->addPredicateCoverage(predicates::B27_FF);
 		}
 		testCase->addEdgeCoverage(edges::B27toB68);
 	}
@@ -341,6 +343,7 @@ inline void MediumCFG::block29() {
 
 	if( (a1 == a2) && (a2 == a3) ) {
 		testCase->addEdgeCoverage(edges::B29toB73);
+		testCase->addPredicateCoverage(predicates::B29_TT);
 	} else {
 		if( (a1 == a2) ) {
 			testCase->addPredicateCoverage(predicates::B29_TF);
@@ -355,20 +358,6 @@ inline void MediumCFG::block29() {
 
 inline void MediumCFG::block30() {
 	//mu > 500 sigma <= 1000 sigma >= 750
-
-	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000 ) {
-		testCase->addEdgeCoverage(edges::B30toB75);
-	} else {
-	   if ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll > -10000 ) {
-		   testCase->addEdgeCoverage(edges::B30toB76);
-		} else {
-			if ( sumOfFirstHalf <= sumOfSecondHalf) {
-				testCase->addEdgeCoverage(edges::B30toB77);
-			} else {
-				testCase->addEdgeCoverage(edges::B30toB78);
-			}
-		}
-	}
 
 	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000) {
 		testCase->addEdgeCoverage(edges::B30toB75);
