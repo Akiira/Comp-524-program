@@ -19,26 +19,13 @@ using std::cout;
 using std::endl;
 
 TestSuite::~TestSuite(){
+	delete[] edgeCoverageCounts;
+	delete[] predicateCoverageCounts;
 
-	if( edgeCoverageCounts ) {
-		delete[] edgeCoverageCounts;
-		edgeCoverageCounts = NULL;
+	for(int i = 0; i < numberOfTestCases; i++){
+			delete testCases[i];
 	}
-
-	if( predicateCoverageCounts ) {
-		delete[] predicateCoverageCounts;
-		predicateCoverageCounts = NULL;
-	}
-	if( testCases ) {
-		for(int i = 0; i < numberOfTestCases; i++){
-			if( testCases[i] ) {
-				delete testCases[i];
-				testCases[i] = NULL;
-			}
-		}
-		delete[] testCases;
-		testCases = NULL;
-	}
+	delete[] testCases;
 }
 
 TestSuite::TestSuite(const TestSuite& testSuite) {

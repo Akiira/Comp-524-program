@@ -17,19 +17,10 @@
 #include <cstring>
 #include <iostream>
 
-TestCase::~TestCase(){
-	if( edgesCovered ) {
-		delete[] edgesCovered;
-		edgesCovered = NULL;
-	}
-	if( predicatesCovered ) {
-		delete[] predicatesCovered;
-		predicatesCovered = NULL;
-	}
-	if( inputParameters ) {
-		delete[] inputParameters;
-		inputParameters = NULL;
-	}
+TestCase::~TestCase() {
+	delete[] edgesCovered;
+	delete[] predicatesCovered;
+	delete[] inputParameters;
 }
 
 // IMPORTANT: In almost all cases now you should use the functions in rangeSet to get test cases
@@ -42,7 +33,6 @@ TestCase::TestCase() {
 	predicatesCovered = new bool[numberOfPredicates] { };
 	inputParameters = new int[numberOfParameters] { };
 	numCovered = 0;
-
 }
 
 TestCase::TestCase(const TestCase& that) {

@@ -13,6 +13,10 @@ using std::cout;
 using std::endl;
 using std::cerr;
 
+Range::~Range() {
+	delete[] usesArray;
+}
+
 Range::Range(int start, int end) {
 	// Should never happen but just in case.
 	if (start > end) {
@@ -123,15 +127,6 @@ Range& Range::operator= (const Range& other) {
 		usesArraySize = other.usesArraySize;
 	}
 	return *this;
-}
-
-Range::~Range() {
-   // cout << "destruct: ";
-    //printRangeSimple();
-
-    // No need to check if its 0, delete on null pointer does nothing
-	delete[] usesArray;
-	usesArray = 0;
 }
 
 void Range::printRange() {

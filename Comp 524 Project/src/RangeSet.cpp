@@ -13,9 +13,20 @@
 #include "TestCase.h"
 #include "Population.h"
 #include "TestSuite.h"
+
 #include <iostream>
 #include <limits>
+
 using std::numeric_limits;
+
+RangeSet::~RangeSet() {
+	for (int i = 0; i < numberOfRanges; i++) {
+			delete ranges[i];
+	}
+
+	delete[] ranges;
+	delete finalTestSuite;
+}
 
 RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges) {
 	this->numberOfRanges = numberOfRanges;
@@ -42,25 +53,6 @@ RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges) {
 	// Start as blank organism. Grow whenever rangeSet generates a test case that covers something new.
 	int edgesPlusPred = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
 	finalTestSuite = new TestSuite(0, edgesPlusPred, new TestCase*[edgesPlusPred]);
-}
-
-RangeSet::~RangeSet() {
-
-	if( ranges ) {
-		for (int i = 0; i < numberOfRanges; i++) {
-			if( ranges[i] ) {
-				delete ranges[i];
-				ranges[i] = 0;
-			}
-
-		}
-		delete[] ranges;
-		ranges = 0;
-	}
-
-	if( finalTestSuite ) {
-		delete finalTestSuite;
-	}
 }
 
 // This is called from tryLocalOpt and after test case crossover and mutation,

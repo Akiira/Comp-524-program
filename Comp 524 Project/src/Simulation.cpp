@@ -22,14 +22,8 @@ using std::endl;
 
 
 Simulation::~Simulation(){
-	if( population ) {
-		delete population;
-		population = 0;
-	}
-	if( rangeSet ) {
-		delete rangeSet;
-		rangeSet = 0;
-	}
+	delete population;
+	delete rangeSet;
 }
 
 Simulation::Simulation(int populationSize, int numberOfCutPoints, double mutationProb) {

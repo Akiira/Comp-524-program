@@ -17,7 +17,6 @@ using std::endl;
 
 Organism::~Organism(){
 	delete chromosome;
-	chromosome = NULL;
 }
 
 Organism::Organism(const Organism& org) {
