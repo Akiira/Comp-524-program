@@ -8,10 +8,12 @@
 #include "Organism.h"
 #include "ControlFlowGraph.h"
 #include "GlobalVariables.h"
-#include <iostream>
-#include <cassert>
 #include "Random.h"
 #include "RangeSet.h"
+
+#include <iostream>
+#include <cassert>
+
 using std::cout;
 using std::endl;
 
@@ -43,7 +45,6 @@ Organism::Organism(int numberOfTestCases, int maxNumberOfTestCases, Range *range
 void Organism::mutate(double mutationProb) {
 	int numberOfTestCases = chromosome->getNumberOfTestCases();
 
-	//TODO: Revisit this
 	for (int i = 0; i < numberOfTestCases; i++) {
 		double toss = uniform01();
 		if (toss < mutationProb) {
@@ -52,72 +53,12 @@ void Organism::mutate(double mutationProb) {
 
 			if (chromosome->isCoveringNew(newTestCase)) {
 				chromosome->replaceDuplicateTestCase(newTestCase);
-				// Organism fitness will be reevalated in the simulation loop
-				//	so wont do it here.
 			}
 			delete newTestCase;
 		}
 	}
 }
 
-// An idea I had for a quick fitness function
-// Max fitness is numberOfTestCases*numberOfEdges + numberOfTestCases*numberOfPredicates
-// Min fitness is 0
-// They are punished for covering the same edges and predicates over and over
-//	The hope is that this brings organisms that managed to cover the hard to reach test cases to the top
-int Organism::fitnessFunction01() {
-	int retval = 0;
-	int* edgeCoverage = chromosome->getEdgeCoverageCounts();
-	int* predicateCoverage = chromosome->getPredicateCoverageCounts();
-	int baseReward = chromosome->getNumberOfTestCases() + 1;
-
-	for(int i = 0; i < (targetCFG->getNumberOfEdges()); i++){
-		if (edgeCoverage[i] > 0) {
-			retval += baseReward - edgeCoverage[i];
-		}
-	}
-
-	for(int i = 0; i < (targetCFG->getNumberOfPredicates()); i++){
-		if (predicateCoverage[i] > 0) {
-			retval += baseReward - predicateCoverage[i];
-		}
-	}
-	return retval;
-}
-
-// Returns a small number between 0 and numOfEdges+numOfPredicates / numberOfTestCases
-int Organism::fitnessFunction02() {
-	int retval = 0;
-	int* edgeCoverage = chromosome->getEdgeCoverageCounts();
-	int* predicateCoverage = chromosome->getPredicateCoverageCounts();
-
-	for(int i = 0; i < (targetCFG->getNumberOfEdges()); i++){
-		if (edgeCoverage[i] > 0) {
-			retval += 1;
-		}
-	}
-
-	for(int i = 0; i < (targetCFG->getNumberOfPredicates()); i++){
-		if (predicateCoverage[i] > 0) {
-			retval += 1;
-		}
-	}
-
-	// multiply by 10000, because right now were expecting an integer for fitness
-	//	and otherwise the integer division almost always will give you 1
-	return retval * 10000 / chromosome->getNumberOfTestCases() ;
-}
-
-// This should be one using the population coverage stuff
-int Organism::fitnessFunction03() {
-	//TODO: Wanted to just make population a global variable, problem was witht he typeOfScaling type and enum, they
-	//	would have had to be put in population instead because of the forward references. Wanted to talk to you about it
-	//	before moving forward.
-	//int* populationEdgeCoverage = population->getEdgesCovered();
-	//int* populationPredicateCoverage = population->getPredicatesCovered();
-	assert(false);
-	return 0;
-}
 void Organism::evaluateBaseFitness(){
 	fitness = 0;
 	chromosome->calculateTestSuiteCoverage();
@@ -240,3 +181,64 @@ Organism& Organism::operator=(const Organism& org) {
 	}
 	return *this;
 }
+
+//============================ OLD FUNCTIONS =======================//
+
+//// An idea I had for a quick fitness function
+//// Max fitness is numberOfTestCases*numberOfEdges + numberOfTestCases*numberOfPredicates
+//// Min fitness is 0
+//// They are punished for covering the same edges and predicates over and over
+////	The hope is that this brings organisms that managed to cover the hard to reach test cases to the top
+//int Organism::fitnessFunction01() {
+//	int retval = 0;
+//	int* edgeCoverage = chromosome->getEdgeCoverageCounts();
+//	int* predicateCoverage = chromosome->getPredicateCoverageCounts();
+//	int baseReward = chromosome->getNumberOfTestCases() + 1;
+//
+//	for(int i = 0; i < (targetCFG->getNumberOfEdges()); i++){
+//		if (edgeCoverage[i] > 0) {
+//			retval += baseReward - edgeCoverage[i];
+//		}
+//	}
+//
+//	for(int i = 0; i < (targetCFG->getNumberOfPredicates()); i++){
+//		if (predicateCoverage[i] > 0) {
+//			retval += baseReward - predicateCoverage[i];
+//		}
+//	}
+//	return retval;
+//}
+//
+//// Returns a small number between 0 and numOfEdges+numOfPredicates / numberOfTestCases
+//int Organism::fitnessFunction02() {
+//	int retval = 0;
+//	int* edgeCoverage = chromosome->getEdgeCoverageCounts();
+//	int* predicateCoverage = chromosome->getPredicateCoverageCounts();
+//
+//	for(int i = 0; i < (targetCFG->getNumberOfEdges()); i++){
+//		if (edgeCoverage[i] > 0) {
+//			retval += 1;
+//		}
+//	}
+//
+//	for(int i = 0; i < (targetCFG->getNumberOfPredicates()); i++){
+//		if (predicateCoverage[i] > 0) {
+//			retval += 1;
+//		}
+//	}
+//
+//	// multiply by 10000, because right now were expecting an integer for fitness
+//	//	and otherwise the integer division almost always will give you 1
+//	return retval * 10000 / chromosome->getNumberOfTestCases() ;
+//}
+//
+//// This should be one using the population coverage stuff
+//int Organism::fitnessFunction03() {
+//	//TODO: Wanted to just make population a global variable, problem was witht he typeOfScaling type and enum, they
+//	//	would have had to be put in population instead because of the forward references. Wanted to talk to you about it
+//	//	before moving forward.
+//	//int* populationEdgeCoverage = population->getEdgesCovered();
+//	//int* populationPredicateCoverage = population->getPredicatesCovered();
+//	assert(false);
+//	return 0;
+//}
