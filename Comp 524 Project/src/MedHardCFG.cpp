@@ -6,12 +6,14 @@
  */
 
 #include "MedHardCFG.h"
+#include "TestCase.h"
+
 #include <limits>
 #include <cassert>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
-#include "TestCase.h"
+
 using std::endl;
 using std::cout;
 using std::numeric_limits;
@@ -25,9 +27,6 @@ MedHardCFG::MedHardCFG() {
 	testCase = NULL;
 
 	for (int i = 0; i < numberOfParameters; ++i) {
-		//rangeForEachParameter[i][0] = numeric_limits<int>::min() / ( i + 6 );
-		//rangeForEachParameter[i][1] = numeric_limits<int>::max() / ( i + 6 );
-
 		rangeForEachParameter[i][0] = numeric_limits<int>::min();
 		rangeForEachParameter[i][1] = numeric_limits<int>::max();
 	}
@@ -40,7 +39,6 @@ MedHardCFG::MedHardCFG() {
 }
 
 MedHardCFG::~MedHardCFG() {
-
 }
 
 int MedHardCFG::getLowerBoundForParameter(int parameter) {
@@ -57,8 +55,6 @@ inline void MedHardCFG::runTestCase() {
 	calculateMean(testCase->getInputParameters());
 	calculateDeviation(testCase->getInputParameters());
 	calculateSums(testCase->getInputParameters());
-
-	//TODO test all edges and predicates are actually reachable
 
 	testCase->addEdgeCoverage(edges::B0toB1);
 	testCase->addPredicateCoverage(predicates::B0_T);

@@ -25,9 +25,6 @@ HardCFG::HardCFG() {
 	testCase = NULL;
 
 	for (int i = 0; i < numberOfParameters; ++i) {
-		//rangeForEachParameter[i][0] = numeric_limits<int>::min() / ( i + 2 );
-		//rangeForEachParameter[i][1] = numeric_limits<int>::max() / ( i + 2 );
-
 		rangeForEachParameter[i][0] = numeric_limits<int>::min();
 		rangeForEachParameter[i][1] = numeric_limits<int>::max();
 	}
@@ -40,7 +37,6 @@ HardCFG::HardCFG() {
 }
 
 HardCFG::~HardCFG() {
-
 }
 
 int HardCFG::getLowerBoundForParameter(int parameter) {
@@ -57,8 +53,6 @@ inline void HardCFG::runTestCase() {
 	calculateMean(testCase->getInputParameters());
 	calculateDeviation(testCase->getInputParameters());
 	calculateSums(testCase->getInputParameters());
-
-	//TODO test all edges and predicates are actually reachable
 
 	if( Mu <= 500 ) {
 		testCase->addEdgeCoverage(edges::B0toB1);
@@ -717,20 +711,6 @@ inline void HardCFG::block29() {
 inline void HardCFG::block30() {
 	//mu > 500 sigma <= 1000 sigma >= 750
 
-	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000 ) {
-		testCase->addEdgeCoverage(edges::B30toB75);
-	} else {
-	   if ( sumOfFirstHalf == sumOfSecondHalf && sumOfAll > -10000 ) {
-		   testCase->addEdgeCoverage(edges::B30toB76);
-		} else {
-			if ( sumOfFirstHalf <= sumOfSecondHalf) {
-				testCase->addEdgeCoverage(edges::B30toB77);
-			} else {
-				testCase->addEdgeCoverage(edges::B30toB78);
-			}
-		}
-	}
-
 	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000) {
 		testCase->addEdgeCoverage(edges::B30toB75);
 		testCase->addPredicateCoverage(predicates::B30A_TT);
@@ -799,7 +779,6 @@ void HardCFG::calculateSums(const int* values) {
 			sumOfFirstHalf += values[i];
 		} else {
 			sumOfSecondHalf += values[i];
-			//sumOfSecondHalf += values[numberOfParameters - i - 1];
 		}
 	}
 	sumOfAll = sumOfFirstHalf + sumOfSecondHalf;

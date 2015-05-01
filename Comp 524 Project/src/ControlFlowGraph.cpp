@@ -6,9 +6,10 @@
 ///////////////////////////////////////////////////////////
 
 #include "ControlFlowGraph.h"
-#include <iostream>
 #include "TestCase.h"
 #include "TestSuite.h"
+
+#include <iostream>
 
 ControlFlowGraph::~ControlFlowGraph(){
 	delete testCase;
@@ -45,20 +46,6 @@ void ControlFlowGraph::printPopulationCoverage(int* edges, int* predicates) cons
 	printPredicatesCovered(predicates);
 }
 
-
-
-ControlFlowGraph& ControlFlowGraph::operator=(const ControlFlowGraph& other)
-{
-	if (this != &other) {
-		delete testCase;
-		testCase = other.testCase;
-		numberOfEdges = other.numberOfEdges;
-		numberOfPredicates = other.numberOfPredicates;
-		numberOfParameters = other.numberOfParameters;
-	}	//if
-	return *this;
-}	//operator=
-
 int ControlFlowGraph::getNumberOfEdges() const {
 	return numberOfEdges;
 }
@@ -73,4 +60,15 @@ int ControlFlowGraph::getNumberOfPredicates() const {
 
 TestCase* ControlFlowGraph::getTestCase() const {
 	return testCase;
+}
+
+ControlFlowGraph& ControlFlowGraph::operator=(const ControlFlowGraph& other) {
+	if (this != &other) {
+		delete testCase;
+		testCase = other.testCase;
+		numberOfEdges = other.numberOfEdges;
+		numberOfPredicates = other.numberOfPredicates;
+		numberOfParameters = other.numberOfParameters;
+	}
+	return *this;
 }
