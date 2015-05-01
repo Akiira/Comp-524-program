@@ -126,12 +126,11 @@ void Simulation::testCaseCrossoverAndMutation(Organism* parent) {
 	}
 
 	TestCase *child1, *child2;
-
-
 	auto tc1    = parent->getChromosome()->getRandomTestCase();
 	auto tc2    = parent->getChromosome()->getRandomTestCase();
 
 	bool done = false;
+
 	for (int i = 0; i < 100; ++i) {
 		do {
 			if (tc1 != tc2) {
@@ -161,11 +160,10 @@ void Simulation::testCaseCrossoverAndMutation(Organism* parent) {
 			parent->getChromosome()->replaceDuplicateTestCase(child2);
 			done = true;
 		}
-		// replaceDup makes a copy, always have to delete.
+
 		delete child1;
-		child1 = NULL;
 		delete child2;
-		child2 = NULL;
+
 		if (done) {
 			break;
 		}
@@ -277,7 +275,9 @@ TestCase* Simulation::localOptFromGivenParams (TestCase* oldTC)  {
 		}
 		NeighborhoodSize += 20;
 	}
+
 	delete tc;
+
 	return NULL;
 }
 
@@ -350,7 +350,6 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 		int nextStartNeg = currStart;
 		int totalIterations = 0;
 
-		//cout << "Starting tryNum # " << tryNum << " : Range Size: " << size << endl;
 		while(nextStartPos < numeric_limits<int>::max()/2 - size && nextStartNeg > numeric_limits<int>::min()/2 + size) {
 
 			nextStartPos = nextStartPos + size;
@@ -386,12 +385,9 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 			}
 
 		}
-		//cout << "End of try # " << tryNum << endl;
 	}
 
 	delete tmpSuite;
-	//cout << "\t\tGlobal range set has been initialized" << endl;
-	//rangeSet->printRangesSimple();
 }
 
 //============================ OLD FUNCTIONS =======================//
