@@ -103,6 +103,10 @@ void runTest(int graph, int test) {
 			cout << "Running random searcher on: " << testProgram << "\n\n";
 			RandomSearcher::search(60 * 60 * 10);
 			break;
+		case 6:
+			cout << "Running simulation without GA on: " << testProgram << "\n\n";
+			runWithoutGA();
+			break;
 		default:
 			cerr << "Unrecognized test number in runTest: " << test << endl;
 			break;
