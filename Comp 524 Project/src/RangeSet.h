@@ -59,12 +59,18 @@ public:
 	}
 
 	string getTestCaseSourceReport() {
-		string retval = "%Test Case Source Report:";
-		retval += "\n%\tInit_Pop: " + std::to_string(testCaseSources[0]);
-		retval += "\n%\tTestSuiteMutation: " + std::to_string(testCaseSources[1]);
-		retval += "\n%\tTestCaseCrossoverAndMutation: " + std::to_string(testCaseSources[2]);
-		retval += "\n%\tLocalOptFromParameters: " + std::to_string(testCaseSources[3]);
-		retval += "\n%\tLocalOptFromZero: " + std::to_string(testCaseSources[4]) + "\n";
+		double sum = 0;
+		for (int i = 0; i < 5; i++) {
+			sum += testCaseSources[i];
+		}
+
+		string retval = "\t\t%Test Case Source Report: (Avg. Size of final suite: " + std::to_string(sum) + ")";
+		retval += "\n\t\t%\tInitial Population:           " + std::to_string(testCaseSources[0]) + " (" + std::to_string(testCaseSources[0] / sum * 100) + "%)";
+		retval += "\n\t\t%\tTestSuiteMutation:            " + std::to_string(testCaseSources[1]) + " (" + std::to_string(testCaseSources[1] / sum * 100) + "%)";
+		retval += "\n\t\t%\tTestCaseCrossoverAndMutation: " + std::to_string(testCaseSources[2]) + " (" + std::to_string(testCaseSources[2] / sum * 100) + "%)";
+		retval += "\n\t\t%\tLocalOptFromParameters:       " + std::to_string(testCaseSources[3]) + " (" + std::to_string(testCaseSources[3] / sum * 100) + "%)";
+		retval += "\n\t\t%\tLocalOptFromZero:             " + std::to_string(testCaseSources[4]) + " (" + std::to_string(testCaseSources[4] / sum * 100) + "%)";
+		retval += "\n";
 		return retval;
 	}
 
