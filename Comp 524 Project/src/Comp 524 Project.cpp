@@ -37,6 +37,8 @@ void printFileHeader();
 void printFileDataEntry(int, short, double, double);
 void runTests(int, int, short, short, double, double);
 
+void printTableOfFinalResults(int population, short cutPoints, double mutation);
+
 ControlFlowGraph*targetCFG { };
 RangeSet*rangeSet { };
 
@@ -60,7 +62,7 @@ const short POPULATION_START = 10;
 const short POPULATION_END = 100;
 const short POPULATION_STEP = 10;
 
-const short TEST_RUNS = 30;
+short TEST_RUNS = 30;
 const short GENERATIONS = 10000;
 
 int main(int argc, char* argv[]) {
@@ -106,6 +108,11 @@ void runTest(int graph, int test) {
 		case 6:
 			cout << "Running simulation without GA on: " << testProgram << "\n\n";
 			runWithoutGA();
+			break;
+		case 7:
+			cout << "Running final results table test on all graphs" << "\n\n";
+			TEST_RUNS = 50;
+			printTableOfFinalResults(25, 2, .5);
 			break;
 		default:
 			cerr << "Unrecognized test number in runTest: " << test << endl;
@@ -295,6 +302,50 @@ void runTests(int popStart, int popEnd, short cutPtsStart,
 		}
 	}
 }
+
+void printTableOfFinalResults(int population, short cutPoints, double mutation)
+{
+	outputFile = new ofstream("finalResultsTable.txt", ios::out | ios::trunc);
+	printFileHeader();
+	*outputFile << "% {Population Size: " << population << ", Cut Points: " << cutPoints << ", Mutation Prob: " << mutation << "} " << endl;
+	*outputFile <<  "\\begin{center}" << endl;
+	*outputFile <<  "\\begin{tabular}{ l | c | c | c }"<< endl;
+	*outputFile <<  "\\hline"<< endl;
+	*outputFile <<  "    " << "CFG" << " & " << "Branch Coverage" << " & " << "MCC Coverage" << " & " << "Avg. Generations" << " \\\\ \\hline" << endl;
+	for (int graph = 0; graph <= 5; ++graph) {
+		setTarget(graph);
+
+		int sumOfGenerations = 0;
+		double sumOfCoverageRatios = 0;
+		printf("Testing population: %d, cutPoints: %d, mutation: %f, on: %s\n", population, cutPoints, mutation, testProgram.c_str());
+		for(int i = 0; i < TEST_RUNS; i++)
+		{
+			cout << "\tTest Num: " << i << " " << endl;
+
+			Simulation* sim = new Simulation(population);
+			int temp = sim->run(GENERATIONS, cutPoints, mutation);
+
+			sumOfCoverageRatios += rangeSet->getFinalTestSuite()->getCoverageRatio();
+			sumOfGenerations += temp;
+			cout << "\t# of gen: " << temp << " cov: " << rangeSet->getFinalTestSuite()->getCoverageRatio() << endl;
+
+			delete sim;
+		}
+
+		double average = ((double)sumOfGenerations) / ((double)TEST_RUNS);
+
+		*outputFile <<  "    " << testProgram.c_str() << " & " << rangeSet->getFinalTestSuite()->getBranchCoverageRatio()
+				<< " & " << rangeSet->getFinalTestSuite()->getMCCCoverageRatio() << " & " << average << " \\\\ \\hline" << endl;
+
+		cout << "Average number of generations: " << average << endl;
+	}
+	*outputFile <<  " \\end{tabular}"<< endl;
+	*outputFile <<  "\\end{center}"<< endl;
+	outputFile->flush();
+
+
+}
+
 
 
 

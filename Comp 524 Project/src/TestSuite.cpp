@@ -252,18 +252,20 @@ void TestSuite::calculateTestSuiteCoverage() {
 	}
 
 	// Calculate the coverage ratio
-	double numCovered = 0;
+	double numBranchCovered = 0, numPredCovered = 0;
 	for (int j = 0; j < targetCFG->getNumberOfEdges(); ++j) {
 		if (edgeCoverageCounts[j] > 0) {
-			numCovered++;
+			numBranchCovered++;
 		}
 	}
 	for (int j = 0; j < targetCFG->getNumberOfPredicates(); ++j) {
 		if (predicateCoverageCounts[j] > 0) {
-			numCovered++;
+			numPredCovered++;
 		}
 	}
-	coverageRatio = numCovered / (numberOfEdges + numberOfPredicates);
+	coverageRatio = (numBranchCovered+numPredCovered) / (numberOfEdges + numberOfPredicates);
+	branchCoverageRatio = numBranchCovered / numberOfEdges;
+	mccCoverageRatio = numPredCovered / numberOfPredicates;
 }
 
 bool TestSuite::isCoveringNew(const TestCase *tc) const {
