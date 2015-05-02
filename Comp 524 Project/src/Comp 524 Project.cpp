@@ -37,7 +37,7 @@ void printFileHeader();
 void printFileDataEntry(int, short, double, double);
 void runTests(int, int, short, short, double, double);
 
-void printTableOfFinalResults(int population, short cutPoints, double mutation);
+void printTableOfFinalResults(int type, int population, short cutPoints, double mutation);
 
 ControlFlowGraph*targetCFG { };
 RangeSet*rangeSet { };
@@ -112,7 +112,17 @@ void runTest(int graph, int test) {
 		case 7:
 			cout << "Running final results table test on all graphs" << "\n\n";
 			TEST_RUNS = 50;
-			printTableOfFinalResults(25, 2, .5);
+			printTableOfFinalResults(0, 25, 2, .5);
+			break;
+		case 8:
+			cout << "Running final results table test on all graphs without GA" << "\n\n";
+			TEST_RUNS = 50;
+			printTableOfFinalResults(1, 25, 2, .5);
+			break;
+		case 9:
+			cout << "Running final results table test on all graphs without Local Opt" << "\n\n";
+			TEST_RUNS = 50;
+			printTableOfFinalResults(2, 25, 2, .5);
 			break;
 		default:
 			cerr << "Unrecognized test number in runTest: " << test << endl;
@@ -304,9 +314,26 @@ void runTests(int popStart, int popEnd, short cutPtsStart,
 	}
 }
 
-void printTableOfFinalResults(int population, short cutPoints, double mutation)
+/*
+ * Type:
+ * 	0 - Entire algorithm
+ * 	1 - WIthout GA (Only initial population, local opt)
+ * 	2 - Without Local Opt (only initial population, crossover, mutation, and range adaptation)
+ */
+void printTableOfFinalResults(int type, int population, short cutPoints, double mutation)
 {
-	outputFile = new ofstream("finalResultsTable.txt", ios::out | ios::trunc);
+	switch(type) {
+		case 0:
+			outputFile = new ofstream("finalResultsTableEntireAlgorithm.txt", ios::out | ios::trunc);
+			break;
+		case 1:
+			outputFile = new ofstream("finalResultsTableWithoutGAtxt", ios::out | ios::trunc);
+			break;
+		case 2:
+			outputFile = new ofstream("finalResultsTableWithoutLocalOpttxt", ios::out | ios::trunc);
+			break;
+	}
+
 	printFileHeader();
 	*outputFile << "% {Population Size: " << population << ", Cut Points: " << cutPoints << ", Mutation Prob: " << mutation << "} " << endl;
 	*outputFile <<  "\\begin{center}" << endl;
@@ -331,7 +358,19 @@ void printTableOfFinalResults(int population, short cutPoints, double mutation)
 			cout << "\tTest Num: " << i << " " << endl;
 
 			Simulation* sim = new Simulation(population);
-			int temp = sim->run(GENERATIONS, cutPoints, mutation);
+			int temp;
+			switch(type) {
+				case 0:
+					temp = sim->run(GENERATIONS, cutPoints, mutation);
+					break;
+				case 1:
+					temp = sim->runWithoutGA(GENERATIONS);
+					break;
+				case 2:
+					temp = sim->runWithoutLocalOpt(GENERATIONS, cutPoints, mutation);
+					break;
+			}
+
 
 			sumOfCoverageRatios += rangeSet->getFinalTestSuite()->getCoverageRatio();
 			sumOfGenerations += temp;
