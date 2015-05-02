@@ -113,6 +113,46 @@ int Simulation::runWithoutGA(int numberOfGenerations) {
 	return currentGen;
 }
 
+int Simulation::runWithoutLocalOpt(int numberOfGenerations, int numberOfCutPoints, double mutationProb) {
+	this->numberOfCutPoints = numberOfCutPoints;
+	this->mutationProb      = mutationProb;
+	int currentGen { 0 };
+
+	double lastGensCoverage = population->getCoverageRatio();
+	int gensOfNoImprov = 0;
+
+	do {
+		if (currentGen % 100 == 0 ) {
+			cout << "\t\tGeneration # " << currentGen << " CoverageRatio: " << population->getCoverageRatio() << endl;
+		}
+
+		if( gensOfNoImprov == 20 || currentGen % 30 == 0 ){
+			testSuiteCrossoverAndMutation();
+		}
+
+		auto parent = population->getOrganism(population->fitnessProportionalSelect());
+
+		testCaseCrossoverAndMutation(parent);
+
+		population->updatePopulationsFitness();
+
+		if( lastGensCoverage < population->getCoverageRatio() ) {
+			lastGensCoverage = population->getCoverageRatio();
+			gensOfNoImprov = 0;
+		}
+
+		if (gensOfNoImprov == 30 || currentGen % 100 == 1) {
+			rangeSet->adaptRangesBasedOnUsefulness();
+		}
+
+		gensOfNoImprov++;
+		currentGen++;
+	} while (currentGen <= numberOfGenerations && population->getCoverageRatio() < 1 && gensOfNoImprov < 500);
+	//cout <<  rangeSet->getFinalTestSuite()->printTestCaseInputsAndCoverage() << endl;
+	//cout <<  rangeSet->getTestCaseSourceReport() << endl;
+	return currentGen;
+}
+
 void Simulation::testCaseCrossoverAndMutation(Organism* parent) {
 	if( targetCFG->getNumberOfParameters() <= 1 ) {
 		return;

@@ -31,6 +31,8 @@ public:
 
 	int run(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
 	int runWithoutGA(int numberOfGenerations);
+	int runWithoutLocalOpt(int numberOfGenerations, int numberOfCutPoints, double mutationProb);
+
 	void testCaseCrossoverAndMutation(Organism* parent);
 	void testSuiteCrossoverAndMutation();
 
