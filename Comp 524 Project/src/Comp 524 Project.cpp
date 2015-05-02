@@ -270,20 +270,14 @@ void runTests(int popStart, int popEnd, short cutPtsStart,
 			{
 				int sumOfGenerations = 0;
 				double sumOfCoverageRatios = 0;
+			    auto start = chrono::system_clock::now();
 				printf("Testing population: %d, cutPoints: %d, mutation: %f, on: %s\n", population, cutPoints, mutation, testProgram.c_str());
 				for(int i = 0; i < TEST_RUNS; i++)
 				{
 					cout << "\tTest Num: " << i << " " << endl;
 
 					Simulation* sim = new Simulation(population);
-					int temp;
-//					if(mutation <= 0.01 && cutPoints == 0) {
-//						cout << "\tWithout GA" << endl;
-//						temp = sim->runWithoutGA(GENERATIONS);
-//					} else {
-						temp = sim->run(GENERATIONS, cutPoints, mutation);
-					//}
-
+					int temp = sim->run(GENERATIONS, cutPoints, mutation);
 
 					sumOfCoverageRatios += rangeSet->getFinalTestSuite()->getCoverageRatio();
 					sumOfGenerations += temp;
@@ -291,10 +285,17 @@ void runTests(int popStart, int popEnd, short cutPtsStart,
 
 					delete sim;
 				}
+			    auto end = chrono::system_clock::now();
+			    chrono::duration<double> elapsed_seconds = end-start;
+			    chrono::duration<double> average_elapsed_seconds = elapsed_seconds / TEST_RUNS;
+			    cout << "elapsed time: " << elapsed_seconds.count() << endl;
+			    cout << "averaged elapsed time: " << average_elapsed_seconds.count() << endl;
 
 				double average = ((double)sumOfGenerations) / ((double)TEST_RUNS);
 				printFileDataEntry(population, cutPoints, mutation, average);
 				*outputFile << "\t\t(* Average Coverage Ratio: " << ((double)sumOfCoverageRatios) / ((double)TEST_RUNS) <<  " *)" << endl;
+				*outputFile << "\t\t(* Average Seconds Per Run " << average_elapsed_seconds.count()  <<  " *)" << endl;
+
 				outputFile->flush();
 
 				cout << "Average number of generations: " << average << endl;
@@ -309,14 +310,21 @@ void printTableOfFinalResults(int population, short cutPoints, double mutation)
 	printFileHeader();
 	*outputFile << "% {Population Size: " << population << ", Cut Points: " << cutPoints << ", Mutation Prob: " << mutation << "} " << endl;
 	*outputFile <<  "\\begin{center}" << endl;
-	*outputFile <<  "\\begin{tabular}{ l | c | c | c }"<< endl;
+	*outputFile <<  "\\begin{tabular}{| l | c | c | c | c |}"<< endl;
 	*outputFile <<  "\\hline"<< endl;
-	*outputFile <<  "    " << "CFG" << " & " << "Branch Coverage" << " & " << "MCC Coverage" << " & " << "Avg. Generations" << " \\\\ \\hline" << endl;
+	*outputFile <<  "\t"    << "CFG" << " & "
+							<< "Branch Coverage" << " & "
+							<< "MCC Coverage" << " & "
+							<< "Avg. Generations" << " & "
+							<< "Avg. Seconds" << " \\\\ "
+							<< "\\hline" << endl;
 	for (int graph = 0; graph <= 5; ++graph) {
 		setTarget(graph);
 
 		int sumOfGenerations = 0;
 		double sumOfCoverageRatios = 0;
+		double* avgCountsTestCaseSources = new double[5];
+	    auto start = chrono::system_clock::now();
 		printf("Testing population: %d, cutPoints: %d, mutation: %f, on: %s\n", population, cutPoints, mutation, testProgram.c_str());
 		for(int i = 0; i < TEST_RUNS; i++)
 		{
@@ -329,15 +337,36 @@ void printTableOfFinalResults(int population, short cutPoints, double mutation)
 			sumOfGenerations += temp;
 			cout << "\t# of gen: " << temp << " cov: " << rangeSet->getFinalTestSuite()->getCoverageRatio() << endl;
 
+			int* testCaseSources = rangeSet->getTestCaseSourceCounts();
+			for (int i = 0; i < 5; i++) {
+				avgCountsTestCaseSources[i] += testCaseSources[i];
+			}
 			delete sim;
 		}
 
-		double average = ((double)sumOfGenerations) / ((double)TEST_RUNS);
+	    auto end = chrono::system_clock::now();
+	    chrono::duration<double> elapsed_seconds = end-start;
+	    chrono::duration<double> average_elapsed_seconds = elapsed_seconds / TEST_RUNS;
 
-		*outputFile <<  "    " << testProgram.c_str() << " & " << rangeSet->getFinalTestSuite()->getBranchCoverageRatio()
-				<< " & " << rangeSet->getFinalTestSuite()->getMCCCoverageRatio() << " & " << average << " \\\\ \\hline" << endl;
 
-		cout << "Average number of generations: " << average << endl;
+		double averageGen = ((double)sumOfGenerations) / ((double)TEST_RUNS);
+
+		*outputFile <<  "\t"
+				<< testProgram.c_str() << " & "
+				<< rangeSet->getFinalTestSuite()->getBranchCoverageRatio() << " & "
+				<< rangeSet->getFinalTestSuite()->getMCCCoverageRatio() << " & "
+				<< averageGen << " & "
+				<< average_elapsed_seconds.count()
+				<< " \\\\ \\hline" << endl;
+		for (int i = 0; i < 5; i++) {
+			avgCountsTestCaseSources[i] /= (double)TEST_RUNS;
+		}
+		*outputFile << rangeSet->getAvgTestCaseSourceReport(avgCountsTestCaseSources);
+		outputFile->flush();
+
+		cout << "Average number of generations: " << averageGen << endl;
+	    cout << "elapsed time for " << TEST_RUNS << " runs: " << elapsed_seconds.count() << endl;
+	    cout << "averaged elapsed time: " << average_elapsed_seconds.count() << endl;
 	}
 	*outputFile <<  " \\end{tabular}"<< endl;
 	*outputFile <<  "\\end{center}"<< endl;

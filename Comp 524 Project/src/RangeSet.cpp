@@ -26,22 +26,7 @@ RangeSet::~RangeSet() {
 
 	delete[] ranges;
 	delete finalTestSuite;
-}
-
-RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges, Range** ranges) {
-	this->numberOfRanges = numberOfRanges;
-	this->maxNumberOfRanges = maxNumberOfRanges;
-	this->minNumberOfRanges = 5;
-	this->ranges = ranges;
-	this->totalUsefulness = 0;
-	for (int i = 0; i < numberOfRanges; i++) {
-		totalUsefulness += ranges[i]->numOfUses;	// Likely pointless because they'll be 0.
-	}
-
-	int edgesPlusPred = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
-
-	// Start as blank organism. Grow whenever rangeSet generates a test case that covers something new.
-	finalTestSuite = new TestSuite(0, edgesPlusPred, new TestCase*[edgesPlusPred]);
+	delete[] testCaseSources;
 }
 
 RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges) {
@@ -51,22 +36,24 @@ RangeSet::RangeSet(int numberOfRanges, int maxNumberOfRanges) {
 	this->ranges = new Range*[maxNumberOfRanges];
 	this->totalUsefulness = 0;
 
-	// Start as blank organism. Grow whenever rangeSet generates a test case that covers something new.
+	this->testCaseSources = new int[5] {};
+
+	// Start as blank test suite. Grow whenever rangeSet generates a test case that covers something new.
 	int edgesPlusPred = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
 	finalTestSuite = new TestSuite(0, edgesPlusPred, new TestCase*[edgesPlusPred]);
 }
 
 // This is called from tryLocalOpt and after test case crossover and mutation,
 //	the only place a test case can be generated outside of the rangeSet.
-void RangeSet::offerToFinalTestSuite(TestCase* tc) {
+void RangeSet::offerToFinalTestSuite(TestCase* tc, int source) {
 
 	if (finalTestSuite->isCoveringNew(tc)) {
 		finalTestSuite->addTestCase(new TestCase(*tc));
 		finalTestSuite->calculateTestSuiteCoverage();
 
-		// Increment uses of a corresponding range in the range set.
+		testCaseSources[source]++;
 
-
+		// Increment uses of a corresponding range(s) in the range set.
 		for (int i = 0; i < tc->getNumberOfParameters(); i++) {
 			int param = tc->getInputParameters()[i];
 
@@ -76,7 +63,7 @@ void RangeSet::offerToFinalTestSuite(TestCase* tc) {
 				}
 			}
 		}
-
+		sortRangesByUsefulness();
 	}
 }
 
@@ -92,6 +79,9 @@ TestCase* RangeSet::getNewTestCase() {
 		if (finalTestSuite->isCoveringNew(retval)) {
 			finalTestSuite->addTestCase(new TestCase(*retval));
 			finalTestSuite->calculateTestSuiteCoverage();
+
+			// Test suite mutation
+			testCaseSources[1]++;
 
 			for (int i = 0; i < targetCFG->getNumberOfParameters(); i++) {
 				tmp[i]->incrementUses(retval->getParameter(i));
@@ -116,6 +106,9 @@ TestCase* RangeSet::getNewTestCaseEntirelyFromRange(Range* range) {
 	if (finalTestSuite->isCoveringNew(retval)) {
 		finalTestSuite->addTestCase(new TestCase(*retval));
 		finalTestSuite->calculateTestSuiteCoverage();
+
+		// Initial population
+		testCaseSources[0]++;
 
 		for (int i = 0; i < targetCFG->getNumberOfParameters(); i++) {
 			range->incrementUses(retval->getParameter(i));
@@ -184,32 +177,17 @@ void RangeSet::adaptRangesBasedOnUsefulness() {
 	int index = numberOfRanges-1;
 	while (index >= 0 && numberOfRanges > minNumberOfRanges && (ranges[index]->numOfUses == 0 || ranges[index]->numOfUses < mean -  stdDev))
 	{
-		assert(index >= 0);
-				assert(index < numberOfRanges);
-		//cout << endl <<  "Ranges before delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
-		//printRangesSimple();
 		deleteRange(index);
-		//cout << endl <<  "Ranges after delete bad range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
-		//printRangesSimple();
 		index--;
 	}
 
 	index = 0;
-	while (ranges[index]->numOfUses > mean + stdDev)
+	while (index < numberOfRanges && ranges[index]->numOfUses > mean + stdDev)
 	{
-		assert(index >= 0);
-		assert(index < numberOfRanges);
-		//cout << endl <<  "Splitting a really good range and exploring adjacents" << endl;
-		//cout << endl <<  "Ranges before expore adjacent: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
-		//printRangesSimple();
-		addRangesAdjacentToExistingRange(index);
-
-		//cout << endl << "Ranges after explore adjacent and before split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
-		//printRangesSimple();
-		splitRange(index);
-
-		//cout << "Ranges after split range: " << numberOfRanges << " totalUsefulness: " << totalUsefulness << endl;
-		//printRangesSimple();
+		if (((ranges[index]->end - ranges[index]->start) / 2) > 25) {
+			addRangesAdjacentToExistingRange(index);
+			splitRange(index);
+		}
 		index++;
 	}
 	addNewRandomRange();

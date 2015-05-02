@@ -77,7 +77,8 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 		gensOfNoImprov++;
 		currentGen++;
 	} while (currentGen <= numberOfGenerations && population->getCoverageRatio() < 1 && gensOfNoImprov < 500);
-
+	//cout <<  rangeSet->getFinalTestSuite()->printTestCaseInputsAndCoverage() << endl;
+	//cout <<  rangeSet->getTestCaseSourceReport() << endl;
 	return currentGen;
 }
 
@@ -141,8 +142,8 @@ void Simulation::testCaseCrossoverAndMutation(Organism* parent) {
 		targetCFG->setCoverageOfTestCase(child1);
 		targetCFG->setCoverageOfTestCase(child2);
 
-		rangeSet->offerToFinalTestSuite(child1);
-		rangeSet->offerToFinalTestSuite(child2);
+		rangeSet->offerToFinalTestSuite(child1,2);
+		rangeSet->offerToFinalTestSuite(child2,2);
 
 		if( parent->getChromosome()->isCoveringNew(child1) ) {
 			parent->getChromosome()->replaceDuplicateTestCase(child1);
@@ -183,23 +184,28 @@ void Simulation::testSuiteCrossoverAndMutation() {
 }
 
 void Simulation::tryLocalOptimization(Organism* org) {
-	auto tc = callRandomLocalOpt(org);
+	int* testCaseSource = new int;
+	*testCaseSource = -1;
+	auto tc = callRandomLocalOpt(org, testCaseSource);
 
 	if( tc ) {
 		org->getChromosome()->replaceDuplicateTestCase(tc);
-		rangeSet->offerToFinalTestSuite(tc);
+		rangeSet->offerToFinalTestSuite(tc, *testCaseSource);
 		delete tc;
 	}
+	delete testCaseSource;
 }
 
-TestCase* Simulation::callRandomLocalOpt(Organism* org){
+TestCase* Simulation::callRandomLocalOpt(Organism* org, int* testCaseSource){
 	TestCase* oldTC = org->getChromosome()->getDuplicateTestCase();
 
 	switch (uniformInRange(0, 1)) {
 		case 0:
+			*testCaseSource = 3;
 			return localOptFromGivenParams(oldTC);
 			break;
 		case 1:
+			*testCaseSource = 4;
 			return localOptFromZero(oldTC);
 			break;
 		default:

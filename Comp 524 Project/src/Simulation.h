@@ -35,7 +35,7 @@ public:
 	void testSuiteCrossoverAndMutation();
 
 	void tryLocalOptimization(Organism* org);
-	TestCase* callRandomLocalOpt(Organism* org);
+	TestCase* callRandomLocalOpt(Organism* org, int* localOptUsed);
 	TestCase* localOptFromZero (TestCase* oldTC);
 	TestCase* localOptFromGivenParams (TestCase* oldTC);
 
