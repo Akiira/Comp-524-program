@@ -80,6 +80,7 @@ public:
 		retval += "\n\t\t%\tTestCaseCrossoverAndMutation: " + std::to_string(avgTestCaseSources[2]) + " (" + std::to_string(avgTestCaseSources[2] / sum * 100) + "%)";
 		retval += "\n\t\t%\tLocalOptFromParameters:       " + std::to_string(avgTestCaseSources[3]) + " (" + std::to_string(avgTestCaseSources[3] / sum * 100) + "%)";
 		retval += "\n\t\t%\tLocalOptFromZero:             " + std::to_string(avgTestCaseSources[4]) + " (" + std::to_string(avgTestCaseSources[4] / sum * 100) + "%)";
+		retval += "\n";
 		return retval;
 	}
 	//========================== PRINT FUNCTIONS ===================================//
