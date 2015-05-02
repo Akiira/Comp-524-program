@@ -323,7 +323,7 @@ void printTableOfFinalResults(int population, short cutPoints, double mutation)
 
 		int sumOfGenerations = 0;
 		double sumOfCoverageRatios = 0;
-		double* avgCountsTestCaseSources = new double[5];
+		double* avgCountsTestCaseSources = new double[5] {};
 	    auto start = chrono::system_clock::now();
 		printf("Testing population: %d, cutPoints: %d, mutation: %f, on: %s\n", population, cutPoints, mutation, testProgram.c_str());
 		for(int i = 0; i < TEST_RUNS; i++)
