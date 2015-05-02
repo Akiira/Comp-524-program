@@ -39,8 +39,6 @@ public:
 	TestCase* localOptFromZero (TestCase* oldTC);
 	TestCase* localOptFromGivenParams (TestCase* oldTC);
 
-
-
 	int run(int numberOfGenerations) {
 		return run(numberOfGenerations, this->numberOfCutPoints, this->mutationProb);
 	}
@@ -52,6 +50,8 @@ public:
 	int run(int numberOfGenerations, double mutationProb) {
 		return run(numberOfGenerations, this->numberOfCutPoints, mutationProb);
 	}
+
+	double getCoverageRatio() const;
 
 	//========================== OLD FUNCTIONS =====================================//
 

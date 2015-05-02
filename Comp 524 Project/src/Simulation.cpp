@@ -14,9 +14,11 @@
 #include "Range.h"
 #include "RangeSet.h"
 #include "Organism.h"
+
 #include <iostream>
 #include <cassert>
 #include <thread>
+
 using std::cout;
 using std::endl;
 
@@ -87,7 +89,7 @@ int Simulation::runWithoutGA(int numberOfGenerations) {
 
 	do {
 		if (currentGen % 100 == 0 ) {
-			cout << "\t\tGeneration # " << currentGen << " CoverageRatio: " << population->getCoverageRatio() << endl;
+			cout << "\tGeneration # " << currentGen << " CoverageRatio: " << population->getCoverageRatio() << endl;
 		}
 
 		auto parent = population->getOrganism(population->fitnessProportionalSelect());
@@ -103,13 +105,9 @@ int Simulation::runWithoutGA(int numberOfGenerations) {
 			gensOfNoImprov = 0;
 		}
 
-		if (gensOfNoImprov == 30 || currentGen % 100 == 1) {
-			rangeSet->adaptRangesBasedOnUsefulness();
-		}
-
 		gensOfNoImprov++;
 		currentGen++;
-	} while (currentGen <= numberOfGenerations && population->getCoverageRatio() < 1 && gensOfNoImprov < 100);
+	} while (currentGen <= numberOfGenerations && population->getCoverageRatio() < 1 && gensOfNoImprov < 500);
 
 	return currentGen;
 }
@@ -381,6 +379,10 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 	}
 
 	delete tmpSuite;
+}
+
+double Simulation::getCoverageRatio() const {
+	return population->getCoverageRatio();
 }
 
 //============================ OLD FUNCTIONS =======================//
