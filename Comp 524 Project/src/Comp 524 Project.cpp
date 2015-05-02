@@ -10,6 +10,7 @@
 #include "HiLoControlFlowGraph.h"
 #include "SimpleIfElseControlFlowGraph.h"
 #include "TriangleProblemGraph.h"
+#include "ParameterTestCFG.h"
 #include "Simulation.h"
 #include "RandomSearcher.h"
 #include "MediumCFG.h"
@@ -65,6 +66,27 @@ const short POPULATION_STEP = 10;
 short TEST_RUNS = 30;
 const short GENERATIONS = 10000;
 
+/*
+ * First argument sets target CFG as follows:
+ * 	0. SimpleIfElse
+ * 	1. HiLo
+ * 	2. Medium-Hard-One
+ * 	3. Triangle
+ * 	4. Medium-Hard-Two
+ * 	5. Hard
+ * 	6. ParameterTest
+ *
+ * Second argument sets test as follows:
+ * 	1. Cut points vs Mutation probability
+ * 	2. Population size vs Cut points
+ * 	3. Population size vs Mutation probability
+ * 	4. All of the above
+ * 	5. Random search
+ * 	6. Run without GA, i.e. no crossover, mutation, or selection
+ * 	7. Run with best parameters and print table of results
+ * 	8. ParameterTest
+ */
+
 int main(int argc, char* argv[]) {
 	assert(argc >= 2);
 
@@ -83,7 +105,8 @@ int main(int argc, char* argv[]) {
 
 void runTest(int graph, int test) {
 	setTarget(graph);
-
+	Simulation* sim;
+	int gens;
 	switch (test) {
 		case 1:
 			cout << "Running CP to MP on: " << testProgram << "\n\n";
@@ -113,6 +136,12 @@ void runTest(int graph, int test) {
 			cout << "Running final results table test on all graphs" << "\n\n";
 			TEST_RUNS = 50;
 			printTableOfFinalResults(25, 2, .5);
+			break;
+		case 8:
+			cout << "Running simulation on ParameterTestCFG\n\n";
+			sim = new Simulation(25);
+			gens = sim->run(GENERATIONS, 2, 0.02);
+			cout << "Ran for: " << gens << ", and got coverage ratio: " << sim->getCoverageRatio() << endl;
 			break;
 		default:
 			cerr << "Unrecognized test number in runTest: " << test << endl;
@@ -165,6 +194,10 @@ void setTarget(int i) {
 		case 5:
 			testProgram = "Hard";
 			targetCFG = new HardCFG();
+			break;
+		case 6:
+			testProgram = "ParameterTest";
+			targetCFG = new ParameterTestCFG();
 			break;
 		default:
 			cerr << "Unrecognized target number in setTarget: " << i << endl;
