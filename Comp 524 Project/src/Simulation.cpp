@@ -59,7 +59,7 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 
 		testCaseCrossoverAndMutation(parent);
 
-		if (currentGen % 10 == 0 || population->getCoverageRatio() > 0.95) {
+		if( currentGen % 10 == 0 ) {
 			tryLocalOptimization (parent);
 		}
 
@@ -94,7 +94,7 @@ int Simulation::runWithoutGA(int numberOfGenerations) {
 
 		auto parent = population->getOrganism(population->fitnessProportionalSelect());
 
-		if (currentGen % 10 == 0 || population->getCoverageRatio() > 0.95) {
+		if( currentGen % 10 == 0 ) {
 			tryLocalOptimization (parent);
 		}
 
