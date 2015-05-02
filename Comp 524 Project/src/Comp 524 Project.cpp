@@ -28,6 +28,7 @@ using namespace std;
 
 void runWithoutGA();
 void setTarget(int);
+void runTest(int graph, int test);
 void runTestsOnAllGraphs();
 void testCutPointsToMutationProb();
 void testPopulationSizeToCutPoints();
@@ -55,21 +56,18 @@ const short CUTPOINTS_END = 4;
 const short CUTPOINTS_STEP = 1;
 
 const short POPULATION_STANDARD = 20;
-const short POPULATION_START = 5;
+const short POPULATION_START = 10;
 const short POPULATION_END = 100;
-const short POPULATION_STEP = 5;
+const short POPULATION_STEP = 10;
 
 const short TEST_RUNS = 30;
 const short GENERATIONS = 10000;
 
 int main(int argc, char* argv[]) {
+	assert(argc >= 2);
+
     auto start = chrono::system_clock::now();
-
-    //runTestsOnAllGraphs();
-    //runWithoutGA();
-    targetCFG = new HardCFG();
-    RandomSearcher::search(60 * 60 * atoi(argv[1]));
-
+    runTest(atoi(argv[1]), atoi(argv[2]));
     auto end = chrono::system_clock::now();
 
     chrono::duration<double> elapsed_seconds = end-start;
@@ -81,13 +79,52 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 
+void runTest(int graph, int test) {
+	setTarget(graph);
+
+	switch (test) {
+		case 1:
+			cout << "Running CP to MP on: " << testProgram << "\n\n";
+			testCutPointsToMutationProb();
+			break;
+		case 2:
+			cout << "Running PS to MP on: " << testProgram << "\n\n";
+			testPopulationSizeToMutationProb();
+			break;
+		case 3:
+			cout << "Running PS to CP on: " << testProgram << "\n\n";
+			testPopulationSizeToCutPoints();
+			break;
+		case 4:
+			cout << "Running all tests on all graphs" << "\n\n";
+			runTestsOnAllGraphs();
+			break;
+		case 5:
+			cout << "Running random searcher on: " << testProgram << "\n\n";
+			RandomSearcher::search(60 * 60 * 10);
+			break;
+		default:
+			cerr << "Unrecognized test number in runTest: " << test << endl;
+			break;
+	}
+}
+
 void runWithoutGA() {
-	targetCFG = new HardCFG();
 	outputFile = new ofstream("HardCFG_NoGA" + testProgram + ".txt", ios::out | ios::trunc);
 
-	runTests(50, 50, 0, 0, 0, 0);
+	double avgGens = 0.0;
+	double avgCov  = 0.0;
 
-	*outputFile << "}\n ListPlot3D[Transpose@Partition[Last /@ data, 15], DataRange -> {{" << CUTPOINTS_START << ", " << CUTPOINTS_END << "}, {" << MUTATION_START << ", " << MUTATION_END << "},{" << 1 << ", " << GENERATIONS << "}}, PlotRange -> All, AxesLabel -> {Cut Size, Mutation Probability, Generations}, ColorFunction -> \"Rainbow\"]";
+	for (int n = 0; n < TEST_RUNS; ++n) {
+		cout << "Test Num: " << n << " " << endl;
+		Simulation* sim = new Simulation(20);
+		avgGens += sim->runWithoutGA(GENERATIONS);
+		avgCov += sim->getCoverageRatio();
+	}
+
+	*outputFile << "Average generations: " << avgGens / TEST_RUNS << "\n";
+	*outputFile << "Average Coverage: " << avgCov / TEST_RUNS << "\n";
+
 	outputFile->close();
 	cout << "Data written to file" << endl;
 }
@@ -119,16 +156,17 @@ void setTarget(int i) {
 			targetCFG = new HardCFG();
 			break;
 		default:
+			cerr << "Unrecognized target number in setTarget: " << i << endl;
 			break;
 	}
 }
 
 void runTestsOnAllGraphs() {
 
-	for (int graph = 2; graph == 2; ++graph) {
+	for (int graph = 0; graph <= 5; ++graph) {
 		setTarget(graph);
-		//testCutPointsToMutationProb();
-		//testPopulationSizeToMutationProb();
+		testCutPointsToMutationProb();
+		testPopulationSizeToMutationProb();
 		testPopulationSizeToCutPoints();
 	}
 }
@@ -228,12 +266,12 @@ void runTests(int popStart, int popEnd, short cutPtsStart,
 
 					Simulation* sim = new Simulation(population);
 					int temp;
-					if(mutation <= 0.01 && cutPoints == 0) {
-						cout << "\tWithout GA" << endl;
-						temp = sim->runWithoutGA(GENERATIONS);
-					} else {
+//					if(mutation <= 0.01 && cutPoints == 0) {
+//						cout << "\tWithout GA" << endl;
+//						temp = sim->runWithoutGA(GENERATIONS);
+//					} else {
 						temp = sim->run(GENERATIONS, cutPoints, mutation);
-					}
+					//}
 
 
 					sumOfCoverageRatios += rangeSet->getFinalTestSuite()->getCoverageRatio();
