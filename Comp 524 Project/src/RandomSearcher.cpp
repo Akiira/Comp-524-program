@@ -11,12 +11,13 @@
 #include "ControlFlowGraph.h"
 #include "TestCase.h"
 #include <iostream>
+#include "TestSuite.h"
 #include <chrono>
 
 using std::cout;
 using std::endl;
 
-void RandomSearcher::search(int seconds) {
+void RandomSearcher::search(double seconds) {
 	int numOfEdges = targetCFG->getNumberOfEdges();
 	auto edges = new bool[numOfEdges];
 	int numOfPreds = targetCFG->getNumberOfPredicates();
@@ -33,7 +34,7 @@ void RandomSearcher::search(int seconds) {
 
 		delete test;
 
-		auto diff = chrono::duration_cast<chrono::seconds> (chrono::system_clock::now() - start);
+	    chrono::duration<double> diff = chrono::system_clock::now()-start;
 
 		if ( diff.count() - seconds >= 0 ) {
 			break;
@@ -46,6 +47,34 @@ void RandomSearcher::search(int seconds) {
 	cout << "Preds Coverage Ratio: " << ((double)getPredCount(preds) / (double)targetCFG->getNumberOfPredicates()) << endl;
 	cout << "Overall Coverage Ratio: " << (double)(getEdgeCount(edges) + getPredCount(preds)) / (double)(targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates()) << endl;
 	cout << "\n\n";
+}
+
+
+TestSuite* RandomSearcher::searchAndReturnSuite(double seconds) {
+	// Start as blank test suite. Grow whenever rangeSet generates a test case that covers something new.
+	int edgesPlusPred = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
+	TestSuite* finalTestSuite = new TestSuite(0, edgesPlusPred, new TestCase*[edgesPlusPred]);
+
+	auto start = chrono::system_clock::now();
+
+	do {
+		auto test = TestCase::getRandomTestCase();
+
+		if (finalTestSuite->isCoveringNew(test)) {
+			finalTestSuite->addTestCase(new TestCase(*test));
+			finalTestSuite->calculateTestSuiteCoverage();
+		}
+
+		delete test;
+
+		chrono::duration<double> diff = chrono::system_clock::now()-start;
+
+		if ( diff.count() - seconds >= 0 ) {
+			break;
+		}
+	} while( true );
+
+	return finalTestSuite;
 }
 
 void RandomSearcher::updatePredicateCoverage(bool* preds, bool* newCoverage) {

@@ -9,16 +9,19 @@
 #define RANDOMSEARCHER_H_
 
 #include <chrono>
+class TestSuite;
 
 class RandomSearcher {
 public:
 	RandomSearcher();
 	virtual ~RandomSearcher();
-	static void search(int seconds);
+	static void search(double seconds);
 	static void updatePredicateCoverage(bool* preds, bool* newCoverage);
 	static void updateEdgeCoverage(bool* edges, bool* newCoverage);
 	static int getPredCount(bool* preds);
 	static int getEdgeCount(bool* edges);
+
+	static TestSuite* searchAndReturnSuite(double seconds);
 };
 
 

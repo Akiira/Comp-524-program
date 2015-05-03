@@ -39,6 +39,7 @@ void printFileDataEntry(int, short, double, double);
 void runTests(int, int, short, short, double, double);
 
 void printTableOfFinalResults(int type, int population, short cutPoints, double mutation);
+void printTableOfFinalResultsForRandomSearcher();
 
 ControlFlowGraph*targetCFG { };
 RangeSet*rangeSet { };
@@ -81,7 +82,7 @@ const short GENERATIONS = 10000;
  * 	2. Population size vs Cut points
  * 	3. Population size vs Mutation probability
  * 	4. All of the above
- * 	5. Random search
+ * 	5. Random search on all graphs for max time taken by the GA on those graphs
  * 	6. Run without GA, i.e. no crossover, mutation, or selection
  * 	7. Run with best parameters and print table of results
  * 	8.
@@ -127,8 +128,8 @@ void runTest(int graph, int test) {
 			runTestsOnAllGraphs();
 			break;
 		case 5:
-			cout << "Running random searcher on: " << testProgram << "\n\n";
-			RandomSearcher::search(60 * 60 * 10);
+			cout << "Running final results table for random searcher on all graphs " << "\n\n";
+			printTableOfFinalResultsForRandomSearcher();
 			break;
 		case 6:
 			cout << "Running simulation without GA on: " << testProgram << "\n\n";
@@ -354,6 +355,7 @@ void runTests(int popStart, int popEnd, short cutPtsStart,
  * 	0 - Entire algorithm
  * 	1 - WIthout GA (Only initial population, local opt)
  * 	2 - Without Local Opt (only initial population, crossover, mutation, and range adaptation)
+ * 	3 - Random Searcher
  */
 void printTableOfFinalResults(int type, int population, short cutPoints, double mutation)
 {
@@ -362,10 +364,10 @@ void printTableOfFinalResults(int type, int population, short cutPoints, double 
 			outputFile = new ofstream("finalResultsTableEntireAlgorithm.txt", ios::out | ios::trunc);
 			break;
 		case 1:
-			outputFile = new ofstream("finalResultsTableWithoutGAtxt", ios::out | ios::trunc);
+			outputFile = new ofstream("finalResultsTableWithoutGA.txt", ios::out | ios::trunc);
 			break;
 		case 2:
-			outputFile = new ofstream("finalResultsTableWithoutLocalOpttxt", ios::out | ios::trunc);
+			outputFile = new ofstream("finalResultsTableWithoutLocalOpt.txt", ios::out | ios::trunc);
 			break;
 	}
 
@@ -445,8 +447,51 @@ void printTableOfFinalResults(int type, int population, short cutPoints, double 
 	*outputFile <<  " \\end{tabular}"<< endl;
 	*outputFile <<  "\\end{center}"<< endl;
 	outputFile->flush();
+}
 
+void printTableOfFinalResultsForRandomSearcher()
+{
+	outputFile = new ofstream("finalResultsTableRandomSearcher.txt", ios::out | ios::trunc);
+	*outputFile << "% Random Searcher" << endl;
+	*outputFile <<  "\\begin{center}" << endl;
+	*outputFile <<  "\\begin{tabular}{| l | c | c | c | c |}"<< endl;
+	*outputFile <<  "\\hline"<< endl;
+	*outputFile <<  "\t"    << "CFG" << " & "
+							<< "Branch Coverage" << " & "
+							<< "MCC Coverage" << " & "
+							<< "Seconds" << " \\\\ "
+							<< "\\hline" << endl;
 
+	double secondsForEachGraph[6] =  {.0000000000000000001, .0001, .0001, .0001, .0001, .0001};
+
+	for (int graph = 0; graph <= 5; ++graph) {
+		setTarget(graph);
+
+		double sumOfBranchCoverageRatios = 0;
+		double sumOfMCCCoverageRatios = 0;
+		cout << "Testing Random Searcher on " << testProgram.c_str();
+		for(int i = 0; i < TEST_RUNS; i++)
+		{
+			TestSuite* randomSuite = RandomSearcher::searchAndReturnSuite(secondsForEachGraph[graph]);
+			sumOfBranchCoverageRatios += randomSuite->getBranchCoverageRatio();
+			sumOfBranchCoverageRatios += randomSuite->getMCCCoverageRatio();
+			delete randomSuite;
+
+			cout << "\tTest Num: " << i << " Branch: " <<randomSuite->getBranchCoverageRatio() << " MCC: " <<  randomSuite->getMCCCoverageRatio() << endl;
+		}
+
+		*outputFile <<  "\t"
+				<< testProgram.c_str() << " & "
+				<< sumOfBranchCoverageRatios / (double)TEST_RUNS << " & "
+				<< sumOfMCCCoverageRatios / (double)TEST_RUNS << " & "
+				<< secondsForEachGraph[graph]
+				<< " \\\\ \\hline" << endl;
+		outputFile->flush();
+		cout << secondsForEachGraph[graph] << endl;
+	}
+	*outputFile <<  " \\end{tabular}"<< endl;
+	*outputFile <<  "\\end{center}"<< endl;
+	outputFile->flush();
 }
 
 
