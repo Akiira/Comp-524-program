@@ -462,7 +462,7 @@ void printTableOfFinalResultsForRandomSearcher()
 							<< "Seconds" << " \\\\ "
 							<< "\\hline" << endl;
 
-	double secondsForEachGraph[6] =  {.0000000000000000001, .0001, .0001, .0001, .0001, .0001};
+	double secondsForEachGraph[6] =  {0, 1.13118,  26.1443, 5.73532, 31.7016, 133.28};
 
 	for (int graph = 0; graph <= 5; ++graph) {
 		setTarget(graph);
