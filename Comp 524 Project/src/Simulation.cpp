@@ -68,7 +68,7 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 			gensOfNoImprov = 0;
 		}
 
-		if (gensOfNoImprov >= 20 && currentGen % 100 == 1) {
+		if (gensOfNoImprov >= 20 && currentGen % 100 == 0) {
 			rangeSet->adaptRangesBasedOnUsefulness();
 		}
 
