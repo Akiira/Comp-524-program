@@ -51,9 +51,7 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 			cout << "\t\tGeneration # " << currentGen << " CoverageRatio: " << population->getCoverageRatio() << endl;
 		}
 
-		if( gensOfNoImprov == 20 || currentGen % 30 == 0 ){
-			testSuiteCrossoverAndMutation();
-		}
+
 
 		auto parent = population->getOrganism(population->fitnessProportionalSelect());
 
@@ -70,8 +68,12 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 			gensOfNoImprov = 0;
 		}
 
-		if (gensOfNoImprov == 30 || currentGen % 100 == 1) {
+		if (gensOfNoImprov >= 30 && currentGen % 100 == 1) {
 			rangeSet->adaptRangesBasedOnUsefulness();
+		}
+
+		if( gensOfNoImprov >= 20 && currentGen % 30 == 0 ){
+			testSuiteCrossoverAndMutation();
 		}
 
 		gensOfNoImprov++;
