@@ -462,7 +462,8 @@ void printTableOfFinalResultsForRandomSearcher()
 							<< "Seconds" << " \\\\ "
 							<< "\\hline" << endl;
 
-	double secondsForEachGraph[7] =  {0, 1.13118,  26.1443, 5.73532, 31.7016, 133.28, 0};
+	// SimpleIfElse (Ignored), HiLo, Med Hard1, Triangle, Med Hard 2, Hard, param
+	double secondsForEachGraph[7] =  {0, 1.14958, 26.5636, 6.08553, 34.7523, 95.5332, 0};
 
 	for (int graph = 0; graph <= 6; ++graph) {
 		setTarget(graph);
