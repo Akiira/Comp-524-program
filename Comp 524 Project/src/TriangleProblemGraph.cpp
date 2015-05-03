@@ -103,6 +103,7 @@ inline void TriangleProblemGraph::block2() {
 		else if( 2*A < sum && 2*C < sum ) {
 			testCase->addPredicateCoverage(predicates::B2_TFT);
 		} else {
+			// Pretty sure this is unreachable
 			testCase->addPredicateCoverage(predicates::B2_FFF);
 		}
 	}

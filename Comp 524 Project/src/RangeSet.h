@@ -87,6 +87,14 @@ public:
 		retval += "\n\t\t%\tLocalOptFromParameters:       " + std::to_string(avgTestCaseSources[3]) + " (" + std::to_string(avgTestCaseSources[3] / sum * 100) + "%)";
 		retval += "\n\t\t%\tLocalOptFromZero:             " + std::to_string(avgTestCaseSources[4]) + " (" + std::to_string(avgTestCaseSources[4] / sum * 100) + "%)";
 		retval += "\n";
+
+		retval += "%" + std::to_string(sum) + " & ";
+		retval += std::to_string(avgTestCaseSources[0] / sum * 100) + " & ";
+		retval += std::to_string(avgTestCaseSources[1] / sum * 100) + " & ";
+		retval += std::to_string(avgTestCaseSources[2] / sum * 100) + " & ";
+		retval += std::to_string(avgTestCaseSources[3] / sum * 100) + " & ";
+		retval += std::to_string(avgTestCaseSources[4] / sum * 100) + " \\\\ \\hline ";
+		retval += "\n";
 		return retval;
 	}
 	//========================== PRINT FUNCTIONS ===================================//

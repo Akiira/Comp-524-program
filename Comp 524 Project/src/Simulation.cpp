@@ -51,8 +51,6 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 			cout << "\t\tGeneration # " << currentGen << " CoverageRatio: " << population->getCoverageRatio() << endl;
 		}
 
-
-
 		auto parent = population->getOrganism(population->fitnessProportionalSelect());
 
 		testCaseCrossoverAndMutation(parent);
@@ -79,7 +77,7 @@ int Simulation::run(int numberOfGenerations, int numberOfCutPoints, double mutat
 		gensOfNoImprov++;
 		currentGen++;
 	} while (currentGen <= numberOfGenerations && population->getCoverageRatio() < 1 && gensOfNoImprov < 500);
-	//cout <<  rangeSet->getFinalTestSuite()->printTestCaseInputsAndCoverage() << endl;
+	//rangeSet->getFinalTestSuite()->printAll();
 	//cout <<  rangeSet->getTestCaseSourceReport() << endl;
 	return currentGen;
 }
@@ -216,10 +214,8 @@ void Simulation::testSuiteCrossoverAndMutation() {
 
 	population->crossover(*parent1, *parent2, child1, child2, numberOfCutPoints);
 
-	double newProb;
-	newProb = adaptMutationBasedOnCoverageRatio(mutationProb);
-	child1->mutate(newProb);
-	child2->mutate(newProb);
+	child1->mutate(mutationProb);
+	child2->mutate(mutationProb);
 
 	population->replaceParentWithUnion(parent2Index, child1);
 	population->replaceParentWithUnion(parent1Index, child2);
@@ -319,53 +315,6 @@ TestCase* Simulation::localOptFromGivenParams (TestCase* oldTC)  {
 	delete tc;
 
 	return NULL;
-}
-
-double Simulation::adaptMutationBasedOnOrganismsCoverage(Organism* org) {
-	auto edges = population->getEdgesCovered();
-	auto preds = population->getPredicatesCovered();
-	auto orgsEdges = org->getChromosome()->getEdgeCoverageCounts();
-	auto orgsPreds = org->getChromosome()->getPredicateCoverageCounts();
-	double change = 1.0;
-
-	for (int i = 0; i < targetCFG->getNumberOfEdges(); ++i) {
-		if( edges[i] > 100 && orgsEdges[i] > 0 ) {
-			change += 0.02;
-		}
-		else if( edges[i] < 10 && orgsEdges[i] > 0 ) { //If this organism is one of the few to cover a
-			return 0.0;								// certain edge, then save it.
-		}
-	}
-
-	for (int i = 0; i < targetCFG->getNumberOfPredicates(); ++i) {
-		if( preds[i] > 100 && orgsPreds[i] > 0 ) {
-			change += 0.02;
-		}
-		else if( preds[i] < 10 && orgsPreds[i] > 0 ) { //If this organism is one of the few to cover a
-			return 0.0;								// certain edge, then save it.
-		}
-	}
-
-	return change;
-}
-
-double Simulation::adaptMutationBasedOnCoverageRatio(double pM) {
-	auto cr = population->getCoverageRatio();
-	if( cr < 0.25 ) {
-		return pM;
-	}
-	else if( cr < 0.50 ) {
-		return pM * 0.75;
-	}
-	else if( cr < 0.75 ) {
-		return pM * 0.60;
-	}
-	else if ( cr < 0.90 ) {
-		return pM * 0.50;
-	}
-	else {
-		return pM * 0.40;
-	}
 }
 
 void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
