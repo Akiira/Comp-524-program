@@ -382,7 +382,7 @@ void printTableOfFinalResults(int type, int population, short cutPoints, double 
 							<< "Avg. Generations" << " & "
 							<< "Avg. Seconds" << " \\\\ "
 							<< "\\hline" << endl;
-	for (int graph = 0; graph <= 5; ++graph) {
+	for (int graph = 0; graph <= 6; ++graph) {
 		setTarget(graph);
 
 		int sumOfGenerations = 0;
@@ -462,9 +462,9 @@ void printTableOfFinalResultsForRandomSearcher()
 							<< "Seconds" << " \\\\ "
 							<< "\\hline" << endl;
 
-	double secondsForEachGraph[6] =  {0, 1.13118,  26.1443, 5.73532, 31.7016, 133.28};
+	double secondsForEachGraph[7] =  {0, 1.13118,  26.1443, 5.73532, 31.7016, 133.28, 0};
 
-	for (int graph = 0; graph <= 5; ++graph) {
+	for (int graph = 0; graph <= 6; ++graph) {
 		setTarget(graph);
 
 		double sumOfBranchCoverageRatios = 0;
@@ -474,7 +474,7 @@ void printTableOfFinalResultsForRandomSearcher()
 		{
 			TestSuite* randomSuite = RandomSearcher::searchAndReturnSuite(secondsForEachGraph[graph]);
 			sumOfBranchCoverageRatios += randomSuite->getBranchCoverageRatio();
-			sumOfBranchCoverageRatios += randomSuite->getMCCCoverageRatio();
+			sumOfMCCCoverageRatios += randomSuite->getMCCCoverageRatio();
 			delete randomSuite;
 
 			cout << "\tTest Num: " << i << " Branch: " <<randomSuite->getBranchCoverageRatio() << " MCC: " <<  randomSuite->getMCCCoverageRatio() << endl;
