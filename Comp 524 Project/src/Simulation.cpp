@@ -322,31 +322,30 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 	int edgesPlusPreds = targetCFG->getNumberOfEdges() + targetCFG->getNumberOfPredicates();
 	rangeSet = new RangeSet(0, edgesPlusPreds);
 
-	int startSize = 5000, currStart = -2500;
+	int startSize = 5000;
 
 	TestSuite* tmpSuite = new TestSuite(0, edgesPlusPreds, new TestCase*[edgesPlusPreds] { });
 
-	TestCase* tc1 = rangeSet->getNewTestCaseEntirelyFromRange(currStart, currStart + startSize);
-	tmpSuite->addTestCase(tc1);
-	tmpSuite->calculateTestSuiteCoverage();
-
-	rangeSet->addRange(new Range(currStart, currStart + startSize));
-
 	for (int tryNum = 1; tryNum <= 2; tryNum++) {
 		int size = startSize / tryNum;
-		int nextStartPos = currStart;
-		int nextStartNeg = currStart;
+		long nextStartPos = -size/2;
+		long nextStartNeg = size/2;
 		int totalIterations = 0;
 
-		while(nextStartPos < numeric_limits<int>::max()/2 - size && nextStartNeg > numeric_limits<int>::min()/2 + size) {
+		while(nextStartPos + size < numeric_limits<int>::max() && nextStartNeg - size > numeric_limits<int>::min()) {
 
 			nextStartPos = nextStartPos + size;
+			if (nextStartPos + size > numeric_limits<int>::max()) {
+
+				size = numeric_limits<int>::max() - nextStartPos;
+			}
+
 			TestCase* tcPos = rangeSet->getNewTestCaseEntirelyFromRange(nextStartPos, nextStartPos + size);
 
 			if (tmpSuite->isCoveringNew(tcPos)) {
 				tmpSuite->addTestCase(tcPos);
 				tmpSuite->calculateTestSuiteCoverage();
-
+				cout << "Adding Range: " << nextStartPos << "," << nextStartPos + size << endl;
 				rangeSet->addRange(new Range(nextStartPos, nextStartPos + size));
 			}
 			else {
@@ -354,13 +353,16 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 			}
 
 			nextStartNeg = nextStartNeg - size;
+			if (nextStartNeg - size < numeric_limits<int>::min()) {
+				size = nextStartNeg - numeric_limits<int>::min();
+			}
 			TestCase* tcNeg = rangeSet->getNewTestCaseEntirelyFromRange(nextStartNeg, nextStartNeg + size);
 			targetCFG->setCoverageOfTestCase(tcNeg);
 
 			if (tmpSuite->isCoveringNew(tcNeg)) {
 				tmpSuite->addTestCase(tcNeg);
 				tmpSuite->calculateTestSuiteCoverage();
-
+				cout << "Adding Range: " << nextStartNeg << "," << nextStartNeg + size << endl;
 				rangeSet->addRange(new Range(nextStartNeg, nextStartNeg + size));
 			}
 			else {
@@ -376,6 +378,7 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 	}
 
 	delete tmpSuite;
+	rangeSet->printRangesSimple();
 }
 
 double Simulation::getCoverageRatio() const {
