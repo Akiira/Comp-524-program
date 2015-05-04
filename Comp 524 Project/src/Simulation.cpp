@@ -330,55 +330,51 @@ void Simulation::findPromisingRangesAndCreateTheGlobalRangeSet() {
 		int size = startSize / tryNum;
 		long nextStartPos = -size/2;
 		long nextStartNeg = size/2;
-		int totalIterations = 0;
 
-		while(nextStartPos + size < numeric_limits<int>::max() && nextStartNeg - size > numeric_limits<int>::min()) {
+		while(nextStartPos + size < numeric_limits<int>::max() && tmpSuite->getCoverageRatio() != 1) {
+			nextStartPos += size;
 
-			nextStartPos = nextStartPos + size;
+			int tmpSize = size;
 			if (nextStartPos + size > numeric_limits<int>::max()) {
-
-				size = numeric_limits<int>::max() - nextStartPos;
+				tmpSize = numeric_limits<int>::max() - nextStartPos - 1;
 			}
 
-			TestCase* tcPos = rangeSet->getNewTestCaseEntirelyFromRange(nextStartPos, nextStartPos + size);
+			TestCase* tcPos = rangeSet->getNewTestCaseEntirelyFromRange(nextStartPos, nextStartPos + tmpSize);
 
 			if (tmpSuite->isCoveringNew(tcPos)) {
 				tmpSuite->addTestCase(tcPos);
 				tmpSuite->calculateTestSuiteCoverage();
-				cout << "Adding Range: " << nextStartPos << "," << nextStartPos + size << endl;
-				rangeSet->addRange(new Range(nextStartPos, nextStartPos + size));
+				rangeSet->addRange(new Range(nextStartPos, nextStartPos + tmpSize));
 			}
 			else {
 				delete tcPos;
 			}
 
-			nextStartNeg = nextStartNeg - size;
-			if (nextStartNeg - size < numeric_limits<int>::min()) {
-				size = nextStartNeg - numeric_limits<int>::min();
+		}
+		while(nextStartNeg > numeric_limits<int>::min() && tmpSuite->getCoverageRatio() != 1) {
+			nextStartNeg -= size;
+			int tmpSize = size;
+
+			if (nextStartNeg < numeric_limits<int>::min()) {
+				tmpSize = numeric_limits<int>::min() - nextStartNeg;
+				nextStartNeg = numeric_limits<int>::min();
 			}
-			TestCase* tcNeg = rangeSet->getNewTestCaseEntirelyFromRange(nextStartNeg, nextStartNeg + size);
+
+			TestCase* tcNeg = rangeSet->getNewTestCaseEntirelyFromRange(nextStartNeg, nextStartNeg + tmpSize);
 			targetCFG->setCoverageOfTestCase(tcNeg);
 
 			if (tmpSuite->isCoveringNew(tcNeg)) {
 				tmpSuite->addTestCase(tcNeg);
 				tmpSuite->calculateTestSuiteCoverage();
-				cout << "Adding Range: " << nextStartNeg << "," << nextStartNeg + size << endl;
-				rangeSet->addRange(new Range(nextStartNeg, nextStartNeg + size));
+				rangeSet->addRange(new Range(nextStartNeg, nextStartNeg + tmpSize));
 			}
 			else {
 				delete tcNeg;
 			}
-			totalIterations++;
-
-			if (tmpSuite->getCoverageRatio() == 1) {
-				break;
-			}
-
 		}
 	}
 
 	delete tmpSuite;
-	rangeSet->printRangesSimple();
 }
 
 double Simulation::getCoverageRatio() const {
