@@ -13,8 +13,6 @@
 #include "ParameterTestCFG.h"
 #include "Simulation.h"
 #include "RandomSearcher.h"
-#include "MediumCFG.h"
-#include "MedHardCFG.h"
 #include "HardCFG.h"
 #include "Range.h"
 #include "RangeSet.h"
@@ -24,6 +22,9 @@
 #include <fstream>
 #include <chrono>
 #include <ctime>
+
+#include "HardLeft.h"
+#include "HardRight.h"
 
 using namespace std;
 
@@ -64,16 +65,16 @@ const short POPULATION_START = 10;
 const short POPULATION_END = 100;
 const short POPULATION_STEP = 10;
 
-short TEST_RUNS = 30;
+short TEST_RUNS = 30;	// Overridden to 50 by the final tests.
 const short GENERATIONS = 10000;
 
 /*
  * First argument sets target CFG as follows:
  * 	0. SimpleIfElse
  * 	1. HiLo
- * 	2. Medium-Hard-One
+ * 	2. Hard Left
  * 	3. Triangle
- * 	4. Medium-Hard-Two
+ * 	4. Hard-Right
  * 	5. Hard
  * 	6. ParameterTest
  *
@@ -84,9 +85,9 @@ const short GENERATIONS = 10000;
  * 	4. All of the above
  * 	5. Random search on all graphs for max time taken by the GA on those graphs
  * 	6. Run without GA, i.e. no crossover, mutation, or selection
- * 	7. Run with best parameters and print table of results
- * 	8.
- * 	9.
+ * 	7. Run with final test on entire algorithm and print table of results
+ * 	8. Run with final test without GA and print table of results
+ * 	9. Run with final test without Local Opt and print table of results
  * 	10. ParameterTest
  */
 
@@ -193,16 +194,16 @@ void setTarget(int i) {
 			targetCFG = new HiLoControlFlowGraph();
 			break;
 		case 2:
-			testProgram = "Medium-Hard-One";
-			targetCFG = new MediumCFG();		
+			testProgram = "Hard-Left";
+			targetCFG = new HardLeft();		
 			break;
 		case 3:
 			testProgram = "Triangle";
 			targetCFG = new TriangleProblemGraph();
 			break;
 		case 4:
-			testProgram = "Medium-Hard-Two";
-			targetCFG = new MedHardCFG();
+			testProgram = "Hard-Right";
+			targetCFG = new HardRight();
 			break;
 		case 5:
 			testProgram = "Hard";
@@ -462,7 +463,7 @@ void printTableOfFinalResultsForRandomSearcher()
 							<< "Seconds" << " \\\\ "
 							<< "\\hline" << endl;
 
-	// SimpleIfElse (Ignored), HiLo, Med Hard1, Triangle, Med Hard 2, Hard, param
+	// SimpleIfElse (Ignored), HiLo, Hard-Left, Triangle, Hard-Right, Hard, param(ignored)
 	double secondsForEachGraph[7] =  {0, 1.14958, 26.5636, 6.08553, 34.7523, 95.5332, 0};
 
 	for (int graph = 0; graph <= 6; ++graph) {

@@ -242,15 +242,25 @@ void RangeSet::deleteRange(int index) {
 
 void RangeSet::addRangesAdjacentToExistingRange(int index) {
 	Range* existing = ranges[index];
-	int size = existing->end - existing->start;
-	Range* new1 = new Range(existing->start - size, existing->start);
-	Range* new2 = new Range(existing->end, existing->end + size);
-	// Seed them with some usefulness so they aren't immedietly discarded and
-	//	since we know this area does seem promising.
-	new1->numOfUses = existing->numOfUses / 2;
-	new2->numOfUses = existing->numOfUses / 2;
-	addRange(new1);
-	addRange(new2);
+	long size = (long)(existing->end) - (long)(existing->start);
+	long intMax = numeric_limits<int>::max();
+	long intMin = numeric_limits<int>::min();
+
+	Range* new1 = NULL;
+	Range* new2 = NULL;
+	if ((long)(existing->start) - size > intMin) {
+		new1 = new Range(existing->start - size, existing->start);
+		// Seed them with some usefulness so they aren't immedietly discarded and
+		//	since we know this area does seem promising.
+		new1->numOfUses = existing->numOfUses / 2;
+		addRange(new1);
+	}
+	if ((long)(existing->end) + size < intMax) {
+		new2 = new Range(existing->end, existing->end + size);
+		new2->numOfUses = existing->numOfUses / 2;
+		addRange(new2);
+	}
+
 }
 
 void RangeSet::addRange(Range* r) {

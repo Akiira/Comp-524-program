@@ -5,7 +5,8 @@
  *      Author: Randall and Austin
  */
 
-#include "MediumCFG.h"
+#include "HardLeft.h"
+
 #include <limits>
 #include <cassert>
 #include <cmath>
@@ -20,7 +21,7 @@ using std::numeric_limits;
  * Tweaks from hard graph: cut in half
  */
 
-MediumCFG::MediumCFG() {
+HardLeft::HardLeft() {
 	numberOfEdges = 39;
 	numberOfPredicates = 71;
 
@@ -40,20 +41,20 @@ MediumCFG::MediumCFG() {
 	sumOfSecondHalf =0;
 }
 
-MediumCFG::~MediumCFG() {
+HardLeft::~HardLeft() {
 
 }
 
-int MediumCFG::getLowerBoundForParameter(int parameter) {
+int HardLeft::getLowerBoundForParameter(int parameter) {
 	assert(parameter >= 0 && parameter < numberOfParameters);
 	return rangeForEachParameter[parameter][0];
 }
-int MediumCFG::getUpperBoundForParameter(int parameter) {
+int HardLeft::getUpperBoundForParameter(int parameter) {
 	assert(parameter >= 0 && parameter < numberOfParameters);
 	return rangeForEachParameter[parameter][1];
 }
 
-inline void MediumCFG::runTestCase() {
+inline void HardLeft::runTestCase() {
 	testCase->clearCoverage();
 	calculateMean(testCase->getInputParameters());
 	calculateDeviation(testCase->getInputParameters());
@@ -64,7 +65,7 @@ inline void MediumCFG::runTestCase() {
 	block2();
 }
 
-inline void MediumCFG::block2() {
+inline void HardLeft::block2() {
 	//mu > 500
 
 	if( sigma > 1000 ) {
@@ -78,7 +79,7 @@ inline void MediumCFG::block2() {
 	}
 }
 
-inline void MediumCFG::block5() {
+inline void HardLeft::block5() {
 	//mu > 500 sigma > 1000
 
 	if( sigma > 5000 ) {
@@ -92,7 +93,7 @@ inline void MediumCFG::block5() {
 	}
 }
 
-inline void MediumCFG::block6() {
+inline void HardLeft::block6() {
 	//mu > 500 sigma <= 1000
 	if( sigma < 500 ) {
 		testCase->addEdgeCoverage(edges::B6toB13);
@@ -107,7 +108,7 @@ inline void MediumCFG::block6() {
 
 
 
-inline void MediumCFG::block11() {
+inline void HardLeft::block11() {
 	//mu > 500 sigma > 5000
 
 	if( sigma > 10000 ) {
@@ -121,7 +122,7 @@ inline void MediumCFG::block11() {
 	}
 }
 
-inline void MediumCFG::block12() {
+inline void HardLeft::block12() {
 	//mu > 500 sigma > 1000 sigma < 5000
 
 	if( sigma > 2500 ) {
@@ -135,7 +136,7 @@ inline void MediumCFG::block12() {
 	}
 }
 
-inline void MediumCFG::block13() {
+inline void HardLeft::block13() {
 	//mu > 500 sigma < 500
 	if( sigma < 250 ) {
 		testCase->addEdgeCoverage(edges::B13toB27);
@@ -148,7 +149,7 @@ inline void MediumCFG::block13() {
 	}
 }
 
-inline void MediumCFG::block14() {
+inline void HardLeft::block14() {
 	//mu > 500 sigma <= 1000 sigma > 500
 	if( sigma < 750 ) {
 		testCase->addEdgeCoverage(edges::B14toB29);
@@ -161,7 +162,7 @@ inline void MediumCFG::block14() {
 	}
 }
 
-inline void MediumCFG::block23() {
+inline void HardLeft::block23() {
 	//mu > 500 sigma > 10000
 	int a1 = testCase->getParameter(0),
 		a2 = testCase->getParameter(1),
@@ -182,7 +183,7 @@ inline void MediumCFG::block23() {
 	}
 }
 
-inline void MediumCFG::block24() {
+inline void HardLeft::block24() {
 	//mu > 500 sigma > 5000 sigma < 10000
 
 	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000) {
@@ -219,7 +220,7 @@ inline void MediumCFG::block24() {
 	}
 }
 
-inline void MediumCFG::block25() {
+inline void HardLeft::block25() {
 	//mu > 500 sigma > 2500 sigma < 5000
 	int a1 = testCase->getParameter(0),
 		a2 = testCase->getParameter(0),
@@ -240,7 +241,7 @@ inline void MediumCFG::block25() {
 	}
 }
 
-inline void MediumCFG::block26() {
+inline void HardLeft::block26() {
 	//mu > 500 sigma > 1000 sigma < 2500
 
 	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000) {
@@ -277,7 +278,7 @@ inline void MediumCFG::block26() {
 	}
 }
 
-inline void MediumCFG::block27() {
+inline void HardLeft::block27() {
 	//mu > 500 sigma < 250
 	int a1 = testCase->getParameter(0),
 		a2 = testCase->getParameter(1),
@@ -298,7 +299,7 @@ inline void MediumCFG::block27() {
 	}
 }
 
-inline void MediumCFG::block28() {
+inline void HardLeft::block28() {
 	//mu > 500 sigma <= 100 sigma > 25
 
 	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000) {
@@ -335,7 +336,7 @@ inline void MediumCFG::block28() {
 		}
 }
 
-inline void MediumCFG::block29() {
+inline void HardLeft::block29() {
 	//mu > 500 sigma < 750 sigma > 500
 	int a1 = testCase->getParameter(0),
 		a2 = testCase->getParameter(1),
@@ -356,7 +357,7 @@ inline void MediumCFG::block29() {
 	}
 }
 
-inline void MediumCFG::block30() {
+inline void HardLeft::block30() {
 	//mu > 500 sigma <= 1000 sigma >= 750
 
 	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 10000000) {
@@ -393,7 +394,7 @@ inline void MediumCFG::block30() {
 	}
 }
 
-void MediumCFG::calculateMean(const int* values) {
+void HardLeft::calculateMean(const int* values) {
 	long long sum { 0 };
 	for (int i = 0; i < numberOfParameters; ++i) {
 		sum += values[i];
@@ -402,7 +403,7 @@ void MediumCFG::calculateMean(const int* values) {
 	Mu = ((double) sum / (double) numberOfParameters);
 }
 
-void MediumCFG::calculateDeviation(const int* values) {
+void HardLeft::calculateDeviation(const int* values) {
 	long long sum { 0 };
 
 	for (int i = 0; i < numberOfParameters; ++i) {
@@ -415,7 +416,7 @@ void MediumCFG::calculateDeviation(const int* values) {
 
 
 
-void MediumCFG::calculateSums(const int* values) {
+void HardLeft::calculateSums(const int* values) {
 	sumOfAll = 0;
 	sumOfFirstHalf = 0;
 	sumOfSecondHalf = 0;
@@ -431,7 +432,7 @@ void MediumCFG::calculateSums(const int* values) {
 	sumOfAll = sumOfFirstHalf + sumOfSecondHalf;
 }
 
-void MediumCFG::printInputParameters(int* inputParameters) const{
+void HardLeft::printInputParameters(int* inputParameters) const{
 	cout << endl << "Input Parameters" << endl;
 	cout << "     A        B        C        D        E        F        G        H        I        J" << endl;
 	cout << "-----------------------------------------------" << endl;
@@ -441,7 +442,7 @@ void MediumCFG::printInputParameters(int* inputParameters) const{
 	cout << endl;
 }
 
-void MediumCFG::printEdgesCovered(bool* edgesCovered) const{
+void HardLeft::printEdgesCovered(bool* edgesCovered) const{
 	cout << endl << "Edge Coverage" << endl;
 
 	cout << "B0toB2-B2toB5-B2toB6-B5toB11-B5toB12-B6toB13-B6toB14-B11toB23," << endl;
@@ -489,11 +490,11 @@ void MediumCFG::printEdgesCovered(bool* edgesCovered) const{
 	cout << endl;
 }
 
-void MediumCFG::printPredicatesCovered(bool* predicatesCovered) const{
+void HardLeft::printPredicatesCovered(bool* predicatesCovered) const{
 	cout << "\tTODO" << endl; //TODO printPredicatesCovered
 }
 
-void MediumCFG::printEdgesCovered(int* edgesCovered) const{
+void HardLeft::printEdgesCovered(int* edgesCovered) const{
 
 	cout << "B0toB2-B2toB5-B2toB6-B5toB11-B5toB12-B6toB13-B6toB14-B11toB23," << endl;
 	cout << "---------------------------------------------------------------------------" << endl;
@@ -540,7 +541,7 @@ void MediumCFG::printEdgesCovered(int* edgesCovered) const{
 	cout << endl;
 }
 
-void MediumCFG::printPredicatesCovered(int* predicatesCovered) const{
+void HardLeft::printPredicatesCovered(int* predicatesCovered) const{
 	cout << "\tTODO" << endl;//TODO printPredicatesCovered
 
 }

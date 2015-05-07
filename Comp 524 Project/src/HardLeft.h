@@ -10,10 +10,10 @@
 
 #include "ControlFlowGraph.h"
 
-class MediumCFG: public ControlFlowGraph {
+class HardLeft: public ControlFlowGraph {
 public:
-	MediumCFG();
-	virtual ~MediumCFG();
+	HardLeft();
+	virtual ~HardLeft();
 
 	int getLowerBoundForParameter(int);
 	int getUpperBoundForParameter(int);

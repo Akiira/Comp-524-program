@@ -5,7 +5,8 @@
  *      Author: Randall and Austin
  */
 
-#include "MedHardCFG.h"
+#include "HardRight.h"
+
 #include "TestCase.h"
 
 #include <limits>
@@ -18,7 +19,7 @@ using std::endl;
 using std::cout;
 using std::numeric_limits;
 
-MedHardCFG::MedHardCFG() {
+HardRight::HardRight() {
 	numberOfEdges = 39;
 	numberOfPredicates = 79;
 
@@ -38,19 +39,19 @@ MedHardCFG::MedHardCFG() {
 	sumOfSecondHalf =0;
 }
 
-MedHardCFG::~MedHardCFG() {
+HardRight::~HardRight() {
 }
 
-int MedHardCFG::getLowerBoundForParameter(int parameter) {
+int HardRight::getLowerBoundForParameter(int parameter) {
 	assert(parameter >= 0 && parameter < numberOfParameters);
 	return rangeForEachParameter[parameter][0];
 }
-int MedHardCFG::getUpperBoundForParameter(int parameter) {
+int HardRight::getUpperBoundForParameter(int parameter) {
 	assert(parameter >= 0 && parameter < numberOfParameters);
 	return rangeForEachParameter[parameter][1];
 }
 
-inline void MedHardCFG::runTestCase() {
+inline void HardRight::runTestCase() {
 	testCase->clearCoverage();
 	calculateMean(testCase->getInputParameters());
 	calculateDeviation(testCase->getInputParameters());
@@ -61,7 +62,7 @@ inline void MedHardCFG::runTestCase() {
 	block1();
 }
 
-inline void MedHardCFG::block1() {
+inline void HardRight::block1() {
 	//mu <= 500
 
 	if( sigma < 100 ) {
@@ -75,7 +76,7 @@ inline void MedHardCFG::block1() {
 	}
 }
 
-inline void MedHardCFG::block3() {
+inline void HardRight::block3() {
 	//mu <= 500 sigma < 100
 
 	if( sigma < 50 ) {
@@ -89,7 +90,7 @@ inline void MedHardCFG::block3() {
 	}
 }
 
-inline void MedHardCFG::block4() {
+inline void HardRight::block4() {
 	//mu <= 500 sigma >= 100
 
 	if( sigma > 500 ) {
@@ -103,7 +104,7 @@ inline void MedHardCFG::block4() {
 	}
 }
 
-inline void MedHardCFG::block7() {
+inline void HardRight::block7() {
 	//mu <= 500 sigma < 50
 
 	if( sigma < 25 ) {
@@ -117,7 +118,7 @@ inline void MedHardCFG::block7() {
 	}
 }
 
-inline void MedHardCFG::block8() {
+inline void HardRight::block8() {
 	//mu <= 500 sigma >= 50 sigma < 100
 
 	if( sigma > 75 ) {
@@ -131,7 +132,7 @@ inline void MedHardCFG::block8() {
 	}
 }
 
-inline void MedHardCFG::block9() {
+inline void HardRight::block9() {
 	//mu <= 500 sigma > 500
 
 	if( sigma > 1000 ) {
@@ -145,7 +146,7 @@ inline void MedHardCFG::block9() {
 	}
 }
 
-inline void MedHardCFG::block10() {
+inline void HardRight::block10() {
 	//mu <= 500 sigma >= 100 sigma < 500
 	if( sigma > 250 ) {
 		testCase->addEdgeCoverage(edges::B10toB21);
@@ -159,7 +160,7 @@ inline void MedHardCFG::block10() {
 }
 
 
-inline void MedHardCFG::block15() {
+inline void HardRight::block15() {
 	//mu <= 500 sigma < 25
 	int a1 = testCase->getParameter(0),
 		a2 = testCase->getParameter(1),
@@ -180,7 +181,7 @@ inline void MedHardCFG::block15() {
 	}
 }
 
-inline void MedHardCFG::block16() {
+inline void HardRight::block16() {
 	//mu <= 500 sigma < 50 sigma > 25
 	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0 ) {
 		testCase->addEdgeCoverage(edges::B16toB33);
@@ -223,7 +224,7 @@ inline void MedHardCFG::block16() {
 	}
 }
 
-inline void MedHardCFG::block17() {
+inline void HardRight::block17() {
 	//mu <= 500 sigma >= 75 sigma < 100
 	int a1 = testCase->getParameter(0),
 		a2 = testCase->getParameter(1),
@@ -244,7 +245,7 @@ inline void MedHardCFG::block17() {
 	}
 }
 
-inline void MedHardCFG::block18() {
+inline void HardRight::block18() {
 	//mu <= 500 sigma >= 50 sigma <= 75
 	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0 ) {
 		testCase->addEdgeCoverage(edges::B18toB39);
@@ -286,7 +287,7 @@ inline void MedHardCFG::block18() {
 		}
 }
 
-inline void MedHardCFG::block19() {
+inline void HardRight::block19() {
 	//mu <= 500 sigma > 1000
 	int a1 = testCase->getParameter(0),
 		a2 = testCase->getParameter(1),
@@ -307,7 +308,7 @@ inline void MedHardCFG::block19() {
 	}
 }
 
-inline void MedHardCFG::block20() {
+inline void HardRight::block20() {
 	//mu <= 500 sigma > 500 sigma < 1000
 
 	if( sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0 ) {
@@ -350,7 +351,7 @@ inline void MedHardCFG::block20() {
 		}
 }
 
-inline void MedHardCFG::block21() {
+inline void HardRight::block21() {
 	//mu <= 500 sigma > 250 sigma < 500
 	int a1 = testCase->getParameter(0),
 		a2 = testCase->getParameter(1),
@@ -371,7 +372,7 @@ inline void MedHardCFG::block21() {
 	}
 }
 
-inline void MedHardCFG::block22() {
+inline void HardRight::block22() {
 	//mu <= 500 sigma >= 100 sigma <= 250
 
 	if (sumOfFirstHalf == sumOfSecondHalf && sumOfAll < 0) {
@@ -414,7 +415,7 @@ inline void MedHardCFG::block22() {
 	}
 }
 
-void MedHardCFG::calculateMean(const int* values) {
+void HardRight::calculateMean(const int* values) {
 	long long sum { 0 };
 	for (int i = 0; i < numberOfParameters; ++i) {
 		sum += values[i];
@@ -423,7 +424,7 @@ void MedHardCFG::calculateMean(const int* values) {
 	Mu = ((double) sum / (double) numberOfParameters);
 }
 
-void MedHardCFG::calculateDeviation(const int* values) {
+void HardRight::calculateDeviation(const int* values) {
 	long long sum { 0 };
 
 	for (int i = 0; i < numberOfParameters; ++i) {
@@ -436,7 +437,7 @@ void MedHardCFG::calculateDeviation(const int* values) {
 
 
 
-void MedHardCFG::calculateSums(const int* values) {
+void HardRight::calculateSums(const int* values) {
 	sumOfAll = 0;
 	sumOfFirstHalf = 0;
 	sumOfSecondHalf = 0;
@@ -452,7 +453,7 @@ void MedHardCFG::calculateSums(const int* values) {
 	sumOfAll = sumOfFirstHalf + sumOfSecondHalf;
 }
 
-void MedHardCFG::printInputParameters(int* inputParameters) const{
+void HardRight::printInputParameters(int* inputParameters) const{
 	cout << endl << "Input Parameters" << endl;
 	cout << "     A        B        C        D        E        F        G        H        I        J" << endl;
 	cout << "-----------------------------------------------" << endl;
@@ -462,7 +463,7 @@ void MedHardCFG::printInputParameters(int* inputParameters) const{
 	cout << endl;
 }
 
-void MedHardCFG::printEdgesCovered(bool* edgesCovered) const{
+void HardRight::printEdgesCovered(bool* edgesCovered) const{
 	cout << endl << "Edge Coverage" << endl;
 	cout << "-B0toB1 - B1toB3-B1toB4-B3toB7-B3toB8-B4toB9-B4toB10-B7toB15," << endl;
 	cout << "---------------------------------------------------------------------------" << endl;
@@ -550,11 +551,11 @@ void MedHardCFG::printEdgesCovered(bool* edgesCovered) const{
 	cout << endl;
 }
 
-void MedHardCFG::printPredicatesCovered(bool* predicatesCovered) const{
+void HardRight::printPredicatesCovered(bool* predicatesCovered) const{
 	cout << "\tTODO" << endl; //TODO printPredicatesCovered
 }
 
-void MedHardCFG::printEdgesCovered(int* edgesCovered) const{
+void HardRight::printEdgesCovered(int* edgesCovered) const{
 	cout << endl << "Edge Coverage" << endl;
 	cout << " B0toB1-B1toB3-B1toB4-B3toB7-B3toB8-B4toB9-B4toB10-B7toB15," << endl;
 	cout << "---------------------------------------------------------------------------" << endl;
@@ -599,7 +600,7 @@ void MedHardCFG::printEdgesCovered(int* edgesCovered) const{
 	cout << endl;
 }
 
-void MedHardCFG::printPredicatesCovered(int* predicatesCovered) const{
+void HardRight::printPredicatesCovered(int* predicatesCovered) const{
 	cout << "\tTODO" << endl;//TODO printPredicatesCovered
 
 }
